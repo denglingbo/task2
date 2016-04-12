@@ -1,0 +1,19 @@
+
+.tab-page {
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+    bottom: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    background: $white;
+
+    li {
+         -moz-box-flex: 3;
+         -webkit-box-flex: 3;
+         box-flex: 3;
+         text-align: center;
+         padding: rem(10px) 0;
+    }
+}
