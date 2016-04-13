@@ -55,7 +55,7 @@ for file in ${files[@]}; do
         continue
     fi
 
-    file_name=`echo ${file#[MADRUC\s]*}`
+    file_name=`echo ${file#[MADRUC]*}`
     `echo "$file_name" | grep -q "dep\/*"`
     if [ $? -eq 0 ]; then
         continue

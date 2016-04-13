@@ -46,7 +46,7 @@ var templateCache = {};
  *
  */
 function loadPage(me, obj) {
-console.log(1)
+
     require.ensure(['./pages/doing', './pages/done', './pages/cancel'], function (require) {
         if (!templateCache[obj.name]) {
             var template = require(obj.url);
