@@ -30,37 +30,33 @@ var pages = [
     }
 ];
 
-var asyncPages = (function () {
-    
-    var arr = [];
+var templateCache = {};
 
-    pages.forEach(function (item) {
-        arr.push(item.url);
-    });
-
-    return arr;
-})();
-
+/**
+ * 加载页面
+ * @param {context} me, this -> page
+ * @param {Object} obj, 当前展示的页面配置
+ *
+ */
 function loadPage(me, obj) {
 
     require.ensure(['./pages/doing.html', './pages/done.html', './pages/cancel.html'], function (require) {
         
-        var template = require(obj.url);
-        me.render(obj.selector, template, me.data);  
+        if (!templateCache[obj.name]) {
+            var template = require(obj.url);
+            var html = me.render(obj.selector, template, me.data);
+
+            templateCache[obj.name] = true;
+        }
     });
 
-    // var template = require(url);
-    // me.render(obj.selector, template, me.data);  
 }
 
 page.enter = function () {
 
     var me = this;
 
-    // new Sticky({
-    //     target: selector,
-    //     top: 0
-    // });
+    // new Sticky({target: selector, top: 0});
 
     new SliderPage({
         selector: '.tab-page li', 
@@ -76,15 +72,6 @@ page.enter = function () {
     });
 
     this.bindEvents();
-};
-
-page.getListPage = function () {
-
-    // var tplDone = require('page/list/done');
-    // this.render('#list-wrapper-done', tplDone, this.data);
-
-    // var tplCancel = require('page/list/cancel');
-    // this.render('#list-wrapper-cancel', tplCancel, this.data);
 };
 
 page.bindEvents = function () {

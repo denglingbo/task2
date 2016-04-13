@@ -153,11 +153,14 @@ Page.prototype.addParallelTask = function (task) {
  * @param {string} selector, #id, .class, tagname
  * @param {Loader} template, [name]-loader
  * @param {Object} data, 数据
+ * @return {string} html, html 字符串
  *
  */
 Page.prototype.render = function (selecotr, template, data) {
     var html = template(data);
     $(selecotr).html(html);
+
+    return html;
 };
 
 /**
