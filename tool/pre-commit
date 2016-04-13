@@ -32,12 +32,9 @@ fi
 
 all_ok=true
 # only js extension file will run fecs
-# EXT="js html css less"
-EXT="js html"
+EXT="js html css less"
 read -a files <<< $HAS_CHANGED
-echo "========================================"
-echo files
-echo "========================================"
+
 # echo "${files[0]}"
 next=1
 for file in ${files[@]}; do
