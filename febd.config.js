@@ -98,13 +98,13 @@ config.extMap = {
      * 可以不写的已知后缀
      * @params {Array} ['', ...] 第一个默认的为必填
      */
-    resolveExts: ['.html'],
+    resolveExts: ['.tpl'],
 
     /**
      * 模板源文件后缀
      * @params {string}
      */
-    srcTemplate: 'html',
+    srcTemplate: 'tpl',
 
     /**
      * 模板编译后的后缀

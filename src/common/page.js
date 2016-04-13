@@ -71,7 +71,6 @@ Page.prototype.start = function () {
     }
 
     dfd.done(function () {
-        
         // 执行任务
         me.execute()
             .done(function () {
@@ -129,6 +128,7 @@ Page.prototype.execute = function () {
  *
  * @param {Function} task 任务函数
  * @return {Page} 返回自身
+ *
  */
 Page.prototype.addParallelTask = function (task) {
     var me = this;
@@ -137,7 +137,6 @@ Page.prototype.addParallelTask = function (task) {
     var fn = function () {
         task.call(me, dfd);
     };
-    
     fn.$dfd = dfd;
 
     // 缓存任务函数
@@ -150,37 +149,39 @@ Page.prototype.addParallelTask = function (task) {
 
 /**
  * 渲染模板
- * @param {string} selector, #id, .class, tagname
+ *
+ * @param {string} selector, #id|.class|tagname
  * @param {Loader} template, [name]-loader
  * @param {Object} data, 数据
- * @return {string} html, html 字符串
+ * @return {string} html 字符串
  *
  */
-Page.prototype.render = function (selecotr, template, data) {
-    var html = template(data);
-    $(selecotr).html(html);
+Page.prototype.render = function (selector, template, data) {
+    var str = template(data);
+    $(selector).html(str);
 
-    return html;
+    return str;
 };
 
 /**
  * 获取请求参数并可以根据需求改变参数
  *
+ * @param {number} api, 接口
+ * @param {Object} data, 数据
+ * @return {Object}
+ *
  */
 var getRequestData = function (api, data) {
     var r = {};
-    
     if (config.debug) {
-        r.url = config.mockUrl + '/api?id=' + api
+        r.url = config.mockUrl + '/api?id=' + api;
     }
-
-    // r.data = data;
-
     return r;
 };
 
 /**
  * Post 请求数据
+ *
  * @param {number} api api号
  * @param {Object=} data 请求数据
  * @param {Object=} opts 选项

@@ -36,7 +36,7 @@ var setMaker = function (maker, webpack) {
         {
             // 模板 加载器
             // Reference: https://github.com/webpack/ejs-loader
-            test: /\.html$/,
+            test: /\.tpl$/,
             loader: 'mustache'
         }
     );

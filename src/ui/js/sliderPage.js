@@ -1,4 +1,3 @@
-
 /**
  * @file sliderPage.js
  * @author deo
@@ -7,30 +6,31 @@
  * @param {Ojbect} options,
  *
  */
+
 var SliderPage = function (options) {
 
     if (!options) {
-        console.warn('sliderPage.js options not array.');
+        // console.warn('sliderPage.js options not array.');
         return;
     }
 
     this.opts = {
 
-        selector: null,
+        'selector': null,
 
-        pages: [],
+        'pages': [],
 
-        class: {
-            default: 'slide-default',
-            defaultLeft: 'slide-default-left',
-            defaultRight: 'slide-default-right',
-            next: 'slide-next',
-            prev: 'slide-prev',
-            current: 'slide-current'
+        'class': {
+            'default': 'slide-default',
+            'defaultLeft': 'slide-default-left',
+            'defaultRight': 'slide-default-right',
+            'next': 'slide-next',
+            'prev': 'slide-prev',
+            'current': 'slide-current'
         },
 
-        onStart: function () {},
-        onSlide: function () {}
+        'onStart': function () {},
+        'onSlide': function () {}
     };
 
     $.extend(this.opts, options);
@@ -51,10 +51,10 @@ SliderPage.prototype = {
      * 初始化
      *
      */
-    init: function () {
+    'init': function () {
 
         var me = this;
-        var maxHeight = 0;
+        // var maxHeight = 0;
 
         this.$pages.each(function (i) {
             var $cur = $(this);
@@ -86,10 +86,12 @@ SliderPage.prototype = {
 
     /**
      * 获取当前或指定name 的配置项
+     *
      * @param {string|undefined} name, 可传递项，不传则返回‘当前’对象
+     * @return {Object}
      *
      */
-    get: function (name) {
+    'get': function (name) {
 
         var obj = null;
 
@@ -115,11 +117,12 @@ SliderPage.prototype = {
 
     /**
      * 设置点击项以及位移项
+     *
      * @param {Object} before, 当前展示的对象
      * @param {Object} clicked, 点击项，执行位移的对象
      *
      */
-    set: function (before, clicked) {
+    'set': function (before, clicked) {
         before.current = false;
         clicked.current = true;
     },
@@ -128,7 +131,7 @@ SliderPage.prototype = {
      * 绑定事件
      *
      */
-    bindEvents: function () {
+    'bindEvents': function () {
         var me = this;
 
         this.$items.on('click', function () {
@@ -138,7 +141,8 @@ SliderPage.prototype = {
 
     /**
      * 保持步长始终为 < 1 * step
-     * @param {number} index, 
+     *
+     * @param {number} index, 索引值
      *
      */
     // fixIndex: function (index) {
@@ -147,8 +151,10 @@ SliderPage.prototype = {
 
     /**
      * 为了保持位移始终在一个 view 的距离
-     * @param {Object} before, 
-     * @param {Object} clicked, options
+     *
+     * @param {Object} before, 当前展示的
+     * @param {Object} clicked, 点击的，将要展示的 options
+     * @return {number} 步长
      *
      */
     // getStep: function (before, clicked) {
@@ -167,34 +173,36 @@ SliderPage.prototype = {
 
     /**
      * 获取动画样式
+     *
      * @param {Object} before, options
      * @param {Object} clicked, options
+     * @return {string} 样式名
      *
      */
-    getClass: function (before, clicked) {
+    'getClass': function (before, clicked) {
 
         if (clicked && before.index < clicked.index) {
             return this.opts.class.next;
         }
-        
         return this.opts.class.prev;
     },
 
     /**
      * 为了保证从右往左测点击，滑入的页面能从左侧进入，所以需要修正一下
      * !! 在从左往右切换跳过了中间页面直接点击到后面的页面再切换到左侧会出现滑入位置错误
-     * @param {Object} $clicked,
-     * @param {string} class,
+     *
+     * @param {Object} $clicked, 点击的dom 对象
+     * @param {string} myClass, 添加的样式
      *
      */
-    fix: function ($clicked, myClass) {
+    'fix': function ($clicked, myClass) {
 
         $clicked
             .removeClass(this.opts.class.next)
             .removeClass(this.opts.class.prev)
             .removeClass(this.opts.class.defaultRight)
             .removeClass(this.opts.class.defaultLeft)
-            .addClass(myClass)
+            .addClass(myClass);
 
         // 触发浏览器重绘
         // 写在需要重绘的代码后面
@@ -204,10 +212,11 @@ SliderPage.prototype = {
 
     /**
      * 切换页面
+     *
      * @param {Element} target, Element target
      *
      */
-    switch: function (target) {
+    'switch': function (target) {
         // 切换之前的配置
         var before = this.get();
         var $before = $(before.selector);

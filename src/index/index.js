@@ -1,3 +1,9 @@
+/**
+ * @file index.js
+ * @author deo
+ * 首页
+ *
+ */
 
 // require('../css/index.scss');
 
@@ -12,7 +18,6 @@
 // };
 
 // page.bindEvents = function () {
-    
 //     $('.menu li').on('click', function () {
 //         CPNavigationBar.redirect('/list.html');
 //     });
@@ -20,13 +25,14 @@
 
 
 // /**
-//  * 请求页面接口 
+//  * 请求页面接口
+//  *
+//  * @param {deferred} dfd, deferred
 //  *
 //  */
 // page.addParallelTask(function (dfd) {
 //     var me = this;
 //     var promise = page.post(config.API.HOME_URL, {});
-
 //     promise
 //         .done(function (result) {
 //             if (result.status !== 0) {

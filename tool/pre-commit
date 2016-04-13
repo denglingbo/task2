@@ -31,6 +31,7 @@ if [ -n "$FECS_UNINSTALLED" ]; then
 fi
 
 all_ok=true
+
 # only js extension file will run fecs
 EXT="js html css less"
 read -a files <<< $HAS_CHANGED
