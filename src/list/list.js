@@ -10,7 +10,7 @@ require('./list.scss');
 var config = require('../config');
 var Page = require('../common/page');
 // var Sticky = require('../ui/js/sticky');
-var SliderPage = require('../ui/js/sliderPage');
+var SliderPage = require('../common/ui/sliderPage/sliderPage');
 
 var page = new Page();
 
