@@ -38,7 +38,7 @@ var templateCache = {};
  * @param {Object} obj, 当前展示的页面配置
  *
  */
-function loadPage(me, obj) {
+function loadPage(me, obj) {alert(1)
 
     require.ensure(['./pages/doing.html', './pages/done.html', './pages/cancel.html'], function (require) {
         
