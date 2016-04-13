@@ -13,6 +13,6 @@ var config = {
     }
 };
 
-config.mockUrl = 'http://172.16.1.169:8015';
+config.mockUrl = 'http://localhost:8015';
 
 module.exports = config;
