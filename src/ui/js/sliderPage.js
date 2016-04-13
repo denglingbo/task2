@@ -30,7 +30,7 @@ var SliderPage = function (options) {
         },
 
         'onStart': function () {},
-        'onSlide': function () {}
+        'onSlideBefore': function () {}
     };
 
     $.extend(this.opts, options);
@@ -58,16 +58,6 @@ SliderPage.prototype = {
 
         this.$pages.each(function (i) {
             var $cur = $(this);
-            // var hei = $cur.height();
-
-            // if (hei > maxHeight) {
-            //     maxHeight = hei;
-            // }
-
-            // $cur.css({
-            //     'position': 'absolute',
-            //     'height': hei
-            // });
 
             if (i === 0) {
                 $cur.addClass(me.opts.class.default);
@@ -76,10 +66,6 @@ SliderPage.prototype = {
                 $cur.addClass(me.opts.class.defaultRight);
             }
         });
-
-        // this.$pages.parent().css({
-        //     'height': maxHeight
-        // });
 
         this.bindEvents();
     },
@@ -140,38 +126,6 @@ SliderPage.prototype = {
     },
 
     /**
-     * 保持步长始终为 < 1 * step
-     *
-     * @param {number} index, 索引值
-     *
-     */
-    // fixIndex: function (index) {
-    //     return index > 1 ? 1 : index;
-    // },
-
-    /**
-     * 为了保持位移始终在一个 view 的距离
-     *
-     * @param {Object} before, 当前展示的
-     * @param {Object} clicked, 点击的，将要展示的 options
-     * @return {number} 步长
-     *
-     */
-    // getStep: function (before, clicked) {
-
-    //     var step = 0;
-
-    //     if (clicked && before.index < clicked.index) {
-    //         step = this.fixIndex(clicked.index) * -1;
-    //     }
-    //     else {
-    //         step = this.fixIndex(before.index);
-    //     }
-
-    //     return step * 100;
-    // },
-
-    /**
      * 获取动画样式
      *
      * @param {Object} before, options
@@ -229,7 +183,7 @@ SliderPage.prototype = {
             return;
         }
 
-        this.opts.onSlide.call(this, clicked);
+        this.opts.onSlideBefore.call(this, clicked);
 
         // 从右往左 fix
         if (before.index > clicked.index) {
@@ -250,6 +204,38 @@ SliderPage.prototype = {
 
         this.set(before, clicked);
     }
+
+    /**
+     * 保持步长始终为 < 1 * step
+     *
+     * @param {number} index, 索引值
+     *
+     */
+    // fixIndex: function (index) {
+    //     return index > 1 ? 1 : index;
+    // },
+
+    /**
+     * 为了保持位移始终在一个 view 的距离
+     *
+     * @param {Object} before, 当前展示的
+     * @param {Object} clicked, 点击的，将要展示的 options
+     * @return {number} 步长
+     *
+     */
+    // getStep: function (before, clicked) {
+
+    //     var step = 0;
+
+    //     if (clicked && before.index < clicked.index) {
+    //         step = this.fixIndex(clicked.index) * -1;
+    //     }
+    //     else {
+    //         step = this.fixIndex(before.index);
+    //     }
+
+    //     return step * 100;
+    // }
 };
 
 module.exports = SliderPage;

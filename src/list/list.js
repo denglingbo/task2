@@ -51,8 +51,14 @@ function loadPage(me, obj) {
         if (!templateCache[obj.name]) {
             var template = require(obj.url);
             me.render(obj.selector, template, me.data);
-
             templateCache[obj.name] = true;
+
+            var itemHeight = $(obj.selector).height();
+            var outHeight = $('.slider-outer').height();
+
+            if (outHeight < itemHeight) {
+                $('.slider-outer').height(itemHeight);
+            }
         }
     });
 
@@ -72,7 +78,7 @@ page.enter = function () {
             loadPage(me, obj);
         },
 
-        onSlide: function (obj) {
+        onSlideBefore: function (obj) {
             loadPage(me, obj);
         }
     });

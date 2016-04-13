@@ -12,10 +12,12 @@ var _ = require('underscore');
 var BellOnBundlerErrorPlugin = require('bell-on-bundler-error-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyPlugin = require('copy-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 var mockServer = require('gulp-mock-server');
 var webDevServer = require('webpack-dev-server');
+var connect = require('gulp-connect');
 
 /**
  * webpack config method
@@ -25,8 +27,6 @@ var MakeWebpackConfig = function (config) {
     this.name = 'Make Webpack Config';
 
     this.config = config;
-
-    this.init();
 };
 
 MakeWebpackConfig.prototype = {
@@ -49,7 +49,14 @@ MakeWebpackConfig.prototype = {
 
             new webpack.ProgressPlugin(function (percentage, msg) {
                 console.log('progress: ' + percentage + ' -- ' + msg)
-            })
+            }),
+
+            new CopyPlugin([
+                {
+                    from: './dep/', 
+                    to: './dep/'
+                }
+            ])
         ];
 
         this.setDevtool();
@@ -73,7 +80,6 @@ MakeWebpackConfig.prototype = {
      *
      */
     get: function () {
-console.log(this.webpackConfig);
         return this.webpackConfig; 
     },
 
@@ -382,6 +388,7 @@ console.log(this.webpackConfig);
 
 
 
+
     /**
      * Mock server
      *
@@ -411,11 +418,13 @@ console.log(this.webpackConfig);
 
         me.config.debug = true;
 
+        me.init();
+
         if (callback) {
             callback(me, webpack);
         }
 
-        var webpackConfig = this.get();
+        var webpackConfig = me.get();
         var compiler = webpack(webpackConfig);
         var devServer = new webDevServer(compiler, webpackConfig.devServer);
 
@@ -428,6 +437,57 @@ console.log(this.webpackConfig);
         });
 
         return devServer;
+    },
+
+    /**
+     * Release
+     * 获取 build server
+     * @param {Function} gulpCallback, 这个一定要加上，虽然不加也ok，但是加上才能看到 Finish 信息
+     * @param {Function} callback, 在 makeWebpackConfig.get() 之前对makeWebpack 进行其他操作
+     */
+    build: function (gulpCallback, callback) {
+        var me = this;
+
+        me.config.debug = false;
+
+        me.init();
+
+        if (callback) {
+            callback(me, webpack);
+        }
+        
+        var webpackConfig = me.get();
+
+        // Run webpack
+        webpack(
+
+            // webpack config
+            webpackConfig,
+
+            function (err, stats) {
+                if (err) {
+                    throw new gutil.PluginError('webpack', err);
+                }
+                
+                if (gulpCallback) {
+                    gulpCallback();
+                }
+            }
+        );
+    },
+
+    /**
+     * Release
+     * 创建本地服务
+     *
+     */
+    connect: function () {
+
+        return connect.server({
+            root: this.config.output.root,
+            port: this.config.port,
+            livereload: true
+        });
     }
 
 };

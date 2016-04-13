@@ -71,3 +71,48 @@ gulp.task('dev', [
     'dev-webpack',
     'mock'
 ]);
+
+
+
+/**
+ * release
+ * watcher
+ */
+var files = [
+    'src/**/*.tpl',
+    'src/**/*.scss',
+    'src/**/*.js'
+];
+
+gulp.task('watch', function () {
+
+    gulp.watch(files, ['release-webpack']);
+});
+
+/**
+ * release
+ * webpack
+ */
+gulp.task('release-webpack', function (gulpCallback) {
+
+    febd.build(gulpCallback, function (maker, webpack) {
+        setMaker(maker, webpack);
+    });
+});
+
+/**
+ * release
+ * connect
+ */
+gulp.task('connect', function () {
+
+    febd.connect();
+});
+
+// release
+gulp.task('release', [
+    'release-webpack',
+    'connect',
+    'watch',
+    'mock'
+]);

@@ -5,50 +5,49 @@
  *
  */
 
-// require('../css/index.scss');
+require('./index.scss');
 
-// var config = require('./common/config');
-// var Page = require('./common/page');
+var config = require('../config');
+var Page = require('../common/page');
 
-// var page = new Page();
+var page = new Page();
 
-// page.enter = function () {
-//     console.log(this.data)
-//     this.bindEvents();
-// };
+page.enter = function () {
+    this.bindEvents();
+};
 
-// page.bindEvents = function () {
-//     $('.menu li').on('click', function () {
-//         CPNavigationBar.redirect('/list.html');
-//     });
-// };
-
-
-// /**
-//  * 请求页面接口
-//  *
-//  * @param {deferred} dfd, deferred
-//  *
-//  */
-// page.addParallelTask(function (dfd) {
-//     var me = this;
-//     var promise = page.post(config.API.HOME_URL, {});
-//     promise
-//         .done(function (result) {
-//             if (result.status !== 0) {
-//                 dfd.reject(result);
-//             }
-//             else {
-//                 me.data = result.data;
-//                 dfd.resolve();
-//             }
-//         });
-// });
+page.bindEvents = function () {
+    $('.menu li').on('click', function () {
+        window.CPNavigationBar.redirect('/list.html');
+    });
+};
 
 
-// $(function () {
-//     page.start();
-// });
+/**
+ * 请求页面接口
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+page.addParallelTask(function (dfd) {
+    var me = this;
+    var promise = page.post(config.API.HOME_URL, {});
+    promise
+        .done(function (result) {
+            if (result.status !== 0) {
+                dfd.reject(result);
+            }
+            else {
+                me.data = result.data;
+                dfd.resolve();
+            }
+        });
+});
+
+
+$(function () {
+    page.start();
+});
 
 // CPNavigationBar.redirect('search-custom.html');
 

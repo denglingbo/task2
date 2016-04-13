@@ -4,18 +4,10 @@
   "description": "",
   "main": "main.js",
   "dependencies": {},
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/denglingbo/task2.git"
-  },
-  "author": "deo",
-  "license": "ISC",
   "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
     "bell-on-bundler-error-plugin": "^1.0.8",
+    "copy-webpack-plugin": "^1.1.1",
     "css-loader": "^0.23.1",
     "ejs-loader": "^0.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
@@ -27,6 +19,7 @@
     "gutil": "^1.6.4",
     "html-webpack-plugin": "^2.15.0",
     "image-webpack-loader": "^1.6.3",
+    "mustache-loader": "^0.3.1",
     "node-sass": "^3.4.2",
     "path": "^0.12.7",
     "sass": "^0.5.0",
@@ -37,6 +30,15 @@
     "webpack": "^1.12.14",
     "webpack-dev-server": " ^1.14.1"
   },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denglingbo/task2.git"
+  },
+  "author": "deo",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/denglingbo/task2/issues"
   },
