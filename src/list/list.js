@@ -10,7 +10,7 @@ require('./list.scss');
 var config = require('../config');
 var Page = require('../common/page');
 // var Sticky = require('../ui/js/sticky');
-var SliderPage = require('../common/ui/sliderPage/sliderPage');
+var PageSlider = require('../common/ui/pageSlider/pageSlider');
 var IScroll = require('dep/iscroll');
 var page = new Page();
 
@@ -26,6 +26,7 @@ var pages = [
         name: 'done',
         selector: '#list-wrapper-done',
         url: './pages/done',
+        api: config.API.LIST_DONE_URL,
         index: 1
     },
     {
@@ -46,23 +47,25 @@ page.enter = function () {
 
     var me = this;
 
-    me._windowHeight = $(window).height();
+    me.winHeight = $(window).height();
 
     // new Sticky({target: selector, top: 0});
 
-    this.scrollInit('.slider-scroll');
+    // this.scrollInit('.slider-scroll');
 
-    new SliderPage({
-        selector: '.tab-page li',
+    new PageSlider({
+        outer: '.slider-outer',
+        tabs: '.tab-page li',
         pages: pages,
 
-        onStart: function (cur) {
-            me.loadPage(cur);
+        onInit: function (info) {
+            me.loadPage(info, me.data);
         },
 
-        onSlideBefore: function (cur, prev) {
-            // console.log(pageCache);
-            me.loadPage(cur);
+        onSlideBefore: function (info) {
+            me.loadMoreList(info.api, function (result) {
+                me.loadPage(info, result.data);
+            });
         }
     });
 
@@ -79,40 +82,53 @@ var myScroll;
 /**
  * 加载页面
  *
- * @param {Object} obj, 当前展示的页面配置
+ * @param {Object} info, 当前展示的页面配置
+ * @param {Object} data, 当前要渲染的模板数据
  *
  */
-page.loadPage = function (obj) {
+page.loadPage = function (info, data) {
     var me = this;
 
-    pageName = obj.name;
+    pageName = info.name;
 
     require.ensure(['./pages/doing', './pages/done', './pages/cancel'], function (require) {
-        if (!pageCache[obj.name]) {
-            var template = require(obj.url);
-            var $content = $(obj.selector).find('.list-wrapper-content');
-            me.render($content, template, me.data);
+        if (!pageCache[info.name]) {
+            var template = require(info.url);
+            var $content = $(info.selector).find('.list-wrapper-content');
+            me.render($content, template, data);
 
             // 缓存页面信息
-            pageCache[obj.name] = {
+            pageCache[info.name] = {
                 y: 0
             };
         }
 
         // 这里要重新渲染 scroll，所以需要重设置外层的高度
-        var objHeight = $(obj.selector).height();
-        if (objHeight < me._windowHeight) {
-            objHeight = me._windowHeight;
+        var objHeight = $(info.selector).height();
+
+        if (objHeight < me.winHeight) {
+            objHeight = me.winHeight;
+        }
+        else {
+            $(info.selector).find('.scroll-loader').removeClass('hide');
+            objHeight = $(info.selector).height();
         }
 
         $('.slider-outer').css({
+            // 这里因为loader 具有高度，所以需要重新获取
+            height: objHeight
+        });
+        $(info.selector).css({
+            // 这里因为loader 具有高度，所以需要重新获取
             height: objHeight
         });
 
-        myScroll.refresh();
+        if (myScroll) {
+            myScroll.refresh();
 
-        var prevY = pageCache[obj.name].y || 0;
-        myScroll.scrollTo(0, prevY);
+            var prevY = pageCache[info.name].y || 0;
+            myScroll.scrollTo(0, prevY);
+        }
     });
 };
 
@@ -125,7 +141,7 @@ page.loadPage = function (obj) {
 page.scrollInit = function (selector) {
     var me = this;
 
-    $(selector).height(me._windowHeight);
+    $(selector).height(me.winHeight);
 
     if (myScroll) {
         myScroll.destroy();
@@ -187,11 +203,15 @@ page.scrollInit = function (selector) {
         $loader.html(config.const.loader.default);
 
         if (this._load) {
-            me.loadMoreList(function () {
+            me.loadMoreList(config.API.LIST_MORE_URL, function (result) {
+                console.log(result)
+
                 myScroll._load = false;
             });
         }
     });
+
+
 };
 
 /**
@@ -200,16 +220,16 @@ page.scrollInit = function (selector) {
  * @param {Function} callback, 回调函数
  *
  */
-page.loadMoreList = function (callback) {
+page.loadMoreList = function (api, callback) {
     // var dfd = new $.Deferred();
-    var promise = page.post(config.API.LIST_MORE_URL, {});
+    var promise = page.post(api, {});
 
     promise
         .done(function (result) {
             if (result.status !== 0) {
             }
             else {
-                // console.log(result);
+                callback(result);
             }
         });
 };

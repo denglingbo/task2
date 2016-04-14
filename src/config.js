@@ -10,11 +10,15 @@ var config = {
     API: {
         HOME_URL: 1000,
         LIST_URL: 1001,
-        LIST_MORE_URL: 1002
+        LIST_DONE_URL: 1002
     }
 };
 
-config.mockUrl = 'http://172.16.1.169:8015';
+// var host = 'localhost';
+// var host = '172.16.1.169';
+var host = '192.168.1.5';
+
+config.mockUrl = 'http://' + host + ':8015';
 
 config.const = {
     loader: {
