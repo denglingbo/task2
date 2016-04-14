@@ -19,10 +19,23 @@
     }
 }
 
+// 加载更多
+.scroll-loader {
+    // position: absolute;
+    width: 100%;
+    text-align: center;
+    height: rem(20px);
+    line-height: rem(20px);
+    padding: rem(5px) 0;
+}
+
+.slider-scroll {}
 .slider-outer {
     position: relative;
     width: 100%;
     overflow: hidden;
+    // padding-bottom: 40px;
+    padding-bottom: rem(40px);
 }
 
 .slider-page {
@@ -47,13 +60,13 @@
 }
 .slide-next {
     transform: translate3d(-100%, 0px, 0px);
-    transition: transform 300ms cubic-bezier(0.42, 0, 0.58, 1.0);
+    transition: transform 260ms cubic-bezier(0.42, 0, 0.58, 1.0);
 }
 .slide-prev {
     transform: translate3d(100%, 0px, 0px);
-    transition: transform 300ms cubic-bezier(0.42, 0, 0.58, 1.0);
+    transition: transform 260ms cubic-bezier(0.42, 0, 0.58, 1.0);
 }
 .slide-current {
     transform: translate3d(0%, 0px, 0px);
-    transition: transform 300ms cubic-bezier(0.42, 0, 0.58, 1.0);
+    transition: transform 260ms cubic-bezier(0.42, 0, 0.58, 1.0);
 }

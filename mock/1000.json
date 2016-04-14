@@ -1,8 +1,8 @@
 {
-    "status" : 0,
-    "data" : {
+    "status": 0,
+    "data": {
         "name": "denglingbo",
-        "age" : 1000,
+        "age": 1000,
         "list": [0, 1, 2],
         "reactList": [
             {"name": "deo", "age": 100},

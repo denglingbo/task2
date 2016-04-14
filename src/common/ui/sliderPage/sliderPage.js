@@ -183,7 +183,7 @@ SliderPage.prototype = {
             return;
         }
 
-        this.opts.onSlideBefore.call(this, clicked);
+        this.opts.onSlideBefore.call(this, clicked, before);
 
         // 从右往左 fix
         if (before.index > clicked.index) {

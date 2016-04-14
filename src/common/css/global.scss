@@ -1,6 +1,7 @@
 @charset "utf-8";
 
-@import "var.color.scss";
+@import "vars.scss";
+@import "fn.scss";
 @import "font.scss";
 @import "border-1px.scss";
 
@@ -38,6 +39,10 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
 }
 
+html {
+    font-size: $browser-default-font-size;
+}
+
 body {
     background-color: #f2f3f5;
     font-size: rem(12px);
@@ -48,4 +53,12 @@ body {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     user-select: none;
+}
+
+
+.show {
+    display: block;
+}
+.hide {
+    display: none;
 }

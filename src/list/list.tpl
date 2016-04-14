@@ -10,17 +10,24 @@
     <div class="main">
 
         <!-- 未完成 -->
-        <div class="slider-outer">
-            <div class="slider-page" id="list-wrapper-doing"></div>
+        <div class="slider-scroll">
+            <div class="slider-outer">
+                <div class="slider-page" id="list-wrapper-doing">
+                    <div class="list-wrapper-content"><!-- Content --></div>
+                    <div class="scroll-loader">获取更多</div>
+                </div>
 
-            <!-- 已完成 -->
-            <div class="slider-page" id="list-wrapper-done">
-                
-            </div>
+                <!-- 已完成 -->
+                <div class="slider-page" id="list-wrapper-done">
+                    <div class="list-wrapper-content"><!-- Content --></div>
+                    <div class="scroll-loader">获取更多</div>
+                </div>
 
-            <!-- 已撤销 -->
-            <div class="slider-page" id="list-wrapper-cancel">
-                
+                <!-- 已撤销 -->
+                <div class="slider-page" id="list-wrapper-cancel">
+                    <div class="list-wrapper-content"><!-- Content --></div>
+                    <div class="scroll-loader">获取更多</div>
+                </div>
             </div>
         </div>
 

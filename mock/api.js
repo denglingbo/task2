@@ -20,5 +20,13 @@ module.exports = [
             id: 1001
         },
         response: './1001.json'
+    },
+
+    // 任务列表页 加载更多
+    {
+        params: {
+            id: 1002
+        },
+        response: './1002.json'
     }
 ];
