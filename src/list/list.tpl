@@ -8,26 +8,34 @@
 </head>
 <body>
     <div class="main">
-
-        <!-- 未完成 -->
-        <div class="slider-scroll">
+    
+        <div class="slider-container">
             <div class="slider-outer">
+
+                <!-- 未完成 -->
                 <div class="slider-page" id="list-wrapper-doing" data-name="doing">
-                    <div class="list-wrapper-content"><!-- Content --></div>
-                    <div class="scroll-loader hide">获取更多 doing</div>
+                    <div class="scroll-inner">
+                        <div class="list-wrapper-content"><!-- Content --></div>
+                        <div class="scroll-loader hide">获取更多 doing</div>
+                    </div>
                 </div>
 
                 <!-- 已完成 -->
                 <div class="slider-page" id="list-wrapper-done" data-name="done">
-                    <div class="list-wrapper-content"><!-- Content --></div>
-                    <div class="scroll-loader hide">获取更多 done</div>
+                    <div class="scroll-inner">
+                        <div class="list-wrapper-content">done</div>
+                        <div class="scroll-loader hide">获取更多 done</div>
+                    </div>
                 </div>
 
                 <!-- 已撤销 -->
                 <div class="slider-page" id="list-wrapper-cancel" data-name="cancel">
-                    <div class="list-wrapper-content"><!-- Content --></div>
-                    <div class="scroll-loader hide">获取更多 cancel</div>
+                    <div class="scroll-inner">
+                        <div class="list-wrapper-content">cancel</div>
+                        <div class="scroll-loader hide">获取更多 cancel</div>
+                    </div>
                 </div>
+
             </div>
         </div>
 

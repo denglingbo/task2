@@ -19,20 +19,21 @@ var pages = [
         name: 'doing',
         selector: '#list-wrapper-doing',
         index: 0,
-        url: './pages/doing',
+        url: './pages/item',
         current: true
     },
     {
         name: 'done',
         selector: '#list-wrapper-done',
-        url: './pages/done',
+        url: './pages/item',
         api: config.API.LIST_DONE_URL,
         index: 1
     },
     {
         name: 'cancel',
         selector: '#list-wrapper-cancel',
-        url: './pages/cancel',
+        url: './pages/item',
+        api: config.API.LIST_CANCEL_URL,
         index: 2
     }
 ];
@@ -46,12 +47,14 @@ var pageCache = {};
 page.enter = function () {
 
     var me = this;
-
+    me.winWidth = $(window).width();
     me.winHeight = $(window).height();
 
     // new Sticky({target: selector, top: 0});
-
-    // this.scrollInit('.slider-scroll');
+    $('.slider-outer').css({
+        width: me.winWidth,
+        height: me.winHeight
+    });
 
     new PageSlider({
         outer: '.slider-outer',
@@ -63,9 +66,12 @@ page.enter = function () {
         },
 
         onSlideBefore: function (info) {
-            me.loadMoreList(info.api, function (result) {
-                me.loadPage(info, result.data);
-            });
+
+            if (info && info.name && !pageCache[info.name]) {
+                me.loadMoreList(info.api, function (result) {
+                    me.loadPage(info, result.data);
+                });
+            }
         }
     });
 
@@ -75,9 +81,6 @@ page.enter = function () {
 page.bindEvents = function () {
 
 };
-
-// 用于销毁 myScroll 等操作
-var myScroll;
 
 /**
  * 加载页面
@@ -91,132 +94,57 @@ page.loadPage = function (info, data) {
 
     pageName = info.name;
 
-    require.ensure(['./pages/doing', './pages/done', './pages/cancel'], function (require) {
-        if (!pageCache[info.name]) {
-            var template = require(info.url);
-            var $content = $(info.selector).find('.list-wrapper-content');
-            me.render($content, template, data);
+    var fn = function () {
+
+        var template = require(info.url);
+        var $content = $(info.selector).find('.list-wrapper-content');
+        me.render($content, template, data);
+
+        // 为了 IScroll 一定能被绑定正确，需要添加一个 timeout
+        setTimeout(function () {
+            // 这里要先获取高度
+            var objHeight = $(info.selector).height();
 
             // 缓存页面信息
             pageCache[info.name] = {
                 y: 0
             };
-        }
 
-        // 这里要重新渲染 scroll，所以需要重设置外层的高度
-        var objHeight = $(info.selector).height();
-
-        if (objHeight < me.winHeight) {
-            objHeight = me.winHeight;
-        }
-        else {
-            $(info.selector).find('.scroll-loader').removeClass('hide');
-            objHeight = $(info.selector).height();
-        }
-
-        $('.slider-outer').css({
-            // 这里因为loader 具有高度，所以需要重新获取
-            height: objHeight
-        });
-        $(info.selector).css({
-            // 这里因为loader 具有高度，所以需要重新获取
-            height: objHeight
-        });
-
-        if (myScroll) {
-            myScroll.refresh();
-
-            var prevY = pageCache[info.name].y || 0;
-            myScroll.scrollTo(0, prevY);
-        }
-    });
-};
-
-/**
- * 初始化滚动
- *
- * @param {Element} selector, 滚动的外层容器
- *
- */
-page.scrollInit = function (selector) {
-    var me = this;
-
-    $(selector).height(me.winHeight);
-
-    if (myScroll) {
-        myScroll.destroy();
-        myScroll = null;
-    }
-
-    myScroll = new IScroll(selector, {
-        probeType: 2,
-        scrollX: true,
-        scrollY: true,
-        scrollbars: false,
-        mouseWheel: true,
-        interactiveScrollbars: true,
-        shrinkScrollbars: 'scale',
-        fadeScrollbars: true
-    });
-
-    var $loader = $('.scroll-loader');
-
-    myScroll._load = false;
-
-    // 刷新bar 展示方式
-    myScroll._show = function () {
-        if (this.maxScrollY - this.y > 0) {
-            $loader.removeClass('hide');
-        }
-    };
-
-    // 拉取新页面入口
-    myScroll._refresh = function () {
-        if (this.maxScrollY - this.y > 50) {
-            this._load = true;
-            $loader.html(config.const.loader.doing);
-        }
-    };
-
-    // 监听滚动
-    myScroll.on('scroll', function () {
-        // 记录当前滚动页面的 y 坐标
-        if (pageCache && pageName && pageCache[pageName]) {
-
-            if (this.y < 0) {
-                pageCache[pageName].y = Math.max(this.y, this.maxScrollY);
+            // 保证页面的最小高度
+            if (objHeight < me.winHeight) {
+                objHeight = me.winHeight;
             }
+            // 当文档高度大于屏幕，则展示加载条
+            // 这里因为loader 具有高度，所以需要重新获取
             else {
-                pageCache[pageName].y = 0;
+                $(info.selector).find('.scroll-loader').removeClass('hide');
+
+                // 40 为底部 fixed page tab 的高度
+                objHeight = $(info.selector).height() + 40;
             }
 
-        }
-
-        this._show();
-        this._refresh();
-    });
-
-    // 监听滚动结束
-    myScroll.on('scrollEnd', function () {
-        // Ajax New data
-        // $loader.addClass('hide');
-        $loader.html(config.const.loader.default);
-
-        if (this._load) {
-            me.loadMoreList(config.API.LIST_MORE_URL, function (result) {
-                console.log(result)
-
-                myScroll._load = false;
+            $(info.selector).find('.scroll-inner').css({
+                height: objHeight
             });
-        }
-    });
 
+            // 设置滚动的元素的高宽
+            $(info.selector).css({
+                width: me.winWidth,
+                height: me.winHeight
+            });
+
+            new InitScroll(info.selector);
+        }, 0);
+    };
+
+    require.ensure(['./pages/doing', './pages/done', './pages/cancel'], fn);
 
 };
 
 /**
  * 滚动刷新时，加载更多内容
  *
+ * @param {number} api, API 接口
  * @param {Function} callback, 回调函数
  *
  */
@@ -259,3 +187,88 @@ page.addParallelTask(function (dfd) {
 $(function () {
     page.start();
 });
+
+
+
+/**
+ * 初始化滚动
+ *
+ * @param {Element} selector, 滚动的外层容器
+ *
+ */
+function InitScroll(selector) {
+    var me = this;
+
+    $(selector).height(me.winHeight);
+
+    this._scroll = null;
+
+    this._destroy();
+
+    // myScroll = new IScroll(selector, {
+    this._scroll = new IScroll(selector, {
+        probeType: 2,
+        scrollX: false,
+        scrollY: true,
+        scrollbars: false,
+        mouseWheel: true
+    });
+
+    var $loader = $(selector).find('.scroll-loader');
+
+    this._scroll._load = false;
+
+    // 刷新bar 展示方式
+    this._scroll._show = function () {
+        if (this.maxScrollY - this.y > 0) {
+            $loader.removeClass('hide');
+        }
+    };
+
+    // 拉取新页面入口
+    this._scroll._refresh = function () {
+        if (this.maxScrollY - this.y > 50) {
+            this._load = true;
+            $loader.html(config.const.loader.doing);
+        }
+    };
+
+    // 监听滚动
+    this._scroll.on('scroll', function () {
+        // 记录当前滚动页面的 y 坐标
+        if (pageCache && pageName && pageCache[pageName]) {
+
+            if (this.y < 0) {
+                pageCache[pageName].y = Math.max(this.y, this.maxScrollY);
+            }
+            else {
+                pageCache[pageName].y = 0;
+            }
+
+        }
+
+        this._show();
+        this._refresh();
+    });
+
+    // 监听滚动结束
+    this._scroll.on('scrollEnd', function () {
+        // Ajax New data
+        // $loader.addClass('hide');
+        $loader.html(config.const.loader.default);
+
+        if (this._load) {
+            page.loadMoreList(config.API.LIST_MORE_URL, function (result) {
+                this._scroll._load = false;
+            });
+        }
+    });
+}
+
+InitScroll.prototype._destroy = function () {
+
+    if (this._scroll) {
+        this._scroll.destroy();
+        this._scroll = null;
+    }
+};
