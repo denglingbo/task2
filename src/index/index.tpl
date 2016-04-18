@@ -9,13 +9,11 @@
 <body>
     <div>
         <ul class="menu">
-            <li>我负责的</li>
-            <li>我派发的</li>
-            <li>我参与的</li>
-            <li>我关注的</li>
+            <li><b>我负责的</b><span>(<em>12</em>)</span></li>
+            <li><b>我派发的</b><span>(<em>12</em>)</span></li>
+            <li><b>我参与的</b><span>(<em>12</em>)</span></li>
+            <li><b>我关注的</b><span>(<em>12</em>)</span></li>
         </ul>
-
-        <div id="list"></div>
 
         <div>新建任务</div>
     </div>

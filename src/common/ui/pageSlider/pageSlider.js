@@ -99,6 +99,11 @@ PageSlider.prototype = {
         me.winWidth = $(window).width();
         me.winHeight = $(window).height();
 
+        $(this.opts.outer).css({
+            width: me.winWidth,
+            height: me.winHeight
+        });
+
         this.$pages.each(function (i) {
 
             var num = i * 100;
