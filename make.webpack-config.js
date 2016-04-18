@@ -79,7 +79,7 @@ MakeWebpackConfig.prototype = {
      * 返回 webpack config
      *
      */
-    get: function () {
+    get: function () {console.log(this.webpackConfig.plugins)
         return this.webpackConfig; 
     },
 
@@ -115,6 +115,27 @@ MakeWebpackConfig.prototype = {
         // this.webpackConfig.entry = this.jsFiles;
     },
 
+    /**
+     * 获取页面名，默认是添加文件目录
+     *
+     * @param {string} filePath, 文件路径
+     * @param {string} filename, 文件名
+     * @return {string} url 访问位置
+     *
+     */
+    getPageName: function (filePath, filename) {
+        var pageDir = path.resolve(__dirname, this.config.srcDir.root);
+        var dir = pageDir.replace(/\\/g, '/');
+        var file = filePath.replace(dir, '');
+        var folderName = file.split('/')[1] + '/';
+
+        // 首页前面不添加文件名
+        if (filename === 'index') {
+            folderName = '';
+        }
+
+        return folderName + filename + '.' + this.config.extMap.outputTemplate
+    },
 
     /**
      * 自动生成入口配置
@@ -133,12 +154,12 @@ MakeWebpackConfig.prototype = {
         pageEntries.forEach(function (filePath) {
 
             var filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
-            
+
             var conf = {};
 
             if (filename in me.jsFiles) {
 
-                conf.filename = filename + '.' + me.config.extMap.outputTemplate;
+                conf.filename = me.getPageName(filePath, filename);
                 
                 // 模板源位置
                 conf.template = filePath;
