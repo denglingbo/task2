@@ -18,7 +18,7 @@ page.enter = function () {
 
 page.bindEvents = function () {
     $('.menu li').on('click', function () {
-        window.CPNavigationBar.redirect('/list.html');
+        window.CPNavigationBar.redirect('task/list.html');
     });
 };
 
