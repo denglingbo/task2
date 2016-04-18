@@ -124,14 +124,18 @@ MakeWebpackConfig.prototype = {
      *
      */
     getPageName: function (filePath, filename) {
-        var pageDir = path.resolve(__dirname, this.config.srcDir.root);
-        var dir = pageDir.replace(/\\/g, '/');
-        var file = filePath.replace(dir, '');
-        var folderName = file.split('/')[1] + '/';
 
+        var folderName = '';
+        
         // 首页前面不添加文件名
-        if (filename === 'index') {
-            folderName = '';
+        if (filename !== 'index') {
+            var pageDir = path.resolve(__dirname, this.config.srcDir.root);
+            var dir = pageDir.replace(/\\/g, '/');
+            var fileArr = filePath.replace(dir, '');
+
+            if (fileArr.length && fileArr.length > 1) {
+                folderName = fileArr.split('/')[1] + '/';
+            }
         }
 
         return folderName + filename + '.' + this.config.extMap.outputTemplate
