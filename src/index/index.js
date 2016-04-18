@@ -55,19 +55,3 @@ page.addParallelTask(function (dfd) {
 $(function () {
     page.start();
 });
-
-// CPNavigationBar.redirect('search-custom.html');
-
-// $.ajax({
-//     type: 'post',
-//     url: 'http://172.16.1.169:8015/api?id=1000',
-//     success: function (result) {
-//         var data = result.data;
-
-//         require.ensure(['tpl/list.tpl'], function (require) {
-//             var tpl = require('tpl/list.tpl');
-//             var html = tpl(data);
-//             $('#list').html(html);
-//         });
-//     }
-// });

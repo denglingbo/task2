@@ -1,1 +1,103 @@
 @import "../common/css/global.scss";
+@import "../common/css/layout.scss";
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.main {
+    height: 100%;
+}
+
+.menu {
+    position: relative;
+    height: 70%;
+    padding: 0 rem(10px);
+
+    ul {
+        height: 100%;
+
+        li {
+            // margin-top: rem(10px);
+            height: 25%;
+            // padding: rem(30px) rem(25px);
+            color: $white;
+            overflow: hidden;
+
+            p {
+                margin-top: rem(10px);
+                padding: rem(30px) rem(25px);
+
+                b {
+                    font-size: rem(22px);
+                }
+
+                span {
+                    padding-left: 5px;
+                    font-size: rem(20px);
+                }
+            }
+
+            &.lead {
+                background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
+            }
+
+            &.dist {
+                background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
+            }
+
+            &.join {
+                background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
+            }
+
+            &.follow {
+                background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
+            }
+        }
+    }
+}
+
+.new-task {
+    height: 30%;    
+}
+
+// 新建按钮
+.add-task {
+    position: relative;
+    width: rem(80px);
+    height: rem(80px);
+    border-radius: 100%;
+    background: #03b8fe;
+    margin: rem(20px) auto 0 auto;
+
+    &:before {
+        position: absolute;
+        display: block;
+        content: ' ';
+        width: 36px;
+        height: 3px;
+        background: $white;
+        margin: 0 auto;
+        margin-top: -1px;
+        margin-left: -18px;
+        top: 50%;
+        left: 50%;
+        border-radius: 50px;
+    }
+
+    &:after {
+        position: absolute;
+        display: block;
+        content: ' ';
+        width: 3px;
+        height: 36px;
+        background: $white;
+        margin: 0 auto;
+        top: 50%;
+        left: 50%;
+        margin-top: rem(-18px);
+        margin-left: rem(-1px);
+        border-radius: 50px;
+    }
+}
