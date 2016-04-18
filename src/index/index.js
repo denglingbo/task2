@@ -9,12 +9,14 @@ require('./index.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
+var View = require('../common/view');
 
 var page = new Page();
+var view = new View();
 
 page.enter = function () {
 
-    page.renderTarget('#menu', {
+    view.render('#menu', {
         list: this.data.list
     });
 
