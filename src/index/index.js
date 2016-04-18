@@ -16,6 +16,8 @@ var view = new View();
 
 page.enter = function () {
 
+    this.setMenuHeight();
+
     view.render('#menu', {
         list: this.data.list
     });
@@ -23,10 +25,30 @@ page.enter = function () {
     this.bindEvents();
 };
 
+page.setMenuHeight = function () {
+
+    var winHeight = $(window).height();
+    var buttonHeight = $('.add-task').height();
+    var menuHeight = winHeight - buttonHeight;
+
+    $('#menu').height(menuHeight);
+};
+
 page.bindEvents = function () {
-    $('.menu li').on('click', function () {
+    var me = this;
+
+    $('#menu li').on('click', function () {
         window.CPNavigationBar.redirect('task/list.html');
     });
+
+    $('#add-newtask').on('click', function () {
+        window.CPNavigationBar.redirect('task/new.html');
+    });
+
+    var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize';
+    window.addEventListener(evt, function () {
+        me.setMenuHeight();
+    }, false);
 };
 
 

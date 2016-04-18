@@ -1,6 +1,8 @@
 @import "../common/css/global.scss";
 @import "../common/css/layout.scss";
 
+$color-add-task: #03b8fe;
+
 html, body {
     height: 100%;
     overflow: hidden;
@@ -8,96 +10,119 @@ html, body {
 
 .main {
     height: 100%;
+    overflow: hidden;
 }
 
 .menu {
     position: relative;
-    height: 70%;
+    height: 75%;
     padding: 0 rem(10px);
 
     ul {
         height: 100%;
 
         li {
-            // margin-top: rem(10px);
             height: 25%;
-            // padding: rem(30px) rem(25px);
             color: $white;
             overflow: hidden;
 
-            p {
+            div {
                 margin-top: rem(10px);
-                padding: rem(30px) rem(25px);
+                padding: 0 rem(25px);
+                height: 100%;
+                display: box;
+                display: -webkit-box;
+                display: -moz-box;
+                -webkit-box-pack: center;
+                -moz-box-pack: center;
+                -webkit-box-align: center;
+                -moz-box-align: center;
 
-                b {
-                    font-size: rem(22px);
+                p {
+                    position: relative;
+                    margin-top: rem(-10px);
+
+                    b {
+                        font-size: rem(22px);
+                    }
+
+                    span {
+                        padding-left: 5px;
+                        font-size: rem(20px);
+                    }
                 }
 
-                span {
-                    padding-left: 5px;
-                    font-size: rem(20px);
+                &.lead {
+                    background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
                 }
-            }
 
-            &.lead {
-                background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
-            }
+                &.dist {
+                    background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
+                }
 
-            &.dist {
-                background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
-            }
+                &.join {
+                    background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
+                }
 
-            &.join {
-                background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
-            }
-
-            &.follow {
-                background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
+                &.follow {
+                    background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
+                }
             }
         }
     }
 }
 
-.new-task {
-    height: 30%;    
-}
-
 // 新建按钮
 .add-task {
-    position: relative;
+    position: absolute;
     width: rem(80px);
-    height: rem(80px);
-    border-radius: 100%;
-    background: #03b8fe;
-    margin: rem(20px) auto 0 auto;
+    left: 50%;
+    bottom: 0;
+    margin-left: rem(-40px);
+    padding: rem(20px) 0;
 
-    &:before {
-        position: absolute;
-        display: block;
-        content: ' ';
-        width: 36px;
-        height: 3px;
-        background: $white;
-        margin: 0 auto;
-        margin-top: -1px;
-        margin-left: -18px;
-        top: 50%;
-        left: 50%;
-        border-radius: 50px;
+    .button {
+        position: relative;
+        width: rem(80px);
+        height: rem(80px);
+        border-radius: 100%;
+        background: $color-add-task;
+
+        &:before {
+            position: absolute;
+            display: block;
+            content: ' ';
+            width: 36px;
+            height: 3px;
+            background: $white;
+            margin: 0 auto;
+            margin-top: -1px;
+            margin-left: -18px;
+            top: 50%;
+            left: 50%;
+            border-radius: 50px;
+        }
+
+        &:after {
+            position: absolute;
+            display: block;
+            content: ' ';
+            width: 3px;
+            height: 36px;
+            background: $white;
+            margin: 0 auto;
+            top: 50%;
+            left: 50%;
+            margin-top: rem(-18px);
+            margin-left: rem(-1px);
+            border-radius: 50px;
+        }
     }
 
-    &:after {
-        position: absolute;
-        display: block;
-        content: ' ';
-        width: 3px;
-        height: 36px;
-        background: $white;
-        margin: 0 auto;
-        top: 50%;
-        left: 50%;
-        margin-top: rem(-18px);
-        margin-left: rem(-1px);
-        border-radius: 50px;
+    .text {
+        padding-top: rem(10px);
+        text-align: center;
+        color: $color-add-task;
+        font-size: rem(16px);
     }
 }

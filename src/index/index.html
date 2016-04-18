@@ -12,15 +12,18 @@
         <script id="menu-template" type="x-tmpl-mustache">
         <ul>
             {{#list}}
-            <li class="{{name}}">
-                <p><b>{{text}}</b><span>(<em>{{num}}</em>)</span></p>
+            <li>
+                <div class="{{name}}">
+                    <p><b>{{text}}</b><span>(<em>{{num}}</em>)</span></p>
+                </div>
             </li>
             {{/list}}
         </ul>
         </script>
     
-        <div class="new-task">
-            <div class="add-task"></div>
+        <div id="add-newtask" class="add-task">
+            <div class="button"></div>
+            <div class="text">新建任务</div>
         </div>
     </div>
     <script type="text/javascript" src="../dep/cordova.js"></script>

@@ -66,6 +66,11 @@ em {
 .show {
     display: block;
 }
+
 .hide {
     display: none;
+}
+
+em, b, span, i, input, label, a, img {
+    display: inline-block;
 }
