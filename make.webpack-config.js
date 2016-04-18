@@ -2,7 +2,7 @@
  * @file make-webpack.config.js
  * @author deo
  *
- * 测试版本，未对代码进行优化
+ * 测试版本，未对代码进行优化，暂未把底层逻辑和业务分开
  *
  */
 'use strict';
