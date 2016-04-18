@@ -2,6 +2,8 @@
  * @file make-webpack.config.js
  * @author deo
  *
+ * 测试版本，未对代码进行优化
+ *
  */
 'use strict';
 
