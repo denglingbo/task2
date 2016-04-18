@@ -1,0 +1,88 @@
+@import "../common/css/global";
+
+.new-task-container {
+	font-size: 16px;
+    box-sizing: border-box;
+	* {
+		box-sizing: border-box;
+	}
+}
+
+.input {
+	border: none;
+	background-color: #fff;
+	width: 100%;
+	height: 100%;
+	outline: none;
+	font-size: rem(16px);
+	resize: none;
+	padding-right: rem(15px);
+
+	&:focus {
+        text-indent: 0.1rem;
+	}
+}
+
+.new-task-title,
+.new-task-content {
+	position: relative;
+	padding: rem(20px) 0 0 rem(15px);
+	border-bottom: rem(1px) solid #dedfe0;
+	margin-top: rem(10px);
+	background-color: #fff;
+}
+
+.err-tip {
+	position: absolute;
+	right: rem(15px);
+	font-size: rem(12px);
+	color: #f00;
+}
+
+.new-task-title {
+	padding-bottom: rem(20px);
+
+	.err-tip {
+		bottom: rem(-12px);
+	}
+}
+
+.new-task-content {
+
+	.new-task-words {
+		height: rem(120px);
+		padding-bottom: rem(20px);
+		border-bottom: rem(1px) solid #e3e4e5;
+	}
+
+	.new-task-attach {
+
+		.new-task-add-attach {
+			height: rem(50px);
+			line-height: rem(48px);
+			color: #666;
+		}
+	}
+}
+.new-task-option {
+    border-bottom: rem(1px) solid #dedfe0;
+    padding-left: rem(15px);
+    background-color: #fff;
+    margin-top: rem(10px);
+
+	.new-task-item {
+	    height: rem(44px);
+	    line-height: rem(42px);
+
+	    &:first-child {
+	    	border-bottom: rem(1px) solid #e3e4e5;
+	    }
+
+	    >span {
+	    	color: #666;
+	    }
+    }
+}
+
+
+
