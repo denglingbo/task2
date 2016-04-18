@@ -5,6 +5,7 @@
  */
 
 var config = require('../config');
+var Mustache = require('dep/mustache');
 
 /**
  * Page
@@ -161,6 +162,28 @@ Page.prototype.render = function (selector, template, data) {
     $(selector).html(str);
 
     return str;
+};
+
+/**
+ * Mustache 渲染模板
+ * 模板输出 dom $(selector), 模板源: selector'-template'
+ *
+ * @param {string} selector, #id|.class|tagname
+ * @param {Object} data, 数据
+ *
+ */
+Page.prototype.renderTarget = function (selector, data) {
+    var $elem = $(selector);
+    var $temp = $(selector + '-template');
+
+    if (!$elem.length || !$temp.length) {
+        return;
+    }
+
+    var template = $temp.html();
+    var html = Mustache.render(template, data);
+
+    $elem.html(html);
 };
 
 /**

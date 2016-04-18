@@ -14,8 +14,9 @@ var page = new Page();
 
 page.enter = function () {
 
-    // var menuTemplate = $('#menu-template').html();
-    // console.log(menuTemplate);
+    page.renderTarget('#menu', {
+        list: this.data.list
+    });
 
     this.bindEvents();
 };
