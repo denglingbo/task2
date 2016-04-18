@@ -7,13 +7,15 @@
     <title>Hello Coder</title>
 </head>
 <body>
-    <div>
-        <ul class="menu">
-            <li><b>我负责的</b><span>(<em>12</em>)</span></li>
-            <li><b>我派发的</b><span>(<em>12</em>)</span></li>
-            <li><b>我参与的</b><span>(<em>12</em>)</span></li>
-            <li><b>我关注的</b><span>(<em>12</em>)</span></li>
+    <div class="main">
+        <div id="menu">Loading...</div>
+        <script id="menu-template" type="x-tmpl-mustache">
+        <ul>
+            {{#list}}
+            <li><b>{{name}}</b><span>(<em>num</em>)</span></li>
+            {{/list}}
         </ul>
+        </script>
 
         <div>新建任务</div>
     </div>

@@ -103,10 +103,10 @@ config.extMap = {
     resolveExts: ['.tpl'],
 
     /**
-     * 模板源文件后缀
+     * 模板入口源文件后缀
      * @params {string}
      */
-    srcTemplate: 'tpl',
+    srcTemplate: 'html',
 
     /**
      * 模板编译后的后缀

@@ -1,11 +1,27 @@
 {
     "status": 0,
     "data": {
-        "list": [0, 1, 2],
-        "reactList": [
-            {"name": "deo", "age": 100},
-            {"name": "deng", "age": 56},
-            {"name": "ling", "age": 21}
+        "list": [
+            {
+                "name": "deo",
+                "text": "我负责的",
+                "num": 12
+            },
+            {
+                "name": "deo",
+                "text": "我派发的",
+                "num": 2
+            },
+            {
+                "name": "deo",
+                "text": "我参与的",
+                "num": 32
+            },
+            {
+                "name": "deo",
+                "text": "我关注的",
+                "num": 21
+            }
         ]
     }
 }

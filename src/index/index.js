@@ -13,6 +13,10 @@ var Page = require('../common/page');
 var page = new Page();
 
 page.enter = function () {
+
+    // var menuTemplate = $('#menu-template').html();
+    // console.log(menuTemplate);
+
     this.bindEvents();
 };
 

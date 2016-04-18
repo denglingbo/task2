@@ -33,7 +33,7 @@ fi
 all_ok=true
 
 # only js extension file will run fecs
-EXT="js html css less"
+EXT="js css"
 read -a files <<< $HAS_CHANGED
 
 # echo "${files[0]}"
