@@ -4,3 +4,5 @@
  * 任务详情页
  *
  */
+
+require('./detail.scss');

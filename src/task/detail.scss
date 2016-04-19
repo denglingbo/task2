@@ -1,0 +1,19 @@
+@import "../common/css/global.scss";
+@import "../common/css/layout.scss";
+
+.detail-title {
+    
+    .detail-title-top {
+        
+        &-text {
+            font-size: rem(16px);
+        }
+    }
+
+    .detail-title-bottom {
+
+        &-date {
+            color: $color-tips;
+        }
+    }
+}

@@ -15,8 +15,8 @@ var config = {
     }
 };
 
-var host = 'localhost';
-// var host = '172.16.1.169';
+// var host = 'localhost';
+var host = '172.16.1.169';
 // var host = '192.168.1.5';
 
 config.mockUrl = 'http://' + host + ':8015';

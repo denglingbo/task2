@@ -74,3 +74,7 @@ em {
 em, b, span, i, input, label, a, img {
     display: inline-block;
 }
+
+.state-doing {
+    color: $state-doing;
+}

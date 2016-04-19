@@ -40,7 +40,7 @@ html, body {
 
                 p {
                     position: relative;
-                    margin-top: rem(-10px);
+                    margin-top: rem(-8px);
 
                     b {
                         font-size: rem(22px);
@@ -125,4 +125,13 @@ html, body {
         color: $color-add-task;
         font-size: rem(16px);
     }
+}
+
+.loading-text {
+    display: block;
+    width: 100%;
+    padding: rem(10px) 0;
+    color: $gray;
+    text-align: center;
+    font-size: rem(12px);
 }
