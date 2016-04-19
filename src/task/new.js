@@ -12,6 +12,30 @@ var Page = require('../common/page');
 
 var page = new Page();
 
+var valid = {
+	title: false,
+	content: true
+}
+
+/**
+ * 验证不通过弹窗
+ *
+ * @param {string} info 验证不通过的提示语句 
+ *
+ */
+function validAlert (info) {
+	var alertClass = "alert-info";
+	if($('.' + alertClass).length){
+		return;
+	}
+	var alert = '<div class="'+ alertClass +'">'+ info +'</div>';
+	$('body').append(alert);
+	setTimeout(function () {
+		$('.' + alertClass).fadeOut('fast').remove();
+	}, 
+	3000);
+}
+
 page.enter = function () {
 	var me = this;
 
@@ -20,6 +44,47 @@ page.enter = function () {
 	this.bindEvents();
 };
 
-page.bindEvents = function() {
+/**
+ * 绑定事件
+ *
+ */
+page.bindEvents = function () {
+	$("#new-task-title").on("input propertychange", function () {
+		var me = this;
+		var length = $(me).val().length;
+		var errTip = $(me).next(".err-tip");
+		if (!length || length > 50) {
+			valid.title = false;
+		}
+		else {
+			valid.title = true;
+		}
+		
+		if (length > 50) {
+			errTip.text(50 - length);
+		}
+		else {
+			errTip.text("");
+		}
+	});
 
+	$("#new-task-content").on("input propertychange", function () {
+		var me = this;
+		var length = $(me).val().length;
+		var errTip = $(me).next(".err-tip");
+		if (length > 50000) {
+			valid.content = false;
+			errTip.text(50000 - length);
+		}
+		else {
+			valid.content = true;
+			errTip.text("");
+		}
+	});
+
+	$('#urgencyBlock').tap()
 };
+
+$(function () {
+	page.start();
+});

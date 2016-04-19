@@ -13,6 +13,7 @@ var config = {
         LIST_DONE_URL: 1002,
         LIST_CANCEL_URL: 1003,
         DETAIL_URL: 1004
+        TASK_EDIT_URL: 2000
     }
 };
 

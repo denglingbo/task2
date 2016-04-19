@@ -44,5 +44,11 @@ module.exports = [
             page: 1
         },
         response: './1004/1.json'
+    //编辑任务页
+    {
+        params: {
+            id: 2000
+        },
+        response: './2000.json'
     }
 ];

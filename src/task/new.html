@@ -9,35 +9,35 @@
 <body>
     <div class="main">
     
-        <div class="new-task-container">
-            <div class="new-task-title">
-                <input id="" class="input" placeholder="请输入任务标题(必填)">
-                <span class="err-tip">-1</span>
+        <div class="task-container">
+            <div class="task-title-wrap border border-bottom">
+                <input id="new-task-title" class="input task-title" placeholder="请输入任务标题(必填)">
+                <span class="err-tip"></span>
             </div>
 
-            <div class="new-task-content">
-                <div class="new-task-words">
-                    <textarea id="" class="input" placeholder="请输入任务描述(选填)"></textarea>
-                    <span class="err-tip">-1</span>
+            <div class="task-content-wrap border border-bottom">
+                <div class="task-words border border-bottom">
+                    <textarea id="new-task-content" class="input" placeholder="请输入任务描述(选填)"></textarea>
+                    <span class="err-tip"></span>
                 </div>
-                <div class="new-task-attach">
-                    <div class="new-task-add-attach">
+                <div class="task-attach">
+                    <div class="task-add-attach">
                         添加附件
                     </div>
                 </div>
             </div>
 
-            <div class="new-task-option">
-                <div class="new-task-item"><span>负责人</span></div>
-                <div class="new-task-item"><span>参与人</span></div>
+            <div class="task-option border border-bottom">
+                <div class="task-item border border-bottom"><span>负责人</span></div>
+                <div class="task-item"><span>参与人</span></div>
             </div>
 
-            <div class="new-task-option">
-                <div class="new-task-item"><span>完成时间</span></div>
-                <div class="new-task-item"><span>紧要程度</span></div>
+            <div class="task-option border border-bottom">
+                <div class="task-item border border-bottom"><span>完成时间</span></div>
+                <div id="urgencyBlock" class="task-item"><span>紧要程度</span></div>
             </div>
         </div>
-
+		
     </div>
 </body>
 </html>
