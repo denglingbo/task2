@@ -4,6 +4,7 @@
 .detail-title {
     
     .detail-title-top {
+        position: relative;
         
         &-text {
             font-size: rem(16px);
@@ -11,9 +12,35 @@
     }
 
     .detail-title-bottom {
+        width: 100%;
+        position: relative;
+        margin-top: rem(12px);
+        display: flex;
 
         &-date {
+            display: inline-block;
             color: $color-tips;
+            width: 70%;
+        }
+
+        &-state {
+            display: inline-block;
+            width: 30%;
+            text-align: right;
         }
     }
+}
+
+// 任务描述
+.detail-comments {
+    line-height: rem(16px);
+
+    p {
+        margin-top: rem(5px);
+    }
+}
+
+.sub-title {
+    color: $color-subtitle;
+    margin-bottom: rem(15px);
 }
