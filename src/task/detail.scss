@@ -76,6 +76,12 @@
     }
 }
 
+.column {
+    div {
+        @include column(60px, 60px);
+    }
+}
+
 .sub-title {
     color: $gray;
     padding-bottom: rem(15px);

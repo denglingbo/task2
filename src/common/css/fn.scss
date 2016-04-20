@@ -1,0 +1,70 @@
+/**
+ * @file fn.scss
+ * @author deo
+ *
+ * 函数包
+ *
+ */
+
+// $px 转换 px
+@function rem($px) {
+    @return $px / $browser-default-font-size * 1rem;
+}
+
+// ellipsis
+// support multi line (webkit only)
+@mixin ellipsis($line: 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    @if ($line == 1) {
+       white-space: nowrap;
+    }
+    @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $line;
+        -webkit-box-orient: vertical;
+    }
+}
+
+// clearfix
+// @see http://h5bp.com/q
+@mixin clearfix() {
+
+    &:after,
+    &:before {
+        content: ' ';
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+/* 列布局函数 */
+@mixin column($left-width, $right-width: 0px) {
+    display: block;
+    float: left;
+
+    &.column-left {
+        width: rem($left-width);
+    }
+
+    &.column-middle {
+        width: 100%;
+        margin: 0 rem($right-width * -1) 0 rem($left-width * -1);
+
+        .column-inner {
+            float: none;
+            margin: 0 rem($right-width) 0 rem($left-width);
+            @include ellipsis();
+        }
+    }
+    
+    @if $right-width != 0 {
+        &.column-right {
+            float: right;
+            width: rem($right-width);
+        }
+    }
+}
