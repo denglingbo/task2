@@ -9,12 +9,31 @@ require('./new.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
+var InitChooseScroll = require('./edit/initChooseScroll');
 
 var page = new Page();
 
 var valid = {
 	title: false,
 	content: true
+}
+
+var maskBindDom = [];
+/**
+ * @生成和取消mask
+ *
+ * @param {boolean} bool 值为true生成mask,false取消mask
+ *
+ */
+function mask(bool) {
+	if (bool) {
+		if (!$('.mask').length) {
+			$('body').append('<div class="mask"></div>');
+		}
+	}
+	else {
+		$('.mask').remove();
+	}
 }
 
 /**
@@ -68,6 +87,10 @@ page.bindEvents = function () {
 		}
 	});
 
+	$('.task-title-wrap').click(function () {
+		$("#new-task-title").focus();
+	});
+
 	$("#new-task-content").on("input propertychange", function () {
 		var me = this;
 		var length = $(me).val().length;
@@ -78,11 +101,45 @@ page.bindEvents = function () {
 		}
 		else {
 			valid.content = true;
-			errTip.text("");
+			errTip.text('');
 		}
 	});
 
-	$('#urgencyBlock').tap()
+	$('.task-words').click(function () {
+		$("#new-task-content").focus();
+	});
+
+	$('#urgencyBlock').click(function () {
+		var me = this;
+		require(['./edit/urgency'], function () {
+			var template = require('./edit/urgency');
+
+			mask(true);
+			$('body').append(template({}));
+			maskBindDom.push($('.urgency'));
+	        var liHeight = $('#scroll-wrap li').height();
+        	
+	        var myScroll = new InitChooseScroll({
+	        	selector: '#scroll-wrap',
+	        	liHeight: liHeight
+	        });
+
+
+		})
+	});
+
+	$('.mask').live('click', function () {
+		$(this).remove();
+		maskBindDom.forEach(function ($dom) {
+			$dom.remove();
+		});
+	});
+
+	$('#urgency-cancel').live('click', function () {
+		$('.urgency').remove();
+		$('.mask').remove();
+	});
+
 };
 
 $(function () {
