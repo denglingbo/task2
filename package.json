@@ -11,6 +11,7 @@
     "css-loader": "^0.23.1",
     "ejs-loader": "^0.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
     "glob": "^7.0.3",
     "gulp": "^3.9.1",
     "gulp-connect": "^3.2.2",
@@ -29,6 +30,7 @@
     "source-map": "^0.5.3",
     "style-loader": "^0.13.0",
     "underscore": "^1.8.3",
+    "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
     "webpack-dev-server": " ^1.14.1"
   },

@@ -1,5 +1,42 @@
+/* 布局相关 */
+@charset "utf-8";
+
 .layout {
     margin-top: rem(10px);
     padding: rem(20px) rem(15px);
     background: $white;
+}
+
+.layout-list {
+    margin-top: rem(10px);
+    padding: rem(20px) 0 rem(5px) rem(15px);
+    background: $white;
+}
+
+.col3-row {
+
+    div {
+        display: block;
+        float: left;
+
+        &.col3-left {
+            width: rem(60px);
+        }
+
+        &.col3-middle {
+            width: 100%;
+            margin: 0 rem(-60px);
+
+            .col3-inner {
+                float: none;
+                margin: 0 rem(60px);
+                @include ellipsis();
+            }
+        }
+
+        &.col3-right {
+            float: right;
+            width: rem(60px);
+        }
+    }
 }

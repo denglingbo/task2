@@ -1,0 +1,22 @@
+/* 五角星 */
+@charset "utf-8";
+
+$star-size: rem(16px);
+
+// 左侧尖角
+.star {
+    padding: 0;
+    display: inline-block;
+    width: $star-size;
+    height: $star-size;
+    background: url('#{$rootImg}/star.png') no-repeat ($star-size * -1) 0;
+    background-size: $star-size * 2;
+
+    &.follow {
+        background-position: 0 0;
+    }
+
+    &:hover {
+        @extend .follow;
+    }
+}

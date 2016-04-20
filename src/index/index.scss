@@ -83,6 +83,7 @@ html, body {
 
     .button {
         position: relative;
+        display: block;
         width: rem(80px);
         height: rem(80px);
         border-radius: 100%;
@@ -92,12 +93,12 @@ html, body {
             position: absolute;
             display: block;
             content: ' ';
-            width: 36px;
-            height: 3px;
+            width: rem(36px);
+            height: rem(3px);
             background: $white;
             margin: 0 auto;
-            margin-top: -1px;
-            margin-left: -18px;
+            margin-top: rem(-1px) !important; // 初步怀疑是 webpack loader 把权重顺序输出反了
+            margin-left: rem(-18px) !important;
             top: 50%;
             left: 50%;
             border-radius: 50px;
@@ -107,14 +108,14 @@ html, body {
             position: absolute;
             display: block;
             content: ' ';
-            width: 3px;
-            height: 36px;
+            width: rem(3px);
+            height: rem(36px);
             background: $white;
             margin: 0 auto;
-            top: 50%;
-            left: 50%;
             margin-top: rem(-18px);
             margin-left: rem(-1px);
+            top: 50%;
+            left: 50%;
             border-radius: 50px;
         }
     }

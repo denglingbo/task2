@@ -266,7 +266,7 @@ MakeWebpackConfig.prototype = {
             loaders: []
         };
 
-        var imgPath = config.debug ? '' : '/' + config.output.assets + 'img/';
+        var imgPath = config.debug ? '' : '/' + config.output.assets + '/img/';
 
         // 添加一个内置的 loaders 
         // for jingoal
@@ -277,12 +277,13 @@ MakeWebpackConfig.prototype = {
                 // Reference: https://github.com/webpack/image-webpack-loader
                 // limit=10000&
                 test: /\.(jpe?g|png|gif)$/i,
-                loaders: [
-                    'image?{bypassOnDebug: true, progressive: true, \
-                        optimizationLevel: 3, pngquant:{quality: "65-80", speed: 4}}',
-                    'url?name=' + imgPath + '[hash:8].[name].[ext]'
-                ],
-                exclude: [config.nodeModules]
+                // loaders: [
+                    // 'image?{bypassOnDebug: true, progressive: true, \
+                    //     optimizationLevel: 3, pngquant:{quality: "65-80", speed: 4}}',
+                    // 'url?name=' + imgPath + '[hash:8].[name].[ext]'
+                // ],
+                loader: 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
+                // exclude: [config.nodeModules]
             },
             { 
                 // sass 加载器
@@ -296,6 +297,8 @@ MakeWebpackConfig.prototype = {
                 // exclude: []  //排除不处理的目录
             }
         ];
+
+        console.log(this.webpackConfig.module.loaders)
     },
 
     /**

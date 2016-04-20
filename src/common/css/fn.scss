@@ -1,5 +1,0 @@
-
-// $px 转换 px
-@function rem($px) {
-    @return $px / $browser-default-font-size * 1rem;
-}

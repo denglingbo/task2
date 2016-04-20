@@ -1,13 +1,31 @@
+/* 详情页样式 */
+
 @import "../common/css/global.scss";
 @import "../common/css/layout.scss";
+@import "../common/css/star.scss";
+
+.layout {
+    @extend .border;
+    @extend .border-bottom;
+}
 
 .detail-title {
     
     .detail-title-top {
+        width: 100%;
         position: relative;
+        display: flex;
         
         &-text {
+            display: inline-block;
+            width: 70%;
             font-size: rem(16px);
+        }
+
+        &-like {
+            display: inline-block;
+            width: 30%;
+            text-align: right;
         }
     }
 
@@ -40,7 +58,25 @@
     }
 }
 
+.layout-list {
+    @include clearfix();
+    
+    dd {
+        @extend .border;
+        @extend .border-top;
+        clear: both;
+        padding: rem(15px) 0;
+        @include clearfix();
+
+        label {
+            color: $gray;
+        }
+
+        span {}
+    }
+}
+
 .sub-title {
-    color: $color-subtitle;
-    margin-bottom: rem(15px);
+    color: $gray;
+    padding-bottom: rem(15px);
 }
