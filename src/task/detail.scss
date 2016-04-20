@@ -58,27 +58,47 @@
     }
 }
 
+$label-width: 50px;
+$content-width: 40px;
 .layout-list {
-    @include clearfix();
     
     dd {
+        height: rem(14px);
+        line-height: rem(14px);
+        padding: rem(15px) 0 rem(15px) 0;
+
         @extend .border;
         @extend .border-top;
         clear: both;
-        padding: rem(15px) 0;
-        @include clearfix();
 
-        label {
+        div {
+            @include column($label-width, $content-width);
+        }
+
+        .column-left {
             color: $gray;
         }
 
-        span {}
-    }
-}
+        .column-right {
+            position: relative;
 
-.column {
-    div {
-        @include column(60px, 60px);
+            .partner-more {
+                position: absolute;
+                right: rem(10px);
+                display: flex;
+                flex: 1;
+
+                em {
+                    display: inline-flex;
+                    color: $gray;
+                }
+
+                .arrow {
+                    margin-left: rem(5px);
+                    @include arrow-more(7px);
+                }
+            }
+        }
     }
 }
 
