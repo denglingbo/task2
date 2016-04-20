@@ -9,7 +9,6 @@ require('./new.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
-var InitChooseScroll = require('./edit/initChooseScroll');
 
 var page = new Page();
 
@@ -18,14 +17,14 @@ var valid = {
 	content: true
 }
 
-var maskBindDom = [];
+//var maskBindDom = [];
 /**
  * @生成和取消mask
  *
  * @param {boolean} bool 值为true生成mask,false取消mask
  *
  */
-function mask(bool) {
+/*function mask(bool) {
 	if (bool) {
 		if (!$('.mask').length) {
 			$('body').append('<div class="mask"></div>');
@@ -34,7 +33,7 @@ function mask(bool) {
 	else {
 		$('.mask').remove();
 	}
-}
+}*/
 
 /**
  * 验证不通过弹窗
@@ -68,6 +67,7 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+	
 	$("#new-task-title").on("input propertychange", function () {
 		var me = this;
 		var length = $(me).val().length;
@@ -111,33 +111,7 @@ page.bindEvents = function () {
 
 	$('#urgencyBlock').click(function () {
 		var me = this;
-		require(['./edit/urgency'], function () {
-			var template = require('./edit/urgency');
-
-			mask(true);
-			$('body').append(template({}));
-			maskBindDom.push($('.urgency'));
-	        var liHeight = $('#scroll-wrap li').height();
-        	
-	        var myScroll = new InitChooseScroll({
-	        	selector: '#scroll-wrap',
-	        	liHeight: liHeight
-	        });
-
-
-		})
-	});
-
-	$('.mask').live('click', function () {
-		$(this).remove();
-		maskBindDom.forEach(function ($dom) {
-			$dom.remove();
-		});
-	});
-
-	$('#urgency-cancel').live('click', function () {
-		$('.urgency').remove();
-		$('.mask').remove();
+		
 	});
 
 };

@@ -26,12 +26,7 @@ page.enter = function () {
 page.bindEvents = function () {
 	var $titleDom = $("#edit-task-title");
 	var $contentDom = $("#edit-task-content");
-	/*$titleDom.parent().on('tap', function () {
-		$titleDom.focus();
-	});
-	$contentDom.parent().on('tap', function () {
-		$contentDom.focus();
-	});*/
+	
 	$titleDom.on("input propertychange", function () {
 		var me = this;
 		var length = $(me).val().length;
