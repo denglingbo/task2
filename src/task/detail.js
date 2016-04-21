@@ -14,14 +14,14 @@ var page = new Page();
 page.enter = function () {
     // console.log(this.data);
     this.bindEvents();
-}
+};
 
 page.bindEvents = function () {
-    
+
     $('.column-right').on('click', function () {
-        console.log('chakanshi');
+        // console.log('chakanshi');
     });
-}
+};
 
 /**
  * 请求页面接口
