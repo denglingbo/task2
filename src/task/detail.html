@@ -9,16 +9,21 @@
 <body>
     <div class="main">
 
+        <!-- title -->
         <div class="layout detail-title">
-            <div class="detail-title-top">
-                <div class="detail-title-top-text">手机任务项目</div>
-                <div class="detail-title-top-like">
-                    <div class="star"><em></em></div>
-                </div>
+            
+            <div class="detail-title-control">
+                <div class="detail-checkbox"></div>
             </div>
-            <div class="detail-title-bottom">
-                <div class="detail-title-bottom-date">更新时间 2015-10-12 10:26</div>
-                <div class="detail-title-bottom-state state-doing">进行中</div>
+
+            <div class="detail-title-main">
+                <p class="detail-title-top">手机任务项目</p>
+                <p>更新时间 2015-10-12 10:26</p>
+            </div>
+
+            <div class="detail-title-right">
+                <!-- <p class="star"><em></em></p> -->
+                <p class="detail-title-state state-doing">进行中</p>
             </div>
         </div>
 
@@ -30,7 +35,8 @@
             <p>完成时间: 尽快完成</p>
         </div>
 
-        <dl class="layout-list">
+        <!-- 成员 -->
+        <dl class="layout-list partner">
             <dt class="sub-title">团队成员</dt>
 
             <dd>
@@ -55,18 +61,89 @@
                     <div class="column-inner">Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)、Zhang(张二)</div>
                 </div>
                 <div class="column-right">
-                    <div class="partner-more">
-                        <em>10</em>
+                    <div class="column-more">
+                        <em>19人</em>
                         <em class="arrow"><i></i></em>
                     </div>
                 </div>
             </dd>
-        </div>
+        </dl>
 
-        <div class="layout">
-            users
-        </div>
+        <!-- 事件 & 讨论 -->
+        <dl class="layout-list event-talk">
+            <dt class="sub-title">事件与讨论</dt>
+            
+            <dd class="new-msg">
+                <div class="column-left">
+                    [事件] 关于任务的一个事件关于任务的一个事件关
+                </div>
+                <div class="column-right">
+                    <div class="column-more">
+                        <em class="count">19</em>
+                        <em class="arrow"><i></i></em>
+                    </div>
+                </div>
+            </dd>
+            <dd>
+                <div class="column-left">
+                    [事件] 关于任务的一个事件关于任务的一个事件
+                </div>
+                <div class="column-right">
+                    <div class="column-more">
+                        <em class="arrow"><i></i></em>
+                    </div>
+                </div>
+            </dd>
+
+            <dd class="load-more">
+                点击加载更多
+            </dd>
+        </dl>
+
+        <!-- 附件 -->
+        <dl class="layout-list attach">
+            <dt class="sub-title">附件</dt>
+            
+            <dd>
+                <div class="column-left">
+                    <img src="/common/img/doc.png" />
+                </div>
+                <div class="column-middle">
+                    <div class="column-inner">
+                        <p>N 版设计稿</p>
+                        <p class="attach-size">1.2MB</p>
+                    </div>
+                </div>
+                <div class="column-right">
+                    <em class="download"></em>
+                </div>
+            </dd>
+            <dd>
+                <div class="column-left">
+                    <img src="/common/img/doc.png" />
+                </div>
+                <div class="column-middle">
+                    <div class="column-inner">
+                        N 版设计稿
+                    </div>
+                </div>
+                <div class="column-right">
+                    <em class="download"></em>
+                </div>
+            </dd>
+        </dl>
+
     </div>
+
+    <!-- 底部按钮条 -->
+    <div class="fixbar">
+        <ul>
+            <li>新建事件</li>
+            <li>发起讨论</li>
+            <li>完成任务</li>
+        </ul>
+    </div>
+
     <script type="text/javascript" src="../dep/cordova.js"></script>
 </body>
 </html>

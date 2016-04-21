@@ -105,8 +105,8 @@ InitScroll.prototype = {
         else {
             this.$elem.find('.scroll-loader').removeClass('hide');
 
-            // 40 为底部 fixed page tab 的高度
-            objHeight = this.$elem.height() + 40;
+            // 44 为底部 fixed tab 的高度
+            objHeight = this.$elem.height() + 44;
         }
 
         this.$elem.find('.scroll-inner').css({

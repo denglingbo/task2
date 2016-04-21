@@ -6,8 +6,6 @@
  *
  */
 
-@import "border-1px";
-
 /**
  * $px 转换 px
  *
@@ -60,28 +58,34 @@
  *
  */
 @mixin column($left-width, $right-width: 0px) {
-    display: block;
-    float: left;
+    display: box;
+    box-pack: center;
+    box-align: center;
 
-    &.column-left {
-        width: rem($left-width);
-    }
+    div {
+        
+        float: left;
 
-    &.column-middle {
-        width: 100%;
-        margin: 0 rem($right-width * -1) 0 rem($left-width * -1);
-
-        .column-inner {
-            float: none;
-            margin: 0 rem($right-width) 0 rem($left-width);
-            @include ellipsis();
+        &.column-left {
+            width: $left-width;
         }
-    }
-    
-    @if $right-width != 0 {
-        &.column-right {
-            float: right;
-            width: rem($right-width);
+
+        &.column-middle {
+            width: 100%;
+            margin: 0 ($right-width * -1) 0 ($left-width * -1);
+
+            .column-inner {
+                float: none;
+                margin: 0 ($right-width) 0 ($left-width);
+                @include ellipsis();
+            }
+        }
+        
+        @if $right-width != 0 {
+            &.column-right {
+                float: right;
+                width: $right-width;
+            }
         }
     }
 }
@@ -112,10 +116,10 @@
  *
  * @param {$size} px 箭头大小
  * @param {$dir} [往右] 箭头方向
- * @param {$color} [#aaa] 箭头颜色
+ * @param {$color} [#C2C7CC] 箭头颜色
  *
  */
-@mixin arrow($size, $dir: right, $color: #aaa) {
+@mixin arrow($size, $dir: right, $color: #C2C7CC) {
 
     $width: 0;
     $height: 0;
@@ -159,10 +163,10 @@
  *
  * @param {$size} px 箭头大小
  * @param {$dir} [往右] 箭头方向
- * @param {$color} [#aaa] 箭头颜色
+ * @param {$color} [#C2C7CC] 箭头颜色
  *
  */
-@mixin arrow-more($size, $dir: right, $color: #aaa) {
+@mixin arrow-more($size, $dir: right, $color: #C2C7CC) {
 
     @include arrow($size, $dir, $color);
 
@@ -206,3 +210,6 @@
         }
     }
 }
+
+@import "border-1px";
+@import "tab.scss";

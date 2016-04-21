@@ -13,12 +13,17 @@
  */
 @mixin border-1px($type, $border-color: #DEDFE0) {
 
+    $border-width: border-#{$type}-width;
+
+    @if $type == 'all' {
+        $border-width: border-width;
+    }
+
     border: 0 solid $border-color;
-    border-#{$type}-width: 1px;
+    #{$border-width}: 1px;
 
     @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
 
-        // .border {
         position: relative;
         border: none !important;
 
@@ -40,7 +45,7 @@
         }
 
         &::after {
-            border-#{$type}-width: 1px;
+            #{$border-width}: 1px;
         }
     }
 
@@ -67,7 +72,7 @@
         }
         
         &::after {
-            border-#{$type}-width: 1px;
+            #{$border-width}: 1px;
         }
     }
 }

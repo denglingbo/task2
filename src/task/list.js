@@ -121,7 +121,7 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (result) {
-            if (result.status !== 0) {
+            if (result.meta && result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {

@@ -174,8 +174,15 @@ Page.prototype.render = function (selector, template, data) {
 var getRequestData = function (api, data) {
     var r = {};
     if (config.debug) {
-        r.url = config.mockUrl + '/api?id=' + api;
+        r.url = config.mockUrl + '/api';
     }
+
+    r.data = {
+        id: api
+    };
+
+    $.extend(r.data, data);
+
     return r;
 };
 

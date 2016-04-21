@@ -4,46 +4,77 @@
 @import "../common/css/layout.scss";
 @import "../common/css/star.scss";
 
+.main {
+    padding-bottom: rem(44px);
+}
+
 .layout {
     @include border-1px(bottom);
 }
 
-.detail-title {
-    
-    .detail-title-top {
-        width: 100%;
-        position: relative;
-        display: flex;
-        
-        &-text {
-            display: inline-block;
-            width: 70%;
-            font-size: rem(16px);
-        }
+.sub-title {
+    color: $gray;
+    padding-bottom: rem(15px);
+}
 
-        &-like {
-            display: inline-block;
-            width: 30%;
-            text-align: right;
+.detail-title {
+
+    height: rem(40px);
+
+    div {
+        height: rem(40px);
+
+        p {
+            display: block;
+            clear: both;
+            color: $color-tips;
+            font-size: rem(12px);
+            height: rem(18px);
+            line-height: rem(18px);
+            overflow: hidden;
         }
     }
 
-    .detail-title-bottom {
-        width: 100%;
+    .detail-title-control {
         position: relative;
-        margin-top: rem(12px);
-        display: flex;
+        width: rem(16px);
+        float: left;
+        padding-right: rem(15px);
 
-        &-date {
+        .detail-checkbox {
+            position: absolute;
+            width: rem(16px);
+            height: rem(16px);
+            border: 1px solid #ccc;
+            border-radius: 100%;
+            top: 50%;
+            margin-top: rem(-8px);
+        }
+    }
+
+    .detail-title-main {
+        float: left;
+
+        .detail-title-top {
+            color: $black;
+            font-size: rem(16px);
+            margin-bottom: rem(8px);
+        }
+    }
+
+    .detail-title-right {
+        float: right;
+        text-align: right;
+
+        .star {
             display: inline-block;
-            color: $color-tips;
-            width: 70%;
+            position: relative;
+            margin-top: rem(2px);
+            margin-bottom: rem(-8px);
         }
 
-        &-state {
-            display: inline-block;
-            width: 30%;
-            text-align: right;
+        .detail-title-state {
+            margin-top: rem(10px);
         }
     }
 }
@@ -52,55 +83,166 @@
 .detail-comments {
     line-height: rem(16px);
 
+    .sub-title {
+        padding-bottom: rem(10px);
+    }
+
     p {
         margin-top: rem(5px);
+        line-height: rem(22px)
     }
 }
 
-$label-width: 50px;
-$content-width: 40px;
 .layout-list {
     
+    // 通用
     dd {
-        height: rem(14px);
-        line-height: rem(14px);
-        padding: rem(15px) 0 rem(15px) 0;
+        height: rem(20px);
+        line-height: rem(20px);
+        padding: rem(13px) 0 rem(11px) 0;
 
-        @include border-1px(top);
-        clear: both;
+        @include border-1px(top, #e1e4e6);
+
+        @include clearfix();
 
         div {
-            @include column($label-width, $content-width);
+            height: 100%;
         }
 
         .column-left {
             color: $gray;
         }
 
+        .column-middle {
+        }
+
         .column-right {
             position: relative;
+            font-size: rem(12px);
 
-            .partner-more {
+            .column-more {
                 position: absolute;
-                right: rem(10px);
-                display: flex;
-                flex: 1;
+                right: rem(15px);
+                display: box;
+                box-pack: center;
+                box-align: center;
 
                 em {
-                    display: inline-flex;
-                    color: $gray;
+                    color: $light-gray;
+                    vertical-align: middle;
+
+                    &.count {
+                        display: inline-block;
+                        text-align: center;
+                        width: rem(18px);
+                        height: rem(18px);
+                        line-height: rem(18px);
+                        background: $red;
+                        border-radius: 100%;
+                        color: $white;
+                        font-size: rem(12px);
+                    }
                 }
 
                 .arrow {
-                    margin-left: rem(5px);
+                    margin-left: rem(3px);
                     @include arrow-more(7px);
+                }
+            }
+
+            .download {
+                width: rem(27px);
+                height: rem(27px);
+                background: url('#{$rootImg}/downloadAttach.png') no-repeat 0 0;
+                background-size: rem(27px);
+            }
+        }
+
+        &.load-more {
+            color: $light-gray;
+            text-align: center;
+        }
+    }
+    
+    // 成员
+    $partner-left-width: rem(55px);
+    $partner-right-width: rem(65px);
+
+    &.partner {
+
+        dd {
+            @include column($partner-left-width, $partner-right-width);
+        }
+    }
+    
+    // 事件 & 讨论
+    $et-left-width: 80%;
+    $et-right-width: rem(65px);
+
+    &.event-talk {
+
+        dd {
+
+            @include column($et-left-width, $et-right-width);
+            
+            .column-left {
+                color: $light-gray;
+                @include ellipsis();
+            }
+
+            &.new-msg {
+                .column-left {
+                    color: $black;
+                }
+            }
+        }
+    }
+
+    // 事件 & 讨论
+    $attach-left-width: rem(30px);
+    $attach-right-width: rem(65px);
+
+    &.attach {
+
+        dd {
+
+            height: rem(36px);
+
+            @include column($attach-left-width, $attach-right-width);
+            
+            .column-left {
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .column-middle {
+
+                .column-inner {
+                    padding-left: rem(15px);
+
+                    .attach-size {
+                        font-size: rem(12px);
+                        color: $gray;
+                    }
+                }
+            }
+
+            .column-right {
+                position: relative;
+
+                em {
+                    position: absolute;
+                    top: rem(5px);
+                    right: rem(15px);
                 }
             }
         }
     }
 }
 
-.sub-title {
-    color: $gray;
-    padding-bottom: rem(15px);
+.fixbar {
+    @include fixbar(3);
 }

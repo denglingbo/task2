@@ -19,8 +19,8 @@ var config = {
      * host
      * @params {string}
      */
-    // host: '172.16.1.218',
-    host: 'localhost',
+    host: '172.16.1.218',
+    // host: 'localhost',
     // host: '192.168.1.5',
 
     /**
@@ -56,7 +56,7 @@ config.output = {
      * 打包后的静态文件目录
      * @params {string}
      */
-     assets: 'assets'
+     assets: 'common'
 };
 
 

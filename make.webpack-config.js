@@ -53,10 +53,15 @@ MakeWebpackConfig.prototype = {
                 console.log('progress: ' + percentage + ' -- ' + msg)
             }),
 
+            // to: 实际为 path/xxx
             new CopyPlugin([
                 {
-                    from: './dep/', 
+                    from: './dep/',
                     to: './dep/'
+                },
+                {
+                    from: './src/common/img/',
+                    to: './common/img/'
                 }
             ])
         ];
@@ -81,7 +86,7 @@ MakeWebpackConfig.prototype = {
      * 返回 webpack config
      *
      */
-    get: function () {console.log(this.webpackConfig.plugins)
+    get: function () {console.log(this.webpackConfig)
         return this.webpackConfig; 
     },
 
@@ -277,12 +282,15 @@ MakeWebpackConfig.prototype = {
                 // Reference: https://github.com/webpack/image-webpack-loader
                 // limit=10000&
                 test: /\.(jpe?g|png|gif)$/i,
+                loaders: [
+                    'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
+                ]
                 // loaders: [
                     // 'image?{bypassOnDebug: true, progressive: true, \
                     //     optimizationLevel: 3, pngquant:{quality: "65-80", speed: 4}}',
                     // 'url?name=' + imgPath + '[hash:8].[name].[ext]'
                 // ],
-                loader: 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
+                // loader: 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
                 // exclude: [config.nodeModules]
             },
             { 

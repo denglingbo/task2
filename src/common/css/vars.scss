@@ -6,7 +6,7 @@
  *
  */
 
-$rootImg: '../common/img';
+$rootImg: '/common/img';
 
 
 $browser-default-font-size: 16px !default;
@@ -14,7 +14,9 @@ $browser-default-font-size: 16px !default;
 // colors
 $white: #fff;
 $black: #000;
-$gray: #787980;
+$gray: #797C80;
+$light-gray: #919599;
+$red: #FA575D;
 
 $color-tips: #AAAFB2;
 

@@ -11,12 +11,13 @@ var config = {
         HOME_URL: 1000,
         LIST_URL: 1001,
         LIST_DONE_URL: 1002,
-        LIST_CANCEL_URL: 1003
+        LIST_CANCEL_URL: 1003,
+        DETAIL_URL: 1004
     }
 };
 
-var host = 'localhost';
-// var host = '172.16.1.218';
+// var host = 'localhost';
+var host = '172.16.1.218';
 // var host = '192.168.1.5';
 
 config.mockUrl = 'http://' + host + ':8015';

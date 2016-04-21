@@ -21,7 +21,7 @@ $star-size: rem(16px);
         background-position: 0 0;
     }
 
-    &:hover {
+    &:active {
         @extend .follow;
     }
 }

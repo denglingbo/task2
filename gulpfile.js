@@ -79,6 +79,7 @@ gulp.task('dev', [
  * watcher
  */
 var files = [
+    'src/**/*.html',
     'src/**/*.tpl',
     'src/**/*.scss',
     'src/**/*.js'

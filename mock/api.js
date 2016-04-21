@@ -6,14 +6,12 @@
  */
 
 module.exports = [
-    // 首页
     {
         params: {
             id: 1000
         },
         response: './1000.json'
     },
-    // 任务列表页
     {
         params: {
             id: 1001
@@ -31,5 +29,20 @@ module.exports = [
             id: 1003
         },
         response: './1003.json'
+    },
+
+    {
+        params: {
+            id: 1004,
+            page: 0
+        },
+        response: './1004/0.json'
+    },
+    {
+        params: {
+            id: 1004,
+            page: 1
+        },
+        response: './1004/1.json'
     }
 ];

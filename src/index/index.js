@@ -64,7 +64,7 @@ page.addParallelTask(function (dfd) {
     var promise = page.post(config.API.HOME_URL, {});
     promise
         .done(function (result) {
-            if (result.status !== 0) {
+            if (result.meta && result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {
