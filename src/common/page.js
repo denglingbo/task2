@@ -5,6 +5,7 @@
  */
 
 var config = require('../config');
+var view = require('./view');
 
 /**
  * Page
@@ -42,6 +43,7 @@ function Page(opts) {
     this.isDone = false;
 }
 
+window.pageLog = {};
 
 /**
  * 所有前序任务执行完毕之后，回调 enter
@@ -61,13 +63,15 @@ Page.prototype.start = function () {
 
     // 增加编译模板的任务
     if (!me.isDone) {
-        // me.addParallelTask(function (dfd) {
-
-        //     // 如果页面在这之前已经done过了，那就不继续编译
-        //     // do something
-
-        //     dfd.resolve();
-        // });
+        window.pageLog.compileTemplateStart = Date.now();
+        me.addParallelTask(function (dfd) {
+            // 如果页面在这之前已经done过了，那就不继续编译
+            $('[type="text/x-tmpl-mustache"]').each(function (index, node) {
+                view.getRenderer(node.innerHTML);
+            });
+            window.pageLog.compileTemplateEnd = Date.now();
+            dfd.resolve();
+        });
     }
 
     dfd.done(function () {
@@ -148,7 +152,7 @@ Page.prototype.addParallelTask = function (task) {
 };
 
 /**
- * 渲染模板
+ * 渲染模板文件
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Loader} template, [name]-loader
@@ -156,9 +160,23 @@ Page.prototype.addParallelTask = function (task) {
  * @return {string} html 字符串
  *
  */
-Page.prototype.render = function (selector, template, data) {
+Page.prototype.renderFile = function (selector, template, data) {
     var str = template(data);
     $(selector).html(str);
+
+    return str;
+};
+
+/**
+ * 渲染模板
+ *
+ * @param {string} selector, #id|.class|tagname
+ * @param {Object} data, 数据
+ * @return {string} html 字符串
+ *
+ */
+Page.prototype.render = function (selector, data) {
+    var str = view.render(selector, data);
 
     return str;
 };

@@ -97,7 +97,7 @@ page.loadPage = function (info, data) {
 
         var template = require('./list/item');
         var $content = $(info.selector).find('.list-wrapper-content');
-        me.render($content, template, data);
+        me.renderFile($content, template, data);
 
         pageCache[info.name] = 1;
 

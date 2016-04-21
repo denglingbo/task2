@@ -12,9 +12,7 @@ var Mustache = require('dep/mustache');
  * Mustache
  *
  */
-var View = function () {
-    this.name = 'view';
-};
+var view = {};
 
 /**
  * Mustache 渲染模板
@@ -22,9 +20,10 @@ var View = function () {
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Object} data, 数据
+ * @return {string} html 片段
  *
  */
-View.prototype.render = function (selector, data) {
+view.render = function (selector, data) {
     var $elem = $(selector);
     var $temp = $(selector + '-template');
 
@@ -36,6 +35,18 @@ View.prototype.render = function (selector, data) {
     var html = Mustache.render(template, data);
 
     $elem.html(html);
+
+    return html;
 };
 
-module.exports = View;
+
+/**
+ * 根据模板获取renderer函数
+ *
+ * @param {string} template 模板
+ */
+view.getRenderer = function (template) {
+    Mustache.parse(template);
+};
+
+module.exports = view;

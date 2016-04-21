@@ -1,0 +1,18 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "title": "新建事件",
+        "update_time": "",
+        "follow": true,
+        "status": 3,
+        "description": "",
+        "emergency_level": 0,
+        "deadline": 0,
+        "creator": "张三",
+        "master": "李四",
+        "partner": ["王五","Jack"]
+    }
+}
