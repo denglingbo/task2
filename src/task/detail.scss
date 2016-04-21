@@ -5,8 +5,7 @@
 @import "../common/css/star.scss";
 
 .layout {
-    @extend .border;
-    @extend .border-bottom;
+    @include border-1px(bottom);
 }
 
 .detail-title {
@@ -67,8 +66,7 @@ $content-width: 40px;
         line-height: rem(14px);
         padding: rem(15px) 0 rem(15px) 0;
 
-        @extend .border;
-        @extend .border-top;
+        @include border-1px(top);
         clear: both;
 
         div {

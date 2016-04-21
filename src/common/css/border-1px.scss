@@ -6,31 +6,19 @@
  *
  */
 
-$border-default-color: #DEDFE0;
+/**
+ * @param {$type} 哪个位置有边框
+ * @param {$border-color} 边框颜色
+ *
+ */
+@mixin border-1px($type, $border-color: #DEDFE0) {
 
-.border {
-    border: 0 solid $border-default-color;
+    border: 0 solid $border-color;
+    border-#{$type}-width: 1px;
 
-    &-top {
-        border-top-width: 1px;
-    }
-    &-right {
-        border-right-width: 1px;
-    }
-    &-bottom {
-        border-bottom-width: 1px;
-    }
-    &-left {
-        border-left-width: 1px;
-    }
-    &-all {
-        border-width: 1px;
-    }
-}
+    @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
 
-@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
-
-    .border {
+        // .border {
         position: relative;
         border: none !important;
 
@@ -42,7 +30,7 @@ $border-default-color: #DEDFE0;
             right: -33.33%;
             bottom: -33.33%;
             left: 0;
-            border: 0 solid $border-default-color;
+            border: 0 solid $border-color;
             transform-origin: 0 0;
             pointer-events: none; // 解决挡住点击事件的问题
             transform: scale(.75);
@@ -51,37 +39,14 @@ $border-default-color: #DEDFE0;
         
         }
 
-        &-top {
-            &::after {
-                border-top-width: 1px;
-                }
-        }
-        &-right {
-            &::after {
-                border-right-width: 1px;
-            }
-        }
-        &-bottom {
-            &::after {
-                border-bottom-width: 1px;
-            }
-        }
-        &-left {
-            &::after {
-                border-left-width: 1px;
-            }
-        }
-        &-all {
-            &::after {
-                border-width: 1px;
-            }
+        &::after {
+            border-#{$type}-width: 1px;
         }
     }
-}
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
 
-    .border {
+        // .border {
         position: relative;
         border: none !important;
 
@@ -93,37 +58,16 @@ $border-default-color: #DEDFE0;
             right: -100%;
             bottom: -100%;
             left: 0;
-            border: 0 solid $border-default-color;
+            border: 0 solid $border-color;
             transform-origin: 0 0;
             pointer-events: none; // 解决挡住点击事件的问题
             transform: scale(.5);
             width: 200%;
             box-sizing: border-box;
         }
-        &-top {
-            &::after {
-                border-top-width: 1px;
-            }
-        }
-        &-right {
-            &::after {
-                border-right-width: 1px;
-            }
-        }
-        &-bottom {
-            &::after {
-                border-bottom-width: 1px;
-            }
-        }
-        &-left {
-            &::after {
-                border-left-width: 1px;
-            }
-        }
-        &-all {
-            &::after {
-                border-width: 1px;
-            }
+        
+        &::after {
+            border-#{$type}-width: 1px;
         }
     }
 }
