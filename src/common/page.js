@@ -172,11 +172,12 @@ Page.prototype.renderFile = function (selector, template, data) {
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Object} data, 数据
+ * @param {string} appendType, append, befre, after, ..., 默认值为 html
  * @return {string} html 字符串
  *
  */
-Page.prototype.render = function (selector, data) {
-    var str = view.render(selector, data);
+Page.prototype.render = function (selector, data, appendType) {
+    var str = view.render(selector, data, appendType);
 
     return str;
 };

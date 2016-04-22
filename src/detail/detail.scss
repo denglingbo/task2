@@ -156,11 +156,16 @@
                 background-size: rem(27px);
             }
         }
+    }
 
-        &.load-more {
-            color: $light-gray;
-            text-align: center;
-        }
+    .load-more {
+        color: $light-gray;
+        text-align: center;
+        height: rem(20px);
+        line-height: rem(20px);
+        padding: rem(13px) 0 rem(11px) 0;
+
+        @include border-1px(top, #e1e4e6);
     }
     
     // 成员
@@ -175,14 +180,14 @@
     }
     
     // 事件 & 讨论
-    $et-left-width: 80%;
-    $et-right-width: rem(65px);
+    $at-left-width: 80%;
+    $at-right-width: rem(65px);
 
-    &.event-talk {
+    .affair-talk {
 
         dd {
 
-            @include column($et-left-width, $et-right-width);
+            @include column($at-left-width, $at-right-width);
             
             .column-left {
                 color: $light-gray;

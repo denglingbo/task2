@@ -19,14 +19,119 @@ page.enter = function () {
 
     this.render('#detail-main', this.data);
 
+    this.affairTalkRequest(false);
+
     this.bindEvents();
 };
 
 page.bindEvents = function () {
+    var me = this;
+
+    this.$more = $('#affair-talk-more-handler');
+    this.$affairTalk = $('#affair-talk');
 
     $('.column-right').on('click', function () {
         // console.log('chakanshi');
     });
+
+    // 加载更多事件和讨论
+    this.$more.on('click', function () {
+        me.affairTalkRequest();
+    });
+};
+
+
+var loaderTimer = null;
+
+/**
+ * 加载条状态
+ *
+ * @param {string} status 要展示的状态
+ * @param {number} delay 延迟执行时间
+ */
+function loaderStatus(status, delay) {
+
+    var $elem = $('.load-more');
+
+    var obj = {
+        holder: $elem.find('.load-more-holder'),
+        process: $elem.find('.load-more-process'),
+        done: $elem.find('.load-more-done')
+    };
+
+    var $cur = obj[status] || null;
+
+    if (!$cur || !$cur.length) {
+        return;
+    }
+
+    if (delay === undefined) {
+        $cur.removeClass('hide');
+        $cur.siblings().addClass('hide');
+    }
+    else {
+        clearTimeout(loaderTimer);
+        loaderTimer = setTimeout(function () {
+            $cur.removeClass('hide');
+            $cur.siblings().addClass('hide');
+        }, delay);
+    }
+}
+
+/**
+ * 发送加载列表请求
+ *
+ * @param {boolean} isStatus 是否需要加载条
+ *
+ */
+page.affairTalkRequest = function (isStatus) {
+    var me = this;
+    var promise = page.post(config.API.DETAIL_EVENT_TALK_MORE_URL);
+    var $loader = $('.load-more');
+
+    // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
+    var pageNum = 10;
+
+    var hasStatus = true;
+    if (isStatus === false) {
+        hasStatus = false;
+    }
+
+    if (hasStatus) {
+        loaderStatus('process');
+    }
+
+    promise
+        .done(function (result) {
+            if (result.meta && result.meta.code !== 200) {
+
+            }
+            else {
+                var data = result.data;
+
+                if (!data.list) {
+                    return;
+                }
+
+                me.renderAffairTalk(result.data);
+
+                if (data.list.length < pageNum) {
+                    $loader.addClass('hide');
+                }
+                else {
+                    $loader.removeClass('hide');
+                }
+
+                if (hasStatus) {
+                    loaderStatus('done');
+                    loaderStatus('holder', 500);
+                }
+            }
+        });
+};
+
+page.renderAffairTalk = function (data) {
+    this.render('#affair-talk', data, 'append');
 };
 
 /**
@@ -38,7 +143,7 @@ page.bindEvents = function () {
 page.addParallelTask(function (dfd) {
     var me = this;
     var promise = page.post(config.API.DETAIL_URL, {
-        page: params.page || 0
+        page: params.page || 'task'
     });
 
     promise
@@ -53,13 +158,13 @@ page.addParallelTask(function (dfd) {
                 if (params && params.page) {
                     var pageName = params.page;
                     data.page = {};
-                    if (pageName === '0') {
+                    if (pageName === 'task') {
                         data.pageTask = true;
                     }
-                    else if (pageName === '1') {
-                        data.pageEvent = true;
+                    else if (pageName === 'affair') {
+                        data.pageAffair = true;
                     }
-                    else if (pageName === '2') {
+                    else if (pageName === 'talk') {
                         data.pageTalk = true;
                     }
                 }
@@ -84,6 +189,8 @@ page.addParallelTask(function (dfd) {
                 dfd.resolve();
             }
         });
+
+    return dfd;
 });
 
 $(function () {

@@ -12,7 +12,8 @@ var config = {
         LIST_URL: 1001,
         LIST_DONE_URL: 1002,
         LIST_CANCEL_URL: 1003,
-        DETAIL_URL: 1004
+        DETAIL_URL: 1004,
+        DETAIL_EVENT_TALK_MORE_URL: 1005
     }
 };
 

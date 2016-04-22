@@ -34,15 +34,22 @@ module.exports = [
     {
         params: {
             id: 1004,
-            page: 0
+            page: 'task'
         },
         response: './1004/0.json'
     },
     {
         params: {
             id: 1004,
-            page: 1
+            page: 'affair'
         },
         response: './1004/1.json'
+    },
+
+    {
+        params: {
+            id: 1005
+        },
+        response: './1005.json'
     }
 ];

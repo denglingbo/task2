@@ -14,29 +14,29 @@
         <!-- title -->
         <script id="detail-main-template" type="text/x-tmpl-mustache">
         <div class="layout detail-title">
-            {{#pageEvent}}
+            {{#pageAffair}}
             <div class="detail-title-control">
                 <div class="detail-checkbox"></div>
             </div>
-            {{/pageEvent}}
+            {{/pageAffair}}
 
             <div class="detail-title-main">
-                <p class="detail-title-top">{{title}}</p>
-                <p>{{updateDateRaw}}</p>
+                <p class="detail-title-top">{{ title }}</p>
+                <p>{{ updateDateRaw }}</p>
             </div>
 
             <div class="detail-title-right">
                 {{#hasFollow}}
                 <p class="star"><em></em></p>
                 {{/hasFollow}}
-                <p class="detail-title-state state-doing">{{statusText}}</p>
+                <p class="detail-title-state state-doing">{{ statusText }}</p>
             </div>
         </div>
 
         <div class="layout detail-comments">
             <div class="sub-title">任务描述</div>
 
-            <p>{{description}}</p>
+            <p>{{ description }}</p>
             <p>紧要程度: 紧急</p>
             <p>完成时间: 尽快完成</p>
         </div>
@@ -76,35 +76,20 @@
         </dl>
 
         <!-- 事件 & 讨论 -->
-        <dl class="layout-list event-talk">
-            <dt class="sub-title">事件与讨论</dt>
-            
-            <dd class="new-msg">
-                <div class="column-left">
-                    [事件] 关于任务的一个事件关于任务的一个事件关
-                </div>
-                <div class="column-right">
-                    <div class="column-more">
-                        <em class="count">19</em>
-                        <em class="arrow"><i></i></em>
-                    </div>
-                </div>
-            </dd>
-            <dd>
-                <div class="column-left">
-                    [事件] 关于任务的一个事件关于任务的一个事件
-                </div>
-                <div class="column-right">
-                    <div class="column-more">
-                        <em class="arrow"><i></i></em>
-                    </div>
-                </div>
-            </dd>
+        {{#pageTask}}
+        <div class="layout-list">
+            <dl id="affair-talk" class="affair-talk">
+                <dt class="sub-title">事件与讨论</dt>
+                <!-- 另一个异步请求获取数据 -->
+            </dl>
 
-            <dd class="load-more">
-                点击加载更多
-            </dd>
-        </dl>
+            <div id="affair-talk-more-handler" class="load-more">
+                <span class="load-more-holder">点击加载更多</span>
+                <span class="load-more-process hide">加载中...</span>
+                <span class="load-more-done hide">加载完成</span>
+            </div>
+        </div>
+        {{/pageTask}}
 
         <!-- 附件 -->
         <dl class="layout-list attach">
@@ -137,6 +122,25 @@
             <li>完成任务</li>
         </ul>
     </div>
+    
+    <!-- 事件和讨论 -->
+    <script id="affair-talk-template" type="text/x-tmpl-mustache">
+    {{#list}}
+    <dd tid="{{ id }}" {{#num}}class="new-msg"{{/num}}>
+        <div class="column-left">
+            [{{ type }}] {{ title }}
+        </div>
+        <div class="column-right">
+            <div class="column-more">
+                {{#num}}
+                <em class="count">{{ num }}</em>
+                {{/num}}
+                <em class="arrow"><i></i></em>
+            </div>
+        </div>
+    </dd>
+    {{/list}}
+    </script>
 
     <script type="text/javascript" src="../dep/cordova.js"></script>
 </body>
