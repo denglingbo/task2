@@ -14,6 +14,10 @@
         <!-- title -->
         <script id="detail-main-template" type="text/x-tmpl-mustache">
         <div class="layout detail-title">
+            <div class="detail-title-control">
+                <div class="detail-checkbox"></div>
+            </div>
+
             <div class="detail-title-main">
                 <p class="detail-title-top">{{ title }}</p>
                 <p>{{ updateDateRaw }}</p>
@@ -72,71 +76,25 @@
                 </div>
             </dd>
         </dl>
-
-        <!-- 事件 & 讨论 -->
-        <div class="layout-list">
-            <dl id="affair-talk" class="affair-talk">
-                <dt class="sub-title">事件与讨论</dt>
-                <!-- 另一个异步请求获取数据 -->
-            </dl>
-
-            <div id="affair-talk-more-handler" class="load-more">
-                <span class="load-more-holder">点击加载更多</span>
-                <span class="load-more-process hide">加载中...</span>
-                <span class="load-more-done hide">加载完成</span>
-            </div>
-        </div>
-
-        <!-- 附件
-        <dl class="layout-list attach">
-            <dt class="sub-title">附件</dt>
-            
-            <dd>
-                <div class="column-left">
-                    <img src="/common/img/files/doc.png" />
-                </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        <p>N 版设计稿</p>
-                        <p class="attach-size">1.2MB</p>
-                    </div>
-                </div>
-                <div class="column-right">
-                    <em class="download"></em>
-                </div>
-            </dd>
-        </dl> -->
-
-        <!-- 底部按钮条 -->
-        <div class="fixbar">
-            <ul>
-                <li>新建事件</li>
-                <li>发起讨论</li>
-                <li>完成任务</li>
-            </ul>
-        </div>
         </script>
 
     </div>
-    
-    <!-- 事件和讨论 -->
-    <script id="affair-talk-template" type="text/x-tmpl-mustache">
-    {{#list}}
-    <dd tid="{{ id }}" {{#num}}class="new-msg"{{/num}}>
-        <div class="column-left">
-            [{{ type }}] {{ title }}
-        </div>
-        <div class="column-right">
-            <div class="column-more">
-                {{#num}}
-                <em class="count">{{ num }}</em>
-                {{/num}}
-                <em class="arrow"><i></i></em>
+
+    <!-- 底部输入框 -->
+    <div id="goalui-fixedinput-shadow" class="hide"></div>
+    <div class="goalui-fixedinput">
+        <div class="input-out">
+            <div class="editable-out">
+                <div class="editable" contenteditable="plaintext-only"></div>
             </div>
+            <p class="placeholder">写评论</p>
         </div>
-    </dd>
-    {{/list}}
-    </script>
+        <div class="limit"></div>
+        <div class="button-wrap">
+            <span class="button"></span>
+            <span class="send hide">发送</span>
+        </div>
+    </div>
 
     <script type="text/javascript" src="../dep/cordova.js"></script>
 </body>

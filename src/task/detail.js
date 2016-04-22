@@ -6,15 +6,12 @@
  */
 
 require('./detail.scss');
-require('dep/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
 var util = require('../common/util');
 var Page = require('../common/page');
-var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
 var page = new Page();
-var params = util.getUrlParams();
 
 page.enter = function () {
     // console.log(this.data);
@@ -22,8 +19,6 @@ page.enter = function () {
     this.render('#detail-main', this.data);
 
     this.affairTalkRequest(false);
-
-    virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
 };
@@ -146,9 +141,7 @@ page.renderAffairTalk = function (data) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.TASK_DETAIL_URL, {
-        page: params.page || 'task'
-    });
+    var promise = page.post(config.API.TASK_DETAIL_URL);
 
     promise
         .done(function (result) {
@@ -157,21 +150,6 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 var data = result.data;
-
-                // 根据 page 参数
-                if (params && params.page) {
-                    var pageName = params.page;
-                    data.page = {};
-                    if (pageName === 'task') {
-                        data.pageTask = true;
-                    }
-                    else if (pageName === 'affair') {
-                        data.pageAffair = true;
-                    }
-                    else if (pageName === 'talk') {
-                        data.pageTalk = true;
-                    }
-                }
 
                 // 时间展示
                 data.updateDateRaw = util.formatDateToNow(data.update_time);

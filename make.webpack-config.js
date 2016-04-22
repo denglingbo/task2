@@ -145,7 +145,7 @@ MakeWebpackConfig.prototype = {
             }
         }
 
-        return folderName + filename + '.' + this.config.extMap.outputTemplate
+        return folderName + filename + '.' + this.config.extMap.outputTemplate;
     },
 
     /**
@@ -186,7 +186,7 @@ MakeWebpackConfig.prototype = {
                 );
 
                 me.webpackConfig.entry[filename] = me.jsFiles[filename];
-
+console.log(conf);
                 // 提取公共文件
                 r.push(
                     new CommonsChunkPlugin({
