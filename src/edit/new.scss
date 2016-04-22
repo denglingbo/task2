@@ -2,7 +2,7 @@
 @import '../common/css/add-attach';
 @import '../common/css/close-x';
 
-.alert-info {
+.alert-length-limit {
 	position: fixed;
 	left: 50%;
 	top: 50%;
@@ -30,9 +30,10 @@
 		width: 100%;
 		height: 100%;
 		outline: none;
-		font-size: rem(16px);
+		font-size: rem(18px);
 		resize: none;
 		padding-right: rem(55px);
+		letter-spacing: rem(2px);
 
 		&:focus {
 	        text-indent: 0.1rem;
@@ -50,17 +51,16 @@
 
 	.err-tip {
 		position: absolute;
-		right: rem(15px);
+		display: block;
+		width: rem(55px);
+		text-align: center;
+		right: 0;
 		font-size: rem(12px);
-		color: #f00;
+		color: #fa575d;
 	}
 
 	.edit-title-wrap {
-		padding-bottom: rem(46px);
-
-		.edit-title {
-			font-size: rem(16px);
-		}
+		padding-bottom: rem(15px);
 
 		.err-tip {
 			bottom: rem(-12px);

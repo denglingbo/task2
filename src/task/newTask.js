@@ -1,7 +1,7 @@
 /**
- * @file newEvent.js
+ * @file new.js
  * @author hefeng
- * 新建事件页, 编辑事件页面
+ * 新建任务页
  *
  */
 
@@ -9,6 +9,8 @@ require('../edit/new.scss');
 
 // var config = require('../config');
 var Page = require('../common/page');
+
+//  var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
@@ -20,32 +22,40 @@ var valid = {
 var info = {
     title: '',
     comtent: '',
-    urgency: 0,
-    eventType: 0
+    master: '',
+    canyuren: [],
+    doneTime: 0,
+    urgency: 0
 };
 
 /**
  * 验证不通过弹窗
  *
- * @param {string} info 验证不通过的提示语句
+ * @param {string} info, 验证不通过的提示语句
  *
  */
 // function validAlert(info) {
-//     var alertClass = 'alert-info';
-//     if ($('.' + alertClass).length) {
-//         return;
-//     }
-//     var alert = '<div class="' + alertClass + '">' + info + '</div>';
-//     $('body').append(alert);
+//     var $alertDom = $('.alert-length-limit');
+//     $alertDom.text(info).removeClass('hide');
+
 //     setTimeout(function () {
-//         $('.' + alertClass).fadeOut('fast').remove();
+//         $alertDom.addClass('hide');
 //     },
 //     3000);
 // }
 
+/**
+ * 选择完成时间跳转页面的回掉函数
+ *
+ */
+// function chooseTimeCB() {
+//     // require('./edit/done-time.scss');
+// }
 page.enter = function () {
 
-    page.loadPage(this.data);
+
+
+    page.loadPage();
 };
 
 /**
@@ -53,11 +63,42 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+    var $titleDom = $('#edit-title');
+    var $contentDom = $('#edit-content');
 
-    $('#edit-title').on('input propertychange', function () {
+    /**
+     * 切换关闭按钮的显示与隐藏
+     *
+     * @param {Object} textDom, 当前输入框dom对象
+     * @param {number} textLength, 输入框内文字长度
+     *
+     */
+    function toggleX(textDom, textLength) {
+        if (!textLength) {
+            $(textDom).parent().find('.close-x').addClass('hide');
+        }
+        else {
+            $(textDom).parent().find('.close-x').removeClass('hide');
+        }
+    }
+
+    $('.close-x').click(function () {
+        var $parentDom = $(this).parent();
+        $parentDom.find('.input').val('');
+        $parentDom.find('.err-tip').text('');
+        $(this).addClass('hide');
+        if($parentDom.hasClass('edit-title-wrap')) {
+            valid.title = false;
+        }
+    });
+
+    $titleDom.on('input propertychange', function () {
         var me = this;
         var length = $(me).val().length;
         var errTip = $(me).next('.err-tip');
+
+        toggleX(me, length);
+
         if (!length || length > 50) {
             valid.title = false;
         }
@@ -74,13 +115,16 @@ page.bindEvents = function () {
     });
 
     $('.edit-title-wrap').click(function () {
-        $('#edit-title').focus();
+        $titleDom.focus();
     });
 
-    $('#edit-content').on('input propertychange', function () {
+    $contentDom.on('input propertychange', function () {
         var me = this;
         var length = $(me).val().length;
         var errTip = $(me).next('.err-tip');
+
+        toggleX(me, length);
+
         if (length > 50000) {
             valid.content = false;
             errTip.text(50000 - length);
@@ -92,8 +136,12 @@ page.bindEvents = function () {
     });
 
     $('.edit-words').click(function () {
-        $('edit-content').focus();
+        $contentDom.focus();
     });
+
+    // $('#doneTime').click(function () {
+    //     CPNavigationBar.redirect('./edit/done-time.html', '完成时间', false, chooseTimeCB, info)
+    // });
 
     var mobiOptions = {
         theme: 'android-holo-light',
@@ -139,7 +187,7 @@ page.bindEvents = function () {
 /**
  * 加载页面
  *
- * @param {Object} data 当前要渲染的模板数据
+ * @param {Object} data, 当前要渲染的模板数据
  *
  */
 page.loadPage = function (data) {
@@ -148,10 +196,10 @@ page.loadPage = function (data) {
     data = data || {};
     data = $.extend(data, {
         view: {
-            task: false,
-            event: true,
+            task: true,
+            event: false,
             discussion: false,
-            placeholder: '事件',
+            placeholder: '任务',
             data: []
         }
     });
@@ -159,7 +207,7 @@ page.loadPage = function (data) {
     require.ensure(['../edit/edit'], function () {
         var template = require('../edit/edit');
         var $content = $('.edit-container');
-        me.render($content, template, data);
+        me.renderFile($content, template, data);
         me.bindEvents();
     });
 };
@@ -192,6 +240,8 @@ page.loadPage = function (data) {
 //             });
 //     });
 // }
+
+// editAjax();
 
 $(function () {
     page.start();
