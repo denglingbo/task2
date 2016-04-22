@@ -61,7 +61,7 @@ page.enter = function () {
 
 
 
-	this.bindEvents();
+	page.loadPage();
 };
 
 /**
@@ -206,7 +206,7 @@ page.loadPage = function (data) {
 	require.ensure(['../edit/edit'], function() {
 		var template = require('../edit/edit');
 		var $content = $('.edit-container');
-		me.render($content, template, data);
+		me.renderFile($content, template, data);
 		me.bindEvents();
 	});
 };
