@@ -86,10 +86,10 @@ page.bindEvents = function () {
      */
     function toggleX(textDom, textLength) {
         if (!textLength) {
-            $(textDom).parent().find('.close-x').hide();
+            $(textDom).parent().find('.close-x').addClass('hide');
         }
         else {
-            $(textDom).parent().find('.close-x').show();
+            $(textDom).parent().find('.close-x').removeClass('hide');
         }
     }
 

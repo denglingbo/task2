@@ -74,7 +74,7 @@ em {
 }
 
 .hide {
-    display: none;
+    display: none !important;
 }
 
 em, b, span, i, input, label, a, img {

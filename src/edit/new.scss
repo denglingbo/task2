@@ -68,7 +68,6 @@
 
 		.title-close {
 			top: rem(16px);
-			display: none;
 		}
 	}
 
@@ -82,7 +81,6 @@
 
 			.words-close {
 				top: rem(2px);
-				display: none;
 			}
 		}
 
@@ -120,6 +118,7 @@
 		    	float: right;
 		    	color: $black;
 		    	font-size: 16px;
+		    	margin-right: rem(15px);
 		    }
 	    }
 	}

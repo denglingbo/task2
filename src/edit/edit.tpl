@@ -1,14 +1,14 @@
 <div class="edit-title-wrap">
     <input id="edit-title" class="input edit-title" value="{{title}}" placeholder="&nbsp;&nbsp;请输入{{view.placeholder}}标题(必填)">
     <span class="err-tip"></span>
-    <i class="close-x title-close"></i>
+    <i class="close-x title-close hide"></i>
 </div>
 
 <div class="edit-content-wrap">
     <div class="edit-words">
         <textarea id="edit-content" class="input" placeholder=" 请输入{{view.placeholder}}描述(选填)">{{content}}</textarea>
         <span class="err-tip"></span>
-        <i class="close-x words-close"></i>
+        <i class="close-x words-close hide"></i>
     </div>
     <div class="edit-attach">
         <div class="edit-add-attach">
