@@ -1,0 +1,121 @@
+
+
+#goalui-fixedinput-shadow {
+    position: fixed;
+    z-index: 98;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    word-break: break-all;
+    overflow: hidden;
+    transform: translate3d(0,0,0);
+    display: block;
+}
+
+/*固定输入框*/
+.goalui-fixedinput {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    padding: 6px 12px;
+    background: #e8e8e8;
+
+    .input-out {
+        margin: 0 40px 0 0;
+        position: relative;
+    }
+
+    .editable-out {
+        width: 100%;
+        padding: 0 8px;
+        border-radius: 3px;
+        background: #fff;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .editable {
+        display: block;
+        width: 100%;
+        min-height: 20px;
+        max-height: 78px;
+        line-height: 18px;
+        padding: 6px 20px 6px 0;
+        font-size: 15px;
+        -webkit-user-select: text;
+        user-select: text;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .input-out {
+
+        .placeholder {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-size: 15px;
+            color: #999;
+        }
+    }
+
+    .limit {
+        position: absolute;
+        right: 0;
+        bottom: 38px;
+        width: 50px;
+        line-height: 16px;
+        padding-left: 10px;
+        font-size: 14px;
+        color: #fe0000;
+        box-sizing: border-box;
+    }
+
+    /*发送按钮*/
+    .button-wrap {
+        position: absolute;
+        right: 0;
+        bottom: 6px;
+        width: 50px;
+
+        .button {
+            width: 32px;
+            height: 32px;
+            margin: 0 0 0 6px;
+            background: #fff url(icon_enclosure.png) center center no-repeat;
+            background-size: 19px 19px;
+            border-radius: 50%;
+        }
+
+        .send {
+            font-size: 16px;
+            line-height:32px;
+            padding-left: 8px;
+            color: #29e;
+            text-indent: right;
+        }
+    }
+
+    .button-wrap {
+
+        span {
+            display: block;
+        }
+
+        .send:active {
+            color: #4bf;
+        }
+
+        .send.unable, .send.unable:active {
+            color: #aaa;
+        }
+    }
+}

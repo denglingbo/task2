@@ -6,12 +6,14 @@
  */
 
 require('./detail.scss');
+require('dep/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
 var util = require('../common/util');
 var Page = require('../common/page');
-var page = new Page();
+var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
+var page = new Page();
 var params = util.getUrlParams();
 
 page.enter = function () {
@@ -20,6 +22,8 @@ page.enter = function () {
     this.render('#detail-main', this.data);
 
     this.affairTalkRequest(false);
+
+    virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
 };
@@ -86,7 +90,7 @@ function loaderStatus(status, delay) {
  */
 page.affairTalkRequest = function (isStatus) {
     var me = this;
-    var promise = page.post(config.API.DETAIL_EVENT_TALK_MORE_URL);
+    var promise = page.post(config.API.TASK_DETAIL_EVENT_TALK_MORE_URL);
     var $loader = $('.load-more');
 
     // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
@@ -142,7 +146,7 @@ page.renderAffairTalk = function (data) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.DETAIL_URL, {
+    var promise = page.post(config.API.TASK_DETAIL_URL, {
         page: params.page || 'task'
     });
 
@@ -169,8 +173,10 @@ page.addParallelTask(function (dfd) {
                     }
                 }
 
+                // 时间展示
                 data.updateDateRaw = util.formatDateToNow(data.update_time);
 
+                // 状态显示
                 var statusMap = {
                     1: '已完成',
                     2: '待审核',
@@ -180,9 +186,27 @@ page.addParallelTask(function (dfd) {
                     return statusMap[data.status] || '';
                 })();
 
+                // 是否有 follow
                 data.hasFollow = (function () {
                     return data.status !== 1;
                 })();
+
+                // START - partner
+                var partner = data.partner;
+                var partnerRaw = [];
+
+                partner.forEach(function (item) {
+                    if (item.name && item.pinyin) {
+                        partnerRaw.push(item.name + '(' + item.pinyin + ')');
+                    }
+                });
+
+                if (partnerRaw.length) {
+                    data.partnerLength = partner.length;
+                }
+
+                data.partnerRaw = partnerRaw.join('、');
+                // END - partner
 
                 me.data = data;
 

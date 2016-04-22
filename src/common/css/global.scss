@@ -84,3 +84,9 @@ em, b, span, i, input, label, a, img {
 .state-doing {
     color: $state-doing;
 }
+
+input, button, select, textarea {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+}
