@@ -19,13 +19,9 @@ var config = {
      * host
      * @params {string}
      */
-
-    // host: '172.16.1.218',
-
-    host: '172.16.1.101',
-
+    host: '172.16.1.218',
     // host: 'localhost',
-
+    // host: '192.168.1.5',
 
     /**
      * publicPath

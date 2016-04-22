@@ -9,16 +9,14 @@ require('./index.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
-var View = require('../common/view');
 
 var page = new Page();
-var view = new View();
 
 page.enter = function () {
 
     this.setMenuHeight();
 
-    view.render('#menu', {
+    this.render('#menu', {
         list: this.data.list
     });
 
@@ -43,7 +41,7 @@ page.bindEvents = function () {
 
     $('#add-newtask').on('click', function () {
         // window.CPNavigationBar.redirect('task/new.html');
-        window.CPNavigationBar.redirect('task/detail.html');
+        window.CPNavigationBar.redirect('detail/detail.html?page=0');
     });
 
     var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize';
