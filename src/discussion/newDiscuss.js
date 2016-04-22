@@ -1,7 +1,7 @@
 /**
- * @file new.js
+ * @file newDiscuss.js
  * @author hefeng
- * 新建任务页
+ * 新建讨论页, 编辑讨论页面
  *
  */
 
@@ -9,8 +9,6 @@ require('../edit/new.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
-
-//var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
@@ -22,10 +20,8 @@ var valid = {
 var info = {
 	title: '',
 	comtent: '',
-	master: '',
-	canyuren: [],
-	done_time: 0,
-	urgency: 0
+	urgency: 0,
+	canyuren: []
 }
 
 /**
@@ -47,21 +43,10 @@ function validAlert (info) {
 	3000);
 }
 
-/**
- * 选择完成时间跳转页面的回掉函数
- *
- */
-function chooseTimeCB () {
-	// require('./edit/done-time.scss');
-
-
-}
 page.enter = function () {
 	var me = this;
 
-
-
-	this.bindEvents();
+	page.loadPage(this.data)
 };
 
 /**
@@ -69,31 +54,11 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
-	var $titleDom = $("#edit-title");
-	var $contentDom = $("#edit-content");
 
-	/**
-	 * 切换关闭按钮的显示与隐藏
-	 *
-	 * @param {object} textDom 当前输入框dom对象
-	 * @param {number} textLength 输入框内文字长度
-	 *
-	 */
-	function toggleX (textDom, textLength) {
-		if (!textLength) {
-			$(textDom).parent().find('.close-x').hide();
-		}else {
-			$(textDom).parent().find('.close-x').show();
-		}
-	}
-
-	$titleDom.on("input propertychange", function () {
+	$("#edit-title").on("input propertychange", function () {
 		var me = this;
 		var length = $(me).val().length;
 		var errTip = $(me).next(".err-tip");
-
-		toggleX(me, length);
-
 		if (!length || length > 50) {
 			valid.title = false;
 		}
@@ -110,16 +75,13 @@ page.bindEvents = function () {
 	});
 
 	$('.edit-title-wrap').click(function () {
-		$titleDom.focus();
+		$("#edit-title").focus();
 	});
 
-	$contentDom.on("input propertychange", function () {
+	$("#edit-content").on("input propertychange", function () {
 		var me = this;
 		var length = $(me).val().length;
 		var errTip = $(me).next(".err-tip");
-
-		toggleX(me, length);
-
 		if (length > 50000) {
 			valid.content = false;
 			errTip.text(50000 - length);
@@ -131,12 +93,8 @@ page.bindEvents = function () {
 	});
 
 	$('.edit-words').click(function () {
-		$contentDom.focus();
+		$("edit-content").focus();
 	});
-
-	/*$('#doneTime').click(function () {
-		CPNavigationBar.redirect('./edit/done-time.html', '完成时间', false, chooseTimeCB, info)
-	});*/
 
 	var mobiOptions = {
         theme: 'android-holo-light',
@@ -176,10 +134,6 @@ page.bindEvents = function () {
             $('#urgencyBlock .value').text(text);
         }
     }));
-
-		
-
-
 };
 
 /**
@@ -194,10 +148,10 @@ page.loadPage = function (data) {
 	data = data || {};
 	data = $.extend(data,{
 		view: {
-			task: true,
+			task: false,
 			event: false,
-			discussion: false,
-			placeholder:'任务',
+			discussion: true,
+			placeholder:'讨论',
 			data: []
 		}
 		
@@ -239,8 +193,6 @@ function editAjax() {
 			});
 	});
 }
-
-//editAjax()
 
 $(function () {
 	page.start();

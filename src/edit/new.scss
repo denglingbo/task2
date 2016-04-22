@@ -1,5 +1,6 @@
 @import '../common/css/global';
-@import '../common/css/vars';
+@import '../common/css/add-attach';
+@import '../common/css/close-x';
 
 .alert-info {
 	position: fixed;
@@ -16,17 +17,7 @@
 	border-radius: rem(4px);
 }
 
-.mask {
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	background-color: rgba(0, 0, 0, .45);
-	z-index:555;
-}
-
-.task-container {
+.edit-container {
 	font-size: 16px;
 	box-sizing: border-box;
 	* {
@@ -41,18 +32,18 @@
 		outline: none;
 		font-size: rem(16px);
 		resize: none;
-		padding-right: rem(15px);
+		padding-right: rem(55px);
 
 		&:focus {
 	        text-indent: 0.1rem;
 		}
 	}
 
-	.task-title-wrap,
-	.task-content-wrap {
+	.edit-title-wrap,
+	.edit-content-wrap {
 		position: relative;
 		padding: rem(15px) 0 0 rem(15px);
-		border-color: #dedfe0;
+		@include border-1px(bottom);
 		margin-top: rem(10px);
 		background-color: $white;
 	}
@@ -64,30 +55,40 @@
 		color: #f00;
 	}
 
-	.task-title-wrap {
+	.edit-title-wrap {
 		padding-bottom: rem(46px);
 
-		.task-title {
+		.edit-title {
 			font-size: rem(16px);
 		}
 
 		.err-tip {
 			bottom: rem(-12px);
 		}
+
+		.title-close {
+			top: rem(16px);
+			display: none;
+		}
 	}
 
-	.task-content-wrap {
+	.edit-content-wrap {
 
-		.task-words {
+		.edit-words {
 			height: rem(120px);
 			padding-bottom: rem(15px);
-			border-color: #e3e4e5;
+			@include border-1px(bottom, #e3e4e5);
 			font-size: rem(16px);
+
+			.words-close {
+				top: rem(2px);
+				display: none;
+			}
 		}
 
-		.task-attach {
+		.edit-attach {
 
-			.task-add-attach {
+			.edit-add-attach {
 				height: rem(50px);
 				line-height: rem(48px);
 				color: #666;
@@ -95,19 +96,19 @@
 		}
 	}
 
-	.task-option {
-	    border-color: #dedfe0;
+	.edit-option {
+	    @include border-1px(bottom);
 	    padding-left: rem(15px);
 	    background-color: $white;
 	    margin-top: rem(10px);
 
-		.task-item {
+		.edit-item {
 		    height: rem(44px);
 		    line-height: rem(42px);
 		    font-size: rem(14px);
 
 		    &:first-child {
-		    	border-color: #e3e4e5;
+		    	@include border-1px(bottom, #e3e4e5);
 		    }
 
 		    .title {

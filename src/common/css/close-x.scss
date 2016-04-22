@@ -1,0 +1,23 @@
+/**
+ * @file close-x.scss
+ * @author hefeng
+ *
+ * 关闭x icon
+ *
+ */
+
+$add-attach-width: rem(18px);
+
+.close-x {
+	padding: 0;
+	display: block;
+	position: absolute;
+	right:rem(24px);
+	width: $add-attach-width;
+	height: $add-attach-width;
+	background-image: url('#{$rootImg}/button_top_search_close.png');
+	background-repeat: no-repeat;
+	background-size: $add-attach-width;
+	vertical-align: rem(-2px);
+	margin-right: rem(-3px);
+}
