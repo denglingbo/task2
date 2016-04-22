@@ -7,7 +7,7 @@
 
 require('../edit/new.scss');
 
-var config = require('../config');
+// var config = require('../config');
 var Page = require('../common/page');
 
 var page = new Page();
@@ -30,21 +30,20 @@ var info = {
  * @param {string} info 验证不通过的提示语句
  *
  */
-function validAlert(info) {
-    var alertClass = 'alert-info';
-    if ($('.' + alertClass).length) {
-        return;
-    }
-    var alert = '<div class="' + alertClass + '">' + info + '</div>';
-    $('body').append(alert);
-    setTimeout(function () {
-        $('.' + alertClass).fadeOut('fast').remove();
-    },
-    3000);
-}
+// function validAlert(info) {
+//     var alertClass = 'alert-info';
+//     if ($('.' + alertClass).length) {
+//         return;
+//     }
+//     var alert = '<div class="' + alertClass + '">' + info + '</div>';
+//     $('body').append(alert);
+//     setTimeout(function () {
+//         $('.' + alertClass).fadeOut('fast').remove();
+//     },
+//     3000);
+// }
 
 page.enter = function () {
-    var me = this;
 
     page.loadPage(this.data);
 };
@@ -169,30 +168,30 @@ page.loadPage = function (data) {
  * 编辑页面加载数据
  *
  */
-function editAjax() {
+// function editAjax() {
 
-    /**
-     * 请求页面接口
-     *
-     * @param {deferred} dfd, deferred
-     *
-     */
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var promise = page.post(config.API.TASK_EDIT_URL, {});
+//     /**
+//      * 请求页面接口
+//      *
+//      * @param {deferred} dfd, deferred
+//      *
+//      */
+//     page.addParallelTask(function (dfd) {
+//         var me = this;
+//         var promise = page.post(config.API.TASK_EDIT_URL, {});
 
-        promise
-            .done(function (result) {
-                if (result.meta !== 0) {
-                    dfd.reject(result);
-                }
-                else {
-                    me.data = result.data;
-                    dfd.resolve();
-                }
-            });
-    });
-}
+//         promise
+//             .done(function (result) {
+//                 if (result.meta !== 0) {
+//                     dfd.reject(result);
+//                 }
+//                 else {
+//                     me.data = result.data;
+//                     dfd.resolve();
+//                 }
+//             });
+//     });
+// }
 
 $(function () {
     page.start();

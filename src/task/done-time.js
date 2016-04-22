@@ -48,7 +48,6 @@ function setCurr(currClass) {
     $('.' + currClass).addClass('current');
 }
 page.enter = function () {
-    var me = this;
     page.bindEvents();
 };
 

@@ -7,7 +7,7 @@
 
 require('../edit/new.scss');
 
-var config = require('../config');
+// var config = require('../config');
 var Page = require('../common/page');
 
 //  var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
@@ -34,35 +34,34 @@ var info = {
  * @param {string} info, 验证不通过的提示语句
  *
  */
-function validAlert(info) {
-    var alertClass = 'alert-info';
+// function validAlert(info) {
+//     var alertClass = 'alert-info';
 
-    if ($('.' + alertClass).length) {
-        return;
-    }
+//     if ($('.' + alertClass).length) {
+//         return;
+//     }
 
-    // alert html
-    var alert = '<div class="' + alertClass + '">' + info + '</div>';
+//     // alert html
+//     var alert = '<div class="' + alertClass + '">' + info + '</div>';
 
-    $('body').append(alert);
+//     $('body').append(alert);
 
-    setTimeout(function () {
-        $('.' + alertClass).fadeOut('fast').remove();
-    },
-    3000);
-}
+//     setTimeout(function () {
+//         $('.' + alertClass).fadeOut('fast').remove();
+//     },
+//     3000);
+// }
 
 /**
  * 选择完成时间跳转页面的回掉函数
  *
  */
-function chooseTimeCB() {
-    // require('./edit/done-time.scss');
+// function chooseTimeCB() {
+//     // require('./edit/done-time.scss');
 
 
-}
+// }
 page.enter = function () {
-    var me = this;
 
 
 
@@ -218,30 +217,30 @@ page.loadPage = function (data) {
  * 编辑页面加载数据
  *
  */
-function editAjax() {
+// function editAjax() {
 
-    /**
-     * 请求页面接口
-     *
-     * @param {deferred} dfd, deferred
-     *
-     */
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var promise = page.post(config.API.TASK_EDIT_URL, {});
+//     /**
+//      * 请求页面接口
+//      *
+//      * @param {deferred} dfd, deferred
+//      *
+//      */
+//     page.addParallelTask(function (dfd) {
+//         var me = this;
+//         var promise = page.post(config.API.TASK_EDIT_URL, {});
 
-        promise
-            .done(function (result) {
-                if (result.meta !== 0) {
-                    dfd.reject(result);
-                }
-                else {
-                    me.data = result.data;
-                    dfd.resolve();
-                }
-            });
-    });
-}
+//         promise
+//             .done(function (result) {
+//                 if (result.meta !== 0) {
+//                     dfd.reject(result);
+//                 }
+//                 else {
+//                     me.data = result.data;
+//                     dfd.resolve();
+//                 }
+//             });
+//     });
+// }
 
 // editAjax();
 
