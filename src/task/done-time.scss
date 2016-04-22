@@ -1,0 +1,26 @@
+@import '../common/css/global';
+
+.done-container {
+	height: 100%;
+	width: 100%;
+	background-color: rgb(235, 236, 232);
+	.option {
+		width: 100%;
+		height: rem(80px);
+		line-height: rem(80px);
+		background-color: #fff;
+		position: relative;
+		box-sizing: border-box;
+		padding: 0 rem(30px);
+		margin-top: rem(15px);
+		font-size: rem(16px);
+		display: flex;
+
+		.title {
+			flex:1;
+		}
+	}
+	.current {
+		color: #f00;
+	}
+}

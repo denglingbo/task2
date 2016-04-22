@@ -1,0 +1,130 @@
+@import '../common/css/global';
+@import '../common/css/add-attach';
+@import '../common/css/close-x';
+
+.alert-info {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	height: rem(90px);
+	line-height: rem(90px);
+	width: rem(210px);
+	background-color: rgba(0, 0, 0, 0.5);
+	text-align: center;
+	color: $white;
+	font-size: rem(16px);
+	border-radius: rem(4px);
+}
+
+.edit-container {
+	font-size: 16px;
+	box-sizing: border-box;
+	* {
+		box-sizing: border-box;
+	}
+
+	.input {
+		border: none;
+		background-color: $white;
+		width: 100%;
+		height: 100%;
+		outline: none;
+		font-size: rem(16px);
+		resize: none;
+		padding-right: rem(55px);
+
+		&:focus {
+	        text-indent: 0.1rem;
+		}
+	}
+
+	.edit-title-wrap,
+	.edit-content-wrap {
+		position: relative;
+		padding: rem(15px) 0 0 rem(15px);
+		@include border-1px(bottom);
+		margin-top: rem(10px);
+		background-color: $white;
+	}
+
+	.err-tip {
+		position: absolute;
+		right: rem(15px);
+		font-size: rem(12px);
+		color: #f00;
+	}
+
+	.edit-title-wrap {
+		padding-bottom: rem(46px);
+
+		.edit-title {
+			font-size: rem(16px);
+		}
+
+		.err-tip {
+			bottom: rem(-12px);
+		}
+
+		.title-close {
+			top: rem(16px);
+		}
+	}
+
+	.edit-content-wrap {
+
+		.edit-words {
+			height: rem(120px);
+			padding-bottom: rem(15px);
+			@include border-1px(bottom, #e3e4e5);
+			font-size: rem(16px);
+
+			.words-close {
+				top: rem(2px);
+			}
+		}
+
+		.edit-attach {
+
+			.edit-add-attach {
+				height: rem(50px);
+				line-height: rem(48px);
+				color: #666;
+			}
+		}
+	}
+
+	.edit-option {
+	    @include border-1px(bottom);
+	    padding-left: rem(15px);
+	    background-color: $white;
+	    margin-top: rem(10px);
+
+		.edit-item {
+		    height: rem(44px);
+		    line-height: rem(42px);
+		    font-size: rem(14px);
+
+		    &:first-child {
+		    	@include border-1px(bottom, #e3e4e5);
+		    }
+
+		    .title {
+		    	float: left;
+		    	color: #666;
+		    }
+
+		    .value {
+		    	float: right;
+		    	color: $black;
+		    	font-size: 16px;
+		    	margin-right: rem(15px);
+		    }
+	    }
+	}
+}
+
+
+
+
+

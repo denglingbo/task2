@@ -51,5 +51,11 @@ module.exports = [
             id: 1005
         },
         response: './1005.json'
+    },
+    {
+        params: {
+            id: 2000
+        },
+        response: './2000.json'
     }
 ];
