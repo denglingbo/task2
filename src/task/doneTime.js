@@ -5,7 +5,7 @@
  *
  */
 
-require('./done-time.scss');
+require('./doneTime.scss');
 
 var Page = require('../common/page');
 
