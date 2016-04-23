@@ -41,7 +41,7 @@ page.bindEvents = function () {
 
     $('#add-newtask').on('click', function () {
         // window.CPNavigationBar.redirect('task/new.html');
-        window.CPNavigationBar.redirect('detail/detail.html?page=0');
+        window.CPNavigationBar.redirect('task/detail.html');
     });
 
     var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize';

@@ -86,7 +86,8 @@ MakeWebpackConfig.prototype = {
      * 返回 webpack config
      *
      */
-    get: function () {console.log(this.webpackConfig)
+    get: function () {
+        console.log(this.webpackConfig);
         return this.webpackConfig; 
     },
 
@@ -101,38 +102,28 @@ MakeWebpackConfig.prototype = {
         }
     },
 
-    /**
-     * 获取并设置 Javascript 入口
-     *
-     */
-    setJsFiles: function () {
+    fixFolder: function (folderName, sign) {
 
-        var map = {};
+        if (folderName && folderName.length) {
+            return folderName + sign;
+        }
 
-        var jsDir = path.join(__dirname, this.config.srcDir.root);
-        var entryFiles = glob.sync(jsDir + '/**/*.' + this.config.extMap.js);
-
-        entryFiles.forEach(function (filePath) {
-            var filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
-            map[filename] = filePath;
-        });
-
-        this.jsFiles = map;
-
-        // this.webpackConfig.entry = this.jsFiles;
+        return '';
     },
 
     /**
      * 获取页面名，默认是添加文件目录
      *
      * @param {string} filePath, 文件路径
-     * @param {string} filename, 文件名
-     * @return {string} url 访问位置
+     * @return {Object} 
+     *  object.url 用户的访问路径 index.html, task/detail.html
+     *  object.name 页面名 index, task-detail (自动连接文件夹和文件名)
      *
      */
-    getPageName: function (filePath, filename) {
+    getPage: function (filePath) {
 
         var folderName = '';
+        var filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
         
         // 首页前面不添加文件名
         if (filename !== 'index') {
@@ -141,11 +132,37 @@ MakeWebpackConfig.prototype = {
             var fileArr = filePath.replace(dir, '');
 
             if (fileArr.length && fileArr.length > 1) {
-                folderName = fileArr.split('/')[1] + '/';
+                folderName = fileArr.split('/')[1];
             }
         }
 
-        return folderName + filename + '.' + this.config.extMap.outputTemplate;
+        var ext = this.config.extMap.outputTemplate;
+
+        return {
+            path: this.fixFolder(folderName, '/') + filename + '.' + ext,
+            name: this.fixFolder(folderName, '-') + filename
+        }
+    },
+
+    /**
+     * 获取并设置 Javascript 入口
+     *
+     */
+    setJsFiles: function () {
+        var me = this;
+        var map = {};
+
+        var jsDir = path.join(__dirname, this.config.srcDir.root);
+        var entryFiles = glob.sync(jsDir + '/**/*.' + this.config.extMap.js);
+
+        entryFiles.forEach(function (filePath) {
+            var page = me.getPage(filePath);
+            map[page.name] = filePath;
+        });
+
+        this.jsFiles = map;
+
+        // this.webpackConfig.entry = this.jsFiles;
     },
 
     /**
@@ -164,19 +181,20 @@ MakeWebpackConfig.prototype = {
 
         pageEntries.forEach(function (filePath) {
 
-            var filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
+            // 这里为了避免文件名重复，所以会在前面添加上文件夹名字
+            var page = me.getPage(filePath);
 
             var conf = {};
 
-            if (filename in me.jsFiles) {
+            if (page.name in me.jsFiles) {
 
-                conf.filename = me.getPageName(filePath, filename);
+                conf.filename = page.path;
                 
                 // 模板源位置
                 conf.template = filePath;
 
                 // 设置 js 入口
-                conf.chunks = ['common', filename];
+                conf.chunks = ['common', page.name];
 
                 // script 插入位置
                 conf.inject = 'body';
@@ -185,8 +203,13 @@ MakeWebpackConfig.prototype = {
                     new HtmlWebpackPlugin(conf)
                 );
 
-                me.webpackConfig.entry[filename] = me.jsFiles[filename];
-console.log(conf);
+                me.webpackConfig.entry[page.name] = me.jsFiles[page.name];
+
+                console.log(' ');
+                console.log('-----[' + page.name + ']-----');
+                console.log(conf);
+                console.log(' ');
+
                 // 提取公共文件
                 r.push(
                     new CommonsChunkPlugin({
@@ -305,8 +328,6 @@ console.log(conf);
                 // exclude: []  //排除不处理的目录
             }
         ];
-
-        console.log(this.webpackConfig.module.loaders)
     },
 
     /**
@@ -469,9 +490,11 @@ console.log(conf);
         devServer.listen(me.config.port, me.config.host, function() {
             var url = 'http://' + me.config.host + ':' + me.config.port;
 
+            console.log(' ');
             console.log('----------[dev] webpack server start -----------');
             console.log('SERVER: ' + url);
             console.log('------------------------------------------------');
+            console.log(' ');
         });
 
         return devServer;
