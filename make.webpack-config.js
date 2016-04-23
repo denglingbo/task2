@@ -102,6 +102,14 @@ MakeWebpackConfig.prototype = {
         }
     },
 
+    /**
+     * 转换文件前缀
+     *
+     * @param {string} folderName, 文件路径
+     * @param {string} sign, 分隔符
+     * @return {string}
+     *
+     */
     fixFolder: function (folderName, sign) {
 
         if (folderName && folderName.length) {

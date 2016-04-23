@@ -85,7 +85,7 @@ function loaderStatus(status, delay) {
  */
 page.affairTalkRequest = function (isStatus) {
     var me = this;
-    var promise = page.post(config.API.TASK_DETAIL_EVENT_TALK_MORE_URL);
+    var promise = page.post(config.API.AFFAIR_TALK_MORE_URL);
     var $loader = $('.load-more');
 
     // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了

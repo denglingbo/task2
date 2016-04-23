@@ -211,5 +211,89 @@
     }
 }
 
+/**
+ * 打钩动画
+ *
+ * @param {$color} 颜色
+ * @param {$tick-size} px 外框大小
+ * @param {$line} px 钩的大小
+ *
+ */
+@mixin tickedAnimate($color: #666, $tick-size: 16px, $line: 3px) {
+    $tick-half: $tick-size * .4;
+
+    span.ticked {
+        position: absolute;
+        left: 1px;
+        top: $tick-half * .5;
+        width: $tick-size - $line;
+        height: $tick-half;
+        border-left: $line solid $color;
+        border-bottom: $line solid $color;
+        transform: rotate(-45deg);
+
+        &.animate {
+            animation: rotate .6s cubic-bezier(0.42, 0, 0.58, 1.0);
+            @keyframes rotate {
+                from {
+                    opacity: 0;
+                    transform: scale(3);
+                    transform: rotate(-45deg);
+                }
+                to {
+                    opacity: 1;
+                    transform: rotate(360deg - 45deg);
+                }
+            }
+            
+            // shadow
+            &:after {
+                content: '';
+                position: absolute;
+                left: $line * -1;
+                top: $line * -1;
+                width: $tick-size;
+                height: $tick-size;
+                background: #666;
+                border-radius: 100%;
+                opacity: 0; 
+
+                animation: shadow .8s ease-out 0s;
+                // animation: shadow .8s cubic-bezier(0.42, 0, 0.58, 1.0);
+                @keyframes shadow {
+                    from {
+                        opacity: 1; 
+                        transform: scale(1);
+                    }
+                    to {
+                        opacity: 0; 
+                        transform: scale(3);
+                    }
+                }
+            }
+        }
+    }
+
+    span.untick {
+        position: absolute;
+        width: rem(16px);
+        height: rem(16px);
+        border: 1px solid #ccc;
+        border-radius: 100%;
+        
+        &.animate {
+            animation: untick .6s;
+            @keyframes untick {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
 @import "border-1px";
 @import "tab.scss";

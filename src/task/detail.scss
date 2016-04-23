@@ -45,10 +45,10 @@
             position: absolute;
             width: rem(16px);
             height: rem(16px);
-            border: 1px solid #ccc;
-            border-radius: 100%;
             top: 50%;
             margin-top: rem(-8px);
+            
+            @include tickedAnimate(#666, 16px);
         }
     }
 
@@ -74,6 +74,11 @@
 
         .detail-title-state {
             margin-top: rem(4px);
+            
+            // 没有星星，修正top
+            &-fixed {
+                margin-top: rem(12px);
+            }
         }
     }
 }

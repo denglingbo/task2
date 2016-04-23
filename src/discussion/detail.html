@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="main">
-        
+
         <div id="detail-main"></div>
 
         <!-- title -->
@@ -30,12 +30,12 @@
                 {{#hasFollow}}
                 <p class="star"><em></em></p>
                 {{/hasFollow}}
-                <p class="detail-title-state state-doing">{{ statusText }}</p>
+                <p class="detail-title-state {{^hasFollow}}detail-title-state-fixed{{/hasFollow}} state-doing">{{ statusText }}</p>
             </div>
         </div>
 
         <div class="layout detail-comments">
-            <div class="sub-title">事件描述</div>
+            <div class="sub-title">讨论描述</div>
 
             <p>{{ description }}</p>
             <p>紧要程度: 紧急</p>

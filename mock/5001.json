@@ -1,0 +1,18 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "title": "新建讨论",
+        "update_time": 1460549520000,
+        "follow": true,
+        "status": 1,
+        "description": "",
+        "emergency_level": 0,
+        "deadline": 0,
+        "creator": "张三",
+        "master": "李四",
+        "partner": ["王五","Jack"]
+    }
+}

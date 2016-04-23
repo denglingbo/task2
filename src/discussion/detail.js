@@ -1,7 +1,7 @@
 /**
  * @file detail.js
  * @author deo
- * 事件详情页
+ * 讨论详情页
  *
  */
 
@@ -60,7 +60,7 @@ page.bindEvents = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.AFFAIR_DETAIL_URL);
+    var promise = page.post(config.API.DISCUSSION_DETAIL_URL);
 
     promise
         .done(function (result) {
