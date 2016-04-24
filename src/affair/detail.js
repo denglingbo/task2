@@ -33,22 +33,27 @@ page.bindEvents = function () {
         // console.log('chakanshi');
     });
 
-    var $checkbox = $('.detail-checkbox');
-    $checkbox.on('click', function () {
-        var $elem = $(this);
-        var $untick = $elem.find('.untick');
-        var $ticked = $elem.find('.ticked');
+    // var $checkbox = $('.detail-checkbox');
+    // $checkbox.on('click', function () {
+    //     var $elem = $(this);
+    //     var $untick = $elem.find('.untick');
+    //     var $ticked = $elem.find('.ticked');
 
-        // 勾选
-        if ($ticked.hasClass('hide')) {
-            $untick.addClass('hide');
-            $ticked.removeClass('hide').addClass('animate');
-        }
-        // 取消勾选
-        else {
-            $ticked.addClass('hide');
-            $untick.removeClass('hide').addClass('animate');
-        }
+    //     // 勾选
+    //     if ($ticked.hasClass('hide')) {
+    //         $untick.addClass('hide');
+    //         $ticked.removeClass('hide').addClass('animate');
+    //     }
+    //     // 取消勾选
+    //     else {
+    //         $ticked.addClass('hide');
+    //         $untick.removeClass('hide').addClass('animate');
+    //     }
+    // });
+
+    // tick-circle-to-square tick-ticked-animate
+    $('.tick').on('click', function () {
+        $(this).addClass('tick-circle-to-square tick-ticked-animate');
     });
 };
 

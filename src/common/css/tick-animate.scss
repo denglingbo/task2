@@ -1,0 +1,285 @@
+
+@keyframes shadow {
+    from {
+        opacity: 1; 
+        transform: scale(1);
+    }
+    to {
+        opacity: 0; 
+        transform: scale(3);
+    }
+}
+
+@keyframes rotate {
+    from {
+        opacity: 0;
+        transform: scale(3);
+        transform: rotate(-45deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(360deg - 45deg);
+    }
+}
+
+@keyframes to-square {
+    from {
+        border-radius: 100%;
+    }
+    to {
+        border-radius: 0;
+    }
+}
+@keyframes to-square-bolder {
+    from {
+        border-radius: 100%;
+        border-width: 1px;
+    }
+    to {
+        border-radius: 0;
+        border-width: 2px;
+    }
+}
+@keyframes line2-bolder {
+    from {
+        border-right-width: 1px;
+    }
+    to {
+        border-right-width: 3px;
+    }
+}
+
+
+/**
+ * 打勾动画 效果: 带阴影 + 箭头旋转
+ *
+ * @param {$color} 颜色
+ * @param {$tick-size} px 外框大小
+ * @param {$line} px 钩的大小
+ *
+ */
+@mixin tickedEasy ($color: #666, $tick-size: 16px, $line: 2px) {
+    $tick-half: $tick-size * .4;
+
+    span.ticked {
+        position: absolute;
+        left: 1px;
+        top: $tick-half * .5;
+        width: $tick-size - $line;
+        height: $tick-half;
+        border-left: $line solid $color;
+        border-bottom: $line solid $color;
+
+        &.animate {
+            animation: rotate .6s cubic-bezier(0.42, 0, 0.58, 1.0);
+            animation-fill-mode: forwards;
+            
+            // shadow
+            &:after {
+                content: '';
+                position: absolute;
+                left: $line * -1;
+                top: $line * -1;
+                width: $tick-size;
+                height: $tick-size;
+                background: #666;
+                border-radius: 100%;
+
+                animation: shadow .8s ease-out 0s;
+                animation-fill-mode: forwards;
+            }
+        }
+    }
+
+    span.untick {
+        position: absolute;
+        width: rem(16px);
+        height: rem(16px);
+        border: 1px solid #ccc;
+        border-radius: 100%;
+        
+        &.animate {
+            animation: untick .6s;
+            @keyframes untick {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 这个效果我喜欢
+ */
+@mixin tickedCombo () {
+    $tick-size: 16px;
+    // 方形边框大小
+    $tick-square-size: 2px;
+
+    // 边框大小
+    $tick-circle-size: 1px;
+    // 边框颜色
+    $tick-color: #666;
+
+    $tick-fix-size: $tick-size - $tick-circle-size;
+    $tick-border: $tick-circle-size solid $tick-color;
+
+    position: relative;
+    width: $tick-size;
+    height: $tick-size;
+    
+    // shadow
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: $tick-size;
+        height: $tick-size;
+        background: #666;
+        border-radius: 100%;
+        opacity: 0;
+    }
+    
+    // 默认圆形未勾选
+    &.untick {
+
+        .tick-inner {
+            border-radius: 100%;
+
+            span {
+                border-radius: 100%;
+            }
+        }
+    }
+    
+    .tick-inner {
+        position: absolute;
+        width: $tick-size;
+        height: $tick-size;
+        overflow: hidden;
+        
+        /**
+         * 四条线的基本配置
+         */
+        span {
+            position: absolute;
+            
+            &.tick-top {
+                left: 0;
+                top: 0;
+                width: $tick-size;
+                height: $tick-fix-size;
+                border-top: $tick-border;
+            }
+            
+            &.tick-right {
+                right: 0;
+                top: 0;
+                width: $tick-fix-size;
+                height: $tick-size;
+                border-right: $tick-border;
+            }
+            
+            &.tick-bottom {
+                left: 0;
+                bottom: 0;
+                width: $tick-size;
+                height: $tick-fix-size;
+                border-bottom: $tick-border;
+            }
+            
+            &.tick-left {
+                left: 0;
+                top: 0;
+                width: $tick-fix-size;
+                height: $tick-size;
+                border-left: $tick-border;
+            }
+        }
+    }
+
+    /**
+     * [START] 圆形变方形
+     */
+    $c2s-dur: 0.6s;
+    $ticked-dur: 0.3s;
+    $ticked-end: $tick-size;
+    
+    /* 首先从圆形变成方形 */
+    &.tick-circle-to-square {
+        
+        animation: to-square $c2s-dur ease-out;
+        animation-fill-mode: forwards;
+
+        span {
+            /*animation: to-square-bolder $c2s-dur ease-out;*/
+            animation: to-square $c2s-dur ease-out;
+            animation-fill-mode: forwards;
+        }
+
+        // 修正为方形
+        .tick-inner {
+            border-radius: 0;
+
+            span {
+                border-radius: 0;
+            }
+        }
+    }
+
+    /**
+     * 获取方形变箭头的四条边线移动动画配置
+     *
+     * @param {$delay} 等待时间
+     */
+    @function getTickedStep ($delay: 0) {
+        @return transform $ticked-dur $ticked-dur * $delay + $c2s-dur;
+    }
+
+    /**
+     * 方形变成打勾
+     * 该动画起始位置从 step 1 开始
+     * step1: 画出打勾的最小直线
+     * step2: 隐藏方形底部边框
+     * step3: 隐藏方形左侧边框
+     * 
+     * $tick-dur * num: delay 执行的时间
+     */
+    &.tick-ticked-animate {
+        
+        // 旋转动画
+        transform: rotate(180deg - 45deg);
+        transition: transform $ticked-dur * 3 cubic-bezier(0.42, 0, 0.58, 1.0) $c2s-dur;
+        
+        // 手动修正到中心
+        .tick-inner {
+            transform: translate3d($tick-size * 0.2 * -1, $tick-size * 0.3, 0px);
+            transition: transform $ticked-dur * 3 cubic-bezier(0.42, 0, 0.58, 1.0) $c2s-dur;
+        }
+
+        .tick-right {
+            transform: translate3d(0, ($ticked-end * .5) * -1, 0px);
+            transition: getTickedStep();
+        }
+
+        .tick-bottom {
+            transform: translate3d($ticked-end * -1, 0, 0px);
+            transition: getTickedStep();
+        }
+
+        .tick-left {
+            transform: translate3d(0, $ticked-end * -1, 0px);
+            transition: getTickedStep(1);
+        }
+
+        &:after {
+            animation: shadow 1.6s ease-out 0s;
+            animation-fill-mode: forwards;
+        }
+    }
+}

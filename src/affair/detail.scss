@@ -3,6 +3,7 @@
 @import "../common/css/global.scss";
 @import "../common/css/layout.scss";
 @import "../common/css/star.scss";
+@import "../common/css/tick-animate.scss";
 
 .main {
     padding-bottom: rem(44px);
@@ -48,7 +49,9 @@
             top: 50%;
             margin-top: rem(-8px);
             
-            @include tickedAnimate(#666, 16px);
+            .tick {
+                @include tickedCombo();
+            }
         }
     }
 

@@ -47,8 +47,6 @@
             height: rem(16px);
             top: 50%;
             margin-top: rem(-8px);
-            
-            @include tickedAnimate(#666, 16px);
         }
     }
 
