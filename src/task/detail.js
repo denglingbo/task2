@@ -183,7 +183,8 @@ function getPubData(jids, companyId, dataFlag, fn) {
         }
     };
 
-    window.CPPubData.getPubData(options, function (data) {
+    /* eslint-disable */
+    CPPubData.getPubData(options, function (data) {
         if (!data) {
             fn(null);
             return;
@@ -191,6 +192,7 @@ function getPubData(jids, companyId, dataFlag, fn) {
 
         fn(data);
     });
+    /* eslint-enable */
 }
 
 /**
