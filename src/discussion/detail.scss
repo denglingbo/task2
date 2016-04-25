@@ -49,7 +49,7 @@
             top: 50%;
             margin-top: rem(-8px);
             
-            @include tickedEasy(#666, 16px);
+            @include tickedCombo();
         }
     }
 

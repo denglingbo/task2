@@ -32,8 +32,8 @@ var config = {
     }
 };
 
-// var host = '172.16.1.218';
-var host = 'localhost';
+var host = '172.16.1.218';
+// var host = 'localhost';
 // var host = '172.16.1.101';
 // var host = '192.168.1.5';
 

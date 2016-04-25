@@ -1,4 +1,14 @@
+/**
+ * @file tick-animate.scss
+ * @author deo
+ *
+ * 勾选变打勾动画效果
+ *
+ */
 
+/**
+ * 阴影动画效果
+ */
 @keyframes shadow {
     from {
         opacity: 1; 
@@ -9,19 +19,9 @@
         transform: scale(3);
     }
 }
-
-@keyframes rotate {
-    from {
-        opacity: 0;
-        transform: scale(3);
-        transform: rotate(-45deg);
-    }
-    to {
-        opacity: 1;
-        transform: rotate(360deg - 45deg);
-    }
-}
-
+/**
+ * 圆形变为方形
+ */
 @keyframes to-square {
     from {
         border-radius: 100%;
@@ -30,109 +30,86 @@
         border-radius: 0;
     }
 }
-@keyframes to-square-bolder {
+/**
+ * 圆形变为方形
+ */
+@keyframes to-circle {
     from {
-        border-radius: 100%;
-        border-width: 1px;
-    }
-    to {
         border-radius: 0;
-        border-width: 2px;
-    }
-}
-@keyframes line2-bolder {
-    from {
-        border-right-width: 1px;
     }
     to {
-        border-right-width: 3px;
-    }
-}
-
-
-/**
- * 打勾动画 效果: 带阴影 + 箭头旋转
- *
- * @param {$color} 颜色
- * @param {$tick-size} px 外框大小
- * @param {$line} px 钩的大小
- *
- */
-@mixin tickedEasy ($color: #666, $tick-size: 16px, $line: 2px) {
-    $tick-half: $tick-size * .4;
-
-    span.ticked {
-        position: absolute;
-        left: 1px;
-        top: $tick-half * .5;
-        width: $tick-size - $line;
-        height: $tick-half;
-        border-left: $line solid $color;
-        border-bottom: $line solid $color;
-
-        &.animate {
-            animation: rotate .6s cubic-bezier(0.42, 0, 0.58, 1.0);
-            animation-fill-mode: forwards;
-            
-            // shadow
-            &:after {
-                content: '';
-                position: absolute;
-                left: $line * -1;
-                top: $line * -1;
-                width: $tick-size;
-                height: $tick-size;
-                background: #666;
-                border-radius: 100%;
-
-                animation: shadow .8s ease-out 0s;
-                animation-fill-mode: forwards;
-            }
-        }
-    }
-
-    span.untick {
-        position: absolute;
-        width: rem(16px);
-        height: rem(16px);
-        border: 1px solid #ccc;
         border-radius: 100%;
-        
-        &.animate {
-            animation: untick .6s;
-            @keyframes untick {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
-        }
     }
 }
 
 /**
- * 这个效果我喜欢
+ * 求平方根
+ *
  */
-@mixin tickedCombo () {
-    $tick-size: 16px;
-    // 方形边框大小
-    $tick-square-size: 2px;
+@function sqrt($r) {
+    $x0: 1;
+    $x1: $x0;
 
-    // 边框大小
-    $tick-circle-size: 1px;
-    // 边框颜色
-    $tick-color: #666;
+    @for $i from 1 through 10 {
+        $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+        $x0: $x1;
+    }
 
-    $tick-fix-size: $tick-size - $tick-circle-size;
-    $tick-border: $tick-circle-size solid $tick-color;
+    @return $x1;
+}
 
+/**
+ * 获取等腰直角三角形斜边长度
+ *
+ * @param {$hypo} 直角边长度
+ */
+@function getOpposite ($hypo) {
+    @return sqrt($hypo * $hypo * 2);
+}
+
+/**
+ * Combooooooooooooooooooooooooo
+ * 如果你想调整动画速度，自己玩哈
+ *
+ * @param {$tick-size} 外容器尺寸
+ * @param {$ticked-inset} 打勾图形尺寸
+ * @param {$ticked-line} 打勾图形线的尺寸
+ * @param {$untick-color} 未勾选的边框颜色
+ * @param {$ticked-linecolor} 勾线颜色
+ * @param {$ticked-bgcolor} 勾选状态背景色
+ * @param {$ticked-shadow-bgcolor} 点击态背景效果色
+ *
+ */
+@mixin tickedCombo (
+    $tick-size: 20px,
+    $ticked-inset: 12px,
+    $ticked-line: 2px,
+    $untick-color: #AAAFB2,
+    $ticked-linecolor: #fff,
+    $ticked-bgcolor: #4BB1FA,
+    $tick-shadow-bgcolor: #666
+) {
+
+    $white: #fff;
+    
+    // 设置基础属性
     position: relative;
     width: $tick-size;
     height: $tick-size;
     
-    // shadow
+    /* 旋转背后的圆巴巴 */
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: $tick-size - 2;
+        height: $tick-size - 2;
+        border-radius: 100%;
+        border: 1px solid $white;
+    }
+    
+    /* Shadow 效果 */
     &:after {
         content: '';
         position: absolute;
@@ -140,13 +117,19 @@
         top: 0;
         width: $tick-size;
         height: $tick-size;
-        background: #666;
+        background: $tick-shadow-bgcolor;
         border-radius: 100%;
         opacity: 0;
     }
     
-    // 默认圆形未勾选
+    /* 未勾选 状态 */
     &.untick {
+        border-radius: 100%;
+
+        &:before {
+            background: $white;
+            border-color: $untick-color;
+        }
 
         .tick-inner {
             border-radius: 100%;
@@ -156,12 +139,59 @@
             }
         }
     }
+
+    // 直角等腰三角形对角边长
+    $short-percent: .5;
+    // 获取斜边长
+    $opposite: getOpposite(12);
+    $fix-x-center: $ticked-inset * .5 - ($tick-size - $opposite) * .45 * $short-percent;
+    $fix-y-center: $ticked-inset * .5 - ($tick-size - $opposite) * .62;
     
+    /* 勾选状态 */
+    &.ticked {
+
+        .tick-inner {
+            opacity: 1;
+            transform: rotate(180deg - 45deg);
+            // 手动修正到中心
+            transform-origin: $fix-x-center $fix-y-center;
+        }
+        
+        // 短边 勾
+        .tick-right {
+            transform: translate3d(0, $ticked-inset * -1 * $short-percent, 0px);
+        }
+
+        .tick-bottom {
+            transform: translate3d($ticked-inset * -1, 0, 0px);
+        }
+
+        .tick-left {
+            transform: translate3d(0, $ticked-inset * -1, 0px);
+        }
+    
+        // 背景块
+        &:before {
+            background: $ticked-bgcolor;
+            border-color: $ticked-bgcolor;
+        }
+    }
+    
+    // 把打勾图形放在外层容器的中心位置
+    $tick-margin: ($tick-size - $ticked-inset) * .5;
+    // 内部的4个边线区块修正图形尺寸 (减去边线)
+    $ticked-fix-size: $ticked-inset - $ticked-line;
+    // border
+    $ticked-border: $ticked-line solid $ticked-linecolor;
+
     .tick-inner {
         position: absolute;
-        width: $tick-size;
-        height: $tick-size;
+        width: $ticked-inset;
+        height: $ticked-inset;
         overflow: hidden;
+        opacity: 0;
+        left: $tick-margin;
+        top: $tick-margin;
         
         /**
          * 四条线的基本配置
@@ -172,63 +202,59 @@
             &.tick-top {
                 left: 0;
                 top: 0;
-                width: $tick-size;
-                height: $tick-fix-size;
-                border-top: $tick-border;
+                width: $ticked-inset;
+                height: $ticked-fix-size;
+                border-top: $ticked-border;
             }
             
             &.tick-right {
                 right: 0;
                 top: 0;
-                width: $tick-fix-size;
-                height: $tick-size;
-                border-right: $tick-border;
+                width: $ticked-fix-size;
+                height: $ticked-inset;
+                border-right: $ticked-border;
             }
             
             &.tick-bottom {
                 left: 0;
                 bottom: 0;
-                width: $tick-size;
-                height: $tick-fix-size;
-                border-bottom: $tick-border;
+                width: $ticked-inset;
+                height: $ticked-fix-size;
+                border-bottom: $ticked-border;
             }
             
             &.tick-left {
                 left: 0;
                 top: 0;
-                width: $tick-fix-size;
-                height: $tick-size;
-                border-left: $tick-border;
+                width: $ticked-fix-size;
+                height: $ticked-inset;
+                border-left: $ticked-border;
             }
         }
     }
 
     /**
-     * [START] 圆形变方形
+     * [START circle to square] {change to ticked} 圆形变方形
      */
-    $c2s-dur: 0.6s;
-    $ticked-dur: 0.3s;
-    $ticked-end: $tick-size;
+    $c2s-dur: .6s;
+    $ticked-step-dur: 0.28s;
+    $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
     
     /* 首先从圆形变成方形 */
     &.tick-circle-to-square {
         
-        animation: to-square $c2s-dur ease-out;
+        animation: to-square $c2s-dur $cubic;
         animation-fill-mode: forwards;
 
         span {
-            /*animation: to-square-bolder $c2s-dur ease-out;*/
-            animation: to-square $c2s-dur ease-out;
+            animation: to-square $c2s-dur $cubic;
             animation-fill-mode: forwards;
         }
-
-        // 修正为方形
-        .tick-inner {
-            border-radius: 0;
-
-            span {
-                border-radius: 0;
-            }
+        
+        // 点击态动画
+        &:after {
+            animation: shadow $c2s-dur $cubic;
+            animation-fill-mode: forwards;
         }
     }
 
@@ -238,7 +264,7 @@
      * @param {$delay} 等待时间
      */
     @function getTickedStep ($delay: 0) {
-        @return transform $ticked-dur $ticked-dur * $delay + $c2s-dur;
+        @return transform $ticked-step-dur $cubic $ticked-step-dur * $delay + $c2s-dur;
     }
 
     /**
@@ -251,34 +277,102 @@
      * $tick-dur * num: delay 执行的时间
      */
     &.tick-ticked-animate {
-        
-        // 旋转动画
-        transform: rotate(180deg - 45deg);
-        transition: transform $ticked-dur * 3 cubic-bezier(0.42, 0, 0.58, 1.0) $c2s-dur;
-        
-        // 手动修正到中心
-        .tick-inner {
-            transform: translate3d($tick-size * 0.2 * -1, $tick-size * 0.3, 0px);
-            transition: transform $ticked-dur * 3 cubic-bezier(0.42, 0, 0.58, 1.0) $c2s-dur;
-        }
+        @extend .ticked;
 
+        .tick-inner {
+            transition: transform $ticked-step-dur * 2 $cubic $c2s-dur;
+        }
+        
+        // 短边 勾
         .tick-right {
-            transform: translate3d(0, ($ticked-end * .5) * -1, 0px);
             transition: getTickedStep();
         }
 
         .tick-bottom {
-            transform: translate3d($ticked-end * -1, 0, 0px);
             transition: getTickedStep();
         }
 
         .tick-left {
-            transform: translate3d(0, $ticked-end * -1, 0px);
             transition: getTickedStep(1);
         }
+    }
 
-        &:after {
-            animation: shadow 1.6s ease-out 0s;
+
+    /**
+     * [START square to circle] {change to untick}
+     */
+
+    /**
+     * 获取箭头变方形的动画配置
+     *
+     * @param {$delay} 等待时间
+     */
+    @function getUnTickStep ($delay: 0) {
+        @return transform $ticked-step-dur ease-out $ticked-step-dur * $delay;
+    }
+
+    &.tick-untick-animate {
+
+        .tick-inner {
+            border-radius: 0;
+            opacity: 1;
+            transform: rotate(0deg);
+            transition: transform $ticked-step-dur * 3 $cubic;
+            // 手动修正到中心
+            transform-origin: $ticked-inset * .5 $ticked-inset * .5;
+
+            span {
+                border-radius: 0;
+            }
+        }
+        
+        // 短边 勾
+        .tick-right {
+            transform: translate3d(0, 0, 0);
+            transition: getUnTickStep();
+        }
+
+        .tick-left {
+            transform: translate3d(0, 0, 0);
+            transition: getUnTickStep();
+        }
+
+        .tick-bottom {
+            transform: translate3d(0, 0, 0);
+            transition: getUnTickStep(1);
+        }
+
+        // 控制一下背景色块
+        &.untick {
+
+            // 修改 背景框的颜色
+            @keyframes to-circle-default {
+                from {
+                    border-color: $white;
+                    background: $ticked-bgcolor;
+                }
+                to {
+                    border-color: $untick-color;
+                    background: $white;
+                }
+            }
+
+            // 背景块
+            &:before {
+                animation: to-circle-default $c2s-dur + $ticked-step-dur $cubic;
+                animation-fill-mode: forwards;
+            }
+        }
+    }
+    
+    /* 首先从圆形变成方形 */
+    &.tick-square-to-circle {
+        
+        animation: to-circle $c2s-dur $cubic $ticked-step-dur;
+        animation-fill-mode: forwards;
+
+        span {
+            animation: to-circle $c2s-dur $cubic $ticked-step-dur;
             animation-fill-mode: forwards;
         }
     }

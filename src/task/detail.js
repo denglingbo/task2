@@ -5,6 +5,27 @@
  *
  */
 
+
+// 状态显示
+var statusMap = {
+    1: '已完成',
+    2: '已撤销',
+    3: '进行中',
+    4: '待接收',
+    5: '指派中',
+    6: '审核中',
+    7: '已拒绝'
+};
+
+// 紧要程度
+var importanceMap = {
+    1: '紧急',
+    2: '尽快完成',
+    3: '提早完成',
+    4: '普通'
+};
+
+
 require('./detail.scss');
 
 var config = require('../config');
@@ -134,6 +155,45 @@ page.renderAffairTalk = function (data) {
 };
 
 /**
+ * 获取公共数据
+ *
+ * @param {Array} jids,
+ * @param {number} companyId,
+ * @param {number} dataFlag,
+ * @param {Function} fn,
+ *
+ */
+function getPubData(jids, companyId, dataFlag, fn) {
+    if (!jids || companyId === null) {
+        fn(null);
+        return;
+    }
+
+    var jidArr = [];
+
+    jids.forEach(function (item) {
+        jidArr.push(item + '@' + companyId);
+    });
+
+    var options = {
+        action: 'pubdata/userInfo',
+        parameter: {
+            jids: jidArr,
+            dataFlag: parseInt(dataFlag, 2) || 0
+        }
+    };
+
+    window.CPPubData.getPubData(options, function (data) {
+        if (!data) {
+            fn(null);
+            return;
+        }
+
+        fn(data);
+    });
+}
+
+/**
  * 请求页面接口
  *
  * @param {deferred} dfd, deferred
@@ -152,38 +212,42 @@ page.addParallelTask(function (dfd) {
                 var data = result.data;
 
                 // 时间展示
-                data.updateDateRaw = util.formatDateToNow(data.update_time);
+                data.updateDateRaw = util.formatDateToNow(data.op_time);
 
-                // 状态显示
-                var statusMap = {
-                    1: '已完成',
-                    2: '待审核',
-                    3: '等待中'
-                };
+                data.content = util.formatRichText(data.content);
+
                 data.statusText = (function () {
                     return statusMap[data.status] || '';
                 })();
 
-                // 是否有 follow
-                data.hasFollow = (function () {
-                    return data.status !== 1;
-                })();
+                data.importanceRaw = importanceMap[data.importance_level];
 
-                // START - partner
-                var partner = data.partner;
-                var partnerRaw = [];
+                data.creator = '';
 
-                partner.forEach(function (item) {
-                    if (item.name && item.pinyin) {
-                        partnerRaw.push(item.name + '(' + item.pinyin + ')');
-                    }
+                var cid = util.params('cid');
+                getPubData([data.create_user], util.params('cid'), 0, function (userData) {
+                    var creator = util.getObject(userData, 'jid', data.create_user + '@' + cid);
+                    data.creator = creator !== null ? creator.name : '';
                 });
 
-                if (partnerRaw.length) {
-                    data.partnerLength = partner.length;
-                }
+                data.principal = data.principal_user;
+                data.partnerRaw = data.attend_ids;
 
-                data.partnerRaw = partnerRaw.join('、');
+                // START - partner
+                // var partner = data.partner;
+                // var partnerRaw = [];
+
+                // partner.forEach(function (item) {
+                //     if (item.name && item.pinyin) {
+                //         partnerRaw.push(item.name + '(' + item.pinyin + ')');
+                //     }
+                // });
+
+                // if (partnerRaw.length) {
+                //     data.partnerLength = partner.length;
+                // }
+
+                // data.partnerRaw = partnerRaw.join('、');
                 // END - partner
 
                 me.data = data;

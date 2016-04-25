@@ -20,9 +20,7 @@
             </div>
 
             <div class="detail-title-right">
-                {{#hasFollow}}
                 <p class="star"><em></em></p>
-                {{/hasFollow}}
                 <p class="detail-title-state state-doing">{{ statusText }}</p>
             </div>
         </div>
@@ -30,8 +28,8 @@
         <div class="layout detail-comments">
             <div class="sub-title">任务描述</div>
 
-            <p>{{ description }}</p>
-            <p>紧要程度: 紧急</p>
+            <p>{{ content }}</p>
+            <p>紧要程度: {{ importanceRaw }}</p>
             <p>完成时间: 尽快完成</p>
         </div>
 
@@ -39,6 +37,7 @@
         <dl class="layout-list partner">
             <dt class="sub-title">团队成员</dt>
 
+            {{#creator}}
             <dd>
                 <div class="column-left">创建人: </div>
                 <div class="column-middle">
@@ -47,14 +46,20 @@
                     </div>
                 </div>
             </dd>
+            {{/creator}}
+
+            {{#principal}}
             <dd>
                 <div class="column-left">负责人: </div>
                 <div class="column-middle">
                     <div class="column-inner">
-                        {{ master }}
+                        {{ principal }}
                     </div>
                 </div>
             </dd>
+            {{/principal}}
+
+            {{#partnerLength}}
             <dd>
                 <div class="column-left">参与人: </div>
                 <div class="column-middle">
@@ -71,6 +76,8 @@
                     </div>
                 </div>
             </dd>
+            {{/partnerLength}}
+
         </dl>
 
         <!-- 事件 & 讨论 -->

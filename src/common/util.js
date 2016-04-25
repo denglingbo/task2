@@ -82,6 +82,22 @@ util.getUrlParams = function () {
     return util.qs.parse(query);
 };
 
+/**
+ * 获取URL 指定参数
+ *
+ * @param {string} key 指定某key
+ * @return {Object}
+ */
+util.params = function (key) {
+    if (key === undefined) {
+        return null;
+    }
+
+    var query = util.getUrlParams();
+
+    return query[key] || null;
+};
+
 
 /**
  * decode HTML
@@ -100,6 +116,43 @@ util.decodeHTML = function (source) {
     return str.replace(/&#([\d]+);/g, function (_0, _1) {
         return String.fromCharCode(parseInt(_1, 10));
     });
+};
+
+
+/**
+ * 处理富文本
+ *
+ * @param {string} content html
+ * @return {string} 内容
+ */
+util.formatRichText = function (content) {
+    return content
+            .replace(/(\n)/g, '')
+            .replace(/(\t)/g, '')
+            .replace(/(\r)/g, '')
+            .replace(/<\/?[^>]*>/g, '')
+            .replace(/\s*/g, '');
+};
+
+/**
+ * ---
+ *
+ * @param {Array} arr,
+ * @param {string} key,
+ * @param {string} keyVal,
+ * @return {string} 内容
+ */
+util.getObject = function (arr, key, keyVal) {
+
+    var temp = null;
+
+    arr.forEach(function (item) {
+        if (item[key] === keyVal) {
+            temp = item;
+        }
+    });
+
+    return temp;
 };
 
 util.JSON = {};

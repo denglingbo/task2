@@ -51,9 +51,39 @@ page.bindEvents = function () {
     //     }
     // });
 
-    // tick-circle-to-square tick-ticked-animate
+    var CLASSES = {
+        UNTICK: 'untick',
+        TICKED: 'ticked',
+        CIRCLE_SQUARE: 'tick-circle-to-square',
+        TICKED_ANIMATE: 'tick-ticked-animate',
+        SQUARE_CIRCLE: 'tick-square-to-circle',
+        UNTICK_ANIMATE: 'tick-untick-animate'
+    };
+
     $('.tick').on('click', function () {
-        $(this).addClass('tick-circle-to-square tick-ticked-animate');
+
+        var $elem = $(this);
+
+        // 勾选
+        if ($elem.hasClass(CLASSES.UNTICK)) {
+            $elem
+                .removeClass(CLASSES.UNTICK)
+                .removeClass(CLASSES.TICKED)
+                .removeClass(CLASSES.UNTICK_ANIMATE)
+                .removeClass(CLASSES.SQUARE_CIRCLE)
+                .addClass(CLASSES.CIRCLE_SQUARE)
+                .addClass(CLASSES.TICKED_ANIMATE);
+        }
+        // 取消勾选
+        else {
+            $elem
+                .addClass(CLASSES.UNTICK)
+                .addClass(CLASSES.TICKED)
+                .removeClass(CLASSES.CIRCLE_SQUARE)
+                .removeClass(CLASSES.TICKED_ANIMATE)
+                .addClass(CLASSES.UNTICK_ANIMATE)
+                .addClass(CLASSES.SQUARE_CIRCLE);
+        }
     });
 };
 
