@@ -157,16 +157,19 @@ page.renderAffairTalk = function (data) {
 /**
  * 获取公共数据
  *
- * @param {Array} jids,
- * @param {number} companyId,
- * @param {number} dataFlag,
- * @param {Function} fn,
+ * @param {Array} jids, id 数组
+ * @return {deffered}
  *
  */
-function getPubData(jids, companyId, dataFlag, fn) {
+page.getPubData = function (jids) {
+    var dfd = new $.Deferred();
+
+    var companyId = util.params('cid');
+    var dataFlag = 0;
+
     if (!jids || companyId === null) {
-        fn(null);
-        return;
+        dfd.reject(null);
+        return dfd;
     }
 
     var jidArr = [];
@@ -186,14 +189,18 @@ function getPubData(jids, companyId, dataFlag, fn) {
     /* eslint-disable */
     CPPubData.getPubData(options, function (data) {
         if (!data) {
-            fn(null);
-            return;
+            dfd.reject(null);
         }
-
-        fn(data);
+        else {
+            setTimeout(function () {
+                dfd.resolve(data);
+            }, 1500);
+        }
     });
     /* eslint-enable */
-}
+
+    return dfd;
+};
 
 /**
  * 请求页面接口
@@ -203,59 +210,80 @@ function getPubData(jids, companyId, dataFlag, fn) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
+
     var promise = page.post(config.API.TASK_DETAIL_URL);
+
+    // 初始化 Page 基本数据
+    var dealPageData = function (result) {
+
+        if (result.meta && result.meta.code !== 200) {
+            return null;
+        }
+
+        var data = result.data;
+
+        // 时间展示
+        data.updateDateRaw = util.formatDateToNow(data.op_time);
+
+        data.content = util.formatRichText(data.content);
+
+        data.statusText = (function () {
+            return statusMap[data.status] || '';
+        })();
+
+        data.importanceRaw = importanceMap[data.importance_level];
+
+        data.creator = '';
+        data.principal = data.principal_user;
+        data.partnerRaw = data.attend_ids;
+
+        // var cid = util.params('cid');
+        // getPubData([data.create_user], function (userData) {
+        //     var creator = util.findObjectByArray(userData, 'jid', data.create_user + '@' + cid);
+        //     data.creator = creator !== null ? creator.name : '';
+        // });
+
+        // START - partner
+        // var partner = data.partner;
+        // var partnerRaw = [];
+
+        // partner.forEach(function (item) {
+        //     if (item.name && item.pinyin) {
+        //         partnerRaw.push(item.name + '(' + item.pinyin + ')');
+        //     }
+        // });
+
+        // if (partnerRaw.length) {
+        //     data.partnerLength = partner.length;
+        // }
+
+        // data.partnerRaw = partnerRaw.join('、');
+        // END - partner
+
+        // me.data = data;
+
+        return data;
+    };
 
     promise
         .done(function (result) {
-            if (result.meta && result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                var data = result.data;
+            var data = dealPageData(result);
 
-                // 时间展示
-                data.updateDateRaw = util.formatDateToNow(data.op_time);
+            // var promisePubData = me.getPubData([data.create_user]);
+            var promisePubData = me.getPubData();
 
-                data.content = util.formatRichText(data.content);
+            promisePubData
+                .done(function (a) {
+                    data.creator = 123;
+                    me.data = data;
+                    dfd.resolve();
+                })
+                .fail(function (a) {
 
-                data.statusText = (function () {
-                    return statusMap[data.status] || '';
-                })();
-
-                data.importanceRaw = importanceMap[data.importance_level];
-
-                data.creator = '';
-
-                var cid = util.params('cid');
-                getPubData([data.create_user], util.params('cid'), 0, function (userData) {
-                    var creator = util.getObject(userData, 'jid', data.create_user + '@' + cid);
-                    data.creator = creator !== null ? creator.name : '';
                 });
-
-                data.principal = data.principal_user;
-                data.partnerRaw = data.attend_ids;
-
-                // START - partner
-                // var partner = data.partner;
-                // var partnerRaw = [];
-
-                // partner.forEach(function (item) {
-                //     if (item.name && item.pinyin) {
-                //         partnerRaw.push(item.name + '(' + item.pinyin + ')');
-                //     }
-                // });
-
-                // if (partnerRaw.length) {
-                //     data.partnerLength = partner.length;
-                // }
-
-                // data.partnerRaw = partnerRaw.join('、');
-                // END - partner
-
-                me.data = data;
-
-                dfd.resolve();
-            }
+        })
+        .fail(function (a) {
+            // console.log(a);
         });
 
     return dfd;

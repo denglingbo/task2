@@ -20,7 +20,10 @@ var CPPubData = {
             });
         });
 
-        fn(data);
+        // fn(data);
+        setTimeout(function () {
+            fn(data);
+        }, 100);
     }
 };
 

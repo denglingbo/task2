@@ -135,24 +135,64 @@ util.formatRichText = function (content) {
 };
 
 /**
- * ---
+ * 获取数组中的指定JSON 对象
  *
- * @param {Array} arr,
- * @param {string} key,
- * @param {string} keyVal,
- * @return {string} 内容
+ * @param {Array} arr, 数组 [{}, {}, ...]
+ * @param {string} key, 某个 key
+ * @param {string} val, key 对应的值
+ * @return {Object} 匹配到的对象
  */
-util.getObject = function (arr, key, keyVal) {
+util.findObjectByArray = function (arr, key, val) {
 
     var temp = null;
 
+    if (!arr || !$.isArray(arr)) {
+        return temp;
+    }
+
     arr.forEach(function (item) {
-        if (item[key] === keyVal) {
+        if (item[key] && item[key] === val) {
             temp = item;
         }
     });
 
     return temp;
+};
+
+/**
+ * 格式化数据 如1000->1k 1024->1k 1230->1.2k
+ *
+ * @param  {number} number 要fix的数据
+ * @param  {number} basicNum 基准单位如1000
+ * @param  {string} unitName 单位名称如'k'
+ * @param  {number} maxDecimalCount 最多保留几位小数
+ * @return {number}
+ */
+util.fixNum = function (number, basicNum, unitName, maxDecimalCount) {
+
+    if (!number) {
+        return '';
+    }
+    basicNum = basicNum || 1000;
+    if (number < basicNum) {
+        return number;
+    }
+
+    unitName = unitName || 'k';
+    maxDecimalCount = maxDecimalCount || 1;
+
+    var res = number / basicNum;
+
+    if (/\./.test(res)) {
+        res = '' + res;
+        var decimalIndex = res.indexOf('.');
+        // 保留n未小数
+        res = res.slice(0, decimalIndex + maxDecimalCount + 1);
+        // 把结尾的.0 .00 或者是1.90的无效小数点和0去掉
+        res = res.replace(/\.?0*$/g, '');
+    }
+
+    return res + 'k';
 };
 
 util.JSON = {};
