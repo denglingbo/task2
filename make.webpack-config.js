@@ -447,7 +447,7 @@ MakeWebpackConfig.prototype = {
         }
         else {
             // 编译阶段，css 分离出来单独引入
-            cssLoader = ExtractTextPlugin.extract('style', 'css-loader!' + name + '-loader!autoprefixer-loader?minimize');
+            cssLoader = ExtractTextPlugin.extract('style', 'css-loader!' + name + '-loader!autoprefixer-loader');
         }
 
         return cssLoader;

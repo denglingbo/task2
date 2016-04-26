@@ -9,8 +9,8 @@ require('./list.scss');
 
 var config = require('../config');
 var Page = require('../common/page');
-// var Sticky = require('../ui/js/sticky');
-var PageSlider = require('../common/ui/pageSlider/pageSlider');
+// var Sticky = require('../common/ui/sticky');
+var PageSlider = require('../common/ui/pageSlider');
 var InitScroll = require('./list/initScroll');
 var page = new Page();
 

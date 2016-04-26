@@ -5,7 +5,7 @@
  */
 
 var config = require('../config');
-var view = require('./view');
+var view = require('./ui/view');
 
 /**
  * Page

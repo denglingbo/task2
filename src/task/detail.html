@@ -34,50 +34,9 @@
         </div>
 
         <!-- 成员 -->
-        <dl class="layout-list partner">
-            <dt class="sub-title">团队成员</dt>
-
-            {{#creator}}
-            <dd>
-                <div class="column-left">创建人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{ creator }}
-                    </div>
-                </div>
-            </dd>
-            {{/creator}}
-
-            {{#principal}}
-            <dd>
-                <div class="column-left">负责人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{ principal }}
-                    </div>
-                </div>
-            </dd>
-            {{/principal}}
-
-            {{#partnerLength}}
-            <dd>
-                <div class="column-left">参与人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{partnerRaw}}
-                    </div>
-                </div>
-                <div class="column-right">
-                    <div class="column-more">
-                        {{#partnerLength}}
-                        <em>{{ partnerLength }}人</em>
-                        <em class="arrow"><i></i></em>
-                        {{/partnerLength}}
-                    </div>
-                </div>
-            </dd>
-            {{/partnerLength}}
-
+        <dl id="partner" class="layout-list partner">
+            <!-- Call pub data -->
+            <dt class="sub-title">数据加载中</dt>
         </dl>
 
         <!-- 事件 & 讨论 -->
@@ -143,6 +102,51 @@
         </div>
     </dd>
     {{/list}}
+    </script>
+
+    <script id="partner-template" type="text/x-tmpl-mustache">
+    <dt class="sub-title">团队成员</dt>
+
+    {{#creator}}
+    <dd>
+        <div class="column-left">创建人: </div>
+        <div class="column-middle">
+            <div class="column-inner">
+                {{ creator }}
+            </div>
+        </div>
+    </dd>
+    {{/creator}}
+
+    {{#principal}}
+    <dd>
+        <div class="column-left">负责人: </div>
+        <div class="column-middle">
+            <div class="column-inner">
+                {{ principal }}
+            </div>
+        </div>
+    </dd>
+    {{/principal}}
+
+    {{#partnerLength}}
+    <dd>
+        <div class="column-left">参与人: </div>
+        <div class="column-middle">
+            <div class="column-inner">
+                {{partnerRaw}}
+            </div>
+        </div>
+        <div class="column-right">
+            <div class="column-more">
+                {{#partnerLength}}
+                <em>{{ partnerLength }}人</em>
+                <em class="arrow"><i></i></em>
+                {{/partnerLength}}
+            </div>
+        </div>
+    </dd>
+    {{/partnerLength}}
     </script>
 
     <script type="text/javascript" src="../dep/cordova.js"></script>

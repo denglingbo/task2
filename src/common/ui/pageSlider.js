@@ -6,7 +6,7 @@
  * @param {Ojbect} options,
  *
  */
-var Slide = require('../../slide');
+var Slide = require('./slide');
 
 var elementStyle = document.createElement('div').style;
 var vendor = (function () {

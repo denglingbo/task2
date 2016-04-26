@@ -1,8 +1,8 @@
 /**
  * @file slide.js
  * @author deo
- * 触屏滑动基类
  *
+ * 触屏滑动基类
  */
 
 var Slide = function (selector) {
