@@ -1,6 +1,5 @@
-@import '../css/global';
-@import '../css/add-attach';
-@import '../css/close-x';
+@import '../../common/css/global';
+@import '../../common/css/ui';
 
 .alert-length-limit {
 	position: fixed;
@@ -87,7 +86,7 @@
 		.edit-attach {
 
 			.edit-add-attach {
-				height: rem(50px);
+				min-height: rem(50px);
 				line-height: rem(48px);
 				color: #666;
 			}

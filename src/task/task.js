@@ -1,13 +1,14 @@
 /**
- * @file new.js
+ * @file task.js
  * @author hefeng
  * 新建任务页
  *
  */
 
-require('../common/edit/new.scss');
-
-// var config = require('../config');
+require('../widgets/edit/new.scss');
+Mustache = require('dep/mustache');
+require('dep/plugins/attaches/attaches');
+var config = require('../config');
 var Page = require('../common/page');
 
 //  var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
@@ -55,7 +56,7 @@ page.enter = function () {
 
 
 
-    page.loadPage();
+    page.loadPage(this.data);
 };
 
 /**
@@ -194,20 +195,71 @@ page.loadPage = function (data) {
     var me = this;
 
     data = data || {};
-    data = $.extend(data, {
-        view: {
-            task: true,
-            event: false,
-            discussion: false,
-            placeholder: '任务',
-            data: []
-        }
-    });
 
-    require.ensure(['../common/edit/edit'], function () {
-        var template = require('../common/edit/edit');
+    require.ensure(['../widgets/edit/edit'], function () {
+        var template = require('../widgets/edit/edit');
         var $content = $('.edit-container');
-        me.renderFile($content, template, data);
+        me.renderFile($content, template, $.extend({}, data, {
+            view: {
+                task: true,
+                event: false,
+                discussion: false,
+                placeholder: '任务',
+                data: []
+            }
+        }));
+
+        var attache = new Attach({
+            // 客户端信息
+            clientMsg:{
+                uid: '1',
+                cid: '1',
+                client: '',
+                lang: '',
+                pause: '',
+                appver: '111.1.1'
+            },
+            // 已经有的附件信息，没有传空数组，这个主要是用于修改
+            originAttaches:[
+                {
+                   id: 0, // 附件id
+
+                   fileName: data['file_name'], // 附件名称
+                   size: data.size, // 附件大小
+
+                }
+            ],
+            url:{ 
+                uploadUrl: {
+                    url: '/mgw/approve/attachment/getFSTokensOnCreate',
+                    mothod: 'POST'
+                },
+                resumeUrl: {
+                    url: '/mgw/approve/attachment/getFSTokensOnContinue',
+                    mothod: 'POST'
+                }
+            },
+            supportType:[
+                1, // 本地文件
+                2, // 网盘文件
+                3, // 相册图片
+                4, // 拍照上传
+                5 // 语音上传
+            ],
+            dom: {
+                containerDOM: $('.edit-add-attach') // 附件容器DOM元素
+            },
+            callback: function(){}
+        });
+        var renderString = Attach.getRenderString({attach: [
+            $.extend({}, data.attachements[0], {
+                id:'12321',
+                fileName: data.attachements[0]['file_name']
+            })
+        ]},'11.1.1');
+        $('.edit-add-attach').append(renderString.attach);
+        Attach.initEvent('.edit-add-attach', 'zh_CN');
+
         me.bindEvents();
     });
 };
@@ -216,32 +268,32 @@ page.loadPage = function (data) {
  * 编辑页面加载数据
  *
  */
-// function editAjax() {
+function editAjax() {
 
-//     /**
-//      * 请求页面接口
-//      *
-//      * @param {deferred} dfd, deferred
-//      *
-//      */
-//     page.addParallelTask(function (dfd) {
-//         var me = this;
-//         var promise = page.post(config.API.TASK_EDIT_URL, {});
+    /**
+     * 请求页面接口
+     *
+     * @param {deferred} dfd, deferred
+     *
+     */
+    page.addParallelTask(function (dfd) {
+        var me = this;
+        var promise = page.post(config.API.TASK_EDIT_URL, {});
 
-//         promise
-//             .done(function (result) {
-//                 if (result.meta !== 0) {
-//                     dfd.reject(result);
-//                 }
-//                 else {
-//                     me.data = result.data;
-//                     dfd.resolve();
-//                 }
-//             });
-//     });
-// }
+        promise
+            .done(function (result) {
+                if (result.meta !== 0) {
+                    dfd.reject(result);
+                }
+                else {
+                    me.data = result.data;
+                    dfd.resolve();
+                }
+            });
+    });
+}
 
-// editAjax();
+editAjax();
 
 $(function () {
     page.start();
