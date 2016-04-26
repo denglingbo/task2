@@ -15,6 +15,7 @@
             <i class="add-attach"></i>
             <span>添加附件</span>
         </div>
+        <div class="attach-list"></div>
     </div>
 </div>
 

@@ -5,7 +5,7 @@
  *
  */
 
-require('../widgets/edit/new.scss');
+require('../common/widgets/edit/new.scss');
 Mustache = require('dep/mustache');
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
@@ -23,10 +23,10 @@ var valid = {
 var info = {
     title: '',
     comtent: '',
-    master: '',
+    principalUser: '',
     canyuren: [],
-    doneTime: 0,
-    urgency: 0
+    endTime: 0,
+    importanceLevel: ['重要且紧急', '普通', '重要', '紧急']
 };
 
 /**
@@ -52,10 +52,67 @@ var info = {
 // function chooseTimeCB() {
 //     // require('./edit/done-time.scss');
 // }
+
+/**
+ * 转换string驼峰
+ *
+ * @param {string} str, 需要转换的字符串
+ *
+ */
+function camelCase(str) {
+    return str.replace(/_+(.)?/g, function (str, e) {
+        return e ? e.toUpperCase() : "";
+    });
+}
+
+/**
+ * 附件传入data key转为 camelCase
+ *
+ * @param {Array} arr, 附件传入data
+ *
+ */
+function transKey(arr) {
+    var newArr = [];
+    if ($.isArray(arr)) {
+        newArr = arr;
+    }
+    else if (arr instanceof Object) {
+        newArr.push(arr);
+    }
+    var outArr = [];
+    var newObj = {};
+    for (var i = 0, len = newArr.length; i < len; i++) {
+        var item = newArr[i];
+        newObj = {};
+        for (var key in item) {
+            if (item.hasOwnProperty(key)) {
+                newObj[camelCase(key)] = item[key];
+            }
+        }
+        outArr.push(newObj)
+    }
+    return outArr;
+}
+
+/**
+ * 切换关闭按钮的显示与隐藏
+ *
+ * @param {Object} textDom, 当前输入框dom对象
+ * @param {number} textLength, 输入框内文字长度
+ *
+ */
+function toggleX(textDom, textLength) {
+    if (!textLength) {
+        $(textDom).parent().find('.close-x').addClass('hide');
+    }
+    else {
+        $(textDom).parent().find('.close-x').removeClass('hide');
+    }
+}
+
 page.enter = function () {
 
-
-
+    
     page.loadPage(this.data);
 };
 
@@ -66,22 +123,6 @@ page.enter = function () {
 page.bindEvents = function () {
     var $titleDom = $('#edit-title');
     var $contentDom = $('#edit-content');
-
-    /**
-     * 切换关闭按钮的显示与隐藏
-     *
-     * @param {Object} textDom, 当前输入框dom对象
-     * @param {number} textLength, 输入框内文字长度
-     *
-     */
-    function toggleX(textDom, textLength) {
-        if (!textLength) {
-            $(textDom).parent().find('.close-x').addClass('hide');
-        }
-        else {
-            $(textDom).parent().find('.close-x').removeClass('hide');
-        }
-    }
 
     $('.close-x').click(function () {
         var $parentDom = $(this).parent();
@@ -196,8 +237,8 @@ page.loadPage = function (data) {
 
     data = data || {};
 
-    require.ensure(['../widgets/edit/edit'], function () {
-        var template = require('../widgets/edit/edit');
+    require.ensure(['../common/widgets/edit/edit'], function () {
+        var template = require('../common/widgets/edit/edit');
         var $content = $('.edit-container');
         me.renderFile($content, template, $.extend({}, data, {
             view: {
@@ -208,7 +249,7 @@ page.loadPage = function (data) {
                 data: []
             }
         }));
-
+        // 初始化附件组件
         var attache = new Attach({
             // 客户端信息
             clientMsg:{
@@ -247,18 +288,22 @@ page.loadPage = function (data) {
                 5 // 语音上传
             ],
             dom: {
-                containerDOM: $('.edit-add-attach') // 附件容器DOM元素
+                containerDOM: $('.attach-list') // 附件容器DOM元素
             },
             callback: function(){}
         });
-        var renderString = Attach.getRenderString({attach: [
-            $.extend({}, data.attachements[0], {
-                id:'12321',
-                fileName: data.attachements[0]['file_name']
-            })
-        ]},'11.1.1');
-        $('.edit-add-attach').append(renderString.attach);
-        Attach.initEvent('.edit-add-attach', 'zh_CN');
+        var renderString = Attach.getRenderString({attach: transKey(data.attachements)},'11.1.1');
+        $('.attach-list').append(renderString.attach);
+        Attach.initEvent('.attach-list', 'zh_CN');
+
+        // 设置默认值
+        $('#urgencyBlock .value').text(info.importanceLevel[data['importance_level']]);
+        $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
+
+        // 初始化文本框的关闭按钮
+        $.each($('.input'), function (index, item) {
+            toggleX($(item), $(item).val());
+        });
 
         me.bindEvents();
     });

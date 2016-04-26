@@ -15,6 +15,12 @@
 	            "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
 	            "file_name" : "ca.crt",
 	            "size" : 1391
+	        },
+	        {
+	            "deleted" : false,
+	            "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
+	            "file_name" : "cb.crt",
+	            "size" : 1311
 	        }
 	    ],
 	    "message" : {
