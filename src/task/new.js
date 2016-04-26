@@ -21,12 +21,55 @@ var valid = {
 };
 
 var info = {
+    id: '',
     title: '',
     comtent: '',
-    principalUser: '',
-    canyuren: [],
+    principalUser: 0,
+    attendIds: [],
     endTime: 0,
-    importanceLevel: ['重要且紧急', '普通', '重要', '紧急']
+    importanceLevel: 0
+};
+
+var principalSelectKey = 'principalSelector';
+var attendSelectKey = 'attandSelectKey';
+var selectValue = {
+    "clientMsg": {
+        "uid": "",
+        "cid": "",
+        "client": "",
+        "lang": "",
+        "puse": "",
+        "appver": ""
+    },
+    "selector": {
+        "contact": 3,   //选择人
+        "dept": 0,      //选择部门
+        "title": 0      //选择职务
+    },
+    "selectType": 2,    //选择组件类型：1.单选 2.复选
+    "filter": {         //指定的过滤数据
+        "disabled": {   //指定不显示的数据
+            "contacts": [],
+            "depts": [],
+            "titles": []
+        },
+        "enabled": {    //指定显示的数据
+            "depts": [],
+            "titles": []
+        },
+        "checked": {   //已选择的数据
+            "contacts": [],     //数组
+            "depts": [],
+            "titles": []
+        }
+    },
+    "dataSource": 1,    //数据源：1.通过原生插件获取 2.从移动网关服务器获取
+    "requestInfo":{     //从移动网关获取数据的请求信息
+        "type": "get",             //请求方式
+        "data": "",                //请求发送的数据
+        "url": "",     //请求的url
+        "headers": {}
+    }
 };
 
 /**
@@ -43,14 +86,6 @@ var info = {
 //         $alertDom.addClass('hide');
 //     },
 //     3000);
-// }
-
-/**
- * 选择完成时间跳转页面的回掉函数
- *
- */
-// function chooseTimeCB() {
-//     // require('./edit/done-time.scss');
 // }
 
 /**
@@ -112,8 +147,11 @@ function toggleX(textDom, textLength) {
 
 page.enter = function () {
 
-    
     page.loadPage(this.data);
+
+    // TODO 修改存储数据
+    window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
+    window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
 };
 
 /**
@@ -121,6 +159,7 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+    var me = this;
     var $titleDom = $('#edit-title');
     var $contentDom = $('#edit-content');
 
@@ -181,49 +220,27 @@ page.bindEvents = function () {
         $contentDom.focus();
     });
 
-    // $('#doneTime').click(function () {
-    //     CPNavigationBar.redirect('./edit/done-time.html', '完成时间', false, chooseTimeCB, info)
-    // });
-
-    var mobiOptions = {
-        theme: 'android-holo-light',
-        mode: 'scroller',
-        // ios 底部上滑, android 中间显示
-        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-        lang: 'zh',
-        buttons: ['cancel', 'set'],
-        height: 50
-    };
-
-    $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
-        headerText: '紧急程度',
-        showInput: false,
-        showMe: true,
-        rows: 3,
-        data: [
-            {
-                text: '重要且紧急',
-                value: '0'
-            },
-            {
-                text: '普通',
-                value: '1',
-                selected: true
-            },
-            {
-                text: '重要',
-                value: '2'
-            },
-            {
-                text: '紧急',
-                value: '3'
+    // 完成时间跳转页面
+    $('#doneTime').click(function () {
+        CPNavigationBar.redirect('./doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
+            if (data) {
+                data = JSON.parse(data);
             }
-        ],
-        onSelect: function (text, inst) {
-            info.urgency = +inst.getVal();
-            $('#urgencyBlock .value').text(text);
-        }
-    }));
+            // TODO
+        });
+    });
+
+    // 选择人员跳转页面
+    $('#principal, #attends').click(function (e) {
+        var key = e.target.id === 'principal' ? principalSelectKey : attendSelectKey;
+        CPNavigationBar.redirect('../selector/selector.html?paramId=' + key, '选人', false, function (data) {
+            if (data) {
+                data = JSON.parse(data);
+            }
+            // TODO
+        });
+    });
+    
 };
 
 /**
@@ -249,6 +266,47 @@ page.loadPage = function (data) {
                 data: []
             }
         }));
+
+        var mobiOptions = {
+            theme: 'android-holo-light',
+            mode: 'scroller',
+            // ios 底部上滑, android 中间显示
+            display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
+            lang: 'zh',
+            buttons: ['cancel', 'set'],
+            height: 50
+        };
+
+        $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
+            headerText: '紧急程度',
+            showInput: false,
+            showMe: true,
+            rows: 3,
+            data: [
+                {
+                    text: '重要且紧急',
+                    value: '0'
+                },
+                {
+                    text: '普通',
+                    value: '1',
+                    selected: true
+                },
+                {
+                    text: '重要',
+                    value: '2'
+                },
+                {
+                    text: '紧急',
+                    value: '3'
+                }
+            ],
+            onSelect: function (text, inst) {
+                info.urgency = +inst.getVal();
+                $('#urgencyBlock .value').text(text);
+            }
+        }));
+
         // 初始化附件组件
         var attache = new Attach({
             // 客户端信息
@@ -261,15 +319,7 @@ page.loadPage = function (data) {
                 appver: '111.1.1'
             },
             // 已经有的附件信息，没有传空数组，这个主要是用于修改
-            originAttaches:[
-                {
-                   id: 0, // 附件id
-
-                   fileName: data['file_name'], // 附件名称
-                   size: data.size, // 附件大小
-
-                }
-            ],
+            originAttaches:[],
             url:{ 
                 uploadUrl: {
                     url: '/mgw/approve/attachment/getFSTokensOnCreate',
@@ -297,7 +347,8 @@ page.loadPage = function (data) {
         Attach.initEvent('.attach-list', 'zh_CN');
 
         // 设置默认值
-        $('#urgencyBlock .value').text(info.importanceLevel[data['importance_level']]);
+        var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
+        $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
         $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
 
         // 初始化文本框的关闭按钮

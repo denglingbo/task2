@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title data-title="选人组件"></title>
+	<link rel="stylesheet" type="text/css" href="/dep/plugins/selector/css/selector.css" />
+</head>
+<body>
+
+	<!--顶部-->
+	<div id="selector-top">
+		<div class="selector-search">
+			<div class="con"><div class="photos"><i class="icon"></i></div></div>
+			<div class="input"><form action="javascript:;"><input type="search" class="language" data-lang="p|search" placeholder="搜索" autocomplete="off"></form><span class="shelter"></span></div>
+		</div>
+		<div class="selector-search-off hide language" data-lang="t|searchOut">退出搜索</div>
+	</div>	
+
+	<!--头部-->
+	<div id="selector-header-out">
+		<div id="selector-header"></div>
+		<div id="selector-crumb"></div>
+	</div>
+		
+
+	<!--内容区域-->
+	<div id="selector-body-out">
+		<div id="selector-body">
+			<div id="selector-main"></div>
+			<div id="selector-search-main"></div>
+		</div>
+		<div id="selector-letter-nav"></div>
+	</div>
+
+	<!--loading-->
+	<div id="selector-loading"><i></i><span class="language" data-lang="t|loading">加载中...</span></div>
+
+
+	<!--**************模板*************-->
+	<!-- <div class="selector-search-bg"><div class="con"><i></i><span>搜索</span></div></div> -->
+
+	<!--tab切换-->
+	<script id="template-tab" type="x-tmpl-mustache">
+		<div class="selector-tab-out">
+			{{#value}}
+			<div class="selector-tab" id="tab{{id}}" data-id="{{id}}">
+				<div class="selector-tab-head"><span class="kind"><strong>{{name}}</strong><em></em></span><i></i></div>
+			</div>
+			{{/value}}
+		</div>
+	</script>
+
+	<!--tab切换子类-->
+	<script id="template-tab-list" type="x-tmpl-mustache">
+	    <div class="selector-tab-content">
+	        <ul>
+	        	{{#value}}
+	            <li id="tab{{id}}" data-id="{{id}}">{{name}}</li>
+	            {{/value}}
+	        </ul>
+	    </div>
+	</script>
+
+	<!--面包屑-->
+	<script id="template-crumb" type="x-tmpl-mustache">
+		<div class="selector-crumb">
+			<strong class="root" id="{{root.id}}">{{root.name}}<i></i></strong>
+		</div>
+	</script>
+
+	<!--部门列表-->
+	<script id="template-department" type="x-tmpl-mustache">
+		<ul class="selector-group">
+			{{#rel.depts}}
+			<li id="{{id}}" class="item-depts"><span>{{name}}</span><i></i></li>
+			{{/rel.depts}}
+		</ul>
+		<ul class="selector-group">
+			{{#rel.titles}}
+			<li id="{{id}}" class="item-titles"><span>{{name}}</span><i></i></li>
+			{{/rel.titles}}
+		</ul>
+		<ul class="selector-list">
+			{{#rel.contacts}}
+			{{#consArr}}
+			<li class="item selector-contacts-item checkable"  data-id="{{jid}}">
+				<input type="button" class="checkbox">
+				<img src="img/photo.png" class="photo">
+				<p class="name">{{name}}</p>
+				<p class="title">{{titleName}}</p>
+			</li>
+			{{/consArr}}
+			{{/rel.contacts}}
+		</ul>
+	</script>
+
+	<!--全体员工选择-->
+	<script id="template-person" type="x-tmpl-mustache">
+		<div class="selector-person">
+			<div class="selector-person-con">
+				{{#rel.contacts}}
+				<div class="selector-person-item">
+					<div class="selector-person-tag" data-letter="{{firstLetter}}">{{firstLetter}}</div>
+					<ul class="selector-list">
+						{{#consArr}}
+						<li class="item selector-contacts-item checkable" data-id="{{jid}}">
+							<input type="button" class="checkbox">
+							<img src="img/photo.png" class="photo">
+							<p class="name">{{name}}</p>
+							<p class="title">{{titleName}}</p>
+						</li>
+						{{/consArr}}
+					</ul>
+				</div>
+				{{/rel.contacts}}
+			</div>
+		</div>
+	</script>
+
+	<!--字母导航-->
+	<script id="templateLetterNav" type="x-tmpl-mustache">		
+		<ul class="selector-person-nav">
+			{{#rel.contacts}}
+			<li>{{firstLetter}}</li>
+			{{/rel.contacts}}
+		</ul>
+		<div class="selector-person-tip">A</div>
+	</script>
+
+	<!--自定义组列表-->
+	<script id="template-defined" type="x-tmpl-mustache">
+		<ul class="selector-group">
+			{{#rel.udefGroups}}
+			<li id="{{id}}"><span>{{name}}</span><i></i></li>
+			{{/rel.udefGroups}}
+		</ul>
+	</script>
+
+	<!--友好企业列表-->
+	<script id="template-friend" type="x-tmpl-mustache">
+		<ul class="selector-group">
+			{{#rel.uncorps}}
+			<li id="{{id}}"><span>{{name}}</span><i></i></li>
+			{{/rel.uncorps}}
+		</ul>
+	</script>
+
+	<!--部门选择 根目录-->
+	<script id="template-depts-select1" type="x-tmpl-mustache">
+		<ul class="selector-cell selector-depts-ul checkbox-list">
+			{{#rel.depts}}
+			<li class="item" data-id="{{id}}">
+				<label class="selector-depts-item checkable" data-id="{{id}}">
+					<input type="button" class="checkbox">
+					<span class="name">{{name}}</span>
+				</label>
+				<i></i>
+			</li>
+			{{/rel.depts}}
+		</ul>
+	</script>
+
+	<!--部门选择 子目录-->
+	<script id="template-depts-select2" type="x-tmpl-mustache">
+		<div class="selector-checkall selector-checkall-depts">
+			<p><input type="button" class="checkbox"><span class="language" data-lang="t|checkall">全选</span></p>
+		</div>
+		<ul class="selector-cell selector-depts-ul checkbox-list selector-mt">
+			{{#rel.depts}}
+			<li class="item" data-id="{{id}}">
+				<label class="selector-depts-item checkable" data-id="{{id}}">
+					<input type="button" class="checkbox">
+					<span class="name">{{name}}</span>
+				</label>
+				<i></i>
+			</li>
+			{{/rel.depts}}
+		</ul>
+	</script>
+
+	<!--职务 选择-->
+	<script id="template-titles-select" type="x-tmpl-mustache">
+		<ul class="selector-cell">
+			{{#rel.titles}}
+			<li class="item selector-titles-item checkable" data-id="{{id}}">
+				<input type="button" class="checkbox">
+				<p class="name">{{name}}</p>
+			</li>
+			{{/rel.titles}}
+		</ul>
+	</script>
+
+	<!--人员选择1 有子类 consArr-->
+	<script id="template-contact1" type="x-tmpl-mustache">
+		<div class="selector-checkall">
+			<p><input type="button" class="checkbox"><span class="language" data-lang="t|checkall">全选</span></p>
+		</div>
+		<ul class="selector-list checkbox-list selector-mt">
+			{{#rel.contacts}}
+			{{#consArr}}
+			<li class="item selector-contacts-item checkable" data-id="{{jid}}">
+				<input type="button" class="checkbox">
+				<img src="img/photo.png" class="photo">
+				<p class="name">{{name}}</p>
+				<p class="title">{{titleName}}</p>
+			</li>
+			{{/consArr}}
+			{{/rel.contacts}}
+		</ul>
+	</script>
+
+	<!--人员选择2 无子类 consArr-->
+	<script id="template-contact2" type="x-tmpl-mustache">
+		<div class="selector-checkall">
+			<p><input type="button" class="checkbox"><span class="language" data-lang="t|checkall">全选</span></p>
+		</div>
+		<ul class="selector-list checkbox-list selector-mt">
+			{{#rel.contacts}}
+			<li class="item selector-contacts-item checkable" data-id="{{jid}}">
+				<input type="button" class="checkbox">
+				<img src="img/photo.png" class="photo">
+				<p class="name">{{name}}</p>
+				<p class="title">{{titleName}}</p>
+			</li>
+			{{/rel.contacts}}
+		</ul>
+	</script>
+
+	<!--搜索结果-->
+	<script id="template-search-main" type="x-tmpl-mustache">
+		<div class="selector-search-result">
+			<div class="search-contacts-title search-column-title">人员</div>
+			<div class="search-column-con">
+				<ul class="selector-list checkbox-list">
+					{{#rel.contacts}}
+					<li class="item selector-contacts-item checkable" data-id="{{jid}}">
+						<input type="button" class="checkbox">
+						<img src="img/photo.png" class="photo">
+						<p class="name">{{name}}</p>
+						<p class="title">{{titleName}}</p>
+					</li>
+					{{/rel.contacts}}
+				</ul>
+			</div>
+			<div class="search-depts-title search-column-title">部门</div>
+			<div class="search-column-con">
+				<ul class="selector-cell">
+					{{#rel.depts}}
+					<li class="item selector-depts-item checkable" data-id="{{id}}">
+						<input type="button" class="checkbox">
+						<p class="name">{{name}}</p>
+					</li>
+					{{/rel.depts}}
+				</ul>
+			</div>
+			<div class="search-titles-title search-column-title">职务</div>
+			<div class="search-column-con">
+				<ul class="selector-cell">
+					{{#rel.titles}}
+					<li class="item selector-titles-item checkable" data-id="{{id}}">
+						<input type="button" class="checkbox">
+						<p class="name">{{name}}</p>
+					</li>
+					{{/rel.titles}}
+				</ul>
+			</div>
+		</div>
+	</script>
+
+
+	<script type="text/javascript" src="/dep/plugins/selector/js/static/zepto.js"></script>
+	<script type="text/javascript" src="/dep/plugins/selector/js/static/mustache.js"></script>
+	<script type="text/javascript" src="/dep/cordova.js"></script>
+	<script type="text/javascript" src="/dep/plugins/selector/js/static/mbreq.js"></script>
+	<script type="text/javascript" src="/dep/plugins/selector/js/selector.js"></script>
+</body>
+</html>
