@@ -5,6 +5,8 @@
  * 人员列表页
  */
 
+require('./list.scss');
+
 // var config = require('../config');
 var util = require('../common/util');
 var mobile = require('../common/mobile.js');
@@ -13,7 +15,7 @@ var Page = require('../common/page');
 var page = new Page();
 
 page.enter = function () {
-    // console.log(this.data);
+    this.render('#users-list', this.data);
 };
 
 /**
@@ -30,12 +32,18 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (data) {
-            me.data = data;
-            dfd.resolve(data);
+            me.data = {
+                list: data
+            };
+
+            dfd.resolve();
         })
         .fail(function () {
             dfd.reject();
         });
+
+
+    // var promiseA = mobile.getUserAndPhoto(jids);
 
     return dfd;
 });

@@ -1,0 +1,54 @@
+/**
+ * @file list.scss
+ * @author deo
+ *
+ * 列表页样式
+ */
+
+@import "../common/css/global.scss";
+@import "../common/css/ui.scss";
+
+.layout-list-only {
+
+    // 成员
+    $left-width: rem(30px);
+    $right-width: rem(65px);
+
+    &.users-list {
+
+        dd {
+            height: rem(36px);
+            line-height: rem(36px);
+
+            @include column($left-width, $right-width);
+
+            .column-left {
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .column-middle {
+
+                .column-inner {
+                    padding-left: rem(15px);
+
+                    .attach-size {
+                        font-size: rem(12px);
+                        color: $gray;
+                    }
+                }
+            }
+/*
+            &:first-child {
+
+                &:before {
+                    display: none;   
+                }
+            }
+*/
+        }
+    }
+}

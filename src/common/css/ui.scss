@@ -36,3 +36,25 @@ $add-attach-width: rem(18px);
 	vertical-align: rem(-2px);
 	margin-right: rem(-3px);
 }
+
+/**
+ * 五角星
+ */
+$star-size: rem(16px);
+
+.star {
+    padding: 0;
+    display: inline-block;
+    width: $star-size;
+    height: $star-size;
+    background: url('#{$rootImg}/star.png') no-repeat ($star-size * -1) 0;
+    background-size: $star-size * 2;
+
+    &.follow {
+        background-position: 0 0;
+    }
+
+    &:active {
+        @extend .follow;
+    }
+}

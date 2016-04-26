@@ -1,8 +1,12 @@
-/* 详情页公共样式 */
+/**
+ * @file detail.scss
+ * @author deo
+ *
+ * 详情页公共样式
+ */
 
 @import "../common/css/global.scss";
-@import "../common/css/layout.scss";
-@import "../common/css/star.scss";
+@import "../common/css/ui.scss";
 
 .main {
     padding-bottom: rem(44px);
@@ -17,6 +21,7 @@
     padding-bottom: rem(15px);
 }
 
+// title 部分
 .detail-title {
 
     height: rem(40px);

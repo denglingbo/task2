@@ -74,6 +74,19 @@ exports.mergeArray = function (param) {
     return arr;
 };
 
+exports.arrayConcat = function (arr1, arr2) {
+
+    arr1.forEach(function (item) {
+
+        arr2.forEach(function (temp) {
+            if (item.jid === temp.jid) {
+                $.extend(item, temp);
+            }
+        });
+    });
+
+};
+
 
 /**
  * 封装原生接口 改为 deferred
@@ -118,6 +131,10 @@ exports.getUserInfo = function (jids, dataFlag) {
         return null;
     }
 
+    if (!$.isArray(jids)) {
+        jids = jids.split(',');
+    }
+
     var jidArr = [];
 
     // 按原生需求拼接字符串
@@ -153,8 +170,8 @@ exports.getUserInfo = function (jids, dataFlag) {
  *
  */
 exports.getUserIcon = function (jids) {
-    var me = this;
     var dfd = new $.Deferred();
+    var me = this;
     var arr = jids;
 
     if (!$.isArray(jids)) {
@@ -184,9 +201,9 @@ exports.getUserIcon = function (jids) {
     $.when.apply($, promiseList)
         .done(function () {
             // 获取整个promise 的返回
-            var args = arguments;
+            var arr = Array.prototype.slice.call(arguments);
 
-            dfd.resolve(args);
+            dfd.resolve(arr);
         })
         .fail(function () {
             dfd.reject(null);
@@ -195,5 +212,24 @@ exports.getUserIcon = function (jids) {
     return dfd;
 };
 
+exports.getUserAndPhoto = function (jids) {
+    var dfd = new $.Deferred();
+    // var me = this;
+    var promiseList = [this.getUserInfo(jids), this.getUserIcon(jids)];
+
+    $.when.apply($, promiseList)
+        .done(function (userInfo, userIcon) {
+
+            // var userInfoArr = userInfo.contacts;
+            // var arr = me.arrayConcat(userInfoArr, userIcon);
+
+            dfd.resolve();
+        })
+        .fail(function () {
+            dfd.reject(null);
+        });
+
+    return dfd;
+};
 
 module.exports = exports;

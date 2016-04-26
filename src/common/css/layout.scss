@@ -12,8 +12,48 @@
     background: $white;
 }
 
-.layout-list {
+// layout-list, layout-list-only
+.layout-common {
     margin-top: rem(10px);
-    padding: rem(20px) 0 0 rem(15px);
     background: $white;
+    
+    dd {
+        height: rem(20px);
+        line-height: rem(20px);
+        padding: rem(13px) 0 rem(11px) 0;
+
+        @include clearfix();
+
+        div {
+            height: 100%;
+        }
+
+        .column-left {}
+
+        .column-middle {}
+
+        .column-right {
+            position: relative;
+        }
+    }
+}
+
+// 有 title 样式
+.layout-list {
+    @extend .layout-common;
+    padding: rem(20px) 0 0 rem(15px);
+
+    dd {
+        @include border-1px(top, #e1e4e6);
+    }
+}
+
+// 无 title 样式
+.layout-list-only {
+    @extend .layout-common;
+    padding: 0 0 0 rem(15px);
+
+    dd:not(:first-child) {
+        @include border-1px(top, #e1e4e6);
+    }
 }

@@ -104,23 +104,9 @@
     
     // 通用
     dd {
-        height: rem(20px);
-        line-height: rem(20px);
-        padding: rem(13px) 0 rem(11px) 0;
-
-        @include border-1px(top, #e1e4e6);
-
-        @include clearfix();
-
-        div {
-            height: 100%;
-        }
 
         .column-left {
             color: $gray;
-        }
-
-        .column-middle {
         }
 
         .column-right {

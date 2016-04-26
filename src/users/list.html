@@ -5,13 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
     <title>Hello Coder</title>
-    <script type="text/javascript">
-
-    </script>
 </head>
 <body>
     <div class="main">
+
+        <dl id="users-list" class="layout-list-only users-list">
+            <!-- template -->
+        </dl>
+
     </div>
+
+    <script id="users-list-template" type="x-tmpl-mustache">
+    {{#list}}
+    <dd>
+        <div class="column-left">
+            <img src="/common/img/files/doc.png" />
+        </div>
+        <div class="column-middle">
+            <div class="column-inner">
+                <p>{{ jid }}</p>
+            </div>
+        </div>
+    </dd>
+    {{/list}}
+    </script>
 
     <script type="text/javascript" src="/cordova.js"></script>
 </body>
