@@ -5,7 +5,7 @@
  *
  */
 
-require('../common/edit/new.scss');
+require('../common/widgets/edit/new.scss');
 
 // var config = require('../config');
 var Page = require('../common/page');
@@ -156,8 +156,8 @@ page.loadPage = function (data) {
         }
     });
 
-    require.ensure(['../common/edit/edit'], function () {
-        var template = require('../common/edit/edit');
+    require.ensure(['../common/widgets/edit/edit'], function () {
+        var template = require('../common/widgets/edit/edit');
         var $content = $('.edit-container');
         me.renderFile($content, template, data);
         me.bindEvents();

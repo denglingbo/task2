@@ -1,0 +1,38 @@
+/**
+ * @file ui.scss
+ * @author deo
+ *
+ * icon样式
+ *
+ */
+
+$add-attach-width: rem(17px);
+
+.add-attach {
+	padding: 0;
+	display: inline-block;
+	width: $add-attach-width;
+	height: $add-attach-width;
+	background-image: url('#{$rootImg}/button_import_add-accessory.png');
+	background-repeat: no-repeat;
+	background-size: $add-attach-width;
+	vertical-align: rem(-2px);
+	margin-right: rem(-3px);
+}
+
+
+$add-attach-width: rem(18px);
+
+.close-x {
+	padding: 0;
+	display: block;
+	position: absolute;
+	right:rem(20px);
+	width: $add-attach-width;
+	height: $add-attach-width;
+	background-image: url('#{$rootImg}/button_top_search_close.png');
+	background-repeat: no-repeat;
+	background-size: $add-attach-width;
+	vertical-align: rem(-2px);
+	margin-right: rem(-3px);
+}
