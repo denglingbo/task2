@@ -5,38 +5,17 @@
  *
  */
 
-
-// 状态显示
-var statusMap = {
-    1: '已完成',
-    2: '已撤销',
-    3: '进行中',
-    4: '待接收',
-    5: '指派中',
-    6: '审核中',
-    7: '已拒绝'
-};
-
-// 紧要程度
-var importanceMap = {
-    1: '紧急',
-    2: '尽快完成',
-    3: '提早完成',
-    4: '普通'
-};
-
-
 require('./detail.scss');
 
 var config = require('../config');
-var util = require('../common/util');
+// var util = require('../common/util');
+var detailUtil = require('../common/widgets/detail/detail.js');
+var mobile = require('../common/mobile.js');
 var Page = require('../common/page');
 
 var page = new Page();
 
 page.enter = function () {
-    // console.log(this.data);
-
     this.render('#detail-main', this.data);
 
     this.affairTalkRequest(false);
@@ -121,85 +100,124 @@ page.affairTalkRequest = function (isStatus) {
         loaderStatus('process');
     }
 
-    promise
-        .done(function (result) {
-            if (result.meta && result.meta.code !== 200) {
+    promise.done(function (result) {
+        if (result.meta && result.meta.code !== 200) {
 
-            }
-            else {
-                var data = result.data;
+            return;
+        }
 
-                if (!data.list) {
-                    return;
-                }
+        var data = result.data;
 
-                me.renderAffairTalk(result.data);
+        if (!data.list) {
+            return;
+        }
 
-                if (data.list.length < pageNum) {
-                    $loader.addClass('hide');
-                }
-                else {
-                    $loader.removeClass('hide');
-                }
+        me.render('#affair-talk', data, 'append');
 
-                if (hasStatus) {
-                    loaderStatus('done');
-                    loaderStatus('holder', 500);
-                }
-            }
-        });
-};
+        if (data.list.length < pageNum) {
+            $loader.addClass('hide');
+        }
+        else {
+            $loader.removeClass('hide');
+        }
 
-page.renderAffairTalk = function (data) {
-    this.render('#affair-talk', data, 'append');
+        if (hasStatus) {
+            loaderStatus('done');
+            loaderStatus('holder', 500);
+        }
+    });
 };
 
 /**
- * 获取公共数据
+ * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
  *
- * @param {Array} jids, id 数组
- * @return {deffered}
+ * @param {Object} srcObject, 源数据对象
+ * @param {Object} itemObject, 子对象
+ * @param {Object} appendObject, 匹配到某对象上
  *
  */
-page.getPubData = function (jids) {
-    var dfd = new $.Deferred();
+page.findOwner = function (srcObject, itemObject, appendObject) {
+    var id = parseInt(mobile.takeJid(itemObject.jid), 10);
 
-    var companyId = util.params('cid');
-    var dataFlag = 0;
+    for (var key in srcObject) {
+        if (srcObject.hasOwnProperty(key)) {
 
-    if (!jids || companyId === null) {
-        dfd.reject(null);
-        return dfd;
-    }
+            var objIds = srcObject[key];
 
-    var jidArr = [];
+            if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
 
-    jids.forEach(function (item) {
-        jidArr.push(item + '@' + companyId);
-    });
+                var appender = appendObject[key];
+                if (!$.isArray(appender)) {
+                    appendObject[key] = [];
+                }
 
-    var options = {
-        action: 'pubdata/userInfo',
-        parameter: {
-            jids: jidArr,
-            dataFlag: parseInt(dataFlag, 2) || 0
+                appendObject[key].push(itemObject);
+            }
+            // 非数组直接判断是否相等
+            else if (objIds === id) {
+                appendObject[key] = itemObject;
+            }
+
         }
+    }
+};
+
+/**
+ * 成员获取失败
+ *
+ */
+page.failUser = function () {
+    $('#partner')
+        .removeClass('hide')
+        .html('<div class="sub-title">数据加载失败, 刷新重试</div>');
+};
+
+/**
+ * 渲染成员数据
+ *
+ * @param {Array} originArr, 原始数组数据 jids，未merge 过的数组
+ * @param {Array} dataArr, 匹配到的数据
+ *
+ */
+page.renderUser = function (originArr, dataArr) {
+    var me = this;
+
+    var data = {
+        creator: null,
+        principal: null,
+        partner: null
     };
 
-    /* eslint-disable */
-    CPPubData.getPubData(options, function (data) {
-        if (!data) {
-            dfd.reject(null);
-        }
-        else {
-            setTimeout(function () {
-                dfd.resolve(data);
-            }, 1500);
-        }
+    dataArr.forEach(function (item) {
+        me.findOwner(originArr, item, data);
     });
-    /* eslint-enable */
 
-    return dfd;
+    var dataRaw = {};
+
+    if (data.creator) {
+        dataRaw.creator = data.creator.name;
+    }
+
+    if (data.principal) {
+        dataRaw.principal = data.principal.name;
+    }
+
+    if (data.partner) {
+        var partnerRaw = [];
+        data.partner.forEach(function (item) {
+            // var pinyin = item.pinyin ? '(' + item.pinyin + ')' : '';
+            partnerRaw.push(item.name);
+        });
+
+        if (partnerRaw.length) {
+            dataRaw.partnerLength = partnerRaw.length;
+        }
+
+        dataRaw.partnerRaw = partnerRaw.join('、');
+    }
+
+    this.render('#partner', dataRaw);
+    $('#partner').removeClass('hide');
 };
 
 /**
@@ -213,74 +231,35 @@ page.addParallelTask(function (dfd) {
 
     var promise = page.post(config.API.TASK_DETAIL_URL);
 
-    // 初始化 Page 基本数据
-    var dealPageData = function (result) {
-
-        if (result.meta && result.meta.code !== 200) {
-            return null;
-        }
-
-        var data = result.data;
-
-        // 时间展示
-        data.updateDateRaw = util.formatDateToNow(data.op_time);
-
-        data.content = util.formatRichText(data.content);
-
-        data.statusText = (function () {
-            return statusMap[data.status] || '';
-        })();
-
-        data.importanceRaw = importanceMap[data.importance_level];
-
-        data.creator = '';
-        data.principal = data.principal_user;
-        data.partnerRaw = data.attend_ids;
-
-        // var cid = util.params('cid');
-        // getPubData([data.create_user], function (userData) {
-        //     var creator = util.findObjectByArray(userData, 'jid', data.create_user + '@' + cid);
-        //     data.creator = creator !== null ? creator.name : '';
-        // });
-
-        // START - partner
-        // var partner = data.partner;
-        // var partnerRaw = [];
-
-        // partner.forEach(function (item) {
-        //     if (item.name && item.pinyin) {
-        //         partnerRaw.push(item.name + '(' + item.pinyin + ')');
-        //     }
-        // });
-
-        // if (partnerRaw.length) {
-        //     data.partnerLength = partner.length;
-        // }
-
-        // data.partnerRaw = partnerRaw.join('、');
-        // END - partner
-
-        // me.data = data;
-
-        return data;
-    };
-
     promise
         .done(function (result) {
-            var data = dealPageData(result);
+            var data = detailUtil.dealPageData(result);
 
-            // var promisePubData = me.getPubData([data.create_user]);
-            var promisePubData = me.getPubData();
+            if (data === null) {
+                dfd.reject(data);
+            }
+            else {
+                me.data = data;
 
-            promisePubData
-                .done(function (a) {
-                    data.creator = 123;
-                    me.data = data;
-                    dfd.resolve();
-                })
-                .fail(function (a) {
+                var obj = {
+                    creator: data.create_user,
+                    principal: data.principal_user,
+                    partner: data.attend_ids
+                };
 
-                });
+                var dfdPub = mobile.getPubData(obj);
+
+                dfdPub
+                    .done(function (pubData) {
+                        me.renderUser(obj, pubData);
+                    })
+                    .fail(function () {
+                        me.failUser();
+                    });
+
+                dfd.resolve(data);
+            }
+
         })
         .fail(function (a) {
             // console.log(a);
