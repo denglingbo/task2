@@ -18,7 +18,7 @@ var exports = {};
  */
 exports.makeJid = function (id) {
     var companyId = util.params('cid');
-    return companyId !== null ? id + '@' + companyId : id;
+    return companyId !== null ? id + '@' + companyId : null;
 };
 
 /**
@@ -29,7 +29,7 @@ exports.makeJid = function (id) {
  *
  */
 exports.takeJid = function (jid) {
-    var jids = jid.split('@');
+    var jids = jid.toString().split('@');
     return jids && jids.length === 2 ? jids[0] : jid;
 };
 
@@ -74,48 +74,27 @@ exports.mergeArray = function (param) {
     return arr;
 };
 
+
 /**
- * 获取公共数据
+ * 封装原生接口 改为 deferred
+ * 获取公共数据 统一 入口
  *
- * @param {Array} arr, id 数组
- * @return {deffered}
+ * @param {Object} options, 原生配置
+ * @return {Deferred}
  *
  */
-exports.getPubData = function (arr) {
-    var me = this;
+exports.getPubData = function (options) {
     var dfd = new $.Deferred();
-    var jids = this.mergeArray(arr);
-
-    if (!jids || jids.length <= 0) {
-        dfd.reject(null);
-        return dfd;
-    }
-
-    var jidArr = [];
-    var dataFlag = 0;
-
-    // 按原生需求拼接字符串
-    jids.forEach(function (item) {
-        jidArr.push(me.makeJid(item));
-    });
-
-    var options = {
-        action: 'pubdata/userInfo',
-        parameter: {
-            jids: jidArr,
-            dataFlag: parseInt(dataFlag, 2) || 0
-        }
-    };
 
     /* eslint-disable */
     CPPubData.getPubData(options, function (data) {
-        if (!data) {
+        if (!data || data.code !== 0) {
             dfd.reject(null);
         }
         else {
             // 模拟延迟
             setTimeout(function () {
-                dfd.resolve(data);
+                dfd.resolve(data.rel);
             }, 100);
         }
     });
@@ -123,5 +102,98 @@ exports.getPubData = function (arr) {
 
     return dfd;
 };
+
+/**
+ * 获取公共数据 - 指定人员信息
+ *
+ * @param {Array} jids, id 数组
+ * @param {number} dataFlag, 获取数据内容的标识
+ * @return {Deferred}
+ *
+ */
+exports.getUserInfo = function (jids, dataFlag) {
+    var me = this;
+
+    if (!jids || jids.length <= 0) {
+        return null;
+    }
+
+    var jidArr = [];
+
+    // 按原生需求拼接字符串
+    jids.forEach(function (item) {
+        jidArr.push(me.makeJid(item));
+    });
+
+    if (dataFlag !== undefined) {
+        dataFlag = parseInt(dataFlag, 10);
+
+        if (isNaN(dataFlag)) {
+            dataFlag = 0;
+        }
+    }
+
+    var options = {
+        action: 'pubdata/userInfo',
+        parameter: {
+            jids: jidArr,
+            dataFlag: dataFlag
+        }
+    };
+
+    return this.getPubData(options);
+};
+
+
+/**
+ * 获取公共数据 - 指定人员头像，简直有点坑啊，要一次次的请求
+ *
+ * @param {Array} jids, id 数组
+ * @return {Deferred}
+ *
+ */
+exports.getUserIcon = function (jids) {
+    var me = this;
+    var dfd = new $.Deferred();
+    var arr = jids;
+
+    if (!$.isArray(jids)) {
+        arr = jids.split(',');
+    }
+
+    // promise 队列
+    var promiseList = [];
+
+    arr.forEach(function (id) {
+        var jid = me.makeJid(id);
+
+        if (jid !== null) {
+
+            var fn = me.getPubData({
+                action: 'pubdata/contactIcon',
+                parameter: {
+                    jid: jid,
+                    isUpdate: 0
+                }
+            });
+
+            promiseList.push(fn);
+        }
+    });
+
+    $.when.apply($, promiseList)
+        .done(function () {
+            // 获取整个promise 的返回
+            var args = arguments;
+
+            dfd.resolve(args);
+        })
+        .fail(function () {
+            dfd.reject(null);
+        });
+
+    return dfd;
+};
+
 
 module.exports = exports;

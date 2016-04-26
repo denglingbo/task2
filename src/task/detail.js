@@ -16,8 +16,9 @@ var Page = require('../common/page');
 var page = new Page();
 
 page.enter = function () {
-    this.render('#detail-main', this.data);
+    this.$main = $('.main');
 
+    this.render('#detail-main', this.data);
     this.affairTalkRequest(false);
 
     this.bindEvents();
@@ -29,8 +30,10 @@ page.bindEvents = function () {
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
-    $('.column-right').on('click', function () {
-        // console.log('chakanshi');
+    this.$main.on('click', '.column-right', function () {
+        /* eslint-disable */
+        CPNavigationBar.redirect('/users/list.html?jids=19,179,55,22,333&cid=4');
+        /* eslint-enable */
     });
 
     // 加载更多事件和讨论
@@ -137,27 +140,31 @@ page.affairTalkRequest = function (isStatus) {
  *
  */
 page.findOwner = function (srcObject, itemObject, appendObject) {
-    var id = parseInt(mobile.takeJid(itemObject.jid), 10);
 
-    for (var key in srcObject) {
-        if (srcObject.hasOwnProperty(key)) {
+    if (itemObject && itemObject.jid) {
 
-            var objIds = srcObject[key];
+        var id = parseInt(mobile.takeJid(itemObject.jid), 10);
 
-            if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+        for (var key in srcObject) {
+            if (srcObject.hasOwnProperty(key)) {
 
-                var appender = appendObject[key];
-                if (!$.isArray(appender)) {
-                    appendObject[key] = [];
+                var objIds = srcObject[key];
+
+                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+
+                    var appender = appendObject[key];
+                    if (!$.isArray(appender)) {
+                        appendObject[key] = [];
+                    }
+
+                    appendObject[key].push(itemObject);
+                }
+                // 非数组直接判断是否相等
+                else if (objIds === id) {
+                    appendObject[key] = itemObject;
                 }
 
-                appendObject[key].push(itemObject);
             }
-            // 非数组直接判断是否相等
-            else if (objIds === id) {
-                appendObject[key] = itemObject;
-            }
-
         }
     }
 };
@@ -167,9 +174,7 @@ page.findOwner = function (srcObject, itemObject, appendObject) {
  *
  */
 page.failUser = function () {
-    $('#partner')
-        .removeClass('hide')
-        .html('<div class="sub-title">数据加载失败, 刷新重试</div>');
+    $('#partner').html('<div class="sub-title">数据加载失败, 刷新重试</div>');
 };
 
 /**
@@ -241,21 +246,28 @@ page.addParallelTask(function (dfd) {
             else {
                 me.data = data;
 
+                // 下面为获取人员信息的配置
                 var obj = {
                     creator: data.create_user,
                     principal: data.principal_user,
                     partner: data.attend_ids
                 };
 
-                var dfdPub = mobile.getPubData(obj);
+                var jids = mobile.mergeArray(obj);
+                var dfdPub = mobile.getUserInfo(jids);
 
-                dfdPub
-                    .done(function (pubData) {
-                        me.renderUser(obj, pubData);
-                    })
-                    .fail(function () {
-                        me.failUser();
-                    });
+                if (dfdPub === null) {
+                    me.data.userInfoFail = true;
+                }
+                else {
+                    dfdPub
+                        .done(function (pubData) {
+                            me.renderUser(obj, pubData.contacts);
+                        })
+                        .fail(function () {
+                            me.failUser();
+                        });
+                }
 
                 dfd.resolve(data);
             }

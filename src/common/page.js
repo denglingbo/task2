@@ -66,7 +66,7 @@ Page.prototype.start = function () {
         window.pageLog.compileTemplateStart = Date.now();
         me.addParallelTask(function (dfd) {
             // 如果页面在这之前已经done过了，那就不继续编译
-            $('[type="text/x-tmpl-mustache"]').each(function (index, node) {
+            $('[type="x-tmpl-mustache"]').each(function (index, node) {
                 view.getRenderer(node.innerHTML);
             });
             window.pageLog.compileTemplateEnd = Date.now();
@@ -88,10 +88,20 @@ Page.prototype.start = function () {
         // Do something
     });
 
-    (function (params) {
-        me._data = params;
+    // (function (params) {
+    //     me._data = params;
+    //     dfd.resolve();
+    // })();
+
+    // -------------------------------------
+    // 这里不适用于所有环境，此处为 cordova 服务
+    // 等待 deviceready 完成
+    // -------------------------------------
+    window.pageLog.devicereadyStart = +new Date();
+    document.addEventListener('deviceready', function () {
         dfd.resolve();
-    })();
+    }, false);
+    window.pageLog.devicereadyEnd = +new Date();
 
     return dfd;
 };

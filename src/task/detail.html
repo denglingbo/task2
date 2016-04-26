@@ -36,7 +36,12 @@
         <!-- 成员 -->
         <dl id="partner" class="layout-list partner">
             <!-- Call pub data -->
+            {{#userInfoFail}}
+            <dt class="sub-title">没有获取到人员信息</dt>
+            {{/userInfoFail}}
+            {{^userInfoFail}}
             <dt class="sub-title">数据加载中</dt>
+            {{/userInfoFail}}
         </dl>
 
         <!-- 事件 & 讨论 -->
@@ -103,10 +108,10 @@
     </dd>
     {{/list}}
     </script>
-
+    
+    <!-- 团队成员 -->
     <script id="partner-template" type="text/x-tmpl-mustache">
     <dt class="sub-title">团队成员</dt>
-
     {{#creator}}
     <dd>
         <div class="column-left">创建人: </div>
@@ -149,7 +154,7 @@
     {{/partnerLength}}
     </script>
 
-    <script type="text/javascript" src="../dep/cordova.js"></script>
+    <script type="text/javascript" src="/cordova.js"></script>
 </body>
 
 </html>
