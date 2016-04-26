@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * @file task.js
  * @author hefeng

@@ -6,7 +6,6 @@
  */
 
 require('./index.scss');
-
 var config = require('../config');
 var Page = require('../common/page');
 
@@ -36,12 +35,15 @@ page.bindEvents = function () {
     var me = this;
 
     $('#menu li').on('click', function () {
-        window.CPNavigationBar.redirect('task/list.html');
+        /* eslint-disable */
+        CPNavigationBar.redirect('/task/list.html');
+        /* eslint-enable */
     });
 
     $('#add-newtask').on('click', function () {
-        // window.CPNavigationBar.redirect('task/new.html');
-        window.CPNavigationBar.redirect('task/detail.html');
+        /* eslint-disable */
+        CPNavigationBar.redirect('/task/detail.html');
+        /* eslint-enable */
     });
 
     var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize';

@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 /**
  * 模拟一下 手机端 需要的 deviceready
