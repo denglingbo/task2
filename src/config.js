@@ -8,6 +8,11 @@ var config = {
     debug: true,
 
     API: {
+
+        host: '',
+
+        prefix: '',
+
         HOME_URL: 1000,
 
         // 列表页，未完成
@@ -43,11 +48,13 @@ config.const = {
     }
 };
 
-var host = '172.16.1.209';
-// var host = 'localhost';
-// var host = '172.16.1.101';
-// var host = '192.168.1.5';
-
-config.mockUrl = 'http://' + host + ':8015';
+if (config.debug) {
+    // var host = '172.16.1.209';
+    // var host = 'localhost';
+    // var host = '172.16.1.101';
+    var host = '192.168.1.5';
+    config.API.host = 'http://' + host + ':8015';
+    config.API.prefix = '/api';
+}
 
 module.exports = config;

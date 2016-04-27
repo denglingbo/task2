@@ -6,6 +6,7 @@
  */
 
 var path = require('path');
+var srcConfig = require('./src/config');
 
 var config = {
     
@@ -19,22 +20,19 @@ var config = {
      * host
      * @params {string}
      */
-    host: '172.16.1.209',
-    // host: 'localhost',
-    // host: '172.16.1.101',
-    // host: '192.168.1.5',
-
-    /**
-     * publicPath
-     * @params {string}
-     */
-    publicPath: '',
+    host: srcConfig.API.host,
 
     /**
      * 监听端口
      * @params {number}
      */
     port: 8014,
+
+    /**
+     * publicPath
+     * @params {string}
+     */
+    publicPath: '',
 
     /**
      * mock 监听端口
@@ -44,6 +42,7 @@ var config = {
 
 };
 
+config.publicPath = srcConfig.API.host.replace(/:(\w+)/gi, '') + ':' + config.port + '/';
 
 config.output = {
 

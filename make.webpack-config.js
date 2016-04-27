@@ -22,6 +22,14 @@ var webDevServer = require('webpack-dev-server');
 var connect = require('gulp-connect');
 
 /**
+ * 用于 mock 时候替换
+ *
+ */
+var replaceHost = function (host) {
+    return host.replace(/([http|https]+:\/\/|:(.)+)/gi, '');
+};
+
+/**
  * webpack config method
  *
  */
@@ -98,7 +106,7 @@ MakeWebpackConfig.prototype = {
             this.webpackConfig.devtool = 'eval-source-map';
         }
         else {
-            this.webpackConfig.devtool = 'source-map';
+            // this.webpackConfig.devtool = 'source-map';
         }
     },
 
@@ -219,12 +227,12 @@ MakeWebpackConfig.prototype = {
                 console.log(' ');
 
                 // 提取公共文件
-                r.push(
-                    new CommonsChunkPlugin({
-                        name: 'common',
-                        chunks: conf.chunks
-                    })
-                );
+                // r.push(
+                //     new CommonsChunkPlugin({
+                //         name: 'common',
+                //         chunks: conf.chunks
+                //     })
+                // );
             }
         });
 
@@ -245,12 +253,14 @@ MakeWebpackConfig.prototype = {
             path: config.output.root,
 
             // 输出文件
-            filename: config.debug ? '[name].js' : config.output.assets + '/js/[name].[hash].min.js',
+            // filename: config.debug ? '[name].js' : config.output.assets + '/js/[name].[hash].min.js',
+            filename: config.debug ? '[name].js' : config.output.assets + '/js/[name].min.js',
 
             // 调试目录 或者 CDN 目录 
-            publicPath: config.debug ? '/' : 'http://' + config.host + ':' + config.port + '/',
+            publicPath: config.debug ? '/' : config.publicPath,
 
-            chunkFilename: config.debug ? '[chunkhash:8].chunk.js' : config.output.assets + '/js/[chunkhash:8].chunk.min.js'
+            // chunkFilename: config.debug ? '[chunkhash:8].chunk.js' : config.output.assets + '/js/[chunkhash:8].chunk.min.js'
+            chunkFilename: config.debug ? 'chunk.js' : config.output.assets + '/js/chunk.min.js'
         };
     },
 
@@ -400,10 +410,24 @@ MakeWebpackConfig.prototype = {
 
                 // Reference: https://github.com/webpack/extract-text-webpack-plugin
                 new ExtractTextPlugin(
-                    config.output.assets + '/css/[contenthash:8].[name].min.css'
+                    // config.output.assets + '/css/[contenthash:8].[name].min.css'
+                    config.output.assets + '/css/[name].min.css'
                 )
             );
         }
+
+        // 提取所有的入口文件中的公共部分
+        var pageChunks = [];
+        var entries = this.webpackConfig.entry;
+        for (var key in entries) {
+            pageChunks.push(key);
+        }
+        this.plugins.push(
+            new CommonsChunkPlugin({
+                name: 'common',
+                chunks: pageChunks
+            })
+        );
 
         this.plugins = this.plugins.concat(this.pageEntries);
 
@@ -462,7 +486,7 @@ MakeWebpackConfig.prototype = {
      */
     mock: function (opts) {
         var mockConfig = {
-            host: this.config.host,
+            host: replaceHost(this.config.host),
             port: this.config.mockPort,
             path: '/',
             mockDir: './mock'
@@ -495,8 +519,8 @@ MakeWebpackConfig.prototype = {
         var compiler = webpack(webpackConfig);
         var devServer = new webDevServer(compiler, webpackConfig.devServer);
 
-        devServer.listen(me.config.port, me.config.host, function() {
-            var url = 'http://' + me.config.host + ':' + me.config.port;
+        devServer.listen(me.config.port, replaceHost(me.config.host), function() {
+            var url = replaceHost(me.config.host) + ':' + me.config.port;
 
             console.log(' ');
             console.log('----------[dev] webpack server start -----------');

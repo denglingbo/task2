@@ -248,9 +248,6 @@ Page.prototype.render = function (selector, data, appendType) {
  */
 var getRequestData = function (api, data) {
     var r = {};
-    if (config.debug) {
-        r.url = config.mockUrl + '/api';
-    }
 
     r.data = {
         id: api
@@ -277,9 +274,11 @@ Page.prototype.post = function (api, data, opts) {
 
     opts = opts || {};
 
+    var host = config.API.host + config.API.prefix;
+
     var promise = $.ajax({
         type: 'post',
-        url: reqData.url,
+        url: host,
         data: reqData.data
     });
 
