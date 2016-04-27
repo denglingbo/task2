@@ -28,7 +28,7 @@ var config = {
         TASK_EDIT_URL: 2000,
 
         // 讨论
-        DISCUSSION_DETAIL_URL: 5001
+        TALK_DETAIL_URL: 5001
     }
 };
 

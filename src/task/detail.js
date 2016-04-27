@@ -8,7 +8,6 @@
 require('./detail.scss');
 
 var config = require('../config');
-// var util = require('../common/util');
 var detailUtil = require('../common/widgets/detail/detail.js');
 var phoneMid = require('../common/phoneMid.js');
 var Page = require('../common/page');
@@ -34,7 +33,7 @@ page.bindEvents = function () {
     this.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 
-        if (jids && jids.length > 0) {
+        if (jids && jids.toString().length > 0) {
             /* eslint-disable */
             CPNavigationBar.redirect('/users/list.html?jids=' + jids);
             /* eslint-enable */
@@ -48,7 +47,7 @@ page.bindEvents = function () {
 
         if (pageType && pageType.length > 0) {
             /* eslint-disable */
-            CPNavigationBar.redirect('/' + pageType + '/list.html?jids=' + jids);
+            CPNavigationBar.redirect('/' + pageType + '/detail.html');
             /* eslint-enable */
         }
     });
@@ -241,7 +240,6 @@ page.renderUser = function (originArr, dataArr) {
     }
 
     this.render('#partner', dataRaw);
-    $('#partner').removeClass('hide');
 };
 
 /**
@@ -263,18 +261,6 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(data);
             }
             else {
-                data.owner = false;
-                data.ownerAndReview = false;
-
-                // 判断该用户 uid 是不是同时是 该任务的创建者
-                if (phoneMid.uid() === data.create_user) {
-                    data.owner = true;
-                }
-
-                // 底部 fixed bar 更换为 '不同意', '同意'
-                if (data.owner && data.status === 6) {
-                    data.ownerAndReview = true;
-                }
 
                 // 下面为获取人员信息的配置
                 var obj = {

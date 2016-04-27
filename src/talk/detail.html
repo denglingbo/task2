@@ -8,16 +8,24 @@
 </head>
 <body>
     <div class="main">
-
+        
         <div id="detail-main"></div>
 
         <!-- title -->
-        <script id="detail-main-template" type="text/x-tmpl-mustache">
+        <script id="detail-main-template" type="x-tmpl-mustache">
         <div class="layout detail-title">
             <div class="detail-title-control">
                 <div class="detail-checkbox">
-                    <span class="untick"></span>
-                    <span class="ticked hide"></span>
+        
+                    <div class="tick untick">
+                        <div class="tick-inner">
+                            <span class="tick-top"></span>
+                            <span class="tick-right"></span>
+                            <span class="tick-bottom"></span>
+                            <span class="tick-left"></span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -27,61 +35,75 @@
             </div>
 
             <div class="detail-title-right">
-                {{#hasFollow}}
-                <p class="star"><em></em></p>
-                {{/hasFollow}}
-                <p class="detail-title-state {{^hasFollow}}detail-title-state-fixed{{/hasFollow}} state-doing">{{ statusText }}</p>
+                <p class="detail-title-state detail-title-state-fixed state-doing">{{ statusText }}</p>
             </div>
         </div>
 
         <div class="layout detail-comments">
-            <div class="sub-title">讨论描述</div>
+            <div class="sub-title">事件描述</div>
 
             <p>{{ description }}</p>
-            <p>紧要程度: 紧急</p>
+            <p>紧要程度: {{ importanceRaw }}</p>
             <p>完成时间: 尽快完成</p>
         </div>
 
         <!-- 成员 -->
-        <dl class="layout-list partner">
-            <dt class="sub-title">团队成员</dt>
+        <dl id="partner" class="layout-list partner">
+            <!-- Call pub data -->
+            {{#userInfoFail}}
+            <dt class="sub-title">没有获取到人员信息</dt>
+            {{/userInfoFail}}
+            {{^userInfoFail}}
+            <dt class="sub-title">数据加载中</dt>
+            {{/userInfoFail}}
+        </dl>
 
+        <!-- 附件 -->
+        <dl class="layout-list attach">
+            <dt class="sub-title">附件</dt>
+            
             <dd>
-                <div class="column-left">创建人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{ creator }}
-                    </div>
+                <div class="column-left">
+                    <img src="/common/img/files/doc.png" />
                 </div>
-            </dd>
-            <dd>
-                <div class="column-left">负责人: </div>
                 <div class="column-middle">
                     <div class="column-inner">
-                        {{ master }}
-                    </div>
-                </div>
-            </dd>
-            <dd>
-                <div class="column-left">参与人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{partnerRaw}}
+                        <p>N 版设计稿</p>
+                        <p class="attach-size">1.2MB</p>
                     </div>
                 </div>
                 <div class="column-right">
-                    <div class="column-more">
-                        {{#partnerLength}}
-                        <em>{{ partnerLength }}人</em>
-                        <em class="arrow"><i></i></em>
-                        {{/partnerLength}}
-                    </div>
+                    <em class="download"></em>
                 </div>
             </dd>
         </dl>
         </script>
 
     </div>
+
+
+    <!-- 团队成员 -->
+    <script id="partner-template" type="x-tmpl-mustache">
+    <dt class="sub-title">团队成员</dt>
+    {{#partnerLength}}
+    <dd class="partner-more" data-jids="{{partnerJids}}">
+        <div class="column-left">参与人: </div>
+        <div class="column-middle">
+            <div class="column-inner">
+                {{partnerRaw}}
+            </div>
+        </div>
+        <div class="column-right">
+            <div class="column-more">
+                {{#partnerLength}}
+                <em>{{ partnerLength }}人</em>
+                <em class="arrow"><i></i></em>
+                {{/partnerLength}}
+            </div>
+        </div>
+    </dd>
+    {{/partnerLength}}
+    </script>
 
     <!-- 底部输入框 -->
     <div id="goalui-fixedinput-shadow" class="hide"></div>

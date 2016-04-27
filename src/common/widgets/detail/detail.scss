@@ -186,31 +186,8 @@
             @include column($partner-left-width, $partner-right-width);
         }
     }
-    
-    // 事件 & 讨论
-    $at-left-width: 80%;
-    $at-right-width: rem(65px);
 
-    .affair-talk {
-
-        dd {
-
-            @include column($at-left-width, $at-right-width);
-            
-            .column-left {
-                color: $light-gray;
-                @include ellipsis();
-            }
-
-            &.new-msg {
-                .column-left {
-                    color: $black;
-                }
-            }
-        }
-    }
-
-    // 事件 & 讨论
+    // 下载
     $attach-left-width: rem(30px);
     $attach-right-width: rem(65px);
 

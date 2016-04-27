@@ -64,4 +64,11 @@ exports.dealPageData = function (result) {
     return data;
 };
 
+/**
+ * 展示、操作 权限
+ *
+ * @param {Object} rights, 后端权限数据
+ */
+exports.rightsView = function (rights) {};
+
 module.exports = exports;

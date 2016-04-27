@@ -1,18 +1,124 @@
 {
     "meta": {
         "code": 200,
-        "message" : "请求成功"
+        "message": "请求成功"
     },
     "data": {
-        "title": "新建事件",
-        "update_time": 1460549520000,
-        "follow": true,
-        "status": 1,
-        "description": "",
-        "emergency_level": 0,
-        "deadline": 0,
-        "creator": "张三",
-        "master": "李四",
-        "partner": ["王五","Jack"]
+        "rights": {
+            "see_right": true,
+            "edit_right": true,
+            "comment_right": true,
+            "recover_right": false,
+            "done_right": true
+        },
+        "id": 69357,
+        "importance_level": 4,
+        "status": 4,
+        "task_id": 69585,
+        "label_id": 1506,
+        "create_user": 179,
+        "last_up_user": 179,
+        "op_time": 1461642874073,
+        "cid": 10,
+        "title": "DHC-AFFAIR-TEST-0001",
+        "content": "<p>finish_affairfinish_affairfinish_affairfinish_affair</p>",
+        "create_time": 1461642525510,
+        "task_tag_name": "求助",
+        "task_title": "sadc",
+        "attachs": [],
+        "attention": 0,
+        "tags": [
+            {
+                "id": 1502,
+                "name": "求助",
+                "company_id": 10,
+                "sub_id": 1506,
+                "deleted": false
+            },
+            {
+                "id": 1503,
+                "name": "彙報",
+                "company_id": 10,
+                "sub_id": 1509,
+                "deleted": false
+            },
+            {
+                "id": 1504,
+                "name": "計劃",
+                "company_id": 10,
+                "sub_id": 1512,
+                "deleted": false
+            },
+            {
+                "id": 1505,
+                "name": "日誌",
+                "company_id": 10,
+                "sub_id": 1515,
+                "deleted": false
+            },
+            {
+                "id": 1506,
+                "name": "記錄",
+                "company_id": 10,
+                "sub_id": 1518,
+                "deleted": false
+            },
+            {
+                "id": 1507,
+                "name": "消息",
+                "company_id": 10,
+                "sub_id": 1521,
+                "deleted": false
+            },
+            {
+                "id": 1508,
+                "name": "其他",
+                "company_id": 10,
+                "sub_id": 1524,
+                "deleted": false
+            },
+            {
+                "id": 1509,
+                "name": "asswwwwww",
+                "company_id": 10,
+                "sub_id": 1527,
+                "deleted": false
+            },
+            {
+                "id": 1510,
+                "name": "紧急事务",
+                "company_id": 10,
+                "sub_id": 1530,
+                "deleted": false
+            },
+            {
+                "id": 1607,
+                "name": "大黑社会地方投入计划他人加入他人家让他加",
+                "company_id": 10,
+                "sub_id": 1607,
+                "deleted": false
+            },
+            {
+                "id": 1609,
+                "name": "简答题软件投入",
+                "company_id": 10,
+                "sub_id": 1609,
+                "deleted": false
+            },
+            {
+                "id": 1625,
+                "name": "掩藏 打动蚕茧硝基苯",
+                "company_id": 10,
+                "sub_id": 1625,
+                "deleted": false
+            },
+            {
+                "id": 1626,
+                "name": "大概三天很多人推荐人他大家热点推荐的人推",
+                "company_id": 10,
+                "sub_id": 1626,
+                "deleted": false
+            }
+        ]
     }
 }

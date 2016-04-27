@@ -8,8 +8,9 @@
             "add_event_right": true,
             "add_talk_right": true,
             "apply_right": true,
-            "assign_right": false,
             "audit_right": false,
+
+            "assign_right": false,
             "edit_right": true,
             "upload_file_right": true,
             "receive_right": false,

@@ -12,12 +12,12 @@
         <div id="detail-main"></div>
 
         <!-- title -->
-        <script id="detail-main-template" type="text/x-tmpl-mustache">
+        <script id="detail-main-template" type="x-tmpl-mustache">
         <div class="layout detail-title">
             <div class="detail-title-control">
                 <div class="detail-checkbox">
         
-                    <div class="tick untick1 ticked">
+                    <div class="tick untick">
                         <div class="tick-inner">
                             <span class="tick-top"></span>
                             <span class="tick-right"></span>
@@ -35,9 +35,6 @@
             </div>
 
             <div class="detail-title-right">
-                {{#hasFollow}}
-                <p class="star"><em></em></p>
-                {{/hasFollow}}
                 <p class="detail-title-state detail-title-state-fixed state-doing">{{ statusText }}</p>
             </div>
         </div>
@@ -45,48 +42,10 @@
         <div class="layout detail-comments">
             <div class="sub-title">事件描述</div>
 
-            <p>{{ description }}</p>
-            <p>紧要程度: 紧急</p>
+            <p>{{ content }}</p>
+            <p>紧要程度: {{ importanceRaw }}</p>
             <p>完成时间: 尽快完成</p>
         </div>
-
-        <!-- 成员 -->
-        <dl class="layout-list partner">
-            <dt class="sub-title">团队成员</dt>
-
-            <dd>
-                <div class="column-left">创建人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{ creator }}
-                    </div>
-                </div>
-            </dd>
-            <dd>
-                <div class="column-left">负责人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{ master }}
-                    </div>
-                </div>
-            </dd>
-            <dd>
-                <div class="column-left">参与人: </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        {{partnerRaw}}
-                    </div>
-                </div>
-                <div class="column-right">
-                    <div class="column-more">
-                        {{#partnerLength}}
-                        <em>{{ partnerLength }}人</em>
-                        <em class="arrow"><i></i></em>
-                        {{/partnerLength}}
-                    </div>
-                </div>
-            </dd>
-        </dl>
         </script>
 
     </div>
