@@ -56,6 +56,18 @@ module.exports = [
     },
     {
         params: {
+            id: 2001
+        },
+        response: './2001.json'
+    },
+    {
+        params: {
+            id: 2002
+        },
+        response: './2002.json'
+    },
+    {
+        params: {
             id: 5001
         },
         response: './5001.json'

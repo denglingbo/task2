@@ -31,19 +31,19 @@
 </div>
 {{/view.task}}
 
-{{#view.event}}
+{{#view.affair}}
 <div class="edit-option">
     <div id="urgencyBlock" class="edit-item"><span class='title'>紧要程度</span><span class="value">普通</span></div>
     <div id="affairType" class="edit-item"><span class='title'>事件类型</span><span class="value">待办</span></div>
 </div>
-{{/view.event}}
+{{/view.affair}}
 
-{{#view.discussion}}
+{{#view.talk}}
 <div class="edit-option">
     <div id="urgencyBlock" class="edit-item"><span class='title'>紧要程度</span><span class="value">普通</span></div>
     <div id="attends" class="edit-item"><span class='title'>参与人</span><span class="value">水水</span></div>
 </div>
-{{/view.discussion}}
+{{/view.talk}}
 
 
 <div id="alert-box">

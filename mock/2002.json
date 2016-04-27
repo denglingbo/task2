@@ -1,0 +1,22 @@
+{
+  "id" : 0,
+  "attachs" : [
+        {
+            "deleted" : false,
+            "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
+            "file_name" : "ca.crt",
+            "size" : 1391
+        },
+  ],
+  "content" : "<p>DHC-TEST-TALK-0001-继承任务人员</p>",
+  "importance_level" : "4",
+  "inheritance" : true,
+  "message" : {
+      "sent_eim" : true,
+      "sent_emai" : false,
+      "sent_sms" : false
+  },
+  "task_id" : 69598,
+  "title" : "DHC-TEST-TALK-0001",
+  "user_ids" : []
+}

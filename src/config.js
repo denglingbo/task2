@@ -31,6 +31,10 @@ var config = {
         TASK_DETAIL_URL: 1004,
         // 任务编辑
         TASK_EDIT_URL: 2000,
+        // 事件编辑
+        AFFAIR_EDIT_URL: 2001,
+        // 讨论编辑
+        DISCUSSION_EDIT_URL: 2002,
 
         // 讨论
         TALK_DETAIL_URL: 5001

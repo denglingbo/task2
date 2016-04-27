@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 /**
  * @file task.js
  * @author hefeng
@@ -8,12 +6,14 @@
  */
 
 require('../common/widgets/edit/new.scss');
-Mustache = require('dep/mustache');
+/* eslint-disable */
+var Mustache = require('dep/mustache');
+/* eslint-disable */
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
 var Page = require('../common/page');
 
-//  var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
+// var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
@@ -32,73 +32,90 @@ var info = {
     importanceLevel: 0
 };
 
-var principalSelectKey = 'principalSelector';
-var attendSelectKey = 'attandSelectKey';
+var principalSelectKey = 'taskPrincipalSelector';
+var attendSelectKey = 'taskAttandSelectKey';
 var selectValue = {
-    "clientMsg": {
-        "uid": "",
-        "cid": "",
-        "client": "",
-        "lang": "",
-        "puse": "",
-        "appver": ""
+    'clientMsg': {
+        'uid': '',
+        'cid': '',
+        'client': '',
+        'lang': '',
+        'puse': '',
+        'appver': ''
     },
-    "selector": {
-        "contact": 3,   //选择人
-        "dept": 0,      //选择部门
-        "title": 0      //选择职务
+    'selector': {
+        // 选择人
+        'contact': 3,
+        // 选择部门
+        'dept': 0,
+        // 选择职务
+        'title': 0  
     },
-    "selectType": 2,    //选择组件类型：1.单选 2.复选
-    "filter": {         //指定的过滤数据
-        "disabled": {   //指定不显示的数据
-            "contacts": [],
-            "depts": [],
-            "titles": []
+    // 选择组件类型：1.单选 2.复选
+    'selectType': 2,
+    // 指定的过滤数据
+    'filter': {
+        // 指定不显示的数据
+        'disabled': {
+            'contacts': [],
+            'depts': [],
+            'titles': []
         },
-        "enabled": {    //指定显示的数据
-            "depts": [],
-            "titles": []
+        // 指定显示的数据
+        'enabled': {
+            'depts': [],
+            'titles': []
         },
-        "checked": {   //已选择的数据
-            "contacts": [],     //数组
-            "depts": [],
-            "titles": []
+        // 已选择的数据
+        'checked': {
+            // 数组
+            'contacts': [],
+            'depts': [],
+            'titles': []
         }
     },
-    "dataSource": 1,    //数据源：1.通过原生插件获取 2.从移动网关服务器获取
-    "requestInfo":{     //从移动网关获取数据的请求信息
-        "type": "get",             //请求方式
-        "data": "",                //请求发送的数据
-        "url": "",     //请求的url
-        "headers": {}
+    // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
+    'dataSource': 1,
+    // 从移动网关获取数据的请求信息
+    'requestInfo':{
+        // 请求方式
+        'type': 'get',
+        // 请求发送的数据
+        'data': '',
+        // 请求的url
+        'url': '',
+        'headers': {}
     }
 };
 
+/* eslint-disable */
 /**
  * 验证不通过弹窗
  *
  * @param {string} info, 验证不通过的提示语句
  *
  */
-// function validAlert(info) {
-//     var $alertDom = $('.alert-length-limit');
-//     $alertDom.text(info).removeClass('hide');
+function validAlert(info) {
+    var $alertDom = $('.alert-length-limit');
+    $alertDom.text(info).removeClass('hide');
 
-//     setTimeout(function () {
-//         $alertDom.addClass('hide');
-//     },
-//     3000);
-// }
+    setTimeout(function () {
+        $alertDom.addClass('hide');
+    },
+    3000);
+}
+/* eslint-disable */
 
 /**
  * 转换string驼峰
  *
  * @param {string} str, 需要转换的字符串
  *
+ * @return {string} 转换后的驼峰命名
  */
 function camelCase(str) {
     return str.replace(/_+(.)?/g, function (str, e) {
-        return e ? e.toUpperCase() : "";
+        return e ? e.toUpperCase() : '';
     });
 }
 
@@ -107,6 +124,7 @@ function camelCase(str) {
  *
  * @param {Array} arr, 附件传入data
  *
+ * @return {Array}, 属性转换成驼峰命名的对象的集合
  */
 function transKey(arr) {
     var newArr = [];
@@ -150,10 +168,6 @@ function toggleX(textDom, textLength) {
 page.enter = function () {
 
     page.loadPage(this.data);
-
-    // TODO 修改存储数据
-    window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
-    window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
 };
 
 /**
@@ -262,136 +276,141 @@ page.loadPage = function (data) {
         me.renderFile($content, template, $.extend({}, data, {
             view: {
                 task: true,
-                event: false,
-                discussion: false,
+                affair: false,
+                talk: false,
                 placeholder: '任务',
                 data: []
             }
         }));
-
-        var mobiOptions = {
-            theme: 'android-holo-light',
-            mode: 'scroller',
-            // ios 底部上滑, android 中间显示
-            display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-            lang: 'zh',
-            buttons: ['cancel', 'set'],
-            height: 50
-        };
-
-        $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
-            headerText: '紧急程度',
-            showInput: false,
-            showMe: true,
-            rows: 3,
-            data: [
-                {
-                    text: '重要且紧急',
-                    value: '0'
-                },
-                {
-                    text: '普通',
-                    value: '1',
-                    selected: true
-                },
-                {
-                    text: '重要',
-                    value: '2'
-                },
-                {
-                    text: '紧急',
-                    value: '3'
-                }
-            ],
-            onSelect: function (text, inst) {
-                info.urgency = +inst.getVal();
-                $('#urgencyBlock .value').text(text);
-            }
-        }));
-
-        // 初始化附件组件
-        var attache = new Attach({
-            // 客户端信息
-            clientMsg:{
-                uid: '1',
-                cid: '1',
-                client: '',
-                lang: '',
-                pause: '',
-                appver: '111.1.1'
-            },
-            // 已经有的附件信息，没有传空数组，这个主要是用于修改
-            originAttaches:[],
-            url:{ 
-                uploadUrl: {
-                    url: '/mgw/approve/attachment/getFSTokensOnCreate',
-                    mothod: 'POST'
-                },
-                resumeUrl: {
-                    url: '/mgw/approve/attachment/getFSTokensOnContinue',
-                    mothod: 'POST'
-                }
-            },
-            supportType:[
-                1, // 本地文件
-                2, // 网盘文件
-                3, // 相册图片
-                4, // 拍照上传
-                5 // 语音上传
-            ],
-            dom: {
-                containerDOM: $('.attach-list') // 附件容器DOM元素
-            },
-            callback: function(){}
-        });
-        var renderString = Attach.getRenderString({attach: transKey(data.attachements)},'11.1.1');
-        $('.attach-list').append(renderString.attach);
-        Attach.initEvent('.attach-list', 'zh_CN');
-
-        // 设置默认值
-        var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
-        $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
-        $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
-
-        // 初始化文本框的关闭按钮
-        $.each($('.input'), function (index, item) {
-            toggleX($(item), $(item).val());
-        });
-
+        page.initPlugin(data)
+        page.initValue(data);
         me.bindEvents();
     });
 };
 
-/**
- * 编辑页面加载数据
- *
- */
-function editAjax() {
+page.initPlugin = function (data) {
+    var mobiOptions = {
+        theme: 'android-holo-light',
+        mode: 'scroller',
+        // ios 底部上滑, android 中间显示
+        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
+        lang: 'zh',
+        buttons: ['cancel', 'set'],
+        height: 50
+    };
 
-    /**
-     * 请求页面接口
-     *
-     * @param {deferred} dfd, deferred
-     *
-     */
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var promise = page.post(config.API.TASK_EDIT_URL, {});
+    $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
+        headerText: '紧急程度',
+        showInput: false,
+        showMe: true,
+        rows: 3,
+        data: [
+            {
+                text: '重要且紧急',
+                value: '0'
+            },
+            {
+                text: '普通',
+                value: '1',
+                selected: true
+            },
+            {
+                text: '重要',
+                value: '2'
+            },
+            {
+                text: '紧急',
+                value: '3'
+            }
+        ],
+        onSelect: function (text, inst) {
+            info.urgency = +inst.getVal();
+            $('#urgencyBlock .value').text(text);
+        }
+    }));
 
-        promise
-            .done(function (result) {
-                if (result.meta !== 0) {
-                    dfd.reject(result);
-                }
-                else {
-                    me.data = result.data;
-                    dfd.resolve();
-                }
-            });
+    // 初始化附件组件
+    var attache = new Attach({
+        // 客户端信息
+        clientMsg: {
+            uid: '1',
+            cid: '1',
+            client: '',
+            lang: '',
+            pause: '',
+            appver: '111.1.1'
+        },
+        // 已经有的附件信息，没有传空数组，这个主要是用于修改
+        originAttaches:[],
+        url: {
+            uploadUrl: {
+                url: '/mgw/approve/attachment/getFSTokensOnCreate',
+                mothod: 'POST'
+            },
+            resumeUrl: {
+                url: '/mgw/approve/attachment/getFSTokensOnContinue',
+                mothod: 'POST'
+            }
+        },
+        supportType: [
+            // 本地文件
+            1,
+            // 网盘文件
+            2,
+            // 相册图片
+            3,
+            // 拍照上传
+            4,
+            // 语音上传
+            5
+        ],
+        dom: {
+            // 附件容器DOM元素
+            containerDOM: $('.attach-list')
+        },
+        callback: function () {}
     });
+    var renderString = Attach.getRenderString({attach: transKey(data.attachements)}, '11.1.1');
+    $('.attach-list').append(renderString.attach);
+    Attach.initEvent('.attach-list', 'zh_CN');
 }
 
-editAjax();
+page.initValue = function () {
+    // 设置默认值
+    var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
+    $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
+    $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
+
+    // 初始化文本框的关闭按钮
+    $.each($('.input'), function (index, item) {
+        toggleX($(item), $(item).val());
+    });
+
+    // TODO 修改存储数据
+    window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
+    window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
+}
+/**
+ * 请求页面接口
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+page.addParallelTask(function (dfd) {
+    var me = this;
+    var promise = page.post(config.API.TASK_EDIT_URL, {});
+
+    promise
+        .done(function (result) {
+            if (result.meta !== 0) {
+                dfd.reject(result);
+            }
+            else {
+                me.data = result.data;
+                dfd.resolve();
+            }
+        });
+});
 
 $(function () {
     page.start();
