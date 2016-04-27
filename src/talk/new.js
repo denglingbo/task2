@@ -1,7 +1,7 @@
 /**
- * @file task.js
+ * @file discussion.js
  * @author hefeng
- * 新建任务页
+ * 新建讨论页, 编辑讨论页面
  *
  */
 
@@ -26,14 +26,11 @@ var info = {
     id: '',
     title: '',
     comtent: '',
-    principalUser: 0,
     attendIds: [],
-    endTime: 0,
     importanceLevel: 0
 };
 
-var principalSelectKey = 'taskPrincipalSelector';
-var attendSelectKey = 'taskAttandSelectKey';
+var selectKey = 'discussionAttandSelectKey';
 var selectValue = {
     'clientMsg': {
         'uid': '',
@@ -116,7 +113,7 @@ function validAlert(info) {
  */
 function camelCase(str) {
     return str.replace(/_+(.)?/g, function (str, e) {
-        return e ? e.toUpperCase() : '';
+        return e ? e.toUpperCase() : "";
     });
 }
 
@@ -237,20 +234,9 @@ page.bindEvents = function () {
         $contentDom.focus();
     });
 
-    // 完成时间跳转页面
-    $('#doneTime').click(function () {
-        CPNavigationBar.redirect('./doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
-            if (data) {
-                data = JSON.parse(data);
-            }
-            // TODO
-        });
-    });
-
     // 选择人员跳转页面
-    $('#principal, #attends').click(function (e) {
-        var key = e.target.id === 'principal' ? principalSelectKey : attendSelectKey;
-        CPNavigationBar.redirect('../selector/selector.html?paramId=' + key, '选人', false, function (data) {
+    $('#attends').click(function (e) {
+        CPNavigationBar.redirect('../selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
             if (data) {
                 data = JSON.parse(data);
             }
@@ -276,10 +262,10 @@ page.loadPage = function (data) {
         var $content = $('.edit-container');
         me.renderFile($content, template, $.extend({}, data, {
             view: {
-                task: true,
+                task: false,
                 affair: false,
-                talk: false,
-                placeholder: '任务',
+                talk: true,
+                placeholder: '讨论',
                 data: []
             }
         }));
@@ -371,7 +357,7 @@ page.initPlugin = function (data) {
         },
         callback: function () {}
     });
-    var renderString = Attach.getRenderString({attach: transKey(data.attachements)}, '11.1.1');
+    var renderString = Attach.getRenderString({attach: transKey(data.attaches)}, '11.1.1');
     $('.attach-list').append(renderString.attach);
     Attach.initEvent('.attach-list', 'zh_CN');
 }
@@ -380,7 +366,6 @@ page.initValue = function () {
     // 设置默认值
     var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
     $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
-    $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
 
     // 初始化文本框的关闭按钮
     $.each($('.input'), function (index, item) {
@@ -388,8 +373,7 @@ page.initValue = function () {
     });
 
     // TODO 修改存储数据
-    window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
-    window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
+    window.localStorage.setItem(selectKey, JSON.stringify(selectValue));
 }
 /**
  * 请求页面接口
@@ -399,7 +383,7 @@ page.initValue = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.TASK_EDIT_URL, {});
+    var promise = page.post(config.API.DISCUSSION_EDIT_URL, {});
 
     promise
         .done(function (result) {

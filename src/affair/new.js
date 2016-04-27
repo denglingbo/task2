@@ -30,13 +30,14 @@ var info = {
     affairType: 0
 };
 
-/* eslint-disable */
+
 /**
  * 验证不通过弹窗
  *
  * @param {string} info, 验证不通过的提示语句
  *
  */
+/* eslint-disable */
 function validAlert(info) {
     var $alertDom = $('.alert-length-limit');
     $alertDom.text(info).removeClass('hide');
