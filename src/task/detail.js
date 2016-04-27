@@ -10,7 +10,7 @@ require('./detail.scss');
 var config = require('../config');
 // var util = require('../common/util');
 var detailUtil = require('../common/widgets/detail/detail.js');
-var mobile = require('../common/mobile.js');
+var phoneMid = require('../common/phoneMid.js');
 var Page = require('../common/page');
 
 var page = new Page();
@@ -30,10 +30,27 @@ page.bindEvents = function () {
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
-    this.$main.on('click', '.column-right', function () {
-        /* eslint-disable */
-        CPNavigationBar.redirect('/users/list.html?jids=19,179,55,22,333&cid=4');
-        /* eslint-enable */
+    // 查看更多人员
+    this.$main.on('click', '.partner-more', function () {
+        var jids = $(this).data('jids');
+
+        if (jids && jids.length > 0) {
+            /* eslint-disable */
+            CPNavigationBar.redirect('/users/list.html?jids=' + jids);
+            /* eslint-enable */
+        }
+    });
+
+    // 跳转到事件或讨论页面
+    this.$main.on('click', '.affair-talk-item', function () {
+        // affair or talk
+        var pageType = $(this).data('page');
+
+        if (pageType && pageType.length > 0) {
+            /* eslint-disable */
+            CPNavigationBar.redirect('/' + pageType + '/list.html?jids=' + jids);
+            /* eslint-enable */
+        }
     });
 
     // 加载更多事件和讨论
@@ -81,7 +98,7 @@ function loaderStatus(status, delay) {
 }
 
 /**
- * 发送加载列表请求
+ * 发送加载事件和讨论列表请求
  *
  * @param {boolean} isStatus 是否需要加载条
  *
@@ -143,7 +160,7 @@ page.findOwner = function (srcObject, itemObject, appendObject) {
 
     if (itemObject && itemObject.jid) {
 
-        var id = parseInt(mobile.takeJid(itemObject.jid), 10);
+        var id = parseInt(phoneMid.takeJid(itemObject.jid), 10);
 
         for (var key in srcObject) {
             if (srcObject.hasOwnProperty(key)) {
@@ -209,9 +226,10 @@ page.renderUser = function (originArr, dataArr) {
 
     if (data.partner) {
         var partnerRaw = [];
+        var partnerJids = [];
         data.partner.forEach(function (item) {
-            // var pinyin = item.pinyin ? '(' + item.pinyin + ')' : '';
             partnerRaw.push(item.name);
+            partnerJids.push(phoneMid.takeJid(item.jid));
         });
 
         if (partnerRaw.length) {
@@ -219,6 +237,7 @@ page.renderUser = function (originArr, dataArr) {
         }
 
         dataRaw.partnerRaw = partnerRaw.join('、');
+        dataRaw.partnerJids = partnerJids.join(',');
     }
 
     this.render('#partner', dataRaw);
@@ -244,7 +263,18 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(data);
             }
             else {
-                me.data = data;
+                data.owner = false;
+                data.ownerAndReview = false;
+
+                // 判断该用户 uid 是不是同时是 该任务的创建者
+                if (phoneMid.uid() === data.create_user) {
+                    data.owner = true;
+                }
+
+                // 底部 fixed bar 更换为 '不同意', '同意'
+                if (data.owner && data.status === 6) {
+                    data.ownerAndReview = true;
+                }
 
                 // 下面为获取人员信息的配置
                 var obj = {
@@ -253,9 +283,10 @@ page.addParallelTask(function (dfd) {
                     partner: data.attend_ids
                 };
 
-                var jids = mobile.mergeArray(obj);
-                var dfdPub = mobile.getUserInfo(jids);
+                var jids = phoneMid.makeArray(obj);
+                var dfdPub = phoneMid.getUserInfo(jids, data.cid);
 
+                // 查询用户信息失败
                 if (dfdPub === null) {
                     me.data.userInfoFail = true;
                 }
@@ -268,6 +299,8 @@ page.addParallelTask(function (dfd) {
                             me.failUser();
                         });
                 }
+
+                me.data = data;
 
                 dfd.resolve(data);
             }

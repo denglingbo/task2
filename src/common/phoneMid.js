@@ -1,13 +1,48 @@
 /**
- * @file phonePlugins.js
+ * @file phoneMid.js
  * @author deo
  *
  * 手机端的一些公用脚本，和原生进行交互的中间层
  */
-
+var config = require('../config');
 var util = require('./util');
+var storage = require('./localstorage');
 
 var exports = {};
+
+/**
+ * 获取 uid, uid 是在页面入口位置传递进来，并且通过 ls 进行持续保存
+ *
+ * @return {string} uid
+ */
+exports.uid = function () {
+    var data = storage.getData(config.const.TASK_PARAMS);
+    var uid = util.params('uid') || data.uid;
+
+    return parseInt(uid, 10);
+};
+
+/**
+ * 获取 companyId, 优先使用 ls 的值，再使用传递的 cid (几乎不会传这个 ^.^)，同时覆盖 ls.cid
+ *
+ * @param {number} cid, companyId
+ * @return {string} companyId
+ *
+ */
+exports.companyId = function (cid) {
+    // localstorage
+    var data = storage.getData(config.const.TASK_PARAMS);
+
+    // 1. 后端传递的 cid
+    if (cid !== undefined && cid !== null) {
+        data.cid = cid;
+        storage.addData(config.const.TASK_PARAMS, data);
+        return cid;
+    }
+
+    // 2. ls or query params
+    return util.params('cid') || data.cid;
+};
 
 /**
  * 把 id 拼装成 jid
@@ -16,9 +51,14 @@ var exports = {};
  * @return {string} id@companyId
  *
  */
-exports.makeJid = function (id) {
-    var companyId = util.params('cid');
-    return companyId !== null ? id + '@' + companyId : null;
+exports.makeJid = function (id, cid) {
+    cid = cid || this.companyId(cid);
+
+    if (cid === null) {
+        return null;
+    }
+
+    return id + '@' + cid;
 };
 
 /**
@@ -34,34 +74,41 @@ exports.takeJid = function (jid) {
 };
 
 /**
- * 合并为一个数组
+ * 将一个数组中的所有项合并到一起
+ * eg: [1, 2, [2, 3], ...]
+ * eg: {a: 1, b: [1, 2], ...}
  *
- * @param {Array|Object} param, 要合并的数组
+ * @param {Array|Object} args, 要合并的数组
  * @return {Array} 合并过的数组
  *
  */
-exports.mergeArray = function (param) {
+exports.makeArray = function (args) {
     var temp = [];
 
-    if ($.isPlainObject(param)) {
-        for (var key in param) {
-            if (param.hasOwnProperty(key)) {
-                temp.push(param[key]);
+    // 如果是对象，则只把 value 作为数组的项
+    if ($.isPlainObject(args)) {
+        for (var key in args) {
+            if (args.hasOwnProperty(key)) {
+                temp.push(args[key]);
             }
         }
     }
-    else if ($.isArray(param)) {
-        temp = param;
+    // 数组 [1, 2, 3, [4, 5]]
+    else if ($.isArray(args)) {
+        temp = args;
     }
-    else if (typeof param === 'number' || typeof param === 'string') {
-        temp = [param];
+    // 单个值 1 or 'hello'
+    else if (typeof args === 'number' || typeof args === 'string') {
+        temp = [args];
     }
+    // 未知情况，不做操作
     else {
-        return param;
+        return args;
     }
 
     var arr = [];
 
+    // 新数组
     temp.forEach(function (item) {
         if (typeof item === 'number' || typeof item === 'string') {
             arr.push(item);
@@ -74,17 +121,28 @@ exports.mergeArray = function (param) {
     return arr;
 };
 
-exports.arrayConcat = function (arr1, arr2) {
+/**
+ * 把两个数组中的对象合并到一个数组，同 id 的对象 合并
+ *
+ * @param {Array} arr1, 数组
+ * @param {Array} arr2, 数组
+ * @param {string} key, 匹配某个 key
+ * @return {Array}
+ *
+ */
+exports.mergeObject2Array = function (arr1, arr2, key) {
+    var arr = arr1;
 
-    arr1.forEach(function (item) {
+    arr.forEach(function (arrItem) {
 
-        arr2.forEach(function (temp) {
-            if (item.jid === temp.jid) {
-                $.extend(item, temp);
+        arr2.forEach(function (arr2Item) {
+            if (arrItem[key] === arr2Item[key]) {
+                $.extend(arrItem, arr2Item);
             }
         });
     });
 
+    return arr;
 };
 
 
@@ -120,11 +178,12 @@ exports.getPubData = function (options) {
  * 获取公共数据 - 指定人员信息
  *
  * @param {Array} jids, id 数组
+ * @param {string} cid, cid 公司id ，可以不传
  * @param {number} dataFlag, 获取数据内容的标识
  * @return {Deferred}
  *
  */
-exports.getUserInfo = function (jids, dataFlag) {
+exports.getUserInfo = function (jids, cid, dataFlag) {
     var me = this;
 
     if (!jids || jids.length <= 0) {
@@ -139,7 +198,7 @@ exports.getUserInfo = function (jids, dataFlag) {
 
     // 按原生需求拼接字符串
     jids.forEach(function (item) {
-        jidArr.push(me.makeJid(item));
+        jidArr.push(me.makeJid(item, cid));
     });
 
     if (dataFlag !== undefined) {
@@ -161,15 +220,15 @@ exports.getUserInfo = function (jids, dataFlag) {
     return this.getPubData(options);
 };
 
-
 /**
  * 获取公共数据 - 指定人员头像，简直有点坑啊，要一次次的请求
  *
  * @param {Array} jids, id 数组
+ * @param {string} cid, cid 公司id ，可以不传
  * @return {Deferred}
  *
  */
-exports.getUserIcon = function (jids) {
+exports.getUserIcon = function (jids, cid) {
     var dfd = new $.Deferred();
     var me = this;
     var arr = jids;
@@ -182,7 +241,7 @@ exports.getUserIcon = function (jids) {
     var promiseList = [];
 
     arr.forEach(function (id) {
-        var jid = me.makeJid(id);
+        var jid = me.makeJid(id, cid);
 
         if (jid !== null) {
 
@@ -212,18 +271,29 @@ exports.getUserIcon = function (jids) {
     return dfd;
 };
 
-exports.getUserAndPhoto = function (jids) {
+
+/**
+ * 获取用户信息 以及 用户头像
+ * 这里是为了避免常用请求，所以把 Fn * n + 1 次调用合并为 一次 Fn 已方便使用
+ * 请求 userInfo 1 次请求，contactIcon 需要 N * count 次请求，所以一个用户列表 需要 N * count + 1 次
+ *
+ * @param {Array} jids, id 数组
+ * @param {string} cid, cid 公司id ，可以不传
+ * @return {Deferred}
+ *
+ */
+exports.getUserAndPhoto = function (jids, cid) {
     var dfd = new $.Deferred();
-    // var me = this;
-    var promiseList = [this.getUserInfo(jids), this.getUserIcon(jids)];
+    var me = this;
+    var promiseList = [this.getUserInfo(jids, cid), this.getUserIcon(jids, cid)];
 
     $.when.apply($, promiseList)
         .done(function (userInfo, userIcon) {
 
-            // var userInfoArr = userInfo.contacts;
-            // var arr = me.arrayConcat(userInfoArr, userIcon);
+            var userInfoArr = userInfo.contacts;
+            var data = me.mergeObject2Array(userInfoArr, userIcon, 'jid');
 
-            dfd.resolve();
+            dfd.resolve(data);
         })
         .fail(function () {
             dfd.reject(null);

@@ -18,8 +18,8 @@ var CPNavigationBar = {
 };
 
 
-var randomData = function () {
-    return 'Name-' + Math.floor(Math.random() * 1000);
+var randomData = function (key) {
+    return 'Name-' + key || (Math.floor(Math.random() * 1000));
 };
 
 /**
@@ -35,7 +35,7 @@ var getMockData = {
         jids.forEach(function (item) {
             data.push({
                 jid: item,
-                name: randomData()
+                name: randomData(item)
             });
         });
 

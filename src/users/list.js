@@ -7,9 +7,8 @@
 
 require('./list.scss');
 
-// var config = require('../config');
 var util = require('../common/util');
-var mobile = require('../common/mobile.js');
+var phoneMid = require('../common/phoneMid.js');
 var Page = require('../common/page');
 
 var page = new Page();
@@ -28,9 +27,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
     var jids = util.params('jids');
 
-    var promise = mobile.getUserIcon(jids);
-
-    promise
+    phoneMid.getUserAndPhoto(jids)
         .done(function (data) {
             me.data = {
                 list: data
@@ -41,9 +38,6 @@ page.addParallelTask(function (dfd) {
         .fail(function () {
             dfd.reject();
         });
-
-
-    // var promiseA = mobile.getUserAndPhoto(jids);
 
     return dfd;
 });

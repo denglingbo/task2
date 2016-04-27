@@ -14,7 +14,6 @@
 
 // layout-list, layout-list-only
 .layout-common {
-    margin-top: rem(10px);
     background: $white;
     
     dd {
@@ -41,6 +40,7 @@
 // 有 title 样式
 .layout-list {
     @extend .layout-common;
+    margin-top: rem(10px);
     padding: rem(20px) 0 0 rem(15px);
 
     dd {

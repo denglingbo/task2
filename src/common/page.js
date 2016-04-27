@@ -6,6 +6,58 @@
 
 var config = require('../config');
 var view = require('./ui/view');
+var util = require('./util');
+var storage = require('./localstorage');
+
+if (!window.pageLog) {
+    window.pageLog = {};
+}
+
+/**
+ * 不储存空数据
+ *
+ * @param {string} key, url query key
+ * @return {string|null}
+ */
+var checkParamNull = function (key) {
+    var ls = storage.getData(config.const.TASK_PARAMS);
+    var param = $.trim(util.params(key));
+    var lsData = ls && ls[key] ? ls[key] : '';
+
+    if (param === undefined || param === null || param.length <= 0) {
+
+        if (lsData) {
+            return lsData;
+        }
+
+        return '';
+    }
+
+    return param || lsData;
+};
+
+/**
+ * 储存基础数据
+ *
+ * @return {Object}
+ */
+var getParams = function () {
+
+    var data = {
+        // uid 人员id
+        uid: checkParamNull('uid'),
+        // cid 公司id
+        cid: checkParamNull('cid'),
+        // lang 语言类型
+        lang: checkParamNull('lang') || 'zh_CN',
+        // client 客户端类型
+        client: checkParamNull('client')
+    };
+
+    storage.addData(config.const.TASK_PARAMS, data);
+
+    return data;
+};
 
 /**
  * Page
@@ -42,8 +94,6 @@ function Page(opts) {
      */
     this.isDone = false;
 }
-
-window.pageLog = {};
 
 /**
  * 所有前序任务执行完毕之后，回调 enter
@@ -88,17 +138,13 @@ Page.prototype.start = function () {
         // Do something
     });
 
-    // (function (params) {
-    //     me._data = params;
-    //     dfd.resolve();
-    // })();
-
     // -------------------------------------
     // 这里不适用于所有环境，此处为 cordova 服务
     // 等待 deviceready 完成
     // -------------------------------------
     window.pageLog.devicereadyStart = +new Date();
     document.addEventListener('deviceready', function () {
+        me._data = getParams();
         dfd.resolve();
     }, false);
     window.pageLog.devicereadyEnd = +new Date();

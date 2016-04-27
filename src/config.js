@@ -32,19 +32,22 @@ var config = {
     }
 };
 
-// var host = '172.16.1.218';
-var host = 'localhost';
-// var host = '172.16.1.101';
-// var host = '192.168.1.5';
-
-config.mockUrl = 'http://' + host + ':8015';
-
 config.const = {
+
+    TASK_PARAMS: 'TASK_PARAMS',
+
     loader: {
         'doing': '加载中',
         'done': '加载完成',
         'default': '加载更多'
     }
 };
+
+var host = '172.16.1.209';
+// var host = 'localhost';
+// var host = '172.16.1.101';
+// var host = '192.168.1.5';
+
+config.mockUrl = 'http://' + host + ':8015';
 
 module.exports = config;

@@ -42,7 +42,7 @@ page.bindEvents = function () {
 
     $('#add-newtask').on('click', function () {
         /* eslint-disable */
-        CPNavigationBar.redirect('/task/detail.html');
+        CPNavigationBar.redirect('/task/detail.html?cid=4');
         /* eslint-enable */
     });
 
