@@ -1,5 +1,5 @@
 /**
- * @file done-time.js
+ * @file doneTime.js
  * @author hefeng
  * 完成时间跳转页
  *
@@ -10,6 +10,7 @@ var config = require('../config');
 var Page = require('../common/page');
 
 var page = new Page();
+// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var info = {
     endTime: 0
@@ -77,8 +78,12 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
-    $('.done-early').click(function (e) {
+    var me = this;
+    $('.done-early').on('click', function () {
         setCurr('done-early');
+    });
+    $('#submit').on('click', function () {
+        me.returnValue();
     });
 };
 
@@ -116,6 +121,11 @@ page.initValue = function () {
     if (!info.endTime) {
         setCurr('done-early');
     }
+};
+page.returnValue = function () {
+    /* eslint-disable */
+    CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
+    /* eslint-enable */
 };
 /**
  * 请求页面接口

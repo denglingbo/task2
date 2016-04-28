@@ -10,12 +10,15 @@ var plugins = require('common/plugins');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
+var phoneMid = require('common/phoneMid');
 
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
+// 验证信息
 var valid = {
+    isEdit: false,
     title: false,
     content: true
 };
@@ -105,6 +108,7 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+    var me = this;
 
     editCom.bindClear(valid);
 
@@ -113,13 +117,24 @@ page.bindEvents = function () {
     editCom.bindContent(valid);
 
     editCom.bindGetFocus();
+
+    $('#submit').on('click', function () {
+        editCom.submitValid(me.submit, valid);
+    });
+
     /* eslint-disable */
     // 选择人员跳转页面
     $('#attends').click(function (e) {
         CPNavigationBar.redirect('selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
-            if (data) {
-                data = JSON.parse(data);
+            if (!data) {
+                return;
             }
+            valid.isEdit = true;
+            data = JSON.parse(data);
+            var contacts = data.contacts;
+            contacts.forEach(function (value, index) {
+                info['user_ids'].push(phoneMid.takeJid(value.jid));
+            });
             // TODO
         });
     });
@@ -183,6 +198,8 @@ page.initPlugin = function () {
             info['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
+
+            valid.isEdit = true;
         }
     }));
 
@@ -228,7 +245,9 @@ page.initPlugin = function () {
         },
         operateType: 'upload',
         attachesCount: 10,
-        callback: function () {}
+        callback: function () {
+            valid.isEdit = true;
+        }
     };
     plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
 };
@@ -242,12 +261,19 @@ page.initValue = function () {
     /* eslint-enable */
 
     // 初始化文本框的关闭按钮
-    $.each($('.input'), function (index, item) {
-        editCom.toggleX($(item), $(item).val());
-    });
+    editCom.initTextClose(valid);
 
     // TODO 修改存储数据
     window.localStorage.setItem(selectKey, JSON.stringify(selectValue));
+};
+
+page.submit = function () {
+    var me = page;
+    info.title = $('#edit-title').val();
+    info.content = $('#edit-content').val();
+    /* eslint-disable */
+    var promise = me.post(config.API.TALK_EDIT_URL, info);
+    /* eslint-enable */
 };
 /**
  * 请求页面接口
@@ -268,6 +294,9 @@ page.addParallelTask(function (dfd) {
                 me.data = result.data;
                 if (me.data.id) {
                     info = me.data;
+                }
+                else {
+                    me.data = info;
                 }
                 dfd.resolve();
             }

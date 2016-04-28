@@ -15,7 +15,9 @@ var Page = require('common/page');
 
 var page = new Page();
 
+// 验证信息
 var valid = {
+    isEdit: false,
     title: false,
     content: true
 };
@@ -33,7 +35,7 @@ var info = {
     title: '',
     content: '',
     importance_level: 1,
-    label_id: ''
+    label_id: 0
 };
 /* eslint-enable */
 page.enter = function () {
@@ -49,6 +51,7 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+    var me = this;
     editCom.bindClear(valid);
 
     editCom.bindTitle(valid);
@@ -56,6 +59,10 @@ page.bindEvents = function () {
     editCom.bindContent(valid);
 
     editCom.bindGetFocus();
+
+    $('#submit').on('click', function () {
+        editCom.submitValid(me.submit, valid);
+    });
 };
 
 /**
@@ -116,6 +123,8 @@ page.initPlugin = function () {
             info['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
+
+            valid.isEdit = true;
         }
     }));
 
@@ -161,8 +170,12 @@ page.initPlugin = function () {
             }
         ],
         onSelect: function (text, inst) {
-            info.affairType = +inst.getVal();
+            /* eslint-disable */
+            info['label_id'] = +inst.getVal();
+            /* eslint-enable */
             $('#affairType .value').text(text);
+
+            valid.isEdit = true;
         }
     }));
 
@@ -208,7 +221,9 @@ page.initPlugin = function () {
         },
         operateType: 'upload',
         attachesCount: 10,
-        callback: function () {}
+        callback: function () {
+            valid.isEdit = true;
+        }
     };
     plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
 };
@@ -221,10 +236,18 @@ page.initValue = function () {
     $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
     /* eslint-enable */
     // 初始化文本框的关闭按钮
-    $.each($('.input'), function (index, item) {
-        editCom.toggleX($(item), $(item).val());
-    });
+    editCom.initTextClose(valid);
 };
+
+page.submit = function () {
+    var me = page;
+    info.title = $('#edit-title').val();
+    info.content = $('#edit-content').val();
+    /* eslint-disable */
+    var promise = me.post(config.API.TALK_EDIT_URL, info);
+    /* eslint-enable */
+};
+
 /**
  * 请求页面接口
  *
@@ -245,6 +268,9 @@ page.addParallelTask(function (dfd) {
                 me.data = result.data;
                 if (me.data.id) {
                     info = me.data;
+                }
+                else {
+                    me.data = info;
                 }
                 dfd.resolve();
             }

@@ -10,12 +10,15 @@ var plugins = require('common/plugins');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
+var phoneMid = require('common/phoneMid');
 
-// var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
+// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
+// 验证信息
 var valid = {
+    isEdit: false,
     title: false,
     content: true
 };
@@ -117,28 +120,56 @@ page.bindEvents = function () {
     editCom.bindContent(valid);
 
     editCom.bindGetFocus();
+
     $('#submit').on('click', function () {
-        me.submit();
+        editCom.submitValid(me.submit, valid);
+    });
+
+    $('#cancel').on('click', function () {
+        editCom.cancelValidate(valid);
     });
     /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         CPNavigationBar.redirect('/task/doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
-            if (data) {
-                data = JSON.parse(data);
+            if (!data) {
+                return;
             }
-            // TODO
+            valid.isEdit = true;
+            data = JSON.parse(data);
+            info['end_time'] = data.endTime;
+            $('#doneTime .value').text(me.data['end_time'] ? new Date(me.info['end_time']) : '尽快完成');
         });
     });
 
     // 选择人员跳转页面
     $('#principal, #attends').on('click', function (e) {
-        var key = e.target.id === 'principal' ? principalSelectKey : attendSelectKey;
+        var key = '';
+        var itemKey = '';
+        if (e.target.id === 'principal') {
+            key = principalSelectKey;
+            itemKey = 'principal_user';
+        }
+        else {
+            key = attendSelectKey;
+            itemKey = 'attend_ids';
+        } 
+
         CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
-            if (data) {
-                data = JSON.parse(data);
+            if (!data) {
+                return;
             }
-            // TODO
+            valid.isEdit = true;
+            data = JSON.parse(data);
+            var contacts = data.contacts;
+            if ($.isArray(info[itemKey])) {
+                contacts.forEach(function (value, index) {
+                    info[itemKey].push(phoneMid.takeJid(value.jid));
+                });
+            }
+            else {
+                info[itemKey] = phoneMid.takeJid(contacts[0].jid);
+            }
         });
     });
     /* eslint-enable */
@@ -201,6 +232,8 @@ page.initPlugin = function () {
             info['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
+
+            valid.isEdit = true;
         }
     }));
 
@@ -246,7 +279,9 @@ page.initPlugin = function () {
         },
         operateType: 'upload',
         attachesCount: 10,
-        callback: function () {}
+        callback: function () {
+            valid.isEdit = true;
+        }
     };
     plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
 };
@@ -260,9 +295,7 @@ page.initValue = function () {
     $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
     /* eslint-enable */
     // 初始化文本框的关闭按钮
-    $.each($('.input'), function (index, item) {
-        editCom.toggleX($(item), $(item).val());
-    });
+    editCom.initTextClose(valid);
 
     // TODO 修改存储数据
     selectValue.selectType = 1;
@@ -272,7 +305,7 @@ page.initValue = function () {
 };
 
 page.submit = function () {
-    var me = this;
+    var me = page;
     info.title = $('#edit-title').val();
     info.content = $('#edit-content').val();
     /* eslint-disable */
@@ -299,6 +332,9 @@ page.addParallelTask(function (dfd) {
                 me.data = result.data;
                 if (me.data.id) {
                     info = me.data;
+                }
+                else {
+                    me.data = info;
                 }
                 dfd.resolve();
             }

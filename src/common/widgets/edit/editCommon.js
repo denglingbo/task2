@@ -8,19 +8,56 @@
 /**
  * 验证不通过弹窗
  *
- * @param {string} str, 验证不通过的提示语句
+ * @param {Array} arr, 需要弹窗提示的提示语集合
  *
  */
-exports.validAlert = function (str) {
+exports.validAlert = function (arr) {
     var $alertDom = $('.alert-length-limit');
-    $alertDom.text(str).removeClass('hide');
-
+    var len = arr.length;
+    var time = 0;
+    if (len > 1) {
+        $alertDom.text(arr[0]).removeClass('hide');
+        time = 3000;
+    }
+    else if (len === 1) {
+        $alertDom.text(arr[0]).removeClass('hide');
+        time = 3000;
+    }
+    else {
+        return;
+    }
     setTimeout(function () {
         $alertDom.addClass('hide');
+        arr.shift()
+        exports.validAlert(arr);
     },
-    3000);
+    time);
 };
 
+/**
+ * 取消确认是否编辑过, 是否离开弹窗
+ *
+ * @param {Object} validObj, 验证信息对象
+ *
+ */
+exports.cancelValidate = function (validObj) {
+    if(validObj.isEdit) {
+        var cancelButton = {
+            title: '取消',
+            callback: function () {
+
+            }
+        };
+
+        var OKButton = {
+            title: '确认',
+            callback: function () {
+
+            }
+        };
+        CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
+    }
+}
 /**
  * 转换string驼峰
  *
@@ -89,11 +126,18 @@ exports.toggleX = function (textDom, textLength) {
 exports.bindClear = function (validObj) {
     $('.close-x').on('click', function () {
         var $parentDom = $(this).parent();
-        $parentDom.find('.input').val('');
+        var $textDom = $parentDom.find('.input');
+        if ($textDom.val().length) {
+            validObj.isEdit = true;
+        }
+        $textDom.val('');
         $parentDom.find('.err-tip').text('');
         $(this).addClass('hide');
         if ($parentDom.hasClass('edit-title-wrap')) {
             validObj.title = false;
+        }
+        else {
+            validObj.content = true;
         }
     });
 };
@@ -109,6 +153,7 @@ exports.bindTitle = function (validObj) {
         var me = this;
         var length = $(me).val().length;
         var errTip = $(me).next('.err-tip');
+        validObj.isEdit = true;
 
         exports.toggleX(me, length);
 
@@ -139,6 +184,7 @@ exports.bindContent = function (validObj) {
         var me = this;
         var length = $(me).val().length;
         var errTip = $(me).next('.err-tip');
+        validObj.isEdit = true;
 
         exports.toggleX(me, length);
 
@@ -166,5 +212,54 @@ exports.bindGetFocus = function () {
         $('#edit-content').focus();
     });
 };
+
+/**
+ * 编辑页面初始化close按钮和提交验证
+ *
+ * @param {Object} validObj, 验证信息对象
+ *
+ */
+exports.initTextClose = function (validObj) {
+    $.each($('.input'), function (index, item) {
+        var itemValue = $(item).val();
+        var itemLen = itemValue.length;
+        exports.toggleX($(item), itemValue);
+        if (item.id.indexOf('title') && itemLen > 0 && itemLen <= 50) {
+            validObj.title = true;
+        }
+        if (item.id.indexOf('content') && itemLen > 50000) {
+            validObj.content = false;
+        }
+    });
+}
+
+/**
+ * 提交前验证
+ *
+ * @param {Function} submitFn, 提交到后端的函数
+ * @param {Object} validObj, 验证信息对象
+ *
+ */
+exports.submitValid = function (submitFn, validObj) {
+    var flag = validObj.title && validObj.content;
+    var arr = [];
+    if (flag) {
+       submitFn(); 
+    }
+    else {
+        if (!validObj.title) {
+            if(!$('#edit-title').val()) {
+                arr.push('标题不能为空');
+            }
+            else {
+                arr.push('标题不能超过50字');
+            }
+        }
+        if (!validObj.content) {
+            arr.push('输入内容不能超过5万字');
+        }
+    }
+    exports.validAlert(arr);
+}
 
 module.exports = exports;
