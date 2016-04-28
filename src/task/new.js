@@ -6,7 +6,9 @@
  */
 
 require('../common/widgets/edit/new.scss');
+/* eslint-disable */
 Mustache = require('dep/mustache');
+/* eslint-disable */
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
 var Page = require('../common/page');
@@ -30,16 +32,16 @@ var info = {
     importance_level: 0,
     notice: 0,
     message : {
-        "sent_eim" : true,
-        "sent_emai" : false,
-        "sent_sms" : false
+        sent_eim : true,
+        sent_emai : false,
+        sent_sms : false
     },
     attachements : [
           {
-              "deleted" : false,
-              "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
-              "file_name" : "ca.crt",
-              "size" : 1391
+              deleted : false,
+              dfs_path : '00012AE75593C73341F7927F567E0C49AD6D',
+              file_name : 'ca.crt',
+              size : 1391
           }
     ]
 };
@@ -47,56 +49,56 @@ var info = {
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
 var selectValue = {
-    'clientMsg': {
-        'uid': '',
-        'cid': '',
-        'client': '',
-        'lang': '',
-        'puse': '',
-        'appver': ''
+    clientMsg: {
+        uid: '',
+        cid: '',
+        client: '',
+        lang: '',
+        puse: '',
+        appver: ''
     },
-    'selector': {
+    selector: {
         // 选择人
-        'contact': 3,
+        contact: 3,
         // 选择部门
-        'dept': 0,
+        dept: 0,
         // 选择职务
-        'title': 0  
+        title: 0  
     },
     // 选择组件类型：1.单选 2.复选
-    'selectType': 2,
+    selectType: 2,
     // 指定的过滤数据
-    'filter': {
+    filter: {
         // 指定不显示的数据
-        'disabled': {
-            'contacts': [],
-            'depts': [],
-            'titles': []
+        disabled: {
+            contacts: [],
+            depts: [],
+            titles: []
         },
         // 指定显示的数据
-        'enabled': {
-            'depts': [],
-            'titles': []
+        enabled: {
+            depts: [],
+            titles: []
         },
         // 已选择的数据
-        'checked': {
+        checked: {
             // 数组
-            'contacts': [],
-            'depts': [],
-            'titles': []
+            contacts: [],
+            depts: [],
+            titles: []
         }
     },
     // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
-    'dataSource': 1,
+    dataSource: 1,
     // 从移动网关获取数据的请求信息
-    'requestInfo':{
+    requestInfo:{
         // 请求方式
-        'type': 'get',
+        type: 'get',
         // 请求发送的数据
-        'data': '',
+        data: '',
         // 请求的url
-        'url': '',
-        'headers': {}
+        url: '',
+        headers: {}
     }
 };
 

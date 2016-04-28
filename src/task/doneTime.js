@@ -52,11 +52,12 @@ function setCurr(currClass) {
  * 获取URL参数
  *
  * @param {string} key, 参数key
- * @return {}
+ * @return {string} 参数value
  *
  */
-function getQueryString(key){
-    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+
+function getQueryString(key) {
+    var reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)');
     var r = window.location.search.substr(1).match(reg);
     if (r !== null) {
         return r[2];
@@ -64,7 +65,6 @@ function getQueryString(key){
 }
 
 page.enter = function () {
-
     page.initValue();
     page.bindEvents();
     page.initPlugin();

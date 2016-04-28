@@ -6,7 +6,9 @@
  */
 
 require('../common/widgets/edit/new.scss');
+/* eslint-disable */
 Mustache = require('dep/mustache');
+/* eslint-disable */
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
 var Page = require('../common/page');

@@ -14,7 +14,7 @@ page.enter = function () {
 };
 
 page.bindEvents = function () {
-    
+
 };
 
 page.addParallelTask(function (dfd) {
