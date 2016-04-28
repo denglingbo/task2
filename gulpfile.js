@@ -99,6 +99,7 @@ gulp.task('watch', function () {
 gulp.task('release-webpack', function (gulpCallback) {
 
     febd.build(gulpCallback, function (maker, webpack) {
+        maker.setReleaseMock();
         setMaker(maker, webpack);
     });
 });

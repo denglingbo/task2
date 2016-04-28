@@ -99,6 +99,17 @@ MakeWebpackConfig.prototype = {
         return this.webpackConfig; 
     },
 
+    setReleaseMock: function () {
+        this.plugins.push(
+            new CopyPlugin([
+                {
+                    from: './cordova.js',
+                    to: './cordova.js'
+                }
+            ])
+        );
+    },
+
     setDevtool: function () {
 
         // 输出 source map
