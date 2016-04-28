@@ -10,8 +10,13 @@ var config = {
     API: {
 
         host: '',
+        // host: 'http://[host]',
 
         prefix: '',
+        // prefix: '/task/m/v1/',
+        // http://[host]/task/m/v1/get_task_detail?task_id=69585
+        // http://[host]/task/m/v1/get_talk_list?task_id=69585&title&talk_status=0&curr_page=1&number=15&sort_type=0&show_finish=0
+        // get_task_detail --> 之后用更改 1000
 
         HOME_URL: 1000,
 
