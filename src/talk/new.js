@@ -397,6 +397,7 @@ page.addParallelTask(function (dfd) {
                 dfd.resolve();
             }
         });
+    return dfd;
 });
 
 $(function () {

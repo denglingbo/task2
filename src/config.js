@@ -29,6 +29,7 @@ var config = {
 
         // 任务详情
         TASK_DETAIL_URL: 1004,
+        
         // 任务编辑
         TASK_EDIT_URL: 2000,
         // 事件编辑

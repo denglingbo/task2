@@ -214,7 +214,7 @@ page.initPlugin = function () {
         buttons: ['cancel', 'set'],
         height: 50
     };
-
+    // 紧急程度
     $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
         headerText: '紧急程度',
         showInput: false,
@@ -240,8 +240,55 @@ page.initPlugin = function () {
             }
         ],
         onSelect: function (text, inst) {
-            info.urgency = +inst.getVal();
+            info.importanceLevel = +inst.getVal();
             $('#urgencyBlock .value').text(text);
+        }
+    }));
+
+    // 事件类型
+    $('#affairType').mobiscroll().select($.extend({}, mobiOptions, {
+        headerText: '事件类型',
+        showInput: false,
+        showMe: true,
+        rows: 3,
+        data: [
+            {
+                text: '待办',
+                value: '0'
+            },
+            {
+                text: '求助',
+                value: '1',
+                selected: true
+            },
+            {
+                text: '汇报',
+                value: '2'
+            },
+            {
+                text: '计划',
+                value: '3'
+            },
+            {
+                text: '日志',
+                value: '4'
+            },
+            {
+                text: '记录',
+                value: '5'
+            },
+            {
+                text: '消息',
+                value: '6'
+            },
+            {
+                text: '其他',
+                value: '7'
+            }
+        ],
+        onSelect: function (text, inst) {
+            info.affairType = +inst.getVal();
+            $('#affairType .value').text(text);
         }
     }));
 
@@ -326,6 +373,7 @@ page.addParallelTask(function (dfd) {
                 dfd.resolve();
             }
         });
+    return dfd;
 });
 
 $(function () {

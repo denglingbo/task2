@@ -285,7 +285,6 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
 
-    // require.ensure(['common/widgets/edit/new'], function () {
     var template = require('common/widgets/edit/new');
     var $content = $('.edit-container');
     me.renderFile($content, template, $.extend({}, me.data, {
@@ -300,7 +299,6 @@ page.loadPage = function () {
     me.initPlugin();
     me.initValue();
     me.bindEvents();
-    // });
 };
 
 page.initPlugin = function () {
@@ -340,7 +338,7 @@ page.initPlugin = function () {
             }
         ],
         onSelect: function (text, inst) {
-            info.urgency = +inst.getVal();
+            info['importance_level'] = +inst.getVal();
             $('#urgencyBlock .value').text(text);
         }
     }));
@@ -392,7 +390,7 @@ page.initPlugin = function () {
     var renderString = Attach.getRenderString({attach: transKey(me.data.attachements)}, '11.1.1');
     $('.attach-list').append(renderString.attach);
     Attach.initEvent('.attach-list', 'zh_CN');
-}
+};
 
 page.initValue = function () {
     var me = this;
@@ -411,7 +409,12 @@ page.initValue = function () {
     window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
     selectValue['selectType'] = 2;
     window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
-}
+};
+
+page.submit = function () {
+    var promise = page.post(config.API.TASK_EDIT_URL, info);
+};
+
 /**
  * 请求页面接口
  *
@@ -432,6 +435,7 @@ page.addParallelTask(function (dfd) {
                 dfd.resolve();
             }
         });
+    return dfd;
 });
 
 $(function () {
