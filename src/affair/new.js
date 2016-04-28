@@ -244,7 +244,7 @@ page.submit = function () {
     info.title = $('#edit-title').val();
     info.content = $('#edit-content').val();
     /* eslint-disable */
-    var promise = me.post(config.API.TALK_EDIT_URL, info);
+    var promise = me.post(config.API.AFFAIR_EDIT_URL, info);
     /* eslint-enable */
 };
 
