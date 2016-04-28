@@ -10,9 +10,9 @@ require('dep/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
 // var util = require('../common/util');
-var detailUtil = require('../common/widgets/detail/detail.js');
-var phoneMid = require('../common/phoneMid.js');
-var Page = require('../common/page');
+var detailUtil = require('common/widgets/detail/detail.js');
+var phoneMid = require('common/phoneMid.js');
+var Page = require('common/page');
 var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
 var page = new Page();

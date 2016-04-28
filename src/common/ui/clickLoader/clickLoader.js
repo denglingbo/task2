@@ -5,7 +5,7 @@
  * 点击加载功能
  */
 
-require('./loader.scss');
+require('./clickLoader.scss');
 
 var getDom = function (classObject) {
 
@@ -40,8 +40,11 @@ var STATUS_CLASS = {
  *  options.promise: 用于 ajax
  */
 var Loader = function (options) {
+    var me = this;
 
-    this.opts = {
+    me.opts = {
+        // promise 一定要在 function 内部 return，不然一万年都不是一个新的请求了
+        promise: null,
 
         // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
         pageNum: 10,
@@ -50,14 +53,19 @@ var Loader = function (options) {
 
         status: STATUS_CLASS,
 
-        template: getDom(STATUS_CLASS)
+        template: getDom(STATUS_CLASS),
+
+        onInit: null,
+        onClick: null
     };
 
-    $.extend(this.opts, options);
+    $.extend(me.opts, options);
 
-    this.$main = $(this.opts.handler);
+    me.promise = me.opts.promise;
 
-    this.init();
+    me.$main = $(me.opts.handler);
+
+    me.init();
 };
 
 Loader.prototype = {
@@ -66,7 +74,21 @@ Loader.prototype = {
      * 添加一些必须的dom 或者属性
      */
     init: function () {
+        var me = this;
         this.addDom();
+
+        if (me.opts.onInit) {
+
+            if (me.opts.promise) {
+                me.req(function (data) {
+                    me.opts.onInit.call(me, data);
+                });
+            }
+            else {
+                me.opts.onInit.call(me);
+            }
+        }
+
         this.bindEvents();
     },
 
@@ -82,7 +104,19 @@ Loader.prototype = {
     },
 
     bindEvents: function () {
+        var me = this;
 
+        this.$main.on('click', function () {
+
+            if (me.opts.promise && me.opts.onClick) {
+                me.req(function (data) {
+                    me.opts.onClick.call(me, data);
+                });
+            }
+            else {
+                me.opts.onClick.call(me);
+            }
+        });
     },
 
     timerId: null,
@@ -122,15 +156,14 @@ Loader.prototype = {
     /**
      * 异步请求 此处需要一个 promise
      *
-     * @param {Promise} promise,
      * @param {Function} fn, 回调
      */
-    req: function (promise, fn) {
+    req: function (fn) {
         var me = this;
 
         me.statusChange('process');
 
-        promise
+        me.promise()
             .done(function (result) {
                 if (result.meta && result.meta.code !== 200) {
                     fn.call(me, false);

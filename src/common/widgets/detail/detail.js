@@ -7,6 +7,7 @@
  *
  */
 var util = require('../../util');
+var phoneMid = require('common/phoneMid');
 
 var exports = {};
 
@@ -56,6 +57,14 @@ exports.dealPageData = function (result) {
     })();
 
     data.importanceRaw = importanceMap[data.importance_level];
+
+    data.isMaster = 0;
+
+    // 负责人到完成任务页面有备注信息填写
+    // 判断这个用户点击完成任务过去的页面的展示权限
+    if (phoneMid.uid() === data.principal_user) {
+        data.isMaster = 1;
+    }
 
     data.creator = '';
     data.principal = data.principal_user;

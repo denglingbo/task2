@@ -23,15 +23,21 @@ page.enter = function () {
     me.render('#detail-main', me.data);
 
     me.clickLoader = new ClickLoader({
-        pageNum: 1
-    });
 
-    me.clickLoader.req(
-        page.post(config.API.AFFAIR_TALK_MORE_URL),
-        function (data) {
+        promise: function () {
+            return page.post(config.API.AFFAIR_TALK_MORE_URL);
+        },
+
+        pageNum: 10,
+
+        onInit: function (data) {
+            me.render('#affair-talk', data, 'append');
+        },
+
+        onClick: function (data) {
             me.render('#affair-talk', data, 'append');
         }
-    );
+    });
 
     me.bindEvents();
 };
@@ -39,11 +45,12 @@ page.enter = function () {
 page.bindEvents = function () {
     var me = this;
 
-    this.$more = $('#affair-talk-more-handler');
-    this.$affairTalk = $('#affair-talk');
+    me.$more = $('#affair-talk-more-handler');
+    me.$affairTalk = $('#affair-talk');
+    me.$fixbar = $('.fixbar');
 
     // 查看更多人员
-    this.$main.on('click', '.partner-more', function () {
+    me.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {
@@ -54,27 +61,28 @@ page.bindEvents = function () {
     });
 
     // 跳转到事件或讨论页面
-    this.$main.on('click', '.affair-talk-item', function () {
+    me.$main.on('click', '.affair-talk-item', function () {
         // affair or talk
-        var pageType = $(this).data('page');
+        var pageTo = $(this).data('page');
 
-        if (pageType && pageType.length > 0) {
+        if (pageTo && pageTo.length > 0) {
             /* eslint-disable */
-            CPNavigationBar.redirect('/' + pageType + '/detail.html');
+            CPNavigationBar.redirect('/' + pageTo + '/detail.html');
             /* eslint-enable */
         }
     });
 
-    // 加载更多事件和讨论
-    this.$more.on('click', function () {
+    // 页面底部跳转
+    me.$fixbar.find('li').on('click', function () {
+        var pageTo = $(this).data('page');
 
-        me.clickLoader.req(
-            page.post(config.API.AFFAIR_TALK_MORE_URL),
-            function (data) {
-                me.render('#affair-talk', data, 'append');
-            }
-        );
+        if (pageTo && pageTo.length > 0) {
+            /* eslint-disable */
+            CPNavigationBar.redirect(pageTo);
+            /* eslint-enable */
+        }
     });
+
 };
 
 /**

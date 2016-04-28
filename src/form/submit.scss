@@ -1,0 +1,10 @@
+
+@import "../common/css/global.scss";
+
+textarea {
+    border: none;
+    margin-top: rem(10px);
+    width: 100%;
+    height: rem(180px);
+    padding: rem(10px)
+}

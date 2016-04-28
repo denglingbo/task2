@@ -6,8 +6,9 @@
  */
 
 require('./index.scss');
+
 var config = require('../config');
-var Page = require('../common/page');
+var Page = require('common/page');
 
 var page = new Page();
 

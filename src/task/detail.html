@@ -91,15 +91,15 @@
                 {{/audit_right}}
 
                 {{#add_event_right}}
-                <li>新建事件</li>
+                <li data-page="/affair/new.html">新建事件</li>
                 {{/add_event_right}}
 
                 {{#add_talk_right}}
-                <li>发起讨论</li>
+                <li data-page="/talk/new.html">发起讨论</li>
                 {{/add_talk_right}}
 
                 {{#apply_right}}
-                <li>完成任务</li>
+                <li data-page="/form/submit.html?type=0&master={{ isMaster }}">完成任务</li>
                 {{/apply_right}}
             </ul>
         </div>
