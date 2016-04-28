@@ -9,8 +9,6 @@
 <body>
     <div class="main">
 
-        <div class="loading"></div>
-        
         <div id="detail-main"></div>
 
         <!-- title -->
@@ -43,7 +41,10 @@
             <dd>没有获取到人员信息</dd>
             {{/userInfoFail}}
             {{^userInfoFail}}
-            <dd>数据加载中</dd>
+            <div class="loading-status">
+                <span class="loading"></span>
+                <span class="loading-text">加载中</span>
+            </div>
             {{/userInfoFail}}
         </dl>
 
@@ -55,9 +56,7 @@
             </dl>
 
             <div id="affair-talk-more-handler" class="load-more">
-                <span class="load-more-holder">点击加载更多</span>
-                <span class="load-more-process hide">加载中...</span>
-                <span class="load-more-done hide">加载完成</span>
+                <!-- JS create -->
             </div>
         </div>
 

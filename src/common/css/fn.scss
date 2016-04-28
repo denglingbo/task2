@@ -232,9 +232,7 @@
     background: linear-gradient(to bottom, $color-to 0%, $color-mid 100%);
     
     // 旋转吧漏腚君
-    // animation: 1.2s linear 0s normal none infinite rotate;
-    transform: rotate(360deg);
-    transition: transform 1.2s linear 0s infinite;
+    animation: 1.2s linear 0s normal none infinite loading-rotate;
 
     &:before {
         content: '';
@@ -258,15 +256,15 @@
         background: #fff;
         border-radius: 100%;
     }
-/*
-    @keyframes rotate{
+
+    @keyframes loading-rotate {
         from {
-            transform: rotate(0deg)
+            transform: rotate(0deg);
         }
         to {
-            transform: rotate(360deg)
+            transform: rotate(360deg);
         }
-    }*/
+    }
 }
 
 @import "border-1px";

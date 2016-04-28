@@ -117,6 +117,7 @@ Page.prototype.start = function () {
         me.addParallelTask(function (dfd) {
             // 如果页面在这之前已经done过了，那就不继续编译
             $('[type="x-tmpl-mustache"]').each(function (index, node) {
+                // 通通拿出来编译一发
                 view.getRenderer(node.innerHTML);
             });
             window.pageLog.compileTemplateEnd = Date.now();
@@ -284,7 +285,15 @@ Page.prototype.post = function (api, data, opts) {
 
     // 请求完成
     promise.done(function (result, status, xhr) {
-        dfd.resolve(result);
+        // Just debug test
+        if (config.debug) {
+            setTimeout(function () {
+                dfd.resolve(result);
+            }, 200);
+        }
+        else {
+            dfd.resolve(result);
+        }
     });
 
     // 请求失败

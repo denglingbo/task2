@@ -41,7 +41,6 @@ $add-attach-width: rem(18px);
  * 五角星
  */
 $star-size: rem(16px);
-
 .star {
     padding: 0;
     display: inline-block;
@@ -59,7 +58,33 @@ $star-size: rem(16px);
     }
 }
 
-
+/**
+ * Loading
+ */
+$loading-size: 20px;
 .loading {
-    @include loading();
+    @include loading($loading-size);
+}
+
+.loading-status {
+    display: flex;
+    justify-content: center;
+
+    .loading, .loading-text {
+        display: inline-flex;
+    }
+    .loading-text {
+        height: $loading-size;
+        line-height: $loading-size;
+        padding-left: rem(10px);
+        font-size: rem(12px);
+        color: $color-tips;
+    }
+}
+
+.layout-list {
+    .loading-status {
+        padding-top: 0;
+        padding-bottom: rem(15px);
+    }
 }

@@ -8,19 +8,32 @@
 require('./detail.scss');
 
 var config = require('../config');
-var detailUtil = require('../common/widgets/detail/detail.js');
-var phoneMid = require('../common/phoneMid.js');
-var Page = require('../common/page');
+var detailUtil = require('common/widgets/detail/detail');
+var phoneMid = require('common/phoneMid');
+var ClickLoader = require('common/ui/clickLoader/clickLoader');
+var Page = require('common/page');
 
 var page = new Page();
 
 page.enter = function () {
-    this.$main = $('.main');
+    var me = this;
 
-    this.render('#detail-main', this.data);
-    this.affairTalkRequest(false);
+    me.$main = $('.main');
 
-    this.bindEvents();
+    me.render('#detail-main', me.data);
+
+    me.clickLoader = new ClickLoader({
+        pageNum: 1
+    });
+
+    me.clickLoader.req(
+        page.post(config.API.AFFAIR_TALK_MORE_URL),
+        function (data) {
+            me.render('#affair-talk', data, 'append');
+        }
+    );
+
+    me.bindEvents();
 };
 
 page.bindEvents = function () {
@@ -54,96 +67,13 @@ page.bindEvents = function () {
 
     // 加载更多事件和讨论
     this.$more.on('click', function () {
-        me.affairTalkRequest();
-    });
-};
 
-
-var loaderTimer = null;
-
-/**
- * 加载条状态
- *
- * @param {string} status 要展示的状态
- * @param {number} delay 延迟执行时间
- */
-function loaderStatus(status, delay) {
-
-    var $elem = $('.load-more');
-
-    var obj = {
-        holder: $elem.find('.load-more-holder'),
-        process: $elem.find('.load-more-process'),
-        done: $elem.find('.load-more-done')
-    };
-
-    var $cur = obj[status] || null;
-
-    if (!$cur || !$cur.length) {
-        return;
-    }
-
-    if (delay === undefined) {
-        $cur.removeClass('hide');
-        $cur.siblings().addClass('hide');
-    }
-    else {
-        clearTimeout(loaderTimer);
-        loaderTimer = setTimeout(function () {
-            $cur.removeClass('hide');
-            $cur.siblings().addClass('hide');
-        }, delay);
-    }
-}
-
-/**
- * 发送加载事件和讨论列表请求
- *
- * @param {boolean} isStatus 是否需要加载条
- *
- */
-page.affairTalkRequest = function (isStatus) {
-    var me = this;
-    var promise = page.post(config.API.AFFAIR_TALK_MORE_URL);
-    var $loader = $('.load-more');
-
-    // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
-    var pageNum = 10;
-
-    var hasStatus = true;
-    if (isStatus === false) {
-        hasStatus = false;
-    }
-
-    if (hasStatus) {
-        loaderStatus('process');
-    }
-
-    promise.done(function (result) {
-        if (result.meta && result.meta.code !== 200) {
-
-            return;
-        }
-
-        var data = result.data;
-
-        if (!data.list) {
-            return;
-        }
-
-        me.render('#affair-talk', data, 'append');
-
-        if (data.list.length < pageNum) {
-            $loader.addClass('hide');
-        }
-        else {
-            $loader.removeClass('hide');
-        }
-
-        if (hasStatus) {
-            loaderStatus('done');
-            loaderStatus('holder', 500);
-        }
+        me.clickLoader.req(
+            page.post(config.API.AFFAIR_TALK_MORE_URL),
+            function (data) {
+                me.render('#affair-talk', data, 'append');
+            }
+        );
     });
 };
 
