@@ -5,13 +5,11 @@
  *
  */
 
-require('../common/widgets/edit/new.scss');
-/* eslint-disable */
-Mustache = require('dep/mustache');
-/* eslint-disable */
-require('dep/plugins/attaches/attaches');
-var config = require('../config');
-var Page = require('../common/page');
+require('common/widgets/edit/new.scss');
+var plugins = require('common/plugins');
+var editCom = require('common/widgets/edit/editCommon');
+var config = require('config');
+var Page = require('common/page');
 
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
@@ -21,94 +19,29 @@ var valid = {
     title: false,
     content: true
 };
-
+/* eslint-disable */
+// 因为后端字段需要
 var info = {
-    id: '',
-    title: '',
-    comtent: '',
-    importanceLevel: 0,
-    affairType: 0
-};
-
-
-/**
- * 验证不通过弹窗
- *
- * @param {string} info, 验证不通过的提示语句
- *
- */
-/* eslint-disable */
-function validAlert(info) {
-    var $alertDom = $('.alert-length-limit');
-    $alertDom.text(info).removeClass('hide');
-
-    setTimeout(function () {
-        $alertDom.addClass('hide');
+    id: 0,
+    attachements: [],
+    message: {
+        sent_eim: true,
+        sent_emai: false,
+        sent_sms: false
     },
-    3000);
-}
-/* eslint-disable */
-
-/**
- * 转换string驼峰
- *
- * @param {string} str, 需要转换的字符串
- * @return {string} 转换后的驼峰命名
- */
-function camelCase(str) {
-    return str.replace(/_+(.)?/g, function (str, e) {
-        return e ? e.toUpperCase() : "";
-    });
-}
-
-/**
- * 附件传入data key转为 camelCase
- *
- * @param {Array} arr, 附件传入data
- *
- * @return {Array}, 属性转换成驼峰命名的对象的集合
- */
-function transKey(arr) {
-    var newArr = [];
-    if ($.isArray(arr)) {
-        newArr = arr;
-    }
-    else if (arr instanceof Object) {
-        newArr.push(arr);
-    }
-    var outArr = [];
-    var newObj = {};
-    for (var i = 0, len = newArr.length; i < len; i++) {
-        var item = newArr[i];
-        newObj = {};
-        for (var key in item) {
-            if (item.hasOwnProperty(key)) {
-                newObj[camelCase(key)] = item[key];
-            }
-        }
-        outArr.push(newObj)
-    }
-    return outArr;
-}
-
-/**
- * 切换关闭按钮的显示与隐藏
- *
- * @param {Object} textDom, 当前输入框dom对象
- * @param {number} textLength, 输入框内文字长度
- *
- */
-function toggleX(textDom, textLength) {
-    if (!textLength) {
-        $(textDom).parent().find('.close-x').addClass('hide');
-    }
-    else {
-        $(textDom).parent().find('.close-x').removeClass('hide');
-    }
-}
-
+    task_id: 69598,
+    title: '',
+    content: '',
+    importance_level: 1,
+    label_id: ''
+};
+/* eslint-enable */
 page.enter = function () {
-    page.loadPage(this.data);
+    var me = this;
+    me.loadPage();
+    me.initPlugin();
+    me.initValue();
+    me.bindEvents();
 };
 
 /**
@@ -116,66 +49,13 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
-    var me = this;
-    var $titleDom = $('#edit-title');
-    var $contentDom = $('#edit-content');
+    editCom.bindClear(valid);
 
-    $('.close-x').click(function () {
-        var $parentDom = $(this).parent();
-        $parentDom.find('.input').val('');
-        $parentDom.find('.err-tip').text('');
-        $(this).addClass('hide');
-        if ($parentDom.hasClass('edit-title-wrap')) {
-            valid.title = false;
-        }
-    });
+    editCom.bindTitle(valid);
 
-    $titleDom.on('input propertychange', function () {
-        var me = this;
-        var length = $(me).val().length;
-        var errTip = $(me).next('.err-tip');
+    editCom.bindContent(valid);
 
-        toggleX(me, length);
-
-        if (!length || length > 50) {
-            valid.title = false;
-        }
-        else {
-            valid.title = true;
-        }
-
-        if (length > 50) {
-            errTip.text(50 - length);
-        }
-        else {
-            errTip.text('');
-        }
-    });
-
-    $('.edit-title-wrap').click(function () {
-        $titleDom.focus();
-    });
-
-    $contentDom.on('input propertychange', function () {
-        var me = this;
-        var length = $(me).val().length;
-        var errTip = $(me).next('.err-tip');
-
-        toggleX(me, length);
-
-        if (length > 50000) {
-            valid.content = false;
-            errTip.text(50000 - length);
-        }
-        else {
-            valid.content = true;
-            errTip.text('');
-        }
-    });
-
-    $('.edit-words').click(function () {
-        $contentDom.focus();
-    });   
+    editCom.bindGetFocus();
 };
 
 /**
@@ -185,22 +65,14 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
 
-    require.ensure(['../common/widgets/edit/edit'], function () {
-        var template = require('../common/widgets/edit/edit');
-        var $content = $('.edit-container');
-        me.renderFile($content, template, $.extend({}, me.data, {
-            view: {
-                task: false,
-                affair: true,
-                talk: false,
-                placeholder: '事件',
-                data: []
-            }
-        }));
-        page.initPlugin()
-        page.initValue();
-        me.bindEvents();
-    });
+    var template = require('common/widgets/edit/new');
+    var $content = $('.edit-container');
+    me.renderFile($content, template, $.extend({}, me.data, {
+        view: {
+            affair: true,
+            placeholder: '事件'
+        }
+    }));
 };
 
 page.initPlugin = function () {
@@ -223,24 +95,26 @@ page.initPlugin = function () {
         data: [
             {
                 text: '重要且紧急',
-                value: '0'
+                value: 0
             },
             {
                 text: '普通',
-                value: '1',
+                value: 1,
                 selected: true
             },
             {
                 text: '重要',
-                value: '2'
+                value: 2
             },
             {
                 text: '紧急',
-                value: '3'
+                value: 3
             }
         ],
         onSelect: function (text, inst) {
-            info.importanceLevel = +inst.getVal();
+            /* eslint-disable */
+            info['importance_level'] = +inst.getVal();
+            /* eslint-enable */
             $('#urgencyBlock .value').text(text);
         }
     }));
@@ -254,36 +128,36 @@ page.initPlugin = function () {
         data: [
             {
                 text: '待办',
-                value: '0'
+                value: 0
             },
             {
                 text: '求助',
-                value: '1',
+                value: 1,
                 selected: true
             },
             {
                 text: '汇报',
-                value: '2'
+                value: 2
             },
             {
                 text: '计划',
-                value: '3'
+                value: 3
             },
             {
                 text: '日志',
-                value: '4'
+                value: 4
             },
             {
                 text: '记录',
-                value: '5'
+                value: 5
             },
             {
                 text: '消息',
-                value: '6'
+                value: 6
             },
             {
                 text: '其他',
-                value: '7'
+                value: 7
             }
         ],
         onSelect: function (text, inst) {
@@ -293,7 +167,7 @@ page.initPlugin = function () {
     }));
 
     // 初始化附件组件
-    var attache = new Attach({
+    var attachOptions = {
         // 客户端信息
         clientMsg: {
             uid: '1',
@@ -303,8 +177,8 @@ page.initPlugin = function () {
             pause: '',
             appver: '111.1.1'
         },
-        // 已经有的附件信息，没有传空数组，这个主要是用于修改
-        originAttaches:[],
+        // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
+        originAttaches: [],
         url: {
             uploadUrl: {
                 url: '/mgw/approve/attachment/getFSTokensOnCreate',
@@ -335,23 +209,22 @@ page.initPlugin = function () {
         operateType: 'upload',
         attachesCount: 10,
         callback: function () {}
-    });
-    var renderString = Attach.getRenderString({attach: transKey(me.data.attachements)}, '11.1.1');
-    $('.attach-list').append(renderString.attach);
-    Attach.initEvent('.attach-list', 'zh_CN');
-}
+    };
+    plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
+};
 
 page.initValue = function () {
     var me = this;
     // 设置默认值
     var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
+    /* eslint-disable */
     $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
-
+    /* eslint-enable */
     // 初始化文本框的关闭按钮
     $.each($('.input'), function (index, item) {
-        toggleX($(item), $(item).val());
+        editCom.toggleX($(item), $(item).val());
     });
-}
+};
 /**
  * 请求页面接口
  *
@@ -370,6 +243,9 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 me.data = result.data;
+                if (me.data.id) {
+                    info = me.data;
+                }
                 dfd.resolve();
             }
         });

@@ -35,7 +35,7 @@ var config = {
         // 事件编辑
         AFFAIR_EDIT_URL: 2001,
         // 讨论编辑
-        DISCUSSION_EDIT_URL: 2002,
+        TALK_EDIT_URL: 2002,
 
         // 讨论
         TALK_DETAIL_URL: 5001

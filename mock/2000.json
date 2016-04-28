@@ -1,11 +1,11 @@
 {
 	"meta": 0,
 	"data": {
-	    "id" : 0,
+	    "id" : 111,
 	    "title" : "sdfasdfasdf",
 	    "content" : "<p>asdfasdfasdfasdfasadsfasdf</p>",
 	    "end_time" : 0,
-	    "importance_level" : "3",
+	    "importance_level" : 3,
 	    "attend_ids" : [92072, 92126],
 	    "notice" : 0,
 	    "principal_user" : 179,

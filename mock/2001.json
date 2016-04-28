@@ -1,7 +1,7 @@
 {
     "meta": 0,
     "data": {
-        "id" : 0,
+        "id" : 121,
         "attachements" : [
             {
                 "deleted" : false,
@@ -24,7 +24,7 @@
         "task_id" : 69598,
         "title" : "DHC-TEST-AFFAIR-0001",
         "content" : "<p>skdfjaskdjfsadjflkasjdlkfjadlk</p>",
-        "importance_level" : "2",
+        "importance_level" : 2,
         "label_id" : "1521"
     }  
 }
