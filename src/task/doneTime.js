@@ -6,7 +6,7 @@
  */
 
 require('./doneTime.scss');
-
+var config = require('../config');
 var Page = require('../common/page');
 
 var page = new Page();
@@ -52,24 +52,22 @@ function setCurr(currClass) {
  * 获取URL参数
  *
  * @param {string} key, 参数key
+ * @return {}
  *
  */
 function getQueryString(key){
-    var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
-    if(r !== null){
+    if (r !== null) {
         return r[2];
     }
-    return null;
 }
 
 page.enter = function () {
-    var endTime = +getQueryString('endTime');
-    info.endTime = endTime ? endTime : 0;
-    if (!info.endTime) {
-        setCurr('done-early');
-    }
-    page.bindEvents(info.endTime)
+
+    page.initValue();
+    page.bindEvents();
+    page.initPlugin();
     // TODO 传递的时间参数，设置默认
 
 };
@@ -78,12 +76,14 @@ page.enter = function () {
  * 绑定事件
  *
  */
-page.bindEvents = function (initTime) {
+page.bindEvents = function () {
     $('.done-early').click(function (e) {
         setCurr('done-early');
     });
-    var defaultTime = initTime ? new Date(initTime) : new Date();
-    console.log(defaultTime);
+};
+
+page.initPlugin = function (initTime) {
+    var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
     $('.custom-time').mobiscroll().datetime($.extend({}, mobiOptions, {
         headerText: '<span class="dw-tab-data dw-tab-selected">日期</span><span class="dw-tab-time">时间</span>',
         minDate: new Date(date.y - 50, 0, 1),
@@ -109,6 +109,37 @@ page.bindEvents = function (initTime) {
         }
     }));
 };
+
+page.initValue = function () {
+    var endTime = +getQueryString('endTime');
+    info.endTime = endTime ? endTime : 0;
+    if (!info.endTime) {
+        setCurr('done-early');
+    }
+};
+/**
+ * 请求页面接口
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+
+page.addParallelTask(function (dfd) {
+    var me = this;
+    var promise = page.post(config.API.TASK_EDIT_URL, {});
+    promise
+        .done(function (result) {
+            if (result.meta !== 0) {
+                dfd.reject(result);
+            }
+            else {
+                me.data = result.data;
+                dfd.resolve();
+            }
+        });
+
+    return dfd;
+});
 
 $(function () {
     page.start();

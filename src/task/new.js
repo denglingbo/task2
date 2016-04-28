@@ -6,9 +6,7 @@
  */
 
 require('../common/widgets/edit/new.scss');
-/* eslint-disable */
-var Mustache = require('dep/mustache');
-/* eslint-disable */
+Mustache = require('dep/mustache');
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
 var Page = require('../common/page');
@@ -26,10 +24,24 @@ var info = {
     id: '',
     title: '',
     comtent: '',
-    principalUser: 0,
-    attendIds: [],
-    endTime: 0,
-    importanceLevel: 0
+    principal_user: 0,
+    attend_ids: [],
+    end_time: 0,
+    importance_level: 0,
+    notice: 0,
+    message : {
+        "sent_eim" : true,
+        "sent_emai" : false,
+        "sent_sms" : false
+    },
+    attachements : [
+          {
+              "deleted" : false,
+              "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
+              "file_name" : "ca.crt",
+              "size" : 1391
+          }
+    ]
 };
 
 var principalSelectKey = 'taskPrincipalSelector';
@@ -168,7 +180,7 @@ function toggleX(textDom, textLength) {
 
 page.enter = function () {
 
-    page.loadPage(this.data);
+    page.loadPage();
 };
 
 /**
@@ -263,18 +275,14 @@ page.bindEvents = function () {
 /**
  * 加载页面
  *
- * @param {Object} data, 当前要渲染的模板数据
- *
  */
-page.loadPage = function (data) {
+page.loadPage = function () {
     var me = this;
-
-    data = data || {};
 
     require.ensure(['../common/widgets/edit/edit'], function () {
         var template = require('../common/widgets/edit/edit');
         var $content = $('.edit-container');
-        me.renderFile($content, template, $.extend({}, data, {
+        me.renderFile($content, template, $.extend({}, me.data, {
             view: {
                 task: true,
                 affair: false,
@@ -283,13 +291,14 @@ page.loadPage = function (data) {
                 data: []
             }
         }));
-        page.initPlugin(data)
-        page.initValue(data);
+        page.initPlugin();
+        page.initValue();
         me.bindEvents();
     });
 };
 
-page.initPlugin = function (data) {
+page.initPlugin = function () {
+    var me = this;
     var mobiOptions = {
         theme: 'android-holo-light',
         mode: 'scroller',
@@ -367,20 +376,24 @@ page.initPlugin = function (data) {
         ],
         dom: {
             // 附件容器DOM元素
-            containerDOM: $('.attach-list')
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
         },
+        operateType: 'upload',
+        attachesCount: 10,
         callback: function () {}
     });
-    var renderString = Attach.getRenderString({attach: transKey(data.attachements)}, '11.1.1');
+    var renderString = Attach.getRenderString({attach: transKey(me.data.attachements)}, '11.1.1');
     $('.attach-list').append(renderString.attach);
     Attach.initEvent('.attach-list', 'zh_CN');
 }
 
 page.initValue = function () {
+    var me = this;
     // 设置默认值
     var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
-    $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
-    $('#doneTime .value').text(data['end_time'] ? new Date(data['end_time']) : '尽快完成');
+    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
+    $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
 
     // 初始化文本框的关闭按钮
     $.each($('.input'), function (index, item) {
@@ -388,7 +401,9 @@ page.initValue = function () {
     });
 
     // TODO 修改存储数据
+    selectValue['selectType'] = 1;
     window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
+    selectValue['selectType'] = 2;
     window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
 }
 /**

@@ -1,14 +1,12 @@
 /**
- * @file discussion.js
+ * @file talk.js
  * @author hefeng
  * 新建讨论页, 编辑讨论页面
  *
  */
 
 require('../common/widgets/edit/new.scss');
-/* eslint-disable */
-var Mustache = require('dep/mustache');
-/* eslint-disable */
+Mustache = require('dep/mustache');
 require('dep/plugins/attaches/attaches');
 var config = require('../config');
 var Page = require('../common/page');
@@ -30,7 +28,7 @@ var info = {
     importanceLevel: 0
 };
 
-var selectKey = 'discussionAttandSelectKey';
+var selectKey = 'talkAttandSelectKey';
 var selectValue = {
     'clientMsg': {
         'uid': '',
@@ -164,8 +162,8 @@ function toggleX(textDom, textLength) {
 }
 
 page.enter = function () {
-
-    page.loadPage(this.data);
+    
+    page.loadPage();
 };
 
 /**
@@ -249,18 +247,15 @@ page.bindEvents = function () {
 /**
  * 加载页面
  *
- * @param {Object} data, 当前要渲染的模板数据
- *
  */
-page.loadPage = function (data) {
+page.loadPage = function () {
     var me = this;
-
-    data = data || {};
 
     require.ensure(['../common/widgets/edit/edit'], function () {
         var template = require('../common/widgets/edit/edit');
         var $content = $('.edit-container');
-        me.renderFile($content, template, $.extend({}, data, {
+
+        me.renderFile($content, template, $.extend({}, me.data, {
             view: {
                 task: false,
                 affair: false,
@@ -269,13 +264,14 @@ page.loadPage = function (data) {
                 data: []
             }
         }));
-        page.initPlugin(data)
-        page.initValue(data);
+        page.initPlugin()
+        page.initValue();
         me.bindEvents();
     });
 };
 
-page.initPlugin = function (data) {
+page.initPlugin = function () {
+    var me = this;
     var mobiOptions = {
         theme: 'android-holo-light',
         mode: 'scroller',
@@ -353,19 +349,23 @@ page.initPlugin = function (data) {
         ],
         dom: {
             // 附件容器DOM元素
-            containerDOM: $('.attach-list')
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
         },
+        operateType: 'upload',
+        attachesCount: 10,
         callback: function () {}
     });
-    var renderString = Attach.getRenderString({attach: transKey(data.attaches)}, '11.1.1');
+    var renderString = Attach.getRenderString({attach: transKey(me.data.attachements)}, '11.1.1');
     $('.attach-list').append(renderString.attach);
     Attach.initEvent('.attach-list', 'zh_CN');
 }
 
 page.initValue = function () {
+    var me = this;
     // 设置默认值
     var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
-    $('#urgencyBlock .value').text(importanceLevel[data['importance_level']]);
+    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
 
     // 初始化文本框的关闭按钮
     $.each($('.input'), function (index, item) {

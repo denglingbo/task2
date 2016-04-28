@@ -11,11 +11,11 @@
         <i class="close-x words-close hide"></i>
     </div>
     <div class="edit-attach">
-        <div class="edit-add-attach">
+        <div id="addAttach" class="edit-add-attach">
             <i class="add-attach"></i>
             <span>添加附件</span>
         </div>
-        <div class="attach-list"></div>
+        <div id="attachList" class="attach-list"></div>
     </div>
 </div>
 

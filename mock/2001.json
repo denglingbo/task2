@@ -1,21 +1,30 @@
 {
-    "id" : 0,
-    "attachs" : [
-        {
-            "deleted" : false,
-            "dfs_path" : "0001E74CDCF059634E4493A3174A985AD820",
-            "file_name" : "task-protocol.txt",
-            "size" : 808
-        }
-    ],
-    "message" : {
-        "sent_eim" : true,
-        "sent_emai" : false,
-        "sent_sms" : false
-    },
-    "task_id" : 69598,
-    "title" : "DHC-TEST-AFFAIR-0001",
-    "content" : "<p>skdfjaskdjfsadjflkasjdlkfjadlk</p>",
-    "importance_level" : "4",
-    "label_id" : "1521"
+    "meta": 0,
+    "data": {
+        "id" : 0,
+        "attachements" : [
+            {
+                "deleted" : false,
+                "dfs_path" : "0001E74CDCF059634E4493A3174A985AD820",
+                "file_name" : "task-protocol.txt",
+                "size" : 808
+            },
+            {
+                "deleted" : false,
+                "dfs_path" : "0001E74CDCF059634E4493A3174A985AD820",
+                "file_name" : "asdasdsa.txt",
+                "size" : 8999
+            }
+        ],
+        "message" : {
+            "sent_eim" : true,
+            "sent_emai" : false,
+            "sent_sms" : false
+        },
+        "task_id" : 69598,
+        "title" : "DHC-TEST-AFFAIR-0001",
+        "content" : "<p>skdfjaskdjfsadjflkasjdlkfjadlk</p>",
+        "importance_level" : "2",
+        "label_id" : "1521"
+    }  
 }
