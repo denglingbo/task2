@@ -8,6 +8,8 @@
 </head>
 <body>
     <div class="main">
+
+        <div class="loading"></div>
         
         <div id="detail-main"></div>
 
@@ -35,12 +37,13 @@
 
         <!-- 成员 -->
         <dl id="partner" class="layout-list partner">
+            <dt class="sub-title">团队成员</dt>
             <!-- Call pub data -->
             {{#userInfoFail}}
-            <dt class="sub-title">没有获取到人员信息</dt>
+            <dd>没有获取到人员信息</dd>
             {{/userInfoFail}}
             {{^userInfoFail}}
-            <dt class="sub-title">数据加载中</dt>
+            <dd>数据加载中</dd>
             {{/userInfoFail}}
         </dl>
 

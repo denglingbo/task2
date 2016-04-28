@@ -58,3 +58,8 @@ $star-size: rem(16px);
         @extend .follow;
     }
 }
+
+
+.loading {
+    @include loading();
+}

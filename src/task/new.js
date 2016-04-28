@@ -4,12 +4,13 @@
  * 新建任务页
  *
  */
-
+/* eslint-disable */
 require('../common/widgets/edit/new.scss');
-/* eslint-disable */
-Mustache = require('dep/mustache');
-/* eslint-disable */
+var Mustache = require('dep/mustache');
+// attaches 需要使用
+window.Mustache = Mustache;
 require('dep/plugins/attaches/attaches');
+
 var config = require('../config');
 var Page = require('../common/page');
 
@@ -22,6 +23,8 @@ var valid = {
     content: true
 };
 
+
+// 因为后端字段需要
 var info = {
     id: '',
     title: '',
@@ -45,6 +48,7 @@ var info = {
           }
     ]
 };
+/* eslint-disable */
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
@@ -252,8 +256,8 @@ page.bindEvents = function () {
     });
 
     // 完成时间跳转页面
-    $('#doneTime').click(function () {
-        CPNavigationBar.redirect('./doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
+    $('.main').on('click', '.add-attach',function () {
+        CPNavigationBar.redirect('/task/doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
             if (data) {
                 data = JSON.parse(data);
             }
@@ -264,7 +268,7 @@ page.bindEvents = function () {
     // 选择人员跳转页面
     $('#principal, #attends').click(function (e) {
         var key = e.target.id === 'principal' ? principalSelectKey : attendSelectKey;
-        CPNavigationBar.redirect('../selector/selector.html?paramId=' + key, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
             if (data) {
                 data = JSON.parse(data);
             }
@@ -281,22 +285,22 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
 
-    require.ensure(['../common/widgets/edit/edit'], function () {
-        var template = require('../common/widgets/edit/edit');
-        var $content = $('.edit-container');
-        me.renderFile($content, template, $.extend({}, me.data, {
-            view: {
-                task: true,
-                affair: false,
-                talk: false,
-                placeholder: '任务',
-                data: []
-            }
-        }));
-        page.initPlugin();
-        page.initValue();
-        me.bindEvents();
-    });
+    // require.ensure(['common/widgets/edit/new'], function () {
+    var template = require('common/widgets/edit/new');
+    var $content = $('.edit-container');
+    me.renderFile($content, template, $.extend({}, me.data, {
+        view: {
+            task: true,
+            affair: false,
+            talk: false,
+            placeholder: '任务',
+            data: []
+        }
+    }));
+    me.initPlugin();
+    me.initValue();
+    me.bindEvents();
+    // });
 };
 
 page.initPlugin = function () {

@@ -210,5 +210,64 @@
     }
 }
 
+/**
+ * 加载中样式
+ *
+ * @param {$size} 大小
+ * @param {$border} border 大小
+ * @param {$color-form} 开始颜色
+ * @param {$color-mid} 中间色
+ * @param {$color-to} 结束颜色
+ *
+ */
+@mixin loading($size: 20px, $border: 2px, $color-form: #F1F2F4, $color-mid: #CECFD3, $color-to: #ABADB2) {
+    
+    width: $size;
+    height: $size;
+    border-radius: 100%;
+    position: relative;
+    overflow: hidden;
+    
+    // 左半边区域
+    background: linear-gradient(to bottom, $color-to 0%, $color-mid 100%);
+    
+    // 旋转吧漏腚君
+    // animation: 1.2s linear 0s normal none infinite rotate;
+    transform: rotate(360deg);
+    transition: transform 1.2s linear 0s infinite;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: $size * .5;
+        top: 0;
+        width: $size * .5;
+        height: $size;
+        
+        // 右半边区域
+        background: linear-gradient(to bottom, $color-form 0%, $color-mid 100%);
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: $border;
+        top: $border;
+        width: $size - $border * 2;
+        height: $size - $border * 2;
+        background: #fff;
+        border-radius: 100%;
+    }
+/*
+    @keyframes rotate{
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }*/
+}
+
 @import "border-1px";
 @import "tab.scss";
