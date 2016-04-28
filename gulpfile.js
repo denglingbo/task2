@@ -53,7 +53,7 @@ var setMaker = function (maker, webpack) {
  * 模拟转发
  */
 gulp.task('mock', function () {
-    gulp.src('/api', febd.mock());
+    gulp.src('.', febd.mock());
 });
 
 /**

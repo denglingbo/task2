@@ -18,19 +18,23 @@ var getDom = function (classObject) {
     }
 
     return '<span class="' + domClass.default + ' hide">点击加载更多</span>'
-        + '<span class="' + domClass.process + '">'
+        + '<span class="' + domClass.process + ' hide">'
             + '<div class="loading-status">'
                 + '<span class="loading"></span>'
                 + '<span class="loading-text">加载中</span>'
             + '</div>'
         + '</span>'
-        + '<span class="' + domClass.done + ' hide">加载完成</span>';
+        + '<span class="' + domClass.done + ' hide">加载完成</span>'
+        + '<span class="' + domClass.max + ' hide">所有数据加载完成</span>'
+        + '<span class="' + domClass.fail + ' hide">数据加载失败，请重试</span>';
 };
 
 var STATUS_CLASS = {
     'default': '.load-more-holder',
     'process': '.load-more-process',
-    'done': '.load-more-done'
+    'done': '.load-more-done',
+    'max': '.load-more-max',
+    'fail': '.load-more-fail'
 };
 
 /**
@@ -69,6 +73,9 @@ var Loader = function (options) {
 };
 
 Loader.prototype = {
+
+    // 更改状态
+    statusTimerId: null,
 
     /**
      * 添加一些必须的dom 或者属性
@@ -119,8 +126,6 @@ Loader.prototype = {
         });
     },
 
-    timerId: null,
-
     /**
      * 加载条状态
      *
@@ -129,7 +134,7 @@ Loader.prototype = {
      */
     statusChange: function (status, delay) {
         var me = this;
-        clearTimeout(me.timerId);
+        clearTimeout(me.statusTimerId);
 
         if (!me.opts.status || !me.opts.status[status]) {
             return;
@@ -146,12 +151,17 @@ Loader.prototype = {
             $cur.siblings().addClass('hide');
         }
         else {
-            me.timerId = setTimeout(function () {
+            me.statusTimerId = setTimeout(function () {
                 $cur.removeClass('hide');
                 $cur.siblings().addClass('hide');
             }, delay);
         }
     },
+
+    // 请求开始 时间戳
+    reqStart: 0,
+    // 请求结束 时间戳
+    reqEnd: 0,
 
     /**
      * 异步请求 此处需要一个 promise
@@ -163,7 +173,12 @@ Loader.prototype = {
 
         me.statusChange('process');
 
-        me.promise()
+        // 请求开始时间
+        me.reqStart = +new Date();
+
+        var promise = me.promise();
+
+        promise
             .done(function (result) {
                 if (result.meta && result.meta.code !== 200) {
                     fn.call(me, false);
@@ -189,8 +204,14 @@ Loader.prototype = {
 
                 fn.call(me, data);
             })
-            .fail(function () {
+            .fail(function (err) {
+                clearTimeout(me.statusTimerId);
+                me.statusChange('fail');
+
                 fn(me, false);
+            })
+            .always(function () {
+                me.reqEnd = +new Date();
             });
     }
 };

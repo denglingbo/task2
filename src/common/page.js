@@ -250,11 +250,7 @@ Page.prototype.render = function (selector, data, appendType) {
 var getRequestData = function (api, data) {
     var r = {};
 
-    r.data = {
-        id: api
-    };
-
-    $.extend(r.data, data);
+    $.extend(r, data);
 
     return r;
 };
@@ -275,7 +271,7 @@ Page.prototype.post = function (api, data, opts) {
 
     opts = opts || {};
 
-    var host = config.API.host + config.API.prefix;
+    var host = config.API.host + config.API.prefix + api;
 
     var promise = $.ajax({
         type: 'post',
@@ -298,7 +294,7 @@ Page.prototype.post = function (api, data, opts) {
 
     // 请求失败
     promise.fail(function (xhr, errorType, error) {
-        dfd.reject(error);
+        dfd.reject(xhr, errorType, error);
     });
 
     return dfd;

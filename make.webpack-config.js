@@ -500,7 +500,7 @@ MakeWebpackConfig.prototype = {
             host: replaceHost(this.config.host),
             port: this.config.mockPort,
             path: '/',
-            mockDir: './mock'
+            mockDir: './mock/data'
         };
 
         _.extend(mockConfig, opts);

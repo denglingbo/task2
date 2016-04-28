@@ -32,7 +32,7 @@ var config = {
      * publicPath
      * @params {string}
      */
-    publicPath: '',
+    publicPath: '/',
 
     /**
      * mock 监听端口
@@ -41,8 +41,6 @@ var config = {
     mockPort: 8015
 
 };
-
-config.publicPath = srcConfig.API.host.replace(/:(\w+)/gi, '') + ':' + config.port + '/';
 
 config.output = {
 

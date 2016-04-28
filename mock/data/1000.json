@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "list": [
+            {
+                "name": "lead",
+                "text": "我负责的",
+                "num": 12
+            },
+            {
+                "name": "dist",
+                "text": "我派发的",
+                "num": 2
+            },
+            {
+                "name": "join",
+                "text": "我参与的",
+                "num": 32
+            },
+            {
+                "name": "follow",
+                "text": "我关注的",
+                "num": 21
+            }
+        ]
+    }
+}
