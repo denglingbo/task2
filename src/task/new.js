@@ -306,10 +306,24 @@ page.initValue = function () {
 
 page.submit = function () {
     var me = page;
+    var dfd = new $.Deferred();
     info.title = $('#edit-title').val();
     info.content = $('#edit-content').val();
     /* eslint-disable */
     var promise = me.post(config.API.TASK_EDIT_URL, info);
+    promise
+        .done(function () {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            } 
+            else {
+                // TODO
+                dfd.resolve();
+            }
+        }).fail(function (result) {
+            // TODO
+            // console.log(result);
+        })
     /* eslint-enable */
 };
 
@@ -325,7 +339,7 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (result) {
-            if (result.meta !== 0) {
+            if (result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {
@@ -336,6 +350,7 @@ page.addParallelTask(function (dfd) {
                 else {
                     me.data = info;
                 }
+
                 dfd.resolve();
             }
         });

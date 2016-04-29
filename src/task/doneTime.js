@@ -69,8 +69,6 @@ page.enter = function () {
     page.initValue();
     page.bindEvents();
     page.initPlugin();
-    // TODO 传递的时间参数，设置默认
-
 };
 
 /**
@@ -139,7 +137,7 @@ page.addParallelTask(function (dfd) {
     var promise = page.post(config.API.TASK_EDIT_URL, {});
     promise
         .done(function (result) {
-            if (result.meta !== 0) {
+            if (result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {
