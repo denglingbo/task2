@@ -13,7 +13,9 @@
 
     <script id="main-template" type="x-tmpl-mustache">
     {{#list}}
-        <textarea class="{{ name }}" placeholder={{ holder }}></textarea>
+        <div class="phone-input">
+            <div class="phone-input-main" contenteditable="plaintext-only" class="{{ name }}" data-name="{{ name }}" data-placeholder={{ holder }}></div>
+        </div>
     {{/list}}
     </script>
 

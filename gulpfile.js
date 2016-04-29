@@ -19,17 +19,7 @@ var febd = new MakeWebpackConfig(config);
 // var Febd = require('febd');
 // var febd = new Febd(config);
 
-var path = require('path');
-var depDir = path.join(__dirname, '/dep/');
-var common = path.join(__dirname, '/src/common/');
-
 var setMaker = function (maker, webpack) {
-
-    maker.setAlias({
-        zepto: depDir + 'zepto',
-        common: common,
-        dep: depDir
-    });
 
     maker.addLoaders(
         {

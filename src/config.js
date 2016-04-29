@@ -9,7 +9,7 @@ var config = {
 
     API: {
 
-        host: 'http://localhost:8015',
+        host: 'http://172.16.1.151:8015',
 
         prefix: '/task/m/v1/',
         // prefix: '/task/m/v1/',
@@ -17,7 +17,7 @@ var config = {
         // http://[host]/task/m/v1/get_talk_list?task_id=69585&title&talk_status=0&curr_page=1&number=15&sort_type=0&show_finish=0
         // get_task_detail --> 之后用更改 1000
 
-        HOME_URL: 1000,
+        HOME_URL: 'index',
 
         // 列表页，未完成
         LIST_URL: 1001,
@@ -27,9 +27,10 @@ var config = {
         LIST_CANCEL_URL: 1003,
 
         // 事件详情
-        AFFAIR_DETAIL_URL: 1005,
+        AFFAIR_DETAIL_URL: 'get_affair_detail',
+
         // 加载更多事件和讨论
-        AFFAIR_TALK_MORE_URL: 3005,
+        AFFAIR_TALK_MORE_URL: 'get_affair_talk_list',
 
         // 任务详情
         TASK_DETAIL_URL: 'get_task_detail',
@@ -49,19 +50,19 @@ var config = {
         TALK_EDIT_URL: 'update_affair_comment',
 
         // 讨论
-        TALK_DETAIL_URL: 5001
+        TALK_DETAIL_URL: 'get_talk_detail'
     }
 };
 
 config.const = {
 
-    TASK_PARAMS: 'TASK_PARAMS',
+    TASK_PARAMS: 'TASK_PARAMS'
 
-    loader: {
-        'doing': '加载中',
-        'done': '加载完成',
-        'default': '加载更多'
-    }
+    // loader: {
+    //     'doing': '加载中',
+    //     'done': '加载完成',
+    //     'default': '加载更多'
+    // }
 };
 
 if (config.debug) {

@@ -1,0 +1,38 @@
+/**
+ * 手机输入框样式
+ */
+
+.phone-input {
+    position: relative;
+    border: none;
+    margin-top: rem(10px);
+    width: 100%;
+    height: 160px;
+    padding: 10px 0;
+    background: #fff;
+
+    &-main {
+        overflow: auto;
+        height: 100%;
+        padding: 0 10px;
+    }
+
+    &-item {
+        position: absolute;
+        font-size: rem(12px);
+    }
+
+    &-placeholder {
+        color: #999;
+        left: rem(10px);
+        top: rem(10px);
+    }
+
+    &-limit {
+        color: #FA575D;
+        right: 0;
+        bottom: rem(10px);
+        padding: 0 10px;
+        background: rgba(255, 255, 255, 0.6);
+    }
+}

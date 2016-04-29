@@ -8,9 +8,9 @@
 
 require('./submit.scss');
 
-// var config = require('../config');
 var Page = require('common/page');
 var util = require('common/util');
+var PhoneInput = require('common/ui/phoneInput/phoneInput');
 
 var page = new Page();
 
@@ -64,7 +64,7 @@ page.enter = function () {
     var pageType = util.params('type');
 
     // 判断是不是 master，完成总结的 master
-    var isMaster = parseInt(util.params('master'), 10);
+    var isMaster = parseInt(util.params('master'), 2);
 
     // 获取当前页面配置
     var curPage = pages[pageType];
@@ -75,6 +75,10 @@ page.enter = function () {
             list: curPage(isMaster)
         });
     }
+
+    new PhoneInput({
+        limit: 5
+    });
 
     this.bindEvents();
 };

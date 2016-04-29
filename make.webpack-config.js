@@ -58,7 +58,7 @@ MakeWebpackConfig.prototype = {
             new BellOnBundlerErrorPlugin(),
 
             new webpack.ProgressPlugin(function (percentage, msg) {
-                console.log('progress: ' + percentage + ' -- ' + msg)
+                console.log('progress: ' + percentage.toFixed(2) + ' -- ' + msg)
             }),
 
             // to: 实际为 path/xxx
@@ -100,6 +100,7 @@ MakeWebpackConfig.prototype = {
     },
 
     setReleaseMock: function () {
+        // this.webpackConfig.devtool = 'source-map';
         this.plugins.push(
             new CopyPlugin([
                 {
@@ -282,12 +283,21 @@ MakeWebpackConfig.prototype = {
     setResolve: function () {
         var config = this.config;
 
+        var depDir = path.join(__dirname, '/dep/');
+        var common = path.join(__dirname, '/src/common/');
+
         this.webpackConfig.resolve = {
 
             // 指定模块查找的根目录
             root: [path.join(__dirname, config.srcDir.root), config.srcDir.nodeModules],
 
-            alias: {},
+            alias: {
+                zepto: depDir + 'zepto',
+                common: common,
+                dep: depDir,
+
+                page: common + 'page'
+            },
 
             extensions: ['', '.js'].concat(config.extMap.resolveExts)
         };
@@ -370,7 +380,7 @@ MakeWebpackConfig.prototype = {
         }
 
         if (_.isObject) {
-        this.webpackConfig.module.loaders.push(loaders);
+            this.webpackConfig.module.loaders.push(loaders);
         }
     },
 
