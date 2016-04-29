@@ -45,8 +45,8 @@ var date = {
  *
  */
 function setCurr(currClass) {
-    $('.option').removeClass('current');
-    $('.' + currClass).addClass('current');
+    $('.option .hook').addClass('hide');
+    $('.' + currClass + ' .hook').removeClass('hide');
 }
 
 /**

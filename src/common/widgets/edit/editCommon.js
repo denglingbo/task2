@@ -57,7 +57,7 @@ exports.cancelValidate = function (validObj) {
         };
         CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
     }
-}
+};
 /**
  * 转换string驼峰
  *
@@ -231,7 +231,7 @@ exports.initTextClose = function (validObj) {
             validObj.content = false;
         }
     });
-}
+};
 
 /**
  * 提交前验证
@@ -241,7 +241,7 @@ exports.initTextClose = function (validObj) {
  *
  */
 exports.submitValid = function (submitFn, validObj) {
-    var flag = validObj.title && validObj.content;
+    var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
     if (flag) {
        submitFn(); 
@@ -255,11 +255,16 @@ exports.submitValid = function (submitFn, validObj) {
                 arr.push('标题不能超过50字');
             }
         }
+
         if (!validObj.content) {
             arr.push('输入内容不能超过5万字');
         }
+
+        if (!validObj.isAttachesReady) {
+            arr.push('附件尚未传输完毕');
+        }
     }
     exports.validAlert(arr);
-}
+};
 
 module.exports = exports;

@@ -22,24 +22,7 @@ var valid = {
     title: false,
     content: true
 };
-/* eslint-disable */
-// 因为后端字段需要
-var info = {
-    id: 0,
-    attachements: [],
-    title: '',
-    content: '',
-    importance_level: 1,
-    inheritance: true,
-    message: {
-        sent_eim: true,
-        sent_emai: false,
-        sent_sms: false
-    },
-    task_id: 69598,
-    user_ids: []
-};
-/* eslint-enable */
+
 var selectKey = 'talkAttandSelectKey';
 var selectValue = {
     clientMsg: {
@@ -133,7 +116,7 @@ page.bindEvents = function () {
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                info['user_ids'].push(phoneMid.takeJid(value.jid));
+                me.data['user_ids'].push(phoneMid.takeJid(value.jid));
             });
             // TODO
         });
@@ -195,7 +178,7 @@ page.initPlugin = function () {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
-            info['importance_level'] = +inst.getVal();
+            me.data['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
 
@@ -269,10 +252,10 @@ page.initValue = function () {
 
 page.submit = function () {
     var me = page;
-    info.title = $('#edit-title').val();
-    info.content = $('#edit-content').val();
+    me.data.title = $('#edit-title').val();
+    me.data.content = $('#edit-content').val();
     /* eslint-disable */
-    var promise = me.post(config.API.TALK_EDIT_URL, info);
+    var promise = me.post(config.API.TALK_EDIT_URL, me.data);
     /* eslint-enable */
 };
 /**
@@ -281,9 +264,11 @@ page.submit = function () {
  * @param {deferred} dfd, deferred
  *
  */
+var doing = 'new';
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.TALK_EDIT_URL, {});
+    var url = doing === 'new' ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
+    var promise = page.post(url);
 
     promise
         .done(function (result) {
@@ -292,12 +277,6 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 me.data = result.data;
-                if (me.data.id) {
-                    info = me.data;
-                }
-                else {
-                    me.data = info;
-                }
                 dfd.resolve();
             }
         });

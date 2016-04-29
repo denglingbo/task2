@@ -21,27 +21,73 @@
 
 {{#view.task}}
 <div class="edit-option">
-    <div id="principal" class="edit-item"><span class='title'>负责人</span><span class="value">张三</span></div>
-    <div id="attends" class="edit-item"><span class='title'>参与人</span><span class="value">水水</span></div>
+    <div id="principal" class="edit-item">
+        <span class='title'>负责人</span>
+        <div class="right">
+            <span class="value">张三</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
+    <div id="attends" class="edit-item">
+        <span class='title'>参与人</span>
+        <div class="right">
+            <span class="value">水水</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
 </div>
 
 <div class="edit-option">
-    <div id="doneTime" class="edit-item"><span class='title'>完成时间</span><span class="value">尽快完成</span></div>
-    <div id="urgencyBlock" class="edit-item"><span class='title'>紧要程度</span><span class="value">普通</span></div>
+    <div id="doneTime" class="edit-item">
+        <span class='title'>完成时间</span>
+        <div class="right">
+            <span class="value">尽快完成</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
+    <div id="urgencyBlock" class="edit-item">
+        <span class='title'>紧要程度</span>
+        <div class="right">
+            <span class="value">普通</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
 </div>
 {{/view.task}}
 
 {{#view.affair}}
 <div class="edit-option">
-    <div id="urgencyBlock" class="edit-item"><span class='title'>紧要程度</span><span class="value">普通</span></div>
-    <div id="affairType" class="edit-item"><span class='title'>事件类型</span><span class="value">待办</span></div>
+    <div id="urgencyBlock" class="edit-item">
+        <span class='title'>紧要程度</span>
+        <div class="right">
+            <span class="value">普通</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
+    <div id="affairType" class="edit-item">
+        <span class='title'>事件类型</span>
+        <div class="right">
+            <span class="value">待办</span>
+            <i class="arrow-right"></i>
+        </div>
+    </div>
 </div>
 {{/view.affair}}
 
 {{#view.talk}}
 <div class="edit-option">
-    <div id="urgencyBlock" class="edit-item"><span class='title'>紧要程度</span><span class="value">普通</span></div>
-    <div id="attends" class="edit-item"><span class='title'>参与人</span><span class="value">水水</span></div>
+    <div id="urgencyBlock" class="edit-item">
+        <span class='title'>紧要程度</span>
+        <div class="right">
+            <span class="value">普通</span>
+        </div>
+    </div>
+    <div id="attends" class="edit-item">
+        <span class='title'>参与人</span>
+        <div class="right">
+            <span class="value">水水</span>
+        </div>
+    </div>
 </div>
 {{/view.talk}}
 

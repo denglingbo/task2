@@ -21,23 +21,7 @@ var valid = {
     title: false,
     content: true
 };
-/* eslint-disable */
-// 因为后端字段需要
-var info = {
-    id: 0,
-    attachements: [],
-    message: {
-        sent_eim: true,
-        sent_emai: false,
-        sent_sms: false
-    },
-    task_id: 69598,
-    title: '',
-    content: '',
-    importance_level: 1,
-    label_id: 0
-};
-/* eslint-enable */
+
 page.enter = function () {
     var me = this;
     me.loadPage();
@@ -120,7 +104,7 @@ page.initPlugin = function () {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
-            info['importance_level'] = +inst.getVal();
+            me.data['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
 
@@ -171,7 +155,7 @@ page.initPlugin = function () {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
-            info['label_id'] = +inst.getVal();
+            me.data['label_id'] = +inst.getVal();
             /* eslint-enable */
             $('#affairType .value').text(text);
 
@@ -241,10 +225,10 @@ page.initValue = function () {
 
 page.submit = function () {
     var me = page;
-    info.title = $('#edit-title').val();
-    info.content = $('#edit-content').val();
+    me.data.title = $('#edit-title').val();
+    me.data.content = $('#edit-content').val();
     /* eslint-disable */
-    var promise = me.post(config.API.AFFAIR_EDIT_URL, info);
+    var promise = me.post(config.API.AFFAIR_EDIT_URL, me.data);
     /* eslint-enable */
 };
 
@@ -254,10 +238,11 @@ page.submit = function () {
  * @param {deferred} dfd, deferred
  *
  */
+var doing = 'new';
 page.addParallelTask(function (dfd) {
     var me = this;
-
-    var promise = page.post(config.API.AFFAIR_EDIT_URL, {});
+    var url = doing === 'new' ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
+    var promise = page.post(url);
 
     promise
         .done(function (result) {
@@ -266,12 +251,6 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 me.data = result.data;
-                if (me.data.id) {
-                    info = me.data;
-                }
-                else {
-                    me.data = info;
-                }
                 dfd.resolve();
             }
         });
