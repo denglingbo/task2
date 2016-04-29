@@ -9,7 +9,7 @@ var config = {
 
     API: {
 
-        host: 'http://172.16.1.151:8015',
+        host: 'http://localhost:8015',
 
         prefix: '/task/m/v1/',
         // prefix: '/task/m/v1/',
