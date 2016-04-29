@@ -1,4 +1,5 @@
 @import '../common/css/global';
+@import '../common/css/ui';
 
 .done-container {
 	height: 100%;
@@ -15,12 +16,13 @@
 		margin-top: rem(15px);
 		font-size: rem(16px);
 		display: flex;
-
+		align-items: center;
+		>.hook {
+			margin-right: rem(4px);
+			margin-left: rem(-20px);
+		}
 		.title {
 			flex:1;
 		}
-	}
-	.current {
-		color: #f00;
 	}
 }

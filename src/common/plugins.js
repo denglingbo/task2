@@ -61,7 +61,7 @@ var attachOption = {
  * @param {Object} options, 初始化附件参数
  * @param {Array} attachData, 附件数据
  * @param {string} containerSelector, 添加附件的容器
- *
+ * @return {Object} 附件对象
  */
 exports.initAttach = function (options, attachData, containerSelector) {
     var attachOptions = $.extend({}, attachOption, options);
@@ -73,6 +73,7 @@ exports.initAttach = function (options, attachData, containerSelector) {
     $(containerSelector).append(renderString.attach);
     Attach.initEvent(containerSelector, 'zh_CN');
     /* eslint-enable */
+    return attach;
 };
 
 module.exports = exports;

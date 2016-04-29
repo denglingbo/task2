@@ -6,7 +6,11 @@
  *
  */
 
-$add-attach-width: rem(17px);
+/**
+ * 附件添加
+ *
+ */
+$add-attach-width: rem(18px);
 
 .add-attach {
 	padding: 0;
@@ -20,7 +24,10 @@ $add-attach-width: rem(17px);
 	margin-right: rem(-3px);
 }
 
-
+/**
+ * 文本清除
+ *
+ */
 $add-attach-width: rem(18px);
 
 .close-x {
@@ -33,10 +40,42 @@ $add-attach-width: rem(18px);
 	background-image: url('#{$rootImg}/button_top_search_close.png');
 	background-repeat: no-repeat;
 	background-size: $add-attach-width;
-	vertical-align: rem(-2px);
-	margin-right: rem(-3px);
 }
 
+/**
+ * 右箭头
+ *
+ */
+$arrow-width-size: rem(9px);
+$arrow-height-size: rem(14px);
+
+.arrow-right {
+    display: inline-block;
+    padding: 0;
+    width: $arrow-width-size;
+    height: $arrow-height-size;
+    background-image: url('#{$rootImg}/icon_list_to-right-arrow.png');
+    background-repeat: no-repeat;
+    background-size: $arrow-width-size $arrow-height-size;
+    vertical-align: rem(-1px);
+}
+
+/**
+ * 勾
+ *
+ */
+$hook-width-size: rem(16px);
+$hook-height-size: rem(12px);
+
+.hook {
+    display: inline-block;
+    padding: 0;
+    width: $hook-width-size;
+    height: $hook-height-size;
+    background-image: url('#{$rootImg}/icon_tab_sure.png');
+    background-repeat: no-repeat;
+    background-size: $hook-width-size $hook-height-size;
+}
 /**
  * 五角星
  */

@@ -16,32 +16,17 @@ var phoneMid = require('common/phoneMid');
 
 var page = new Page();
 
+// 附件对象
+var attach = null;
+
 // 验证信息
 var valid = {
     isEdit: false,
     title: false,
-    content: true
+    content: true,
+    isAttachesReady: true
 };
 
-/* eslint-disable */
-// 因为后端字段需要
-var info = {
-    id: '',
-    title: '',
-    content: '',
-    principal_user: 0,
-    attend_ids: [],
-    end_time: 0,
-    importance_level: 1,
-    notice: 0,
-    message: {
-        sent_eim: true,
-        sent_emai: false,
-        sent_sms: false
-    },
-    attachements: []
-};
-/* eslint-enable */
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
 var selectValue = {
@@ -122,6 +107,7 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
+        valid.isAttachesReady = attach.isAttachesReady();
         editCom.submitValid(me.submit, valid);
     });
 
@@ -137,8 +123,8 @@ page.bindEvents = function () {
             }
             valid.isEdit = true;
             data = JSON.parse(data);
-            info['end_time'] = data.endTime;
-            $('#doneTime .value').text(me.data['end_time'] ? new Date(me.info['end_time']) : '尽快完成');
+            me.data['end_time'] = data.endTime;
+            $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
         });
     });
 
@@ -162,13 +148,13 @@ page.bindEvents = function () {
             valid.isEdit = true;
             data = JSON.parse(data);
             var contacts = data.contacts;
-            if ($.isArray(info[itemKey])) {
+            if ($.isArray(me.data[itemKey])) {
                 contacts.forEach(function (value, index) {
-                    info[itemKey].push(phoneMid.takeJid(value.jid));
+                    me.data[itemKey].push(phoneMid.takeJid(value.jid));
                 });
             }
             else {
-                info[itemKey] = phoneMid.takeJid(contacts[0].jid);
+                me.data[itemKey] = phoneMid.takeJid(contacts[0].jid);
             }
         });
     });
@@ -229,7 +215,7 @@ page.initPlugin = function () {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
-            info['importance_level'] = +inst.getVal();
+            me.data['importance_level'] = +inst.getVal();
             /* eslint-enable */
             $('#urgencyBlock .value').text(text);
 
@@ -283,7 +269,7 @@ page.initPlugin = function () {
             valid.isEdit = true;
         }
     };
-    plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
+    attach = plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
 };
 
 page.initValue = function () {
@@ -291,7 +277,7 @@ page.initValue = function () {
     // 设置默认值
     var importanceLevel = ['普通', '重要', '紧急', '重要且紧急'];
     /* eslint-disable */
-    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']-1]);
+    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level'] - 1]);
     $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
     /* eslint-enable */
     // 初始化文本框的关闭按钮
@@ -307,12 +293,14 @@ page.initValue = function () {
 page.submit = function () {
     var me = page;
     var dfd = new $.Deferred();
-    info.title = $('#edit-title').val();
-    info.content = $('#edit-content').val();
+    me.data.attachements = attach.getModifyAttaches();
+    me.data.title = $('#edit-title').val();
+    me.data.content = $('#edit-content').text();
     /* eslint-disable */
-    var promise = me.post(config.API.TASK_EDIT_URL, info);
+    var promise = me.post(config.API.TASK_EDIT_URL, me.data);
+    console.log(me.data);
     promise
-        .done(function () {
+        .done(function (result) {
             if (result.meta.code !== 200) {
                 dfd.reject(result);
             } 
@@ -323,7 +311,7 @@ page.submit = function () {
         }).fail(function (result) {
             // TODO
             // console.log(result);
-        })
+        });
     /* eslint-enable */
 };
 
@@ -333,9 +321,11 @@ page.submit = function () {
  * @param {deferred} dfd, deferred
  *
  */
+var doing = 'edit';
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = me.post(config.API.TASK_EDIT_URL, {});
+    var url = doing === 'new' ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
+    var promise = me.post(url);
 
     promise
         .done(function (result) {
@@ -344,13 +334,6 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 me.data = result.data;
-                if (me.data.id) {
-                    info = me.data;
-                }
-                else {
-                    me.data = info;
-                }
-
                 dfd.resolve();
             }
         });

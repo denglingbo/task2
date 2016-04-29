@@ -103,6 +103,7 @@
 		    height: rem(44px);
 		    line-height: rem(42px);
 		    font-size: rem(14px);
+			padding-right: rem(15px);
 
 		    &:first-child {
 		    	@include border-1px(bottom, #e3e4e5);
@@ -114,10 +115,9 @@
 		    }
 
 		    .value {
-		    	float: right;
 		    	color: $black;
 		    	font-size: 16px;
-		    	margin-right: rem(15px);
+		    	margin-right: rem(3px);
 		    }
 	    }
 	}
