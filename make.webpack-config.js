@@ -237,14 +237,6 @@ MakeWebpackConfig.prototype = {
                 console.log('-----[' + page.name + ']-----');
                 console.log(conf);
                 console.log(' ');
-
-                // 提取公共文件
-                // r.push(
-                //     new CommonsChunkPlugin({
-                //         name: 'common',
-                //         chunks: conf.chunks
-                //     })
-                // );
             }
         });
 

@@ -153,7 +153,8 @@ PhoneInput.prototype = {
      * @return {number}
      */
     outStringNum: function () {
-        return this.opts.limit - this.getLength();
+        var num = this.opts.limit - this.getLength();
+        return num >= 0 ? 0 : num;
     },
 
     /**
@@ -181,6 +182,15 @@ PhoneInput.prototype = {
             me.elems.$limit
                 .html(me.outStringNum())
                 .removeClass('hide');
+
+            me.$main.attr('status', 'unable');
+        }
+        else {
+            me.elems.$limit
+                .html(me.outStringNum())
+                .addClass('hide');
+
+            me.$main.attr('status', 'enable');
         }
     },
 
@@ -212,6 +222,16 @@ PhoneInput.prototype = {
                     me.elems.$placeholder.removeClass('hide');
                 }
             });
+    },
+
+    /**
+     * 判断当前的输入框是否能提交
+     *
+     * @return {string}
+     */
+    isAllowSubmit: function () {
+        var status = this.$main.attr('status');
+        return status === 'unable' ? 0 : 1;
     }
 };
 

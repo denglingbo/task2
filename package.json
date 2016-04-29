@@ -23,7 +23,7 @@
     "iscroll": "^5.2.0",
     "mustache": "^2.2.1",
     "mustache-loader": "^0.3.1",
-    "node-sass": "^3.4.2",
+    "node-sass": "^3.6.0",
     "path": "^0.12.7",
     "sass": "^0.5.0",
     "sass-loader": "^3.2.0",

@@ -6,6 +6,13 @@
  *
  */
 
+// 2种状态的转换时间
+$c2s-dur: .6s;
+// 4个边的动画步长
+$ticked-step-dur: 0.28s;
+// 动画
+$cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
+
 /**
  * 阴影动画效果
  */
@@ -66,6 +73,27 @@
 @function getOpposite ($hypo) {
     @return sqrt($hypo * $hypo * 2);
 }
+
+
+
+    /**
+     * 获取箭头变方形的动画配置
+     *
+     * @param {$delay} 等待时间
+     */
+    @function getUnTickStep ($delay: 0) {
+        @return transform $ticked-step-dur ease-out $ticked-step-dur * $delay;
+    }
+
+
+    /**
+     * 获取方形变箭头的四条边线移动动画配置
+     *
+     * @param {$delay} 等待时间
+     */
+    @function getTickedStep ($delay: 0) {
+        @return transform $ticked-step-dur $cubic $c2s-dur + $ticked-step-dur * $delay;
+    }
 
 /**
  * Combooooooooooooooooooooooooo
@@ -236,9 +264,6 @@
     /**
      * [START circle to square] {change to ticked} 圆形变方形
      */
-    $c2s-dur: .6s;
-    $ticked-step-dur: 0.28s;
-    $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
     
     /* 首先从圆形变成方形 */
     &.tick-circle-to-square {
@@ -256,15 +281,6 @@
             animation: shadow $c2s-dur $cubic;
             animation-fill-mode: forwards;
         }
-    }
-
-    /**
-     * 获取方形变箭头的四条边线移动动画配置
-     *
-     * @param {$delay} 等待时间
-     */
-    @function getTickedStep ($delay: 0) {
-        @return transform $ticked-step-dur $cubic $ticked-step-dur * $delay + $c2s-dur;
     }
 
     /**
@@ -301,15 +317,6 @@
     /**
      * [START square to circle] {change to untick}
      */
-
-    /**
-     * 获取箭头变方形的动画配置
-     *
-     * @param {$delay} 等待时间
-     */
-    @function getUnTickStep ($delay: 0) {
-        @return transform $ticked-step-dur ease-out $ticked-step-dur * $delay;
-    }
 
     &.tick-untick-animate {
 
