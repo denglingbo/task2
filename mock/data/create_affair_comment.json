@@ -1,0 +1,21 @@
+{
+    "meta": {
+        "code": 200,
+        "message": "请求成功"
+    },
+    "data": {
+        "id": 0,
+        "attachements": [],
+        "content": "",
+        "importance_level": 1,
+        "inheritance": true,
+        "message": {
+            "sent_eim": true,
+            "sent_emai": false,
+            "sent_sms": false
+        },
+        "task_id": 69598,
+        "title": "",
+        "user_ids": []
+    }
+}

@@ -1,0 +1,22 @@
+{
+	"meta": {
+		"code": 200,
+		"message": "请求成功"
+	},
+	"data": {
+	    "id" : 0,
+	    "title": "",
+	    "content": "",
+	    "end_time": 0,
+	    "importance_level": 1,
+	    "attend_ids": [],
+	    "notice": 0,
+	    "principal_user": 0,
+	    "attachements": [],
+	    "message": {
+	        "sent_eim": true,
+	        "sent_emai": false,
+	        "sent_sms": false
+	    }
+	}
+}

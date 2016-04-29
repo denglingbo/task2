@@ -1,0 +1,20 @@
+{
+    "meta": {
+        "code": 200,
+        "message": "请求成功"
+    },
+    "data": {
+        "id": 0,
+        "attachements": [],
+        "message" : {
+            "sent_eim": true,
+            "sent_emai": false,
+            "sent_sms": false
+        },
+        "task_id": 0,
+        "title": "",
+        "content": "",
+        "importance_level": 1,
+        "label_id": 0
+    }  
+}

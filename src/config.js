@@ -34,12 +34,19 @@ var config = {
         // 任务详情
         TASK_DETAIL_URL: 'get_task_detail',
 
+        // 任务新建
+        TASK_NEW_URL: 'create_task',
+        // 事件新建
+        AFFAIR_NEW_URL: 'create_affair',
+        // 讨论新建
+        TALK_NEW_URL: 'create_affair_comment',
+
         // 任务编辑
-        TASK_EDIT_URL: 2000,
+        TASK_EDIT_URL: 'update_task',
         // 事件编辑
-        AFFAIR_EDIT_URL: 2001,
+        AFFAIR_EDIT_URL: 'update_affair',
         // 讨论编辑
-        TALK_EDIT_URL: 2002,
+        TALK_EDIT_URL: 'update_affair_comment',
 
         // 讨论
         TALK_DETAIL_URL: 5001
