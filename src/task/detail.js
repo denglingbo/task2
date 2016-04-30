@@ -22,21 +22,12 @@ page.enter = function () {
 
     me.render('#detail-main', me.data);
 
+    // 初始化一个点击加载组件
     me.clickLoader = new ClickLoader({
-
         promise: function () {
             return page.post(config.API.AFFAIR_TALK_MORE_URL);
         },
-
-        pageNum: 10,
-
-        onInit: function (data) {
-            me.render('#affair-talk', data, 'append');
-        },
-
-        onClick: function (data) {
-            me.render('#affair-talk', data, 'append');
-        }
+        pageNum: 10
     });
 
     me.bindEvents();
@@ -81,6 +72,10 @@ page.bindEvents = function () {
             CPNavigationBar.redirect(pageTo);
             /* eslint-enable */
         }
+    });
+
+    me.clickLoader.on(['complete', 'loadmore'], function (loader, data) {
+        me.render('#affair-talk', data, 'append');
     });
 
 };
@@ -153,14 +148,17 @@ page.renderUser = function (originArr, dataArr) {
 
     var dataRaw = {};
 
+    // 创建人数据
     if (data.creator) {
         dataRaw.creator = data.creator.name;
     }
 
+    // 负责人数据
     if (data.principal) {
         dataRaw.principal = data.principal.name;
     }
 
+    // 成员数据
     if (data.partner) {
         var partnerRaw = [];
         var partnerJids = [];

@@ -22,6 +22,7 @@ html, body {
         height: 100%;
 
         li {
+            position: relative;
             height: 25%;
             color: $white;
             overflow: hidden;
@@ -33,8 +34,8 @@ html, body {
                 display: box;
                 display: -webkit-box;
                 display: -moz-box;
-                -webkit-box-pack: center;
-                -moz-box-pack: center;
+                box-pack: left;
+                -moz-box-pack: left;
                 -webkit-box-align: center;
                 -moz-box-align: center;
 
@@ -51,23 +52,66 @@ html, body {
                         font-size: rem(20px);
                     }
                 }
+            }
 
-                &.lead {
+            &:after {
+                position: absolute;
+                content: '';
+                display: block;
+                top: 50%;
+                right: rem(25px);
+                margin-top: rem(-15px);
+                width: rem(40px);
+                height: rem(40px);
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 38px;
+            }
+
+            // 我负责的
+            &.lead {
+                div {
                     background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
                 }
 
-                &.dist {
+                &:after {
+                    background-image: url(#{$rootImg}/home_page_responsible.png);
+                }
+            }
+
+            // 我派发的
+            &.dist {
+                div {
                     background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
                 }
 
-                &.join {
+                &:after {
+                    background-image: url(#{$rootImg}/home_page_distribute.png);
+                }
+            }
+
+            // 我参与的
+            &.join {
+                div {
                     background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
                 }
 
-                &.follow {
-                    background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
+                &:after {
+                    background-image: url(#{$rootImg}/home_page_participation.png);
                 }
             }
+
+            // 我关注的
+            &.follow {
+                div {
+                    background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
+                }
+
+                &:after {
+                    background-image: url(#{$rootImg}/home_page_attention.png);
+                }
+            }
+
         }
     }
 }

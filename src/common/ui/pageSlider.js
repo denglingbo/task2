@@ -7,39 +7,7 @@
  *
  */
 var Slide = require('./slide');
-
-var elementStyle = document.createElement('div').style;
-var vendor = (function () {
-    var vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT'];
-    var transform;
-    var len = vendors.length;
-
-    for (var i = 0; i < len; i++) {
-        transform = vendors[i] + 'ransform';
-        if (transform in elementStyle) {
-            return vendors[i].substr(0, vendors[i].length - 1);
-        }
-    }
-
-    return false;
-})();
-
-/**
- * 获取当前浏览器下的 css3 key
- *
- * @param {string} style, 样式名 transform, ...
- * @return {string}, 当前浏览器下的样式名
- *
- */
-function prefixStyle(style) {
-    if (vendor === false) {
-        return false;
-    }
-    if (vendor === '') {
-        return style;
-    }
-    return vendor + style.charAt(0).toUpperCase() + style.substr(1);
-}
+var util = require('../util');
 
 /**
  * 滑屏切换页面
@@ -109,10 +77,9 @@ PageSlider.prototype = {
             var num = i * 100;
             $(this).css({
                 width: me.winWidth
-                // ,'transform': 'translate3d(' + num + '%, 0px, 0px)'
             });
 
-            this.style[prefixStyle('transform')] = 'translate3d(' + num + '%, 0px, 0px)';
+            this.style[util.prefixStyle('transform')] = 'translate3d(' + num + '%, 0px, 0px)';
         });
 
         this.bindEvents();
@@ -188,11 +155,7 @@ PageSlider.prototype = {
             me.step = (pos.diffX / me.winWidth) * 100;
             var step = me.step + me.defaultX;
 
-            // me.$outer.css({
-            //     'transform': 'translate3d(' + step + '%, 0px, 0px)'
-            // });
-
-            me.$outer[0].style[prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
+            me.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
         });
 
         this.slide.on('slideEndX', function (event, pos) {
@@ -254,7 +217,7 @@ PageSlider.prototype = {
         //     'transform': 'translate3d(' + step + '%, 0px, 0px)'
         // });
 
-        this.$outer[0].style[prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
+        this.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
 
         this.$outer.addClass('slide-fast');
 

@@ -57,12 +57,6 @@ var config = {
 config.const = {
 
     TASK_PARAMS: 'TASK_PARAMS'
-
-    // loader: {
-    //     'doing': '加载中',
-    //     'done': '加载完成',
-    //     'default': '加载更多'
-    // }
 };
 
 if (config.debug) {

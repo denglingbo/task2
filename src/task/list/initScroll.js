@@ -2,12 +2,20 @@
  * @file initScroll.js
  * @author deo
  *
- * 初始化滚动
- *
+ * 初始化滚动 test [没有实现完成]
  */
 
-var config = require('../../config');
+// var config = require('../../config');
 var IScroll = require('dep/iscroll');
+
+var lang = {
+
+    loader: {
+        'doing': '加载中',
+        'done': '加载完成',
+        'default': '加载更多'
+    }
+};
 
 /**
  * 初始化滚动
@@ -24,7 +32,7 @@ function InitScroll(page, slidePage) {
     var me = this;
     var selector = slidePage.selector;
 
-    me._destroy();
+    me.destroyScroll();
 
     me.page = page;
     me.$elem = $(selector);
@@ -33,7 +41,12 @@ function InitScroll(page, slidePage) {
     me.winWidth = $(window).width();
     me.winHeight = $(window).height();
     me._scroll = null;
+
+    // 是否加载完成
     me._load = false;
+
+    // 是否进行刷新
+    me._refresh = false;
 
     this.setSize();
 
@@ -56,8 +69,8 @@ InitScroll.prototype = {
      * @param {Element} scroll, new Scroll() 返回的scroll 实例
      *
      */
-    _show: function (scroll) {
-        if (scroll.maxScrollY - scroll.y > 0) {
+    showBar: function (scroll) {
+        if (scroll.maxScrollY - scroll.y > 0 && !this.$loader.hasClass('hide')) {
             this.$loader.removeClass('hide');
         }
     },
@@ -68,10 +81,13 @@ InitScroll.prototype = {
      * @param {Element} scroll, new Scroll() 返回的scroll 实例
      *
      */
-    _refresh: function (scroll) {
+    refreshBar: function (scroll) {
         if (scroll.maxScrollY - scroll.y > 50) {
-            // this._load = true;
-            this.$loader.html(config.const.loader.doing);
+            this._refresh = true;
+            this.$loader.html(lang.loader.doing);
+        }
+        else {
+            this._refresh = false;
         }
     },
 
@@ -79,7 +95,7 @@ InitScroll.prototype = {
      * Destroy
      *
      */
-    _destroy: function () {
+    destroyScroll: function () {
 
         if (this._scroll) {
             this._scroll.destroy();
@@ -132,23 +148,25 @@ InitScroll.prototype = {
         // 监听滚动
         me._scroll.on('scroll', function () {
 
-            me._show(this);
-            me._refresh(this);
+            me.showBar(this);
+            me.refreshBar(this);
         });
 
         // 监听滚动结束
         me._scroll.on('scrollEnd', function () {
             // Ajax New Data
             // $loader.addClass('hide');
-            me.$loader.html(config.const.loader.default);
-
-            if (!me._load) {
-                me.page.post(config.API.LIST_MORE_URL)
-                    .done(function () {
-                        // console.log('load more');
-                        me._load = false;
-                    });
+            if (me._refresh) {
+                me.$loader.html(lang.loader.default);
             }
+            // console.log(config.API.LIST_MORE_URL)
+            // if (!me._load) {
+            //     me.page.post(config.API.LIST_MORE_URL)
+            //         .done(function () {
+            //             // console.log('load more');
+            //             me._load = false;
+            //         });
+            // }
         });
     }
 };

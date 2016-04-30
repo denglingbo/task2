@@ -12,9 +12,12 @@
     background: #fff;
 
     &-main {
-        overflow: auto;
         height: 100%;
         padding: 0 10px;
+        -webkit-user-select: text;
+        user-select: text;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 
     &-item {

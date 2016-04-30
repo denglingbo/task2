@@ -6,6 +6,43 @@
  */
 var util = {};
 
+/**
+ * vendor
+ */
+var elementStyle = document.createElement('div').style;
+util.vendor = function () {
+    var vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT'];
+    var transform;
+    var len = vendors.length;
+
+    for (var i = 0; i < len; i++) {
+        transform = vendors[i] + 'ransform';
+        if (transform in elementStyle) {
+            return vendors[i].substr(0, vendors[i].length - 1);
+        }
+    }
+
+    return false;
+};
+
+/**
+ * 获取当前浏览器下的 css3 key
+ *
+ * @param {string} style, 样式名 transform, ...
+ * @return {string}, 当前浏览器下的样式名
+ *
+ */
+util.prefixStyle = function (style) {
+    var vendor = this.vendor();
+    if (vendor === false) {
+        return false;
+    }
+    if (vendor === '') {
+        return style;
+    }
+    return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+};
+
 util.qs = {};
 
 /**
@@ -127,11 +164,11 @@ util.decodeHTML = function (source) {
  */
 util.formatRichText = function (content) {
     return content
-            .replace(/(\n)/g, '')
-            .replace(/(\t)/g, '')
-            .replace(/(\r)/g, '')
-            .replace(/<\/?[^>]*>/g, '')
-            .replace(/\s*/g, '');
+        .replace(/(\n)/g, '')
+        .replace(/(\t)/g, '')
+        .replace(/(\r)/g, '')
+        .replace(/<\/?[^>]*>/g, '')
+        .replace(/\s*/g, '');
 };
 
 /**

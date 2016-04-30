@@ -48,7 +48,7 @@ var virtualInput = function (selector) {
         })
         // 输入
         .on('input', editor, function () {
-
+            var text = $.trim($(this).text());
             sendStatus(this);
 
             if (text.length > maxNum) {

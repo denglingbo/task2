@@ -2,8 +2,21 @@
  * @file slide.js
  * @author deo
  *
- * 触屏滑动基类
+ * 触屏滑动基类，待优化
  */
+
+var Listener = require('common/listener');
+
+var EVENTS = {
+    slideX: 'slideX',
+    slideY: 'slideY',
+    slideDir: 'slideDir',
+    slideMoveX: 'slideMoveX',
+    slideMove: 'slideMove',
+    slideEndX: 'slideEndX',
+    slideEndY: 'slideEndY',
+    slideEnd: 'slideEnd'
+};
 
 var Slide = function (selector) {
 
@@ -27,18 +40,9 @@ var Slide = function (selector) {
     this.init();
 };
 
-var EVENTS = {
-    slideX: 'slideX',
-    slideY: 'slideY',
-    slideDir: 'slideDir',
-    slideMoveX: 'slideMoveX',
-    slideMove: 'slideMove',
-    slideEndX: 'slideEndX',
-    slideEndY: 'slideEndY',
-    slideEnd: 'slideEnd'
-};
+Slide.prototype = new Listener();
 
-Slide.prototype = {
+$.extend(Slide.prototype, {
 
     /**
      * 初始化
@@ -67,6 +71,7 @@ Slide.prototype = {
     bindEvents: function () {
         var me = this;
 
+        // Touch start
         this.$elem.on('touchstart', function (event) {
             event.preventDefault();
 
@@ -78,8 +83,8 @@ Slide.prototype = {
             me._pos.startY = touch.clientY;
         });
 
+        // Touch move
         this.$elem.on('touchmove', function (event) {
-            event.preventDefault();
 
             var touch = event.touches[0];
 
@@ -89,91 +94,67 @@ Slide.prototype = {
             me._pos.diffX = me._pos.x - me._pos.startX;
             me._pos.diffY = me._pos.y - me._pos.startY;
 
-            var diffX = Math.abs(me._pos.diffX);
-            var diffY = Math.abs(me._pos.diffY);
-
-            if (me._timerId === null) {
-                me._timerId = setTimeout(function () {
-
-                    var data = {
-                        x: me._pos.startX,
-                        y: me._pos.startY
-                    };
-
-                    // 左右滑屏
-                    if (diffX > diffY) {
-                        me._dir = 0;
-                        me._execEvent(EVENTS.slideX, event, data);
-                    }
-                    // 上下滑屏
-                    else {
-                        me._dir = 1;
-                        me._execEvent(EVENTS.slideY, event, data);
-                    }
-
-                    me._execEvent(EVENTS.slideDir, event, me._dir, data);
-                }, 10);
-            }
-            if (me._dir === 0) {
-                me._execEvent(EVENTS.slideMoveX, event, me._pos);
-            }
-            else if (me._dir === 1) {
-                me._execEvent(EVENTS.slideMoveY, event, me._pos);
-            }
-
-            me._execEvent(EVENTS.slideMove, event, me._dir, me._pos);
+            me.moveListener(event);
         });
 
+        // Touch end
         this.$elem.on('touchend', function (event) {
             event.preventDefault();
 
             if (me._dir === 0) {
-                me._execEvent(EVENTS.slideEndX, event, me._pos);
+                me.execEvent(EVENTS.slideEndX, event, me._pos);
             }
             else if (me._dir === 1) {
-                me._execEvent(EVENTS.slideEndY, event, me._pos);
+                me.execEvent(EVENTS.slideEndY, event, me._pos);
             }
 
-            me._execEvent(EVENTS.slideEnd, event, me._dir, me._pos);
+            me.execEvent(EVENTS.slideEnd, event, me._dir, me._pos);
         });
     },
 
     /**
-     * 监听事件
+     * 鼠标移动
      *
-     * @param {string} type, 事件类型
-     * @param {Function} fn, 回调函数
-     *
+     * @param {Event} event, 事件
      */
-    on: function (type, fn) {
-        if (!this._events[type]) {
-            this._events[type] = [];
+    moveListener: function (event) {
+        var me = this;
+
+        var diffX = Math.abs(me._pos.diffX);
+        var diffY = Math.abs(me._pos.diffY);
+
+        if (me._timerId === null) {
+            me._timerId = setTimeout(function () {
+
+                var data = {
+                    x: me._pos.startX,
+                    y: me._pos.startY
+                };
+
+                // 左右滑屏
+                if (diffX > diffY) {
+                    me._dir = 0;
+                    me.execEvent(EVENTS.slideX, event, data);
+                }
+                // 上下滑屏
+                else {
+                    me._dir = 1;
+                    me.execEvent(EVENTS.slideY, event, data);
+                }
+
+                me.execEvent(EVENTS.slideDir, event, me._dir, data);
+            }, 10);
+        }
+        if (me._dir === 0) {
+            me.execEvent(EVENTS.slideMoveX, event, me._pos);
+        }
+        else if (me._dir === 1) {
+            me.execEvent(EVENTS.slideMoveY, event, me._pos);
         }
 
-        this._events[type].push(fn);
-    },
+        me.execEvent(EVENTS.slideMove, event, me._dir, me._pos);
 
-    /**
-     * 执行绑定的事件
-     *
-     * @param {string} type, 事件类型
-     *
-     */
-    _execEvent: function (type) {
-        if (!this._events[type]) {
-            return;
-        }
-
-        var len = this._events[type].length;
-
-        if (!len) {
-            return;
-        }
-
-        for (var i = 0; i < len; i++) {
-            this._events[type][i].apply(this, [].slice.call(arguments, 1));
-        }
     }
-};
+});
 
 module.exports = Slide;

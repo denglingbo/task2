@@ -168,28 +168,22 @@ PhoneInput.prototype = {
         var isOutLimit = me.isOutLimit();
 
         if (isNull) {
-            me.elems.$placeholder.removeClass('hide');
-            me.elems.$limit.addClass('hide');
+            me.displayer('placeholder').show();
+            me.displayer('limit').hide();
         }
 
         // 隐藏 placeholder
         if (isNotNull && !isOutLimit) {
-            me.elems.$placeholder.addClass('hide');
+            me.displayer('placeholder').hide();
         }
 
         // 超过字数限制
         if (isOutLimit) {
-            me.elems.$limit
-                .html(me.outStringNum())
-                .removeClass('hide');
-
+            me.displayer('limit').show(me.outStringNum());
             me.$main.attr('status', 'unable');
         }
         else {
-            me.elems.$limit
-                .html(me.outStringNum())
-                .addClass('hide');
-
+            me.displayer('limit').hide(me.outStringNum());
             me.$main.attr('status', 'enable');
         }
     },
@@ -207,7 +201,7 @@ PhoneInput.prototype = {
 
                 // 隐藏 placeholder
                 if (me.isNotNull() && !me.isOutLimit()) {
-                    me.elems.$placeholder.addClass('hide');
+                    me.displayer('placeholder').hide();
                 }
             })
 
@@ -219,9 +213,50 @@ PhoneInput.prototype = {
             // 关闭
             .on('blur', function () {
                 if (me.isNull()) {
-                    me.elems.$placeholder.removeClass('hide');
+                    me.displayer('placeholder').show();
                 }
             });
+    },
+
+    /**
+     * 对各种元素进行展示逻辑
+     *
+     * @param {string} selectorKey, selector 对应的 key， 被绑定在 this.elems 节点上
+     * @return {Object} 返回 show(), hide()
+     */
+    displayer: function (selectorKey) {
+        var $elem = this.elems['$' + selectorKey];
+
+        if (!$elem.length) {
+            return;
+        }
+
+        return {
+
+            /**
+             * 展示元素
+             *
+             * @param {string|Function} html, html 字符串或者 function
+             */
+            show: function (html) {
+                $elem.removeClass('hide');
+                if (html) {
+                    $elem.html(html);
+                }
+            },
+
+            /**
+             * 展示元素
+             *
+             * @param {string|Function} html, html 字符串或者 function
+             */
+            hide: function (html) {
+                $elem.addClass('hide');
+                if (html) {
+                    $elem.html(html);
+                }
+            }
+        };
     },
 
     /**

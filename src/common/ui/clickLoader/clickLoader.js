@@ -2,10 +2,12 @@
  * @file loader.js
  * @author deo
  *
- * 点击加载功能
+ * 点击加载功能，不需要指定内容容器，该组建点击之后会返回 data
  */
 
 require('./clickLoader.scss');
+
+var Listener = require('common/listener');
 
 var getDom = function (classObject) {
 
@@ -53,14 +55,14 @@ var Loader = function (options) {
         // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
         pageNum: 10,
 
+        // 点击按钮，触发事件
         handler: '.load-more',
 
+        // 点击状态的 选择器对象
         status: STATUS_CLASS,
 
-        template: getDom(STATUS_CLASS),
-
-        onInit: null,
-        onClick: null
+        // 点击状态模版数据
+        template: getDom(STATUS_CLASS)
     };
 
     $.extend(me.opts, options);
@@ -72,7 +74,9 @@ var Loader = function (options) {
     me.init();
 };
 
-Loader.prototype = {
+Loader.prototype = new Listener();
+
+$.extend(Loader.prototype, {
 
     // 更改状态
     statusTimerId: null,
@@ -82,18 +86,16 @@ Loader.prototype = {
      */
     init: function () {
         var me = this;
+
         this.addDom();
 
-        if (me.opts.onInit) {
-
-            if (me.opts.promise) {
-                me.req(function (data) {
-                    me.opts.onInit.call(me, data);
-                });
-            }
-            else {
-                me.opts.onInit.call(me);
-            }
+        if (me.opts.promise) {
+            me.req(function (data) {
+                me.execEvent('complete', me, data);
+            });
+        }
+        else {
+            me.execEvent('complete', me);
         }
 
         this.bindEvents();
@@ -115,14 +117,16 @@ Loader.prototype = {
 
         this.$main.on('click', function () {
 
-            if (me.opts.promise && me.opts.onClick) {
+            if (me.opts.promise) {
                 me.req(function (data) {
-                    me.opts.onClick.call(me, data);
+                    me.execEvent('loadmore', me, data);
                 });
             }
             else {
-                me.opts.onClick.call(me);
+                me.execEvent('loadmore', me);
             }
+
+
         });
     },
 
@@ -160,6 +164,7 @@ Loader.prototype = {
 
     // 请求开始 时间戳
     reqStart: 0,
+
     // 请求结束 时间戳
     reqEnd: 0,
 
@@ -214,6 +219,6 @@ Loader.prototype = {
                 me.reqEnd = +new Date();
             });
     }
-};
+});
 
 module.exports = Loader;
