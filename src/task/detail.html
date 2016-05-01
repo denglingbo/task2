@@ -13,6 +13,62 @@
 
         <!-- title -->
         <script id="detail-main-template" type="x-tmpl-mustache">
+
+        <!-- 事件 & 讨论 -->
+        <div class="layout-list">
+            <dl id="affair-talk" class="affair-talk">
+                <dt class="sub-title">事件与讨论</dt>
+                <!-- 另一个异步请求获取数据 -->
+            </dl>
+
+            <div id="affair-talk-more-handler" class="load-more">
+                <!-- JS create -->
+            </div>
+        </div>
+
+        <!-- 附件 -->
+        <dl class="layout-list attach">
+            <dt class="sub-title">附件</dt>
+            
+            <dd>
+                <div class="column-left">
+                    <img src="/common/img/files/doc.png" />
+                </div>
+                <div class="column-middle">
+                    <div class="column-inner">
+                        <p>N 版设计稿</p>
+                        <p class="attach-size">1.2MB</p>
+                    </div>
+                </div>
+                <div class="column-right">
+                    <em class="download"></em>
+                </div>
+            </dd>
+        </dl>
+
+        <!-- 底部按钮条 -->
+        {{#rights}}
+        <div class="fixbar">
+            <ul>
+                {{#audit_right}}
+                <li>不同意</li>
+                <li>同意</li>
+                {{/audit_right}}
+
+                {{#add_event_right}}
+                <li data-page="/affair/new.html">新建事件</li>
+                {{/add_event_right}}
+
+                {{#add_talk_right}}
+                <li data-page="/talk/new.html">发起讨论</li>
+                {{/add_talk_right}}
+
+                {{#apply_right}}
+                <li data-page="/form/submit.html?type=0&master={{ isMaster }}">完成任务</li>
+                {{/apply_right}}
+            </ul>
+        </div>
+        {{/rights}}
         <div class="layout detail-title">
             <div class="detail-title-main">
                 <p class="detail-title-top">{{ title }}</p>
@@ -48,63 +104,6 @@
             {{/userInfoFail}}
         </dl>
 
-        <!-- 事件 & 讨论 -->
-        <div class="layout-list">
-            <dl id="affair-talk" class="affair-talk">
-                <dt class="sub-title">事件与讨论</dt>
-                <!-- 另一个异步请求获取数据 -->
-            </dl>
-
-            <div id="affair-talk-more-handler" class="load-more">
-                <!-- JS create -->
-            </div>
-        </div>
-
-        <!-- 附件 -->
-        <dl class="layout-list attach">
-            <dt class="sub-title">附件</dt>
-            
-            <dd>
-                <div class="column-left">
-                    <img src="/common/img/files/doc.png" />
-                </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        <p>N 版设计稿</p>
-                        <p class="attach-size">1.2MB</p>
-                    </div>
-                </div>
-                <div class="column-right">
-                    <em class="download"></em>
-                </div>
-            </dd>
-        </dl>
-
-        <!-- 底部按钮条 -->
-
-        {{#rights}}
-        <div class="fixbar">
-            <ul>
-                {{#audit_right}}
-                <li>不同意</li>
-                <li>同意</li>
-                {{/audit_right}}
-
-                {{#add_event_right}}
-                <li data-page="/affair/new.html">新建事件</li>
-                {{/add_event_right}}
-
-                {{#add_talk_right}}
-                <li data-page="/talk/new.html">发起讨论</li>
-                {{/add_talk_right}}
-
-                {{#apply_right}}
-                <li data-page="/form/submit.html?type=0&master={{ isMaster }}">完成任务</li>
-                {{/apply_right}}
-            </ul>
-        </div>
-        {{/rights}}
-
         </script>
 
     </div>
@@ -112,7 +111,7 @@
     <!-- 事件和讨论 -->
     <script id="affair-talk-template" type="x-tmpl-mustache">
     {{#list}}
-    <dd tid="{{ id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="{{ page }}" >
+    <dd data-pagenum="{{ pagenum }}" tid="{{ id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="{{ page }}" >
         <div class="column-left">
             [{{ type }}] {{ title }}
         </div>

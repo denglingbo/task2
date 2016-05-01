@@ -71,6 +71,9 @@ var Loader = function (options) {
 
     me.$main = $(me.opts.handler);
 
+    // 当前是第几页数据
+    me.page = 0;
+
     me.init();
 };
 
@@ -206,6 +209,8 @@ $.extend(Loader.prototype, {
 
                 me.statusChange('done');
                 me.statusChange('default', 380);
+
+                me.page ++;
 
                 fn.call(me, data);
             })

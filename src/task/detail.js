@@ -12,6 +12,8 @@ var detailUtil = require('common/widgets/detail/detail');
 var phoneMid = require('common/phoneMid');
 var ClickLoader = require('common/ui/clickLoader/clickLoader');
 var Page = require('common/page');
+// 用于异步获取数据的展示当前页数的组件
+var AsyncPager = require('common/ui/asyncPager/asyncPager');
 
 var page = new Page();
 
@@ -74,9 +76,34 @@ page.bindEvents = function () {
         }
     });
 
-    me.clickLoader.on(['complete', 'loadmore'], function (loader, data) {
-        me.render('#affair-talk', data, 'append');
+
+    // 第一次的时候把 page 相关的参数配置好
+    me.clickLoader.on('complete', function (loader, data) {
+
+        me.asyncPager = new AsyncPager({
+            elems: '#affair-talk dd',
+            pageNum: 10,
+            total: data.total
+        });
     });
+
+    me.clickLoader.on(['complete', 'loadmore'], function (loader, data) {
+
+        // Mustache.js 的逗比之处
+        // {{#list}}
+        //  中无法获取到 list 同级的数据，类似当前这个 data.pagenum, ...
+        // {{/list}}
+        data.pagenum = function () {
+            // return data.page;
+            return loader.page;
+        };
+
+        me.render('#affair-talk', data, 'append');
+
+        // 分页要放在render 之后
+        me.asyncPager.update();
+    });
+
 
 };
 
