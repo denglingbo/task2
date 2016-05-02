@@ -95,8 +95,9 @@ Fixer.prototype = {
     viewStatus: function () {
         // 实际可视区域的临界点 y 坐标
         var top = this.$win.scrollTop() + this.opts.offset;
+
         if (this.opts.screen === 1) {
-             top = top + this.$win.height();
+            top = top + this.$win.height();
         }
 
         var match = this.matcher(top);
