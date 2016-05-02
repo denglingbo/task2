@@ -3,9 +3,9 @@
  * @author deo
  *
  * 用于判断当前滚动时定位到的某元素
+ * 默认需要 fixer.scss
+ * 如果不使用默认的 view (.fixer-tips), 需要自己添加 view 的样式，同时需要 对 js 自动添加的 .fixer-show 添加对应样式
  */
-
-require('./fixer.scss');
 
 var Fixer = function (options) {
 
@@ -13,19 +13,29 @@ var Fixer = function (options) {
     this.finder = {};
 
     this.opts = {
+        // 判断的基准点
+        // 0: 屏幕顶部，1: 屏幕底部
+        screen: 0,
+        // 用于判断的元素
+        elems: null,
+        // 用于获取数据，fixer 会从 dom 节点的 data-[name] 上获取数据: data-pagenum, data-date
+        finder: '',
+        // pageNum & total: 这两个用于 分页模型
         // 一页多少条数据
         pageNum: 0,
         // 总共多少条数据
         total: 0,
-        // data-pagenum, data-date
-        finder: '',
-        // 要去判断的元素集合
-        elems: null,
         // 可视区域偏移量
         offset: 0,
+        // view 模版输出
+        // @param {new Fixer} this, function 中返回的第一个参数是 fixer
+        // @param {Object} match, 匹配到的当前的进入临界位置的配置
+        template: function (match) {
+            return $(match.target).data(this.opts.finder) + '/' + this.totalPage;
+        },
         // 提示元素
-        // default: function
-        // selector|Element
+        // {Function}, function () { return ''; }
+        // {selector|Element}, '.class', '#id', div
         view: function () {
             return '<div class="fixer-tips"></div>';
         }
@@ -36,12 +46,13 @@ var Fixer = function (options) {
     // 当前展示的
     this.curTop = null;
 
+    // 容器，顶部
     this.boxTop = 0;
 
-    // 最后一个元素的底部到顶的距离
+    // 容器，最后一个元素的底部到顶的距离
     this.boxBottom = 0;
 
-    // 第一个元素 top - 最后一个元素底部高度
+    // 容器高度，第一个元素top - 最后一个元素底部高度
     this.boxHeight = 0;
 
     // 总页数
@@ -57,13 +68,14 @@ Fixer.prototype = {
     init: function () {
         var me = this;
 
+        // 默认会添加的 dom
         if ($.isFunction(this.opts.view)) {
             $('body').append(this.opts.view());
             me.$view = $('.fixer-tips');
         }
         // 直接在指定的已经存在位置展示
         else {
-
+            me.$view = $(this.opts.view);
         }
 
         me.bindEvents();
@@ -73,27 +85,33 @@ Fixer.prototype = {
         var me = this;
 
         me.$win.on('scroll', function () {
-            me.viewer();
+            me.viewStatus();
         });
     },
 
     /**
-     * viewer
+     * viewStatus
      */
-    viewer: function () {
+    viewStatus: function () {
         // 实际可视区域的临界点 y 坐标
-        var top = this.$win.scrollTop() + this.$win.height() + this.opts.offset;
+        var top = this.$win.scrollTop() + this.opts.offset;
+        if (this.opts.screen === 1) {
+             top = top + this.$win.height();
+        }
+
         var match = this.matcher(top);
 
+        // matched
         if (match !== null && this.curTop !== match.top) {
+            var str = this.opts.template.call(this, match);
 
-            this.$view.html(match.i + '/' + this.totalPage);
+            this.$view.html(str);
 
             this.curTop = match.top;
         }
 
         // 展示分页提示容器
-        if (top > this.boxTop && top < this.boxBottom) {
+        if (top > this.boxTop && top < this.boxBottom && match !== null) {
             this.$view.addClass('fixer-show');
         }
         // 隐藏分页提示容器
@@ -139,7 +157,7 @@ Fixer.prototype = {
 
         this.finder = finder;
 
-        this.viewer();
+        this.viewStatus();
     },
 
     /**

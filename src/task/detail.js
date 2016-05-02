@@ -6,6 +6,7 @@
  */
 
 require('./detail.scss');
+require('common/ui/fixer/fixer.scss');
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
@@ -82,7 +83,7 @@ page.bindEvents = function () {
 
         me.fixer = new Fixer({
             elems: '#affair-talk dd',
-            // data-pagenum
+            // data-pagenum，数据来源
             finder: 'pagenum',
             pageNum: 10,
             // 可视偏移量
