@@ -12,8 +12,8 @@ var detailUtil = require('common/widgets/detail/detail');
 var phoneMid = require('common/phoneMid');
 var ClickLoader = require('common/ui/clickLoader/clickLoader');
 var Page = require('common/page');
-// 用于异步获取数据的展示当前页数的组件
-var AsyncPager = require('common/ui/asyncPager/asyncPager');
+// 定位器
+var Fixer = require('common/ui/fixer/fixer');
 
 var page = new Page();
 
@@ -80,9 +80,13 @@ page.bindEvents = function () {
     // 第一次的时候把 page 相关的参数配置好
     me.clickLoader.on('complete', function (loader, data) {
 
-        me.asyncPager = new AsyncPager({
+        me.fixer = new Fixer({
             elems: '#affair-talk dd',
+            // data-pagenum
+            finder: 'pagenum',
             pageNum: 10,
+            // 可视偏移量
+            offset: -44,
             total: data.total
         });
     });
@@ -101,7 +105,7 @@ page.bindEvents = function () {
         me.render('#affair-talk', data, 'append');
 
         // 分页要放在render 之后
-        me.asyncPager.update();
+        me.fixer.update();
     });
 
 

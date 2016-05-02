@@ -57,3 +57,23 @@
         @include border-1px(top, #e1e4e6);
     }
 }
+
+.box-left {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    box-pack: left;
+    -moz-box-pack: left;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+}
+
+.box-center {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    box-pack: center;
+    -moz-box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+}

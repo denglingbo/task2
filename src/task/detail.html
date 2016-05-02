@@ -13,6 +13,40 @@
 
         <!-- title -->
         <script id="detail-main-template" type="x-tmpl-mustache">
+        <div class="layout detail-title">
+            <div class="detail-title-main">
+                <p class="detail-title-top">{{ title }}</p>
+                <p>{{ updateDateRaw }}</p>
+            </div>
+
+            <div class="detail-title-right">
+                <p class="star"><em></em></p>
+                <p class="detail-title-state state-doing">{{ statusText }}</p>
+            </div>
+        </div>
+
+        <div class="layout detail-comments">
+            <div class="sub-title">任务描述</div>
+
+            <p>{{ content }}</p>
+            <p>紧要程度: {{ importanceRaw }}</p>
+            <p>完成时间: 尽快完成</p>
+        </div>
+
+        <!-- 成员 -->
+        <dl id="partner" class="layout-list partner">
+            <dt class="sub-title">团队成员</dt>
+            <!-- Call pub data -->
+            {{#userInfoFail}}
+            <dd>没有获取到人员信息</dd>
+            {{/userInfoFail}}
+            {{^userInfoFail}}
+            <div class="loading-status">
+                <span class="loading"></span>
+                <span class="loading-text">加载中</span>
+            </div>
+            {{/userInfoFail}}
+        </dl>
 
         <!-- 事件 & 讨论 -->
         <div class="layout-list">
@@ -69,40 +103,6 @@
             </ul>
         </div>
         {{/rights}}
-        <div class="layout detail-title">
-            <div class="detail-title-main">
-                <p class="detail-title-top">{{ title }}</p>
-                <p>{{ updateDateRaw }}</p>
-            </div>
-
-            <div class="detail-title-right">
-                <p class="star"><em></em></p>
-                <p class="detail-title-state state-doing">{{ statusText }}</p>
-            </div>
-        </div>
-
-        <div class="layout detail-comments">
-            <div class="sub-title">任务描述</div>
-
-            <p>{{ content }}</p>
-            <p>紧要程度: {{ importanceRaw }}</p>
-            <p>完成时间: 尽快完成</p>
-        </div>
-
-        <!-- 成员 -->
-        <dl id="partner" class="layout-list partner">
-            <dt class="sub-title">团队成员</dt>
-            <!-- Call pub data -->
-            {{#userInfoFail}}
-            <dd>没有获取到人员信息</dd>
-            {{/userInfoFail}}
-            {{^userInfoFail}}
-            <div class="loading-status">
-                <span class="loading"></span>
-                <span class="loading-text">加载中</span>
-            </div>
-            {{/userInfoFail}}
-        </dl>
 
         </script>
 

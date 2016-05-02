@@ -1,0 +1,31 @@
+$fixer-default-y: 40px;
+$fixer-show-y: -54px;
+
+.fixer-tips {
+    position: fixed;
+    padding: 4px 6px 2px 6px;
+    height: 12px;
+    line-height: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    bottom: 0;
+    left: 50%;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #fff;
+    margin-left: -20px;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    box-pack: center;
+    -moz-box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    z-index: 9;
+    transform: translate3d(0, $fixer-default-y, 0);
+    transition: transform .4s ease-out;
+}
+
+.fixer-show {
+    transform: translate3d(0, $fixer-show-y, 0);
+    transition: transform .4s ease-out;
+}

@@ -233,5 +233,8 @@
 }
 
 .fixbar {
+    position: relative;
+    z-index: 10;
+    
     @include fixbar(3);
 }

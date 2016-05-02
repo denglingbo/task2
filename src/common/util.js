@@ -247,6 +247,20 @@ util.JSON.parse = function (str) {
 util.JSON.stringify = JSON.stringify;
 
 /**
+ * generate uuid
+ *
+ * @return {string}
+ */
+util.guid = function () {
+    // refer to http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0;
+        var v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+/**
  * 为类型构造器建立继承关系
  *
  * @param {Function} subClass 子类构造器
