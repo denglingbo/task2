@@ -6,24 +6,16 @@
  */
 
 require('./doneTime.scss');
-var config = require('../config');
-var Page = require('../common/page');
+var config = require('config');
+var Page = require('common/page');
+var util = require('common/util');
+var plugins = require('common/plugins');
 
 var page = new Page();
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var info = {
     endTime: 0
-};
-
-var mobiOptions = {
-    theme: 'android-holo-light',
-    mode: 'scroller',
-    // ios 底部上滑, android 中间显示
-    display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-    lang: 'zh',
-    buttons: ['cancel', 'set'],
-    height: 50
 };
 
 // 现在时间
@@ -49,22 +41,6 @@ function setCurr(currClass) {
     $('.' + currClass + ' .hook').removeClass('hide');
 }
 
-/**
- * 获取URL参数
- *
- * @param {string} key, 参数key
- * @return {string} 参数value
- *
- */
-
-function getQueryString(key) {
-    var reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)');
-    var r = window.location.search.substr(1).match(reg);
-    if (r !== null) {
-        return r[2];
-    }
-}
-
 page.enter = function () {
     page.initValue();
     page.bindEvents();
@@ -87,7 +63,7 @@ page.bindEvents = function () {
 
 page.initPlugin = function (initTime) {
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
-    $('.custom-time').mobiscroll().datetime($.extend({}, mobiOptions, {
+    plugins.initMobiscroll('datetime', '.custom-time', {
         headerText: '<span class="dw-tab-data dw-tab-selected">日期</span><span class="dw-tab-time">时间</span>',
         minDate: new Date(date.y - 50, 0, 1),
         maxDate: new Date(date.y + 50, 11, 31, 23, 59, 59),
@@ -110,11 +86,11 @@ page.initPlugin = function (initTime) {
             $('.done-time-value').text(y + '年' + M + '月' + d + '日');
             setCurr('custom-time');
         }
-    }));
+    });
 };
 
 page.initValue = function () {
-    var endTime = +getQueryString('endTime');
+    var endTime = +util.getUrlParams().endTime;
     info.endTime = endTime ? endTime : 0;
     if (!info.endTime) {
         setCurr('done-early');

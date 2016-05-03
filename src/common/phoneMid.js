@@ -48,6 +48,7 @@ exports.companyId = function (cid) {
  * 把 id 拼装成 jid
  *
  * @param {number} id, 不带@ 的id
+ * @param {number} cid, companyId
  * @return {string} id@companyId
  *
  */

@@ -5,7 +5,7 @@
  * 模拟手机端输入框
  */
 
-require('./phoneInput.scss');
+
 
 /**
  * 模拟输入框
@@ -57,6 +57,8 @@ PhoneInput.prototype = {
 
         this.addDom();
         this.bindEvents();
+
+        this.inputStatusChange();
     },
 
     /**

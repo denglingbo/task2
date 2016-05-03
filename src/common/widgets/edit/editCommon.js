@@ -4,6 +4,7 @@
  * 新建、编辑任务、事件、讨论的公共API
  *
  */
+var plugins = require('common/plugins');
 
 /**
  * 验证不通过弹窗
@@ -123,22 +124,36 @@ exports.toggleX = function (textDom, textLength) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.bindClear = function (validObj) {
-    $('.close-x').on('click', function () {
+// exports.bindClear = function (validObj) {
+//     $('.close-x').on('click', function () {
+//         var $parentDom = $(this).parent();
+//         var $textDom = $parentDom.find('.input');
+//         if ($textDom.val().length) {
+//             validObj.isEdit = true;
+//         }
+//         $textDom.val('');
+//         $parentDom.find('.err-tip').text('');
+//         $(this).addClass('hide');
+//         if ($parentDom.hasClass('edit-title-wrap')) {
+//             validObj.title = false;
+//         }
+//         else {
+//             validObj.content = true;
+//         }
+//     });
+// };
+
+exports.bindTitleClear = function (validObj) {
+    $('.edit-title-wrap .close-x').on('click', function () {
         var $parentDom = $(this).parent();
-        var $textDom = $parentDom.find('.input');
+        var $textDom = $('#edit-title');
         if ($textDom.val().length) {
             validObj.isEdit = true;
         }
         $textDom.val('');
         $parentDom.find('.err-tip').text('');
         $(this).addClass('hide');
-        if ($parentDom.hasClass('edit-title-wrap')) {
-            validObj.title = false;
-        }
-        else {
-            validObj.content = true;
-        }
+        validObj.title = false;
     });
 };
 
@@ -179,25 +194,25 @@ exports.bindTitle = function (validObj) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.bindContent = function (validObj) {
-    $('#edit-content').on('input propertychange', function () {
-        var me = this;
-        var length = $(me).val().length;
-        var errTip = $(me).next('.err-tip');
-        validObj.isEdit = true;
+// exports.bindContent = function (validObj) {
+//     $('#edit-content').on('input propertychange', function () {
+//         var me = this;
+//         var length = $(me).val().length;
+//         var errTip = $(me).next('.err-tip');
+//         validObj.isEdit = true;
 
-        exports.toggleX(me, length);
+//         exports.toggleX(me, length);
 
-        if (length > 50000) {
-            validObj.content = false;
-            errTip.text(50000 - length);
-        }
-        else {
-            validObj.content = true;
-            errTip.text('');
-        }
-    });
-};
+//         if (length > 50000) {
+//             validObj.content = false;
+//             errTip.text(50000 - length);
+//         }
+//         else {
+//             validObj.content = true;
+//             errTip.text('');
+//         }
+//     });
+// };
 
 /**
  * bind 文本框获得焦点事件
@@ -219,18 +234,26 @@ exports.bindGetFocus = function () {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.initTextClose = function (validObj) {
-    $.each($('.input'), function (index, item) {
-        var itemValue = $(item).val();
+// exports.initTextClose = function (validObj) {
+//     $.each($('.input'), function (index, item) {
+//         var itemValue = $(item).val();
+//         var itemLen = itemValue.length;
+//         exports.toggleX($(item), itemValue);
+//         if (item.id.indexOf('title') && itemLen > 0 && itemLen <= 50) {
+//             validObj.title = true;
+//         }
+//         if (item.id.indexOf('content') && itemLen > 50000) {
+//             validObj.content = false;
+//         }
+//     });
+// };
+exports.initTitleClose = function (validObj) {
+        var itemValue = $('#edit-title').val();
         var itemLen = itemValue.length;
-        exports.toggleX($(item), itemValue);
-        if (item.id.indexOf('title') && itemLen > 0 && itemLen <= 50) {
+        this.toggleX($('#edit-title'), itemValue);
+        if (itemLen > 0 && itemLen <= 50) {
             validObj.title = true;
         }
-        if (item.id.indexOf('content') && itemLen > 50000) {
-            validObj.content = false;
-        }
-    });
 };
 
 /**
@@ -266,5 +289,75 @@ exports.submitValid = function (submitFn, validObj) {
     }
     exports.validAlert(arr);
 };
+
+/**
+ * 初始化紧急程度mobiscroll
+ *
+ * @param {string} selector, 选择器字符串
+ * @param {Object} infoData, 初始化参数
+ * @param {Object} validObj, 提交验证信息
+ */
+exports.initImportanceLevel = function (selector, infoData, validObj) {
+    var data = {
+        headerText: '紧急程度',
+        showInput: false,
+        showMe: true,
+        rows: 3,
+        data: [
+            {
+                text: '重要且紧急',
+                value: 4
+            },
+            {
+                text: '普通',
+                value: 1,
+                selected: true
+            },
+            {
+                text: '重要',
+                value: 2
+            },
+            {
+                text: '紧急',
+                value: 3
+            }
+        ],
+        onSelect: function (text, inst) {
+            /* eslint-disable */
+            infoData['importance_level'] = +inst.getVal();
+            /* eslint-enable */
+            $(selector + ' .value').text(text);
+
+            validObj.isEdit = true;
+        }
+    };
+    plugins.initMobiscroll('select', selector, data);
+};
+
+/**
+ * 初始化新建、编辑页面附件
+ *
+ * @param {string} selector, 选择器字符串
+ * @param {Object} attachData, 附件信息
+ * @param {Object} validObj, 提交验证信息
+ * @return {Object} 附件对象
+ */
+exports.initEditAttach = function (selector, attachData, validObj) {
+    var attachOptions = {
+        // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
+        originAttaches: [],
+        dom: {
+            // 附件容器DOM元素
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
+        },
+        operateType: 'upload',
+        callback: function () {
+            validObj.isEdit = true;
+        }
+    };
+    var attach = plugins.initAttach(attachOptions, exports.transKey(attachData), selector);
+    return attach;
+}
 
 module.exports = exports;

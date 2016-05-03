@@ -15,11 +15,15 @@ var Page = require('common/page');
 
 var page = new Page();
 
+// 附件对象
+var attach = null;
+
 // 验证信息
 var valid = {
     isEdit: false,
     title: false,
-    content: true
+    content: true,
+    isAttachesReady: true
 };
 
 page.enter = function () {
@@ -36,15 +40,16 @@ page.enter = function () {
  */
 page.bindEvents = function () {
     var me = this;
-    editCom.bindClear(valid);
+    editCom.bindTitleClear(valid);
 
     editCom.bindTitle(valid);
 
-    editCom.bindContent(valid);
+    // editCom.bindContent(valid);
 
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
+        valid.isAttachesReady = attach.isAttachesReady();
         editCom.submitValid(me.submit, valid);
     });
 };
@@ -68,52 +73,11 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
-    var mobiOptions = {
-        theme: 'android-holo-light',
-        mode: 'scroller',
-        // ios 底部上滑, android 中间显示
-        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-        lang: 'zh',
-        buttons: ['cancel', 'set'],
-        height: 50
-    };
-    // 紧急程度
-    $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
-        headerText: '紧急程度',
-        showInput: false,
-        showMe: true,
-        rows: 3,
-        data: [
-            {
-                text: '重要且紧急',
-                value: 0
-            },
-            {
-                text: '普通',
-                value: 1,
-                selected: true
-            },
-            {
-                text: '重要',
-                value: 2
-            },
-            {
-                text: '紧急',
-                value: 3
-            }
-        ],
-        onSelect: function (text, inst) {
-            /* eslint-disable */
-            me.data['importance_level'] = +inst.getVal();
-            /* eslint-enable */
-            $('#urgencyBlock .value').text(text);
-
-            valid.isEdit = true;
-        }
-    }));
+    // 初始化紧急程度
+    editCom.initImportanceLevel('#urgencyBlock', me.data, valid);
 
     // 事件类型
-    $('#affairType').mobiscroll().select($.extend({}, mobiOptions, {
+    plugins.initMobiscroll('#affairType', {
         headerText: '事件类型',
         showInput: false,
         showMe: true,
@@ -161,55 +125,10 @@ page.initPlugin = function () {
 
             valid.isEdit = true;
         }
-    }));
+    });
 
     // 初始化附件组件
-    var attachOptions = {
-        // 客户端信息
-        clientMsg: {
-            uid: '1',
-            cid: '1',
-            client: '',
-            lang: '',
-            pause: '',
-            appver: '111.1.1'
-        },
-        // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
-        originAttaches: [],
-        url: {
-            uploadUrl: {
-                url: '/mgw/approve/attachment/getFSTokensOnCreate',
-                mothod: 'POST'
-            },
-            resumeUrl: {
-                url: '/mgw/approve/attachment/getFSTokensOnContinue',
-                mothod: 'POST'
-            }
-        },
-        supportType: [
-            // 本地文件
-            1,
-            // 网盘文件
-            2,
-            // 相册图片
-            3,
-            // 拍照上传
-            4,
-            // 语音上传
-            5
-        ],
-        dom: {
-            // 附件容器DOM元素
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        },
-        operateType: 'upload',
-        attachesCount: 10,
-        callback: function () {
-            valid.isEdit = true;
-        }
-    };
-    plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
+    attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
 };
 
 page.initValue = function () {
@@ -220,15 +139,31 @@ page.initValue = function () {
     $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
     /* eslint-enable */
     // 初始化文本框的关闭按钮
-    editCom.initTextClose(valid);
+    editCom.initTitleClose(valid);
 };
 
 page.submit = function () {
     var me = page;
+    var dfd = new $.Deferred();
+    me.data.attachements = attach.getModifyAttaches();
     me.data.title = $('#edit-title').val();
     me.data.content = $('#edit-content').val();
     /* eslint-disable */
     var promise = me.post(config.API.AFFAIR_EDIT_URL, me.data);
+    console.log(me.data);
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            } 
+            else {
+                // TODO
+                dfd.resolve();
+            }
+        }).fail(function (result) {
+            // TODO
+            // console.log(result);
+        });
     /* eslint-enable */
 };
 
