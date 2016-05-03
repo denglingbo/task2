@@ -43,9 +43,7 @@
     margin-top: rem(10px);
     padding: rem(20px) 0 0 rem(15px);
 
-    dd {
-        @include border-1px(top, #e1e4e6);
-    }
+    dd {}
 }
 
 // 无 title 样式

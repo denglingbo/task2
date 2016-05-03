@@ -50,6 +50,8 @@ var getParams = function () {
         cid: checkParamNull('cid'),
         // lang 语言类型
         lang: checkParamNull('lang') || 'zh_CN',
+        // puse 区分平台
+        puse: checkParamNull('puse'),
         // client 客户端类型
         client: checkParamNull('client')
     };

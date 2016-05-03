@@ -104,11 +104,8 @@
     
     // 通用
     dd {
-        height: rem(20px);
-        line-height: rem(20px);
         padding: rem(13px) 0 rem(11px) 0;
-
-        @include border-1px(top, #e1e4e6);
+        height: auto;
 
         @include clearfix();
 
@@ -183,6 +180,9 @@
     &.partner {
 
         dd {
+            height: rem(20px);
+            line-height: rem(20px);
+            @include border-1px(top, #e1e4e6);
             @include column($partner-left-width, $partner-right-width);
         }
     }
@@ -194,10 +194,9 @@
     &.attach {
 
         dd {
-
-            height: rem(36px);
-
+            @include border-1px(top, #e1e4e6);
             @include column($attach-left-width, $attach-right-width);
+            height: rem(36px);
             
             .column-left {
                 overflow: hidden;
@@ -230,6 +229,70 @@
             }
         }
     }
+
+    // 评论
+    $comments-left-width: rem(55px);
+
+    &.comments {
+
+        dd {
+            @include column($comments-left-width);
+            padding: 0;
+
+            .column-left {
+                padding: rem(13px) 0 rem(11px) 0;
+
+                img {
+                    width: rem(38px);
+                }
+            }
+
+            .column-middle {
+
+                .column-inner {
+                    @include border-1px(top, #e1e4e6);
+                    padding: rem(17px) 0 rem(11px) 0;
+                }
+            }
+        }
+
+        // dt next dd [first dd]
+        dd:nth-child(2) {
+            @include border-1px(top, #e1e4e6);
+        }
+
+        .columnu-title {
+            font-size: rem(16px);
+        }
+        
+        .comments-main {
+            font-size: rem(11px);
+            margin: rem(10px) 0 rem(5px) 0;
+        }
+        .comments-attach {
+            margin-top: rem(5px);
+        }
+
+        .comments-main,
+        .comments-attach {
+            width: 100%;
+
+            div {
+                float: none;
+            }
+            ul, li {
+                @include clearfix();
+            }
+            .componentAttachLine {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .columnu-date {
+        color: $light-gray;
+    }
+
 }
 
 .fixbar {

@@ -347,6 +347,10 @@ MakeWebpackConfig.prototype = {
                 // loader: 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
                 // exclude: [config.nodeModules]
             },
+            {
+                test: /\.css$/, 
+                loader: this.getCssLoader('sass')
+            },
             { 
                 // sass 加载器
                 // Reference: https://github.com/webpack/style-loader
@@ -475,16 +479,22 @@ MakeWebpackConfig.prototype = {
      *
      */
     getCssLoader: function (name) {
+        // 任意 动态css 加载器
+        var xCss = '';
+
+        if (name) {
+            xCss = '!' + name + '-loader';
+        }
         
         var cssLoader = null;
 
         if (this.config.debug) {
             // 开发阶段，css直接内嵌
-            cssLoader = 'style-loader!css-loader!' + name + '-loader!autoprefixer-loader';
+            cssLoader = 'style-loader!css-loader' + xCss + '!autoprefixer-loader';
         }
         else {
             // 编译阶段，css 分离出来单独引入
-            cssLoader = ExtractTextPlugin.extract('style', 'css-loader!' + name + '-loader!autoprefixer-loader');
+            cssLoader = ExtractTextPlugin.extract('style', 'css-loader' + xCss + '!autoprefixer-loader');
         }
 
         return cssLoader;

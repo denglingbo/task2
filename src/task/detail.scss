@@ -10,7 +10,7 @@
     .affair-talk {
 
         dd {
-
+            @include border-1px(top, #e1e4e6);
             @include column($at-left-width, $at-right-width);
             
             .column-left {

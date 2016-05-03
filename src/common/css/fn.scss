@@ -35,14 +35,16 @@
 
 /**
  * clearfix
- * @see http://h5bp.com/q
- *
  */
 @mixin clearfix () {
-    &:after,
-    &:before {
-        content: ' ';
+    *zoom: 1;
+    overflow: hidden;
+
+    &:before,
+    &:after {
         display: table;
+        line-height: 0;
+        content: ' ';
     }
     &:after {
         clear: both;

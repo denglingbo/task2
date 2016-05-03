@@ -8,6 +8,8 @@
 require('./detail.scss');
 require('dep/ui/virtualInput/virtualInput.scss');
 
+require('dep/plugins/attaches/css/attaches.css');
+
 var config = require('../config');
 // var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail.js');
@@ -15,7 +17,74 @@ var detailUtil = require('common/widgets/detail/detail.js');
 var Page = require('common/page');
 var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
+// hefeng 上传组件
+var plugins = require('common/plugins');
+var editCommon = require('common/widgets/edit/editCommon');
+
 var page = new Page();
+
+
+// 初始化附件组件
+var attachOptions = {
+    // 客户端信息
+    clientMsg: {
+        uid: '1',
+        cid: '1',
+        client: '',
+        lang: '',
+        pause: '',
+        appver: '111.1.1'
+    },
+    // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
+    originAttaches: [],
+    url: {
+        uploadUrl: {
+            url: '/mgw/approve/attachment/getFSTokensOnCreate',
+            mothod: 'POST'
+        },
+        resumeUrl: {
+            url: '/mgw/approve/attachment/getFSTokensOnContinue',
+            mothod: 'POST'
+        }
+    },
+    supportType: [
+        // 本地文件
+        1,
+        // 网盘文件
+        2,
+        // 相册图片
+        3,
+        // 拍照上传
+        4,
+        // 语音上传
+        5
+    ],
+    dom: {
+        // 附件容器DOM元素
+        containerDOM: '#attachList',
+        addBtnDOM: '#addAttach'
+    },
+    operateType: 'upload',
+    attachesCount: 10,
+    callback: function () {}
+};
+
+/* eslint-disable */
+var testArr = [
+    {
+        deleted: false,
+        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
+        file_name: 'ca1.crt',
+        size: 1391
+    },
+    {
+        deleted: false,
+        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
+        file_name: 'cb2.crt',
+        size: 1311
+    }
+];
+/* eslint-enable */
 
 page.enter = function () {
 
@@ -24,6 +93,9 @@ page.enter = function () {
     virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
+
+    plugins.initAttach(attachOptions, editCommon.transKey(testArr), '.comments-attach');
+
 };
 
 page.bindEvents = function () {

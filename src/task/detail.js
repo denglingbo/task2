@@ -6,7 +6,7 @@
  */
 
 require('./detail.scss');
-require('common/ui/fixer/fixer.scss');
+/* require('common/ui/fixer/fixer.scss'); */
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
@@ -14,7 +14,7 @@ var phoneMid = require('common/phoneMid');
 var ClickLoader = require('common/ui/clickLoader/clickLoader');
 var Page = require('common/page');
 // 定位器
-var Fixer = require('common/ui/fixer/fixer');
+// var Fixer = require('common/ui/fixer/fixer');
 
 var page = new Page();
 
@@ -79,20 +79,20 @@ page.bindEvents = function () {
 
 
     // 第一次的时候把 page 相关的参数配置好
-    me.clickLoader.on('complete', function (loader, data) {
+    // me.clickLoader.on('complete', function (loader, data) {
 
-        me.fixer = new Fixer({
-            elems: '#affair-talk dd',
-            // data-pagenum，数据来源
-            finder: 'pagenum',
-            pageNum: 10,
-            // 可视偏移量
-            offset: -44,
-            total: data.total,
-            // 在屏幕下方作为展示的基准点
-            screen: 1
-        });
-    });
+    //     me.fixer = new Fixer({
+    //         elems: '#affair-talk dd',
+    //         // data-pagenum，数据来源
+    //         finder: 'pagenum',
+    //         pageNum: 10,
+    //         // 可视偏移量
+    //         offset: -44,
+    //         total: data.total,
+    //         // 在屏幕下方作为展示的基准点
+    //         screen: 1
+    //     });
+    // });
 
     me.clickLoader.on(['complete', 'loadmore'], function (loader, data) {
 
@@ -108,7 +108,7 @@ page.bindEvents = function () {
         me.render('#affair-talk', data, 'append');
 
         // 分页要放在render 之后
-        me.fixer.complete();
+        // me.fixer.complete();
     });
 
 
