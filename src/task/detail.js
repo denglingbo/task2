@@ -88,7 +88,9 @@ page.bindEvents = function () {
             pageNum: 10,
             // 可视偏移量
             offset: -44,
-            total: data.total
+            total: data.total,
+            // 在屏幕下方作为展示的基准点
+            screen: 1
         });
     });
 
@@ -106,7 +108,7 @@ page.bindEvents = function () {
         me.render('#affair-talk', data, 'append');
 
         // 分页要放在render 之后
-        me.fixer.update();
+        me.fixer.complete();
     });
 
 
