@@ -24,7 +24,7 @@
 
 EG 2:
     DOM:
-        <div id="tips">1</div>
+        <div id="tips">[数据来源为 {fixer.opts.template} return 的值]</div>
 
     JS:
         var fixer = new Fixer({
