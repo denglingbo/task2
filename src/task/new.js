@@ -20,7 +20,8 @@ var page = new Page();
 var attach = null;
 
 // 富文本对象
-var phoneInput = null;
+var phoneInputTitle = null;
+var phoneInputContent = null;
 
 // 验证信息
 var valid = {
@@ -114,7 +115,8 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
-        valid.content = phoneInput.isAllowSubmit();
+        valid.content = phoneInputContent.isAllowSubmit();
+        valid.title = phoneInputTitle.isAllowSubmit();
         valid.isAttachesReady = attach.isAttachesReady();
         editCom.submitValid(me.submit, valid);
     });
@@ -177,17 +179,17 @@ page.loadPage = function () {
     var me = this;
     var template = require('common/widgets/edit/new');
     // console.log(template)
-    var $content = $('.edit-container');
+    var $content = $('#edit-main');
 
     var data = $.extend({}, me.data, {
         view: {
-            task: true,
-            placeholder: '任务'
+            placeholderTitle: '请输入任务标题(必填)',
+            placeholderContent: '请输入任务描述(选填)'
         }
     });
 
     me.render($content, data, {
-        tmpl: template
+        partials: {editMain: template}
     });
 };
 
@@ -201,12 +203,17 @@ page.initPlugin = function () {
     attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
 
     // 初始化富文本框
-    phoneInput = new PhoneInput({
+
+    phoneInputTitle = new PhoneInput({
+        handler: '.title-wrap',
+        input: '#edit-title',
+        limit: 50
+    });
+    phoneInputContent = new PhoneInput({
         handler: '.content-wrap',
         input: '#edit-content',
         limit: 50000
     });
-
 };
 
 page.initValue = function () {

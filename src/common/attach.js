@@ -4,7 +4,7 @@
  * 组件调用公共API
  *
  */
-require('dep/plugins/attaches/attaches.css');
+require('dep/plugins/attaches/css/attaches.css');
 var Mustache = require('dep/mustache');
 // attaches 需要使用
 window.Mustache = Mustache;

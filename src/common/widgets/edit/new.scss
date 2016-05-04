@@ -1,6 +1,10 @@
 @import '../../css/global';
 @import '../../css/ui';
 
+.componentAttachItem {
+    @include border-1px(top, #e1e4e6);
+}
+
 .alert-length-limit {
 	position: fixed;
 	left: 50%;
@@ -22,134 +26,133 @@
 	* {
 		box-sizing: border-box;
 	}
+}
 
-	.input {
-		border: none;
-		background-color: $white;
-		width: 100%;
-		height: 100%;
-		outline: none;
-		font-size: rem(18px);
-		resize: none;
-		padding-right: rem(55px);
-		letter-spacing: rem(2px);
+.input {
+	border: none;
+	background-color: $white;
+	width: 100%;
+	height: 100%;
+	outline: none;
+	font-size: rem(18px);
+	resize: none;
+	padding-right: rem(55px);
+	letter-spacing: rem(2px);
 
-		&:focus {
-	        text-indent: 0.1rem;
-		}
-	}
-
-	.edit-title-wrap,
-	.edit-content-wrap {
-		position: relative;
-		padding: rem(15px) 0 0 rem(15px);
-		@include border-1px(bottom);
-		margin-top: rem(10px);
-		background-color: $white;
-	}
-
-	.err-tip {
-		position: absolute;
-		display: block;
-		width: rem(55px);
-		text-align: center;
-		right: 0;
-		font-size: rem(12px);
-		color: #fa575d;
-	}
-
-	.edit-title-wrap {
-		padding-bottom: rem(15px);
-
-		.err-tip {
-			bottom: rem(-12px);
-		}
-
-		.title-close {
-			top: rem(16px);
-		}
-	}
-
-	.edit-content-wrap {
-
-		.edit-words {
-			height: rem(120px);
-			padding-bottom: rem(15px);
-			@include border-1px(bottom, #e3e4e5);
-			font-size: rem(16px);
-			
-			.content-wrap {
-				overflow: scroll;
-				height: 100%;
-			}
-
-			.words-close {
-				top: rem(2px);
-			}
-		}
-
-		.edit-attach {
-
-			.edit-add-attach {
-				min-height: rem(50px);
-				line-height: rem(48px);
-				color: #666;
-			}
-		}
-	}
-
-	.edit-option {
-	    @include border-1px(bottom);
-	    padding-left: rem(15px);
-	    background-color: $white;
-	    margin-top: rem(10px);
-
-		.edit-item {
-		    height: rem(44px);
-		    line-height: rem(42px);
-		    font-size: rem(14px);
-			padding-right: rem(15px);
-
-		    &:first-child {
-		    	@include border-1px(bottom, #e3e4e5);
-		    }
-
-		    .title {
-		    	float: left;
-		    	color: #666;
-		    }
-
-		    .value {
-		    	color: $black;
-		    	font-size: 16px;
-		    	margin-right: rem(3px);
-		    }
-	    }
-	}
-
-	.phone-input {
-
-	    &-item {
-	        position: absolute;
-	    }
-
-	    &-placeholder {
-	        color: #999;
-	        left: rem(5px);
-	        top: rem(2px);
-	    }
-
-	    &-limit {
-	    	font-size: rem(12px);
-	        color: #FA575D;
-	        right: 0;
-	        bottom: 0;
-	        padding: 0 10px;
-	        background: rgba(255, 255, 255, 0.6);
-	    }
+	&:focus {
+        text-indent: 0.1rem;
 	}
 }
 
+.edit-title-wrap,
+.edit-content-wrap {
+	position: relative;
+	padding: rem(15px) 0 0 rem(15px);
+	@include border-1px(bottom);
+	margin-top: rem(10px);
+	background-color: $white;
+
+	.content-wrap, .title-wrap {
+		overflow: scroll;
+		height: 100%;
+	}
+}
+
+.err-tip {
+	position: absolute;
+	display: block;
+	width: rem(55px);
+	text-align: center;
+	right: 0;
+	font-size: rem(12px);
+	color: #fa575d;
+}
+
+.edit-title-wrap {
+	padding-bottom: rem(15px);
+
+	.err-tip {
+		bottom: rem(-12px);
+	}
+
+	.title-close {
+		top: rem(16px);
+	}
+}
+
+.edit-content-wrap {
+
+	.edit-words {
+		height: rem(120px);
+		padding-bottom: rem(15px);
+		@include border-1px(bottom, #e3e4e5);
+		font-size: rem(16px);
+
+		.words-close {
+			top: rem(2px);
+		}
+	}
+
+	.edit-attach {
+
+		.edit-add-attach {
+			min-height: rem(50px);
+			line-height: rem(48px);
+			color: #666;
+		}
+	}
+}
+
+.edit-option {
+    @include border-1px(bottom);
+    padding-left: rem(15px);
+    background-color: $white;
+    margin-top: rem(10px);
+
+	.edit-item {
+	    height: rem(44px);
+	    line-height: rem(42px);
+	    font-size: rem(14px);
+		padding-right: rem(15px);
+
+	    &:first-child {
+	    	@include border-1px(bottom, #e3e4e5);
+	    }
+
+	    .title {
+	    	float: left;
+	    	color: #666;
+	    }
+
+	    .value {
+	    	color: $black;
+	    	font-size: 16px;
+	    	margin-right: rem(3px);
+	    }
+    }
+}
+
+.phone-input {
+
+    &-item {
+        position: absolute;
+    }
+
+    &-placeholder {
+        color: #999;
+        left: rem(5px);
+        top: rem(2px);
+    }
+
+    &-limit {
+    	font-size: rem(12px);
+        color: #FA575D;
+        right: 0;
+        bottom: 0;
+        padding: 0 10px;
+        background: rgba(255, 255, 255, 0.6);
+    }
+}
 
 
 

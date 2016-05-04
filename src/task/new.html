@@ -13,10 +13,45 @@
     <div class="main">
 
         <div class="edit-container">
-            
+            <div id="edit-main">{{> editMain}}</div>
+            <div id="select-wrap"></div>
         </div>
-		
     </div>
+    <script id="select-wrap-tmpl" type="x-tmpl-mustache">
+        <div class="edit-option">
+            <div id="principal" class="edit-item">
+                <span class='title'>负责人</span>
+                <div class="right">
+                    <span class="value">张三</span>
+                    <i class="arrow-right"></i>
+                </div>
+            </div>
+            <div id="attends" class="edit-item">
+                <span class='title'>参与人</span>
+                <div class="right">
+                    <span class="value">水水</span>
+                    <i class="arrow-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-option">
+            <div id="doneTime" class="edit-item">
+                <span class='title'>完成时间</span>
+                <div class="right">
+                    <span class="value">尽快完成</span>
+                    <i class="arrow-right"></i>
+                </div>
+            </div>
+            <div id="urgencyBlock" class="edit-item">
+                <span class='title'>紧要程度</span>
+                <div class="right">
+                    <span class="value">普通</span>
+                    <i class="arrow-right"></i>
+                </div>
+            </div>
+        </div>
+    </script>
     <script type="text/javascript" src="/cordova.js"></script>
 </body>
 <script type="text/javascript" src="/dep/plugins/mobiscroll/js/mobiscroll-2.17.0.js"></script>
