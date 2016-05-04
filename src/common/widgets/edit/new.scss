@@ -77,6 +77,11 @@
 			padding-bottom: rem(15px);
 			@include border-1px(bottom, #e3e4e5);
 			font-size: rem(16px);
+			
+			.content-wrap {
+				overflow: scroll;
+				height: 100%;
+			}
 
 			.words-close {
 				top: rem(2px);
@@ -119,6 +124,28 @@
 		    	font-size: 16px;
 		    	margin-right: rem(3px);
 		    }
+	    }
+	}
+
+	.phone-input {
+
+	    &-item {
+	        position: absolute;
+	    }
+
+	    &-placeholder {
+	        color: #999;
+	        left: rem(5px);
+	        top: rem(2px);
+	    }
+
+	    &-limit {
+	    	font-size: rem(12px);
+	        color: #FA575D;
+	        right: 0;
+	        bottom: 0;
+	        padding: 0 10px;
+	        background: rgba(255, 255, 255, 0.6);
 	    }
 	}
 }

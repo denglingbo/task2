@@ -6,7 +6,9 @@
 
 <div class="edit-content-wrap">
     <div class="edit-words">
-        <textarea id="edit-content" class="input" placeholder="请输入{{view.placeholder}}描述(选填)">{{content}}</textarea>
+        <div class="content-wrap">
+           <div id="edit-content" class="input" contenteditable="plaintext-only" data-placeholder="请输入{{view.placeholder}}描述(选填)">{{content}}</div> 
+        </div>
         <span class="err-tip"></span>
         <i class="close-x words-close hide"></i>
     </div>

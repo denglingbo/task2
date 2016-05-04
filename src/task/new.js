@@ -6,18 +6,21 @@
  */
 
 require('common/widgets/edit/new.scss');
-var plugins = require('common/plugins');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
 var phoneMid = require('common/phoneMid');
-
+var localStorage = require('common/localstorage');
+var PhoneInput = require('common/ui/phoneInput/phoneInput');
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
 // 附件对象
 var attach = null;
+
+// 富文本对象
+var phoneInput = null;
 
 // 验证信息
 var valid = {
@@ -29,15 +32,19 @@ var valid = {
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
+var clientMsg = (function () {
+    var data = localStorage.getData('TASK_PARAMS');
+    return {
+        uid: data.uid,
+        cid: data.cid,
+        client: data.client,
+        lang: data.lang,
+        puse: data.puse,
+        appver: data.appver || '111.1.1'
+    };
+})();
 var selectValue = {
-    clientMsg: {
-        uid: '',
-        cid: '',
-        client: '',
-        lang: '',
-        puse: '',
-        appver: ''
-    },
+    clientMsg: clientMsg,
     selector: {
         // 选择人
         contact: 3,
@@ -98,15 +105,16 @@ page.enter = function () {
 page.bindEvents = function () {
     var me = this;
 
-    editCom.bindClear(valid);
+    editCom.bindTitleClear(valid);
 
     editCom.bindTitle(valid);
 
-    editCom.bindContent(valid);
+    // editCom.bindContent(valid);
 
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
+        valid.content = phoneInput.isAllowSubmit();
         valid.isAttachesReady = attach.isAttachesReady();
         editCom.submitValid(me.submit, valid);
     });
@@ -185,97 +193,20 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
-    var mobiOptions = {
-        theme: 'android-holo-light',
-        mode: 'scroller',
-        // ios 底部上滑, android 中间显示
-        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-        lang: 'zh',
-        buttons: ['cancel', 'set'],
-        height: 50
-    };
 
-    $('#urgencyBlock').mobiscroll().select($.extend({}, mobiOptions, {
-        headerText: '紧急程度',
-        showInput: false,
-        showMe: true,
-        rows: 3,
-        data: [
-            {
-                text: '重要且紧急',
-                value: 4
-            },
-            {
-                text: '普通',
-                value: 1,
-                selected: true
-            },
-            {
-                text: '重要',
-                value: 2
-            },
-            {
-                text: '紧急',
-                value: 3
-            }
-        ],
-        onSelect: function (text, inst) {
-            /* eslint-disable */
-            me.data['importance_level'] = +inst.getVal();
-            /* eslint-enable */
-            $('#urgencyBlock .value').text(text);
-
-            valid.isEdit = true;
-        }
-    }));
+    // 初始化紧急程度
+    editCom.initImportanceLevel('#urgencyBlock', me.data, valid);
 
     // 初始化附件组件
-    var attachOptions = {
-        // 客户端信息
-        clientMsg: {
-            uid: '1',
-            cid: '1',
-            client: '',
-            lang: '',
-            pause: '',
-            appver: '111.1.1'
-        },
-        // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
-        originAttaches: [],
-        url: {
-            uploadUrl: {
-                url: '/mgw/approve/attachment/getFSTokensOnCreate',
-                mothod: 'POST'
-            },
-            resumeUrl: {
-                url: '/mgw/approve/attachment/getFSTokensOnContinue',
-                mothod: 'POST'
-            }
-        },
-        supportType: [
-            // 本地文件
-            1,
-            // 网盘文件
-            2,
-            // 相册图片
-            3,
-            // 拍照上传
-            4,
-            // 语音上传
-            5
-        ],
-        dom: {
-            // 附件容器DOM元素
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        },
-        operateType: 'upload',
-        attachesCount: 10,
-        callback: function () {
-            valid.isEdit = true;
-        }
-    };
-    attach = plugins.initAttach(attachOptions, editCom.transKey(me.data.attachements), '.attach-list');
+    attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
+
+    // 初始化富文本框
+    phoneInput = new PhoneInput({
+        handler: '.content-wrap',
+        input: '#edit-content',
+        limit: 50000
+    });
+
 };
 
 page.initValue = function () {
@@ -287,13 +218,13 @@ page.initValue = function () {
     $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
     /* eslint-enable */
     // 初始化文本框的关闭按钮
-    editCom.initTextClose(valid);
+    editCom.initTitleClose(valid);
 
     // TODO 修改存储数据
     selectValue.selectType = 1;
-    window.localStorage.setItem(principalSelectKey, JSON.stringify(selectValue));
+    localStorage.addData(principalSelectKey, selectValue);
     selectValue.selectType = 2;
-    window.localStorage.setItem(attendSelectKey, JSON.stringify(selectValue));
+    localStorage.addData(attendSelectKey, selectValue);
 };
 
 page.submit = function () {

@@ -17,7 +17,7 @@ var page = new Page();
 var pages = {
 
     // 完成任务
-    0: function (isMaster) {
+    '0': function (isMaster) {
         var arr = [{
             name: 'summary',
             holder: '请输入任务总结(选填)'
@@ -34,7 +34,7 @@ var pages = {
     },
 
     // 撤销
-    1: function () {
+    '1': function () {
         return [{
             name: 'cancel',
             holder: '请输入撤销理由'
@@ -42,7 +42,7 @@ var pages = {
     },
 
     // 拒绝
-    2: function () {
+    '2': function () {
         return [{
             name: 'oppose',
             holder: '请输入拒绝理由'
@@ -50,7 +50,7 @@ var pages = {
     },
 
     // 同意
-    3: function () {
+    '3': function () {
         return [{
             name: 'agree',
             holder: '请输入同意理由'
