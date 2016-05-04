@@ -211,33 +211,16 @@ Page.prototype.addParallelTask = function (task) {
 };
 
 /**
- * 渲染模板文件
- *
- * @param {string} selector, #id|.class|tagname
- * @param {Loader} template, [name]-loader
- * @param {Object} data, 数据
- * @return {string} html 字符串
- *
- */
-Page.prototype.renderFile = function (selector, template, data) {
-    var str = template(data);
-    $(selector).html(str);
-
-    return str;
-};
-
-/**
  * 渲染模板
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Object} data, 数据
- * @param {string} appendType, append, befre, after, ..., 默认值为 html
+ * @param {string} options, see ui/view.js
  * @return {string} html 字符串
  *
  */
-Page.prototype.render = function (selector, data, appendType) {
-    var str = view.render(selector, data, appendType);
-
+Page.prototype.render = function (selector, data, options) {
+    var str = view.render(selector, data, options);
     return str;
 };
 

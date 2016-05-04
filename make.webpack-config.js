@@ -300,18 +300,6 @@ MakeWebpackConfig.prototype = {
     },
 
     /**
-     * 设置 alias
-     * @param {Object} alias,
-     *
-     */
-    setAlias: function (alias) {
-
-        if (_.isObject(alias)) {
-            _.extend(this.webpackConfig.resolve.alias, alias);
-        }
-    },
-
-    /**
      * 添加 Loaders
      *
      */
@@ -325,7 +313,7 @@ MakeWebpackConfig.prototype = {
             loaders: []
         };
 
-        var imgPath = config.debug ? '' : '/' + config.output.assets + '/img/';
+        var imgPath = config.debug ? '' : config.output.assets + '/img/';
 
         // 添加一个内置的 loaders 
         // for jingoal
@@ -348,8 +336,15 @@ MakeWebpackConfig.prototype = {
                 // exclude: [config.nodeModules]
             },
             {
+                // 模板 加载器
+                // Reference: https://github.com/webpack/html-loader
+                test: /\.tpl$/,
+                // loader: 'mustache'
+                loader: 'html-loader'
+            },
+            {
                 test: /\.css$/, 
-                loader: this.getCssLoader('sass')
+                loader: this.getCssLoader()
             },
             { 
                 // sass 加载器
@@ -366,38 +361,10 @@ MakeWebpackConfig.prototype = {
     },
 
     /**
-     * 添加Loaders
-     *
-     */
-    addLoaders: function (loaders) {
-
-        if (_.isArray(loaders)) {
-            this.webpackConfig.module.loaders = this.webpackConfig.module.loaders.concat(loaders);
-        }
-
-        if (_.isObject) {
-            this.webpackConfig.module.loaders.push(loaders);
-        }
-    },
-
-    /**
-     * 清空 plugins
-     *
-     */
-    clearLoaders: function () {
-        this.webpackConfig.module.loaders = [];
-    },
-
-    /**
      * 添加入口配置
      *
      */
     setPlugins: function () {
-
-        var _opts = {
-            clear: false,
-            add: null
-        };
 
         var config = this.config;
 
@@ -446,32 +413,16 @@ MakeWebpackConfig.prototype = {
             })
         );
 
+        this.plugins.push(
+            new webpack.ProvidePlugin({
+                $: 'zepto'
+            })
+        );
+
         this.plugins = this.plugins.concat(this.pageEntries);
 
         this.webpackConfig.plugins = this.plugins;
     },
-
-    /**
-     * 添加插件
-     *
-     */
-    addPlugins: function (plugins) {
-
-        if (_.isArray(plugins)) {
-            this.plugins = this.plugins.concat(plugins);
-        
-            this.webpackConfig.plugins = this.plugins;
-        }
-    },
-
-    /**
-     * 清空 plugins
-     *
-     */
-    clearPlugins: function () {
-        this.webpackConfig.plugins = this.plugins = [];
-    },
-
 
     /**
      * 样式预编译器
@@ -499,7 +450,6 @@ MakeWebpackConfig.prototype = {
 
         return cssLoader;
     },
-
 
 
 

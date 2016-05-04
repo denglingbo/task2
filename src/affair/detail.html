@@ -7,12 +7,13 @@
     <title>Hello Coder</title>
 </head>
 <body>
+
     <div class="main">
         
         <div id="detail-main"></div>
 
         <!-- title -->
-        <script id="detail-main-template" type="x-tmpl-mustache">
+        <script id="detail-main-tmpl" type="x-tmpl-mustache">
         <div class="layout detail-title">
             <div class="detail-title-control">
                 <div class="detail-checkbox">
@@ -42,9 +43,9 @@
         <div class="layout detail-comments">
             <div class="sub-title">事件描述</div>
 
-            <p>{{ content }}</p>
-            <p>紧要程度: {{ importanceRaw }}</p>
-            <p>完成时间: 尽快完成</p>
+            <div class="layout-section">{{& content }}</div>
+            <div class="layout-section">紧要程度: {{ importanceRaw }}</div>
+            <div class="layout-section">完成时间: 尽快完成</div>
         </div>
 
 

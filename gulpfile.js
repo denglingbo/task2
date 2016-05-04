@@ -19,25 +19,6 @@ var febd = new MakeWebpackConfig(config);
 // var Febd = require('febd');
 // var febd = new Febd(config);
 
-var setMaker = function (maker, webpack) {
-
-    maker.addLoaders(
-        {
-            // 模板 加载器
-            // Reference: https://github.com/webpack/ejs-loader
-            test: /\.tpl$/,
-            loader: 'mustache'
-        }
-    );
-
-    // maker.clearPlugins();
-    maker.addPlugins([
-        new webpack.ProvidePlugin({
-            $: 'zepto'
-        })
-    ]);
-};
-
 /**
  * DEV - Mock
  * 模拟转发
@@ -54,7 +35,7 @@ gulp.task('mock', function () {
 gulp.task('dev-webpack', function (callback) {
 
     febd.devStart(function (maker, webpack) {
-        setMaker(maker, webpack);
+        // setMaker(maker, webpack);
     });
 });
 
@@ -90,7 +71,7 @@ gulp.task('release-webpack', function (gulpCallback) {
 
     febd.build(gulpCallback, function (maker, webpack) {
         maker.setReleaseMock();
-        setMaker(maker, webpack);
+        // setMaker(maker, webpack);
     });
 });
 

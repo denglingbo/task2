@@ -32,7 +32,7 @@ var config = {
      * publicPath
      * @params {string}
      */
-    publicPath: 'http://localhost:8014/',
+    publicPath: '/',
 
     /**
      * mock 监听端口

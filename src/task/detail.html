@@ -12,7 +12,7 @@
         <div id="detail-main"></div>
 
         <!-- title -->
-        <script id="detail-main-template" type="x-tmpl-mustache">
+        <script id="detail-main-tmpl" type="x-tmpl-mustache">
         <div class="layout detail-title">
             <div class="detail-title-main">
                 <p class="detail-title-top">{{ title }}</p>
@@ -28,9 +28,9 @@
         <div class="layout detail-comments">
             <div class="sub-title">任务描述</div>
 
-            <p>{{ content }}</p>
-            <p>紧要程度: {{ importanceRaw }}</p>
-            <p>完成时间: 尽快完成</p>
+            <div class="layout-section">{{& content }}</div>
+            <div class="layout-section">紧要程度: {{ importanceRaw }}</div>
+            <div class="layout-section">完成时间: 尽快完成</div>
         </div>
 
         <!-- 成员 -->
@@ -109,7 +109,7 @@
     </div>
     
     <!-- 事件和讨论 -->
-    <script id="affair-talk-template" type="x-tmpl-mustache">
+    <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#list}}
     <dd data-pagenum="{{ pagenum }}" tid="{{ id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="{{ page }}" >
         <div class="column-left">
@@ -128,7 +128,7 @@
     </script>
     
     <!-- 团队成员 -->
-    <script id="partner-template" type="x-tmpl-mustache">
+    <script id="partner-tmpl" type="x-tmpl-mustache">
     <dt class="sub-title">团队成员</dt>
     {{#creator}}
     <dd>

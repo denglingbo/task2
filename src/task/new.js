@@ -168,13 +168,19 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
     var template = require('common/widgets/edit/new');
+    // console.log(template)
     var $content = $('.edit-container');
-    me.renderFile($content, template, $.extend({}, me.data, {
+
+    var data = $.extend({}, me.data, {
         view: {
             task: true,
             placeholder: '任务'
         }
-    }));
+    });
+
+    me.render($content, data, {
+        tmpl: template
+    });
 };
 
 page.initPlugin = function () {

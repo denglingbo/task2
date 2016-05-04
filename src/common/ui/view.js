@@ -16,27 +16,53 @@ var view = {};
 
 /**
  * Mustache 渲染模板
- * 模板输出 dom $(selector), 模板源: selector'-template'
+ * 模板输出 dom $(selector), 模板源: selector'-tmpl'
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Object} data, 数据
- * @param {string} appendType, append, befre, after, ..., 默认值为 html
+ * @param {Object} options, 可选配置
+ *      @param {Null|string} options.tmpl, script 内容 或者 模版字符串
+ *      @param {string} options.type, dom 添加方式
+ *      @param {Object} options.partials, 子模版配置 {tempName: 'html string'}
  * @return {string} html 片段
  *
  */
-view.render = function (selector, data, appendType) {
-    var $elem = $(selector);
-    var $temp = $(selector + '-template');
-    var type = appendType || 'html';
+view.render = function (selector, data, options) {
 
-    if (!$elem.length || !$temp.length) {
+    var opts = {
+        // 如果 tmpl 为 null，会从当前页面上获取 selector[-tmpl] 的内容
+        tmpl: null,
+        type: 'html',
+        // 子模版配置，{template name: 'template html string'}
+        partials: null
+    };
+
+    $.extend(opts, options);
+
+    var $elem = $(selector);
+
+    if (!$elem.length) {
         return;
     }
 
-    var template = $temp.html();
-    var html = Mustache.render(template, data);
+    if (!opts.tmpl) {
+        var $temp = $($elem.selector + '-tmpl');
+        var template = $temp.html();
+    }
+    else {
+        template = opts.tmpl;
+    }
 
-    $elem[type](html);
+    var html;
+
+    if (opts.partials) {
+        html = Mustache.to_html(template, data, opts.partials);
+    }
+    else {
+        html = Mustache.render(template, data);
+    }
+
+    $elem[opts.type](html);
 
     return html;
 };

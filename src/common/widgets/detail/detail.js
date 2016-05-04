@@ -50,7 +50,7 @@ exports.dealPageData = function (result) {
     // 时间展示
     data.updateDateRaw = util.formatDateToNow(data.op_time);
 
-    data.content = util.formatRichText(data.content);
+    // data.content = util.formatRichText(data.content);
 
     data.statusText = (function () {
         return statusMap[data.status] || '';

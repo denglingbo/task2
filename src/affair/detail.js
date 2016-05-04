@@ -4,7 +4,9 @@
  *
  * 事件详情页
  */
-
+// var Mustache = require('dep/mustache');
+// var CommonTpl = require('common/widgets/edit/new');
+// console.log(CommonTpl)
 require('./detail.scss');
 require('dep/ui/virtualInput/virtualInput.scss');
 
@@ -89,7 +91,24 @@ var testArr = [
 page.enter = function () {
 
     this.render('#detail-main', this.data);
+// var dataa = {
+//     firstName: "Christophe",
+//     lastName: "Coenraets",
+//     address: "1 Main street",
+//     city: "Boston",
+//     state: "MA",
+//     zip: "02106",
+//         view: {
+//             placeholder: 'ha ha'
+//         }
+// };
 
+// var template = "<h1>{{firstName}} {{lastName}}</h1>";
+
+// var hh = Mustache.to_html(template, dataa, {
+//     newCommon: CommonTpl
+// });
+// console.log(hh)
     virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
