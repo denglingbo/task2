@@ -30,10 +30,12 @@ var config = {
         AFFAIR_DETAIL_URL: 'get_affair_detail',
 
         // 加载更多事件和讨论
-        AFFAIR_TALK_MORE_URL: 'get_affair_talk_list',
+        AFFAIR_TALK_MORE_URL: 'get_task_slaves',
 
         // 任务详情
         TASK_DETAIL_URL: 'get_task_detail',
+        // 添加关注
+        TASK_FOLLOW: 'attention_task',
 
         // 任务新建
         TASK_NEW_URL: 'create_task',

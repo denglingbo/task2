@@ -11,7 +11,7 @@ require('./detail.scss');
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
 var phoneMid = require('common/phoneMid');
-var ClickLoader = require('common/ui/clickLoader/clickLoader');
+var ListLoader = require('common/ui/listLoader/listLoader');
 var Page = require('common/page');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
@@ -25,12 +25,22 @@ page.enter = function () {
 
     me.render('#detail-main', me.data);
 
+    var requestPageNum = 5;
     // 初始化一个点击加载组件
-    me.clickLoader = new ClickLoader({
+    me.listLoader = new ListLoader({
         promise: function () {
-            return page.post(config.API.AFFAIR_TALK_MORE_URL);
+            /* eslint-disable */
+            return page.post(config.API.AFFAIR_TALK_MORE_URL, {
+                task_id: me.data.id,
+                curr_page: this.page,
+                number: requestPageNum,
+                sort_type: 0
+            });
+            /* eslint-enable */
         },
-        pageNum: 10
+        // 后端数据节点位置
+        listKey: 'obj_list',
+        pageNum: requestPageNum
     });
 
     me.bindEvents();
@@ -42,6 +52,10 @@ page.bindEvents = function () {
     me.$more = $('#affair-talk-more-handler');
     me.$affairTalk = $('#affair-talk');
     me.$fixbar = $('.fixbar');
+
+    $('.star').on('click', function () {
+        me.follow(this);
+    });
 
     // 查看更多人员
     me.$main.on('click', '.partner-more', function () {
@@ -61,7 +75,7 @@ page.bindEvents = function () {
 
         if (pageTo && pageTo.length > 0) {
             /* eslint-disable */
-            CPNavigationBar.redirect('/' + pageTo + '/detail.html');
+            CPNavigationBar.redirect(pageTo);
             /* eslint-enable */
         }
     });
@@ -79,7 +93,7 @@ page.bindEvents = function () {
 
 
     // 第一次的时候把 page 相关的参数配置好
-    // me.clickLoader.on('complete', function (loader, data) {
+    // me.listLoader.on('complete', function (loader, data) {
 
     //     me.fixer = new Fixer({
     //         elems: '#affair-talk dd',
@@ -94,7 +108,7 @@ page.bindEvents = function () {
     //     });
     // });
 
-    me.clickLoader.on(['complete', 'loadmore'], function (loader, data) {
+    me.listLoader.on(['complete', 'loadmore'], function (loader, data) {
 
         // Mustache.js 的逗比之处
         // {{#list}}
@@ -104,14 +118,40 @@ page.bindEvents = function () {
             // return data.page;
             return loader.page;
         };
+        // data.typeRaw =
+        // console.log(data)
 
-        me.render('#affair-talk', data, 'append');
+        data.list = detailUtil.getEventTalkList(data.obj_list);
+
+        me.render('#affair-talk', data, {type: 'append'});
 
         // 分页要放在render 之后
         // me.fixer.complete();
     });
 
 
+};
+
+page.follow = function (target) {
+    var me = this;
+    var $elem = $(target);
+    var status = 0;
+
+    // 取消关注
+    if ($elem.hasClass('follow')) {
+        status = 0;
+    }
+    // 关注
+    else {
+        status = 1;
+    }
+
+    /* eslint-disable */
+    var promise = page.post(config.API.TASK_FOLLOW, {
+        task_id: me.data.task_id,
+        level: status
+    });
+    /* eslint-enable */
 };
 
 /**
@@ -262,8 +302,8 @@ page.addParallelTask(function (dfd) {
             }
 
         })
-        .fail(function (a) {
-            // console.log(a);
+        .fail(function (err) {
+            // console.log(err);
         });
 
     return dfd;

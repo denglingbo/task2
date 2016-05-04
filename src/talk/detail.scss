@@ -1,7 +1,6 @@
 /* 详情页样式 */
 
 @import "../common/widgets/detail/detail.scss";
-@import "../common/css/tick-animate.scss";
 
 .detail-title {
 
@@ -17,10 +16,6 @@
             height: rem(20px);
             top: 50%;
             margin-top: rem(-10px);
-            
-            .tick {
-                @include tickedCombo();
-            }
         }
     }
 }

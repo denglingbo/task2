@@ -5,26 +5,21 @@
  * 讨论详情页
  */
 
-require('./detail.scss');
+require('dep/plugins/attaches/css/attaches.css');
 require('dep/ui/virtualInput/virtualInput.scss');
 
+require('./detail.scss');
+
 var config = require('../config');
-// var util = require('../common/util');
+var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail.js');
 var phoneMid = require('common/phoneMid.js');
 var Page = require('common/page');
 var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
-var page = new Page();
+var Ticker = require('common/ui/ticker/ticker');
 
-var CLASSES = {
-    UNTICK: 'untick',
-    TICKED: 'ticked',
-    CIRCLE_SQUARE: 'tick-circle-to-square',
-    TICKED_ANIMATE: 'tick-ticked-animate',
-    SQUARE_CIRCLE: 'tick-square-to-circle',
-    UNTICK_ANIMATE: 'tick-untick-animate'
-};
+var page = new Page();
 
 page.enter = function () {
     this.$main = $('.main');
@@ -33,10 +28,15 @@ page.enter = function () {
 
     virtualInput('.goalui-fixedinput');
 
+    this.ticker = new Ticker('.tick', {
+        async: true
+    });
+
     this.bindEvents();
 };
 
 page.bindEvents = function () {
+    // var me = this;
 
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
@@ -52,30 +52,14 @@ page.bindEvents = function () {
         }
     });
 
-    $('.tick').on('click', function () {
+    this.ticker.on('click', function (isCurTicked) {
+        // 0: 取消
+        // 1: 关注
+        // var changeStatus = isCurTicked ? 0 : 1;
 
-        var $elem = $(this);
-
-        // 勾选
-        if ($elem.hasClass(CLASSES.UNTICK)) {
-            $elem
-                .removeClass(CLASSES.UNTICK)
-                .removeClass(CLASSES.TICKED)
-                .removeClass(CLASSES.UNTICK_ANIMATE)
-                .removeClass(CLASSES.SQUARE_CIRCLE)
-                .addClass(CLASSES.CIRCLE_SQUARE)
-                .addClass(CLASSES.TICKED_ANIMATE);
-        }
-        // 取消勾选
-        else {
-            $elem
-                .addClass(CLASSES.UNTICK)
-                .addClass(CLASSES.TICKED)
-                .removeClass(CLASSES.CIRCLE_SQUARE)
-                .removeClass(CLASSES.TICKED_ANIMATE)
-                .addClass(CLASSES.UNTICK_ANIMATE)
-                .addClass(CLASSES.SQUARE_CIRCLE);
-        }
+        // var promise = page.post(config.API.TASK_FOLLOW, {
+        //     // task_id
+        // });
     });
 };
 
@@ -115,7 +99,12 @@ page.renderUser = function (arr) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.TALK_DETAIL_URL);
+
+    /* eslint-disable */
+    var promise = page.post(config.API.TALK_DETAIL_URL, {
+        talk_id: util.params('id')
+    });
+    /* eslint-enable */
 
     promise
         .done(function (result) {

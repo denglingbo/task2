@@ -1,11 +1,11 @@
 /**
- * @file loader.js
+ * @file listLoader.js
  * @author deo
  *
  * 点击加载功能，不需要指定内容容器，该组建点击之后会返回 data
  */
 
-require('./clickLoader.scss');
+require('./listLoader.scss');
 
 var Listener = require('common/listener');
 
@@ -58,6 +58,9 @@ var Loader = function (options) {
         // 点击按钮，触发事件
         handler: '.load-more',
 
+        // 后端 data.list
+        listKey: 'list',
+
         // 点击状态的 选择器对象
         status: STATUS_CLASS,
 
@@ -72,7 +75,7 @@ var Loader = function (options) {
     me.$main = $(me.opts.handler);
 
     // 当前是第几页数据
-    me.page = 0;
+    me.page = 1;
 
     me.init();
 };
@@ -194,13 +197,14 @@ $.extend(Loader.prototype, {
                 }
 
                 var data = result.data;
+                var list = data[me.opts.listKey];
 
-                if (!data.list) {
+                if (!list) {
                     fn.call(me, null);
                     return;
                 }
 
-                if (data.list.length < me.opts.pageNum) {
+                if (list.length < me.opts.pageNum) {
                     me.$main.addClass('hide');
                 }
                 else {
@@ -210,9 +214,9 @@ $.extend(Loader.prototype, {
                 me.statusChange('done');
                 me.statusChange('default', 380);
 
-                me.page ++;
-
                 fn.call(me, data);
+
+                me.page ++;
             })
             .fail(function (err) {
                 clearTimeout(me.statusTimerId);

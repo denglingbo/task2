@@ -3,7 +3,6 @@
  * @author deo
  *
  * 勾选变打勾动画效果
- *
  */
 
 // 2种状态的转换时间
@@ -383,4 +382,9 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
             animation-fill-mode: forwards;
         }
     }
+}
+
+      
+.tick {
+    @include tickedCombo();
 }

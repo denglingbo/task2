@@ -63,21 +63,6 @@
         <!-- 附件 -->
         <dl class="layout-list attach">
             <dt class="sub-title">附件</dt>
-            
-            <dd>
-                <div class="column-left">
-                    <img src="/common/img/files/doc.png" />
-                </div>
-                <div class="column-middle">
-                    <div class="column-inner">
-                        <p>N 版设计稿</p>
-                        <p class="attach-size">1.2MB</p>
-                    </div>
-                </div>
-                <div class="column-right">
-                    <em class="download"></em>
-                </div>
-            </dd>
         </dl>
 
         <!-- 底部按钮条 -->
@@ -111,9 +96,9 @@
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#list}}
-    <dd data-pagenum="{{ pagenum }}" tid="{{ id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="{{ page }}" >
+    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}/detail.html?id={{ target_id }}&task_id={{ task_id }}" >
         <div class="column-left">
-            [{{ type }}] {{ title }}
+            [{{ typeRaw }}] {{ title }}
         </div>
         <div class="column-right">
             <div class="column-more">

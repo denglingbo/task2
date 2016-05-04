@@ -9,7 +9,7 @@
 var util = require('../../util');
 var phoneMid = require('common/phoneMid');
 
-var exports = {};
+var detail = {};
 
 // 状态显示
 var statusMap = {
@@ -30,8 +30,8 @@ var importanceMap = {
     4: '普通'
 };
 
-exports.statusMap = statusMap;
-exports.importanceMap = importanceMap;
+detail.statusMap = statusMap;
+detail.importanceMap = importanceMap;
 
 /**
  * 初始化 Page 基本数据
@@ -39,7 +39,7 @@ exports.importanceMap = importanceMap;
  * @param {Object} result, 处理详情页初始数据
  * @return {Object}
  */
-exports.dealPageData = function (result) {
+detail.dealPageData = function (result) {
 
     if (result.meta && result.meta.code !== 200) {
         return null;
@@ -74,10 +74,40 @@ exports.dealPageData = function (result) {
 };
 
 /**
+ * format 事件 讨论 列表的数据格式
+ *
+ * @param {Array} arr, 列表数据
+ * @return {Array|null}
+ */
+detail.getEventTalkList = function (arr) {
+
+    if (!arr || arr.length <= 0) {
+        return null;
+    }
+
+    var list = [];
+
+    arr.forEach(function (item) {
+        if (item.type === 1) {
+            item.typeRaw = '讨论';
+            item.pageType = 'talk';
+        }
+        if (item.type === 2) {
+            item.typeRaw = '事件';
+            item.pageType = 'affair';
+        }
+
+        list.push(item);
+    });
+
+    return list;
+};
+
+/**
  * 展示、操作 权限
  *
  * @param {Object} rights, 后端权限数据
  */
-exports.rightsView = function (rights) {};
+detail.rightsView = function (rights) {};
 
-module.exports = exports;
+module.exports = detail;

@@ -7,6 +7,7 @@
 var config = require('../config');
 var view = require('./ui/view');
 var util = require('./util');
+var phoneMid = require('./phoneMid');
 var storage = require('./localstorage');
 
 if (!window.pageLog) {
@@ -227,12 +228,16 @@ Page.prototype.render = function (selector, data, options) {
 /**
  * 获取请求参数并可以根据需求改变参数
  *
- * @param {number} api, 接口
  * @param {Object} data, 数据
  * @return {Object}
  *
  */
-var getRequestData = function (api, data) {
+var getRequestData = function (data) {
+
+    if (!$.isPlainObject(data)) {
+        return {};
+    }
+
     var r = {};
 
     $.extend(r, data);
@@ -247,12 +252,19 @@ var getRequestData = function (api, data) {
  * @param {Object=} data 请求数据
  * @param {Object=} opts 选项
  * @param {string} opts.url 请求的host
- *
  * @return {Deferred}
  */
 Page.prototype.post = function (api, data, opts) {
+
     var dfd = new $.Deferred();
-    var reqData = getRequestData(api, data);
+    var isNetwork = phoneMid.isNetwork();
+
+    if (!isNetwork) {
+        dfd.reject({error: 'Connection None'});
+        return dfd;
+    }
+
+    var reqData = getRequestData(data);
 
     opts = opts || {};
 
@@ -261,7 +273,7 @@ Page.prototype.post = function (api, data, opts) {
     var promise = $.ajax({
         type: 'post',
         url: host,
-        data: reqData.data
+        data: reqData
     });
 
     // 请求完成

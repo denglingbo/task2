@@ -16,8 +16,10 @@
 	height: 37px;
 	font-size: 14px;
 	color: #707070;
+    /*
 	-webkit-border-image: url('../img/line-gray.png') 2 0 stretch;
     border-image: url('../img/line-gray.png') 2 0 stretch;
+    */
 }
 
 .componentAttachLine{
@@ -26,8 +28,10 @@
 	font-size: 14px;
 	color: #707070;
 	border-width: 1px 0 0 0;
+    /*
 	-webkit-border-image: url('../img/line-gray.png') 2 0 stretch;
     border-image: url('../img/line-gray.png') 2 0 stretch;
+    */
 }
 
 .componentAttachDetailWrap{

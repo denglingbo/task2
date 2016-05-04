@@ -4,17 +4,14 @@
  *
  * 事件详情页
  */
-// var Mustache = require('dep/mustache');
-// var CommonTpl = require('common/widgets/edit/new');
-// console.log(CommonTpl)
-require('./detail.scss');
+require('dep/plugins/attaches/css/attaches.css');
 require('dep/ui/virtualInput/virtualInput.scss');
 
-require('dep/plugins/attaches/css/attaches.css');
+require('./detail.scss');
 
 var config = require('../config');
-// var util = require('../common/util');
-var detailUtil = require('common/widgets/detail/detail.js');
+var util = require('../common/util');
+var detailUtil = require('common/widgets/detail/detail');
 // var phoneMid = require('../common/phoneMid.js');
 var Page = require('common/page');
 var virtualInput = require('dep/ui/virtualInput/virtualInput');
@@ -22,6 +19,8 @@ var virtualInput = require('dep/ui/virtualInput/virtualInput');
 // hefeng 上传组件
 var plugins = require('common/plugins');
 var editCommon = require('common/widgets/edit/editCommon');
+
+var Ticker = require('common/ui/ticker/ticker');
 
 var page = new Page();
 
@@ -91,24 +90,7 @@ var testArr = [
 page.enter = function () {
 
     this.render('#detail-main', this.data);
-// var dataa = {
-//     firstName: "Christophe",
-//     lastName: "Coenraets",
-//     address: "1 Main street",
-//     city: "Boston",
-//     state: "MA",
-//     zip: "02106",
-//         view: {
-//             placeholder: 'ha ha'
-//         }
-// };
 
-// var template = "<h1>{{firstName}} {{lastName}}</h1>";
-
-// var hh = Mustache.to_html(template, dataa, {
-//     newCommon: CommonTpl
-// });
-// console.log(hh)
     virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
@@ -122,40 +104,7 @@ page.bindEvents = function () {
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
-    var CLASSES = {
-        UNTICK: 'untick',
-        TICKED: 'ticked',
-        CIRCLE_SQUARE: 'tick-circle-to-square',
-        TICKED_ANIMATE: 'tick-ticked-animate',
-        SQUARE_CIRCLE: 'tick-square-to-circle',
-        UNTICK_ANIMATE: 'tick-untick-animate'
-    };
-
-    $('.tick').on('click', function () {
-
-        var $elem = $(this);
-
-        // 勾选
-        if ($elem.hasClass(CLASSES.UNTICK)) {
-            $elem
-                .removeClass(CLASSES.UNTICK)
-                .removeClass(CLASSES.TICKED)
-                .removeClass(CLASSES.UNTICK_ANIMATE)
-                .removeClass(CLASSES.SQUARE_CIRCLE)
-                .addClass(CLASSES.CIRCLE_SQUARE)
-                .addClass(CLASSES.TICKED_ANIMATE);
-        }
-        // 取消勾选
-        else {
-            $elem
-                .addClass(CLASSES.UNTICK)
-                .addClass(CLASSES.TICKED)
-                .removeClass(CLASSES.CIRCLE_SQUARE)
-                .removeClass(CLASSES.TICKED_ANIMATE)
-                .addClass(CLASSES.UNTICK_ANIMATE)
-                .addClass(CLASSES.SQUARE_CIRCLE);
-        }
-    });
+    new Ticker('.tick');
 };
 
 /**
@@ -166,7 +115,12 @@ page.bindEvents = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.AFFAIR_DETAIL_URL);
+
+    /* eslint-disable */
+    var promise = page.post(config.API.AFFAIR_DETAIL_URL, {
+        affair_id: util.params('id')
+    });
+    /* eslint-enable */
 
     promise
         .done(function (result) {

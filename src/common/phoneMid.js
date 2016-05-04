@@ -8,14 +8,42 @@ var config = require('../config');
 var util = require('./util');
 var storage = require('./localstorage');
 
-var exports = {};
+var middleware = {};
+
+/**
+ * 判断网络状态
+ *
+ * @return {boolean} 是否联网
+ */
+middleware.isNetwork = function () {
+    var networkState = null;
+
+    // 非手机环境不判断
+    if (!navigator || !navigator.connection) {
+        return true;
+    }
+
+    try {
+        networkState = navigator.connection.type;
+
+        if (networkState === Connection.NONE) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    catch (e) {
+        // throw 'get navigator.connection.type failed!'
+    }
+};
 
 /**
  * 获取 uid, uid 是在页面入口位置传递进来，并且通过 ls 进行持续保存
  *
  * @return {string} uid
  */
-exports.uid = function () {
+middleware.uid = function () {
     var data = storage.getData(config.const.TASK_PARAMS);
     var uid = util.params('uid') || data.uid;
 
@@ -29,7 +57,7 @@ exports.uid = function () {
  * @return {string} companyId
  *
  */
-exports.companyId = function (cid) {
+middleware.companyId = function (cid) {
     // localstorage
     var data = storage.getData(config.const.TASK_PARAMS);
 
@@ -52,7 +80,7 @@ exports.companyId = function (cid) {
  * @return {string} id@companyId
  *
  */
-exports.makeJid = function (id, cid) {
+middleware.makeJid = function (id, cid) {
     cid = cid || this.companyId(cid);
 
     if (cid === null) {
@@ -69,7 +97,7 @@ exports.makeJid = function (id, cid) {
  * @return {string} id
  *
  */
-exports.takeJid = function (jid) {
+middleware.takeJid = function (jid) {
     var jids = jid.toString().split('@');
     return jids && jids.length === 2 ? jids[0] : jid;
 };
@@ -83,7 +111,7 @@ exports.takeJid = function (jid) {
  * @return {Array} 合并过的数组
  *
  */
-exports.makeArray = function (args) {
+middleware.makeArray = function (args) {
     var temp = [];
 
     // 如果是对象，则只把 value 作为数组的项
@@ -131,7 +159,7 @@ exports.makeArray = function (args) {
  * @return {Array}
  *
  */
-exports.mergeObject2Array = function (arr1, arr2, key) {
+middleware.mergeObject2Array = function (arr1, arr2, key) {
     var arr = arr1;
 
     arr.forEach(function (arrItem) {
@@ -155,7 +183,7 @@ exports.mergeObject2Array = function (arr1, arr2, key) {
  * @return {Deferred}
  *
  */
-exports.getPubData = function (options) {
+middleware.getPubData = function (options) {
     var dfd = new $.Deferred();
 
     /* eslint-disable */
@@ -184,7 +212,7 @@ exports.getPubData = function (options) {
  * @return {Deferred}
  *
  */
-exports.getUserInfo = function (jids, cid, dataFlag) {
+middleware.getUserInfo = function (jids, cid, dataFlag) {
     var me = this;
 
     if (!jids || jids.length <= 0) {
@@ -229,7 +257,7 @@ exports.getUserInfo = function (jids, cid, dataFlag) {
  * @return {Deferred}
  *
  */
-exports.getUserIcon = function (jids, cid) {
+middleware.getUserIcon = function (jids, cid) {
     var dfd = new $.Deferred();
     var me = this;
     var arr = jids;
@@ -283,7 +311,7 @@ exports.getUserIcon = function (jids, cid) {
  * @return {Deferred}
  *
  */
-exports.getUserAndPhoto = function (jids, cid) {
+middleware.getUserAndPhoto = function (jids, cid) {
     var dfd = new $.Deferred();
     var me = this;
     var promiseList = [this.getUserInfo(jids, cid), this.getUserIcon(jids, cid)];
@@ -303,4 +331,4 @@ exports.getUserAndPhoto = function (jids, cid) {
     return dfd;
 };
 
-module.exports = exports;
+module.exports = middleware;
