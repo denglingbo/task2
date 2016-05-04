@@ -91,10 +91,21 @@ $star-size: rem(16px);
     &.follow {
         background-position: 0 0;
     }
+}
 
-    &:active {
-        @extend .follow;
-    }
+/**
+ * 计数器
+ */
+.count {
+    display: inline-block;
+    padding: 0 rem(2px);
+    min-width: rem(14px);
+    text-align: center;
+    height: rem(18px);
+    background: $red;
+    border-radius: 10px;
+    color: $white;
+    font-size: rem(12px);
 }
 
 /**

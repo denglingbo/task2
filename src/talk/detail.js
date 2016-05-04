@@ -29,14 +29,15 @@ page.enter = function () {
     virtualInput('.goalui-fixedinput');
 
     this.ticker = new Ticker('.tick', {
-        async: true
+        async: true,
+        animate: false
     });
 
     this.bindEvents();
 };
 
 page.bindEvents = function () {
-    // var me = this;
+    var me = this;
 
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
@@ -52,14 +53,45 @@ page.bindEvents = function () {
         }
     });
 
-    this.ticker.on('click', function (isCurTicked) {
-        // 0: 取消
-        // 1: 关注
-        // var changeStatus = isCurTicked ? 0 : 1;
+    // 完成按钮点击事件
+    var map = {
+        0: {
+            done: 'untick',
+            fail: 'ticked'
+        },
+        1: {
+            done: 'ticked',
+            fail: 'untick'
+        }
+    };
 
-        // var promise = page.post(config.API.TASK_FOLLOW, {
-        //     // task_id
-        // });
+    this.ticker.on('click', function (isCurTicked) {
+        var myTicker = this;
+        // 0: 取消
+        // 1: 完成
+        var changeStatus = isCurTicked ? 0 : 1;
+
+        /* eslint-disable */
+        var promise = page.post(config.API.TASK_FOLLOW, {
+            task_id: me.data.task_id,
+            level: changeStatus
+        });
+        /* eslint-enable */
+
+        var type = map[changeStatus];
+
+        promise
+            .done(function (result) {
+                if (result && result.meta.code === 200) {
+                    myTicker[type.done]();
+                }
+                else {
+                    myTicker[type.fail]();
+                }
+            })
+            .fail(function () {
+                myTicker[type.fail]();
+            });
     });
 };
 

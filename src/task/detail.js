@@ -132,10 +132,25 @@ page.bindEvents = function () {
 
 };
 
+/**
+ * 添加或取消关注
+ *
+ * @param {Element} target, 点击的元素
+ */
 page.follow = function (target) {
     var me = this;
     var $elem = $(target);
     var status = 0;
+    var map = {
+        0: {
+            done: 'removeClass',
+            fail: 'addClass'
+        },
+        1: {
+            done: 'addClass',
+            fail: 'removeClass'
+        }
+    };
 
     // 取消关注
     if ($elem.hasClass('follow')) {
@@ -146,12 +161,27 @@ page.follow = function (target) {
         status = 1;
     }
 
+    var type = map[status];
+
     /* eslint-disable */
     var promise = page.post(config.API.TASK_FOLLOW, {
         task_id: me.data.task_id,
         level: status
     });
     /* eslint-enable */
+
+    promise
+        .done(function (result) {
+            if (result && result.meta.code === 200) {
+                $elem[type.done]('follow');
+            }
+            else {
+                $elem[type.fail]('follow');
+            }
+        })
+        .fail(function () {
+            $elem[type.fail]('follow');
+        });
 };
 
 /**

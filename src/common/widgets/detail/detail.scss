@@ -132,20 +132,7 @@
                 box-align: center;
 
                 em {
-                    color: $light-gray;
                     vertical-align: middle;
-
-                    &.count {
-                        display: inline-block;
-                        text-align: center;
-                        width: rem(18px);
-                        height: rem(18px);
-                        line-height: rem(18px);
-                        background: $red;
-                        border-radius: 100%;
-                        color: $white;
-                        font-size: rem(12px);
-                    }
                 }
 
                 .arrow {

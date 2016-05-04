@@ -3,6 +3,7 @@
  * @author deo
  *
  * 点击加载功能，不需要指定内容容器，该组建点击之后会返回 data
+ * require ticker.scss
  */
 
 require('./listLoader.scss');

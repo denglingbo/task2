@@ -2,7 +2,8 @@
  * @file ticker.js
  * @author deo
  *
- * 点击变打勾
+ * 点击单选按钮变成打勾的动画效果
+ * require ticker.scss
  */
 
 require('./ticker.scss');
@@ -10,16 +11,20 @@ require('./ticker.scss');
 var Listener = require('common/listener');
 
 /**
- * 变打勾
+ * 打勾的动画函数包
  *
  * @param {Element|selector} target, 元素
  * @param {Ojbect} options, 配置项
+ *      @param {boolean} options.async 是否是点击之后发送异步请求
+ *          options.async = true，组件需要在请求完成之后，在外部来设置点击后状态
+ *      @param {boolean} options.animate 是否需要动画
  */
 var Ticker = function (target, options) {
     var me = this;
 
     me.opts = {
-        async: false
+        async: false,
+        animate: true
     };
 
     this.$elem = $(target);
@@ -41,8 +46,22 @@ var CLASSES = {
 Ticker.prototype = new Listener();
 
 $.extend(Ticker.prototype, {
+
     init: function () {
+        this.addDom();
+
         this.bindEvents();
+    },
+
+    addDom: function () {
+        this.$elem.html(
+            '<div class="tick-inner">'
+                + '<span class="tick-top"></span>'
+                + '<span class="tick-right"></span>'
+                + '<span class="tick-bottom"></span>'
+                + '<span class="tick-left"></span>'
+            + '</div>'
+        );
     },
 
     bindEvents: function () {
@@ -77,24 +96,44 @@ $.extend(Ticker.prototype, {
         }
     },
 
+    /**
+     * 勾选
+     */
     ticked: function () {
-        this.$elem
-            .removeClass(CLASSES.UNTICK)
-            .removeClass(CLASSES.TICKED)
-            .removeClass(CLASSES.UNTICK_ANIMATE)
-            .removeClass(CLASSES.SQUARE_CIRCLE)
-            .addClass(CLASSES.CIRCLE_SQUARE)
-            .addClass(CLASSES.TICKED_ANIMATE);
+        if (!this.opts.animate) {
+            this.$elem
+                .removeClass(CLASSES.UNTICK)
+                .addClass(CLASSES.TICKED);
+        }
+        else {
+            this.$elem
+                .removeClass(CLASSES.UNTICK)
+                .removeClass(CLASSES.TICKED)
+                .removeClass(CLASSES.UNTICK_ANIMATE)
+                .removeClass(CLASSES.SQUARE_CIRCLE)
+                .addClass(CLASSES.CIRCLE_SQUARE)
+                .addClass(CLASSES.TICKED_ANIMATE);
+        }
     },
 
+    /**
+     * 取消
+     */
     untick: function () {
-        this.$elem
-            .addClass(CLASSES.UNTICK)
-            .addClass(CLASSES.TICKED)
-            .removeClass(CLASSES.CIRCLE_SQUARE)
-            .removeClass(CLASSES.TICKED_ANIMATE)
-            .addClass(CLASSES.UNTICK_ANIMATE)
-            .addClass(CLASSES.SQUARE_CIRCLE);
+        if (!this.opts.animate) {
+            this.$elem
+                .addClass(CLASSES.UNTICK)
+                .removeClass(CLASSES.TICKED);
+        }
+        else {
+            this.$elem
+                .addClass(CLASSES.UNTICK)
+                .addClass(CLASSES.TICKED)
+                .removeClass(CLASSES.CIRCLE_SQUARE)
+                .removeClass(CLASSES.TICKED_ANIMATE)
+                .addClass(CLASSES.UNTICK_ANIMATE)
+                .addClass(CLASSES.SQUARE_CIRCLE);
+        }
     }
 });
 

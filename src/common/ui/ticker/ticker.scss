@@ -263,7 +263,6 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
     /**
      * [START circle to square] {change to ticked} 圆形变方形
      */
-    
     /* 首先从圆形变成方形 */
     &.tick-circle-to-square {
         
@@ -316,7 +315,6 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
     /**
      * [START square to circle] {change to untick}
      */
-
     &.tick-untick-animate {
 
         .tick-inner {
@@ -325,7 +323,7 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
             transform: rotate(0deg);
             transition: transform $ticked-step-dur * 3 $cubic;
             // 手动修正到中心
-            transform-origin: $ticked-inset * .5 $ticked-inset * .5;
+            // transform-origin: $ticked-inset * .5 $ticked-inset * .5;
 
             span {
                 border-radius: 0;
