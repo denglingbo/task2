@@ -434,4 +434,46 @@ util.formatDateToNow = function (date, now) {
     return '更新时间 ' + util.dateformat(date, true);
 };
 
+/**
+ * 转换string驼峰
+ *
+ * @param {string} str, 需要转换的字符串
+ * @return {string} 转换后的驼峰命名
+ */
+util.camelCase = function (str) {
+    return str.replace(/_+(.)?/g, function (str, e) {
+        return e ? e.toUpperCase() : '';
+    });
+};
+
+/**
+ * 附件传入data key转为 camelCase
+ *
+ * @param {Array} arr, 附件传入data.attachements
+ * @return {Array}, 属性转换成驼峰命名的对象的集合
+ */
+util.transKey = function (arr) {
+    var newArr = [];
+    var me = this;
+    if ($.isArray(arr)) {
+        newArr = arr;
+    }
+    else if (arr instanceof Object) {
+        newArr.push(arr);
+    }
+    var outArr = [];
+    var newObj = {};
+    for (var i = 0, len = newArr.length; i < len; i++) {
+        var item = newArr[i];
+        newObj = {};
+        for (var key in item) {
+            if (item.hasOwnProperty(key)) {
+                newObj[me.camelCase(key)] = item[key];
+            }
+        }
+        outArr.push(newObj);
+    }
+    return outArr;
+};
+
 module.exports = util;

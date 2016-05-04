@@ -1,5 +1,7 @@
 <div class="edit-title-wrap">
-    <textarea id="edit-title" class="input" placeholder="请输入{{view.placeholder}}标题(必填)">{{title}}</textarea>
+    <div class="title-wrap">
+        <textarea id="edit-title" class="input" contenteditable="plaintext-only" data-placeholder="请输入{{view.placeholder}}标题(必填)">{{title}}</textarea>
+    </div>
     <span class="err-tip"></span>
     <i class="close-x title-close hide"></i>
 </div>

@@ -4,15 +4,28 @@
  * 新建、编辑任务、事件、讨论的公共API
  *
  */
-var plugins = require('common/plugins');
+var util = require('common/util');
+var attach = require('common/attach');
+var editCom = {};
 
+// mobiscroll 公共参数
+var mobiOptions = {
+    theme: 'android-holo-light',
+    mode: 'scroller',
+    // ios 底部上滑, android 中间显示
+    display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
+    lang: 'zh',
+    buttons: ['cancel', 'set'],
+    height: 50
+};
 /**
  * 验证不通过弹窗
  *
  * @param {Array} arr, 需要弹窗提示的提示语集合
  *
  */
-exports.validAlert = function (arr) {
+editCom.validAlert = function (arr) {
+    var me = this;
     var $alertDom = $('.alert-length-limit');
     var len = arr.length;
     var time = 0;
@@ -30,7 +43,7 @@ exports.validAlert = function (arr) {
     setTimeout(function () {
         $alertDom.addClass('hide');
         arr.shift()
-        exports.validAlert(arr);
+        me.validAlert(arr);
     },
     time);
 };
@@ -41,7 +54,7 @@ exports.validAlert = function (arr) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.cancelValidate = function (validObj) {
+editCom.cancelValidate = function (validObj) {
     if(validObj.isEdit) {
         var cancelButton = {
             title: '取消',
@@ -59,62 +72,21 @@ exports.cancelValidate = function (validObj) {
         CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
     }
 };
-/**
- * 转换string驼峰
- *
- * @param {string} str, 需要转换的字符串
- *
- * @return {string} 转换后的驼峰命名
- */
-exports.camelCase = function (str) {
-    return str.replace(/_+(.)?/g, function (str, e) {
-        return e ? e.toUpperCase() : '';
-    });
-};
-
-/**
- * 附件传入data key转为 camelCase
- *
- * @param {Array} arr, 附件传入data.attachements
- *
- * @return {Array}, 属性转换成驼峰命名的对象的集合
- */
-exports.transKey = function (arr) {
-    var newArr = [];
-    if ($.isArray(arr)) {
-        newArr = arr;
-    }
-    else if (arr instanceof Object) {
-        newArr.push(arr);
-    }
-    var outArr = [];
-    var newObj = {};
-    for (var i = 0, len = newArr.length; i < len; i++) {
-        var item = newArr[i];
-        newObj = {};
-        for (var key in item) {
-            if (item.hasOwnProperty(key)) {
-                newObj[exports.camelCase(key)] = item[key];
-            }
-        }
-        outArr.push(newObj)
-    }
-    return outArr;
-};
 
 /**
  * 切换关闭按钮的显示与隐藏
  *
- * @param {Object} textDom, 当前输入框dom对象
+ * @param {string} id, 当前输入框的id
  * @param {number} textLength, 输入框内文字长度
  *
  */
-exports.toggleX = function (textDom, textLength) {
+editCom.toggleX = function (id, textLength) {
+    var $close = $('.' + id + '-wrap .close-x');
     if (!textLength) {
-        $(textDom).parent().find('.close-x').addClass('hide');
+        $close.addClass('hide');
     }
     else {
-        $(textDom).parent().find('.close-x').removeClass('hide');
+        $close.removeClass('hide');
     }
 };
 
@@ -124,26 +96,7 @@ exports.toggleX = function (textDom, textLength) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-// exports.bindClear = function (validObj) {
-//     $('.close-x').on('click', function () {
-//         var $parentDom = $(this).parent();
-//         var $textDom = $parentDom.find('.input');
-//         if ($textDom.val().length) {
-//             validObj.isEdit = true;
-//         }
-//         $textDom.val('');
-//         $parentDom.find('.err-tip').text('');
-//         $(this).addClass('hide');
-//         if ($parentDom.hasClass('edit-title-wrap')) {
-//             validObj.title = false;
-//         }
-//         else {
-//             validObj.content = true;
-//         }
-//     });
-// };
-
-exports.bindTitleClear = function (validObj) {
+editCom.bindTitleClear = function (validObj) {
     $('.edit-title-wrap .close-x').on('click', function () {
         var $parentDom = $(this).parent();
         var $textDom = $('#edit-title');
@@ -163,14 +116,14 @@ exports.bindTitleClear = function (validObj) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.bindTitle = function (validObj) {
+editCom.bindTitle = function (validObj) {
+    var me = this;
     $('#edit-title').on('input propertychange', function () {
-        var me = this;
-        var length = $(me).val().length;
-        var errTip = $(me).next('.err-tip');
+        var length = $(this).val().length;
+        var errTip = $(this).next('.err-tip');
         validObj.isEdit = true;
 
-        exports.toggleX(me, length);
+        me.toggleX('edit-title', length);
 
         if (!length || length > 50) {
             validObj.title = false;
@@ -189,36 +142,10 @@ exports.bindTitle = function (validObj) {
 };
 
 /**
- * bind content文本框的事件
- *
- * @param {Object} validObj, 验证信息对象
- *
- */
-// exports.bindContent = function (validObj) {
-//     $('#edit-content').on('input propertychange', function () {
-//         var me = this;
-//         var length = $(me).val().length;
-//         var errTip = $(me).next('.err-tip');
-//         validObj.isEdit = true;
-
-//         exports.toggleX(me, length);
-
-//         if (length > 50000) {
-//             validObj.content = false;
-//             errTip.text(50000 - length);
-//         }
-//         else {
-//             validObj.content = true;
-//             errTip.text('');
-//         }
-//     });
-// };
-
-/**
  * bind 文本框获得焦点事件
  *
  */
-exports.bindGetFocus = function () {
+editCom.bindGetFocus = function () {
     $('.edit-title-wrap').on('click', function () {
         $('#edit-title').focus();
     });
@@ -229,31 +156,34 @@ exports.bindGetFocus = function () {
 };
 
 /**
- * 编辑页面初始化close按钮和提交验证
+ * 编辑页面title初始化close按钮和提交验证
  *
  * @param {Object} validObj, 验证信息对象
  *
  */
-// exports.initTextClose = function (validObj) {
-//     $.each($('.input'), function (index, item) {
-//         var itemValue = $(item).val();
-//         var itemLen = itemValue.length;
-//         exports.toggleX($(item), itemValue);
-//         if (item.id.indexOf('title') && itemLen > 0 && itemLen <= 50) {
-//             validObj.title = true;
-//         }
-//         if (item.id.indexOf('content') && itemLen > 50000) {
-//             validObj.content = false;
-//         }
-//     });
-// };
-exports.initTitleClose = function (validObj) {
-        var itemValue = $('#edit-title').val();
-        var itemLen = itemValue.length;
-        this.toggleX($('#edit-title'), itemValue);
-        if (itemLen > 0 && itemLen <= 50) {
-            validObj.title = true;
-        }
+editCom.initTitleClose = function (validObj) {
+    var itemValue = $('#edit-title').val();
+    var itemLen = itemValue.length;
+    this.toggleX('edit-title', itemLen);
+    if (itemLen > 0 && itemLen <= 50) {
+        validObj.title = true;
+    }
+};
+
+/**
+ * 编辑页面content初始化close按钮和提交验证
+ *
+ * @param {Object} validObj, 验证信息对象
+ *
+ */
+editCom.initTitleClose = function (validObj) {
+    var $textDom = $('#edit-contnet');
+    var itemValue = $textDom.text();
+    var itemLen = itemValue.length;
+    this.toggleX('edit-content', itemLen);
+    if (itemLen <= 50000) {
+        validObj.content = true;
+    }
 };
 
 /**
@@ -263,7 +193,7 @@ exports.initTitleClose = function (validObj) {
  * @param {Object} validObj, 验证信息对象
  *
  */
-exports.submitValid = function (submitFn, validObj) {
+editCom.submitValid = function (submitFn, validObj) {
     var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
     if (flag) {
@@ -287,7 +217,7 @@ exports.submitValid = function (submitFn, validObj) {
             arr.push('附件尚未传输完毕');
         }
     }
-    exports.validAlert(arr);
+    this.validAlert(arr);
 };
 
 /**
@@ -297,7 +227,7 @@ exports.submitValid = function (submitFn, validObj) {
  * @param {Object} infoData, 初始化参数
  * @param {Object} validObj, 提交验证信息
  */
-exports.initImportanceLevel = function (selector, infoData, validObj) {
+editCom.initImportanceLevel = function (selector, infoData, validObj) {
     var data = {
         headerText: '紧急程度',
         showInput: false,
@@ -331,7 +261,7 @@ exports.initImportanceLevel = function (selector, infoData, validObj) {
             validObj.isEdit = true;
         }
     };
-    plugins.initMobiscroll('select', selector, data);
+    this.initMobiscroll('select', selector, data);
 };
 
 /**
@@ -342,7 +272,7 @@ exports.initImportanceLevel = function (selector, infoData, validObj) {
  * @param {Object} validObj, 提交验证信息
  * @return {Object} 附件对象
  */
-exports.initEditAttach = function (selector, attachData, validObj) {
+editCom.initEditAttach = function (selector, attachData, validObj) {
     var attachOptions = {
         // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
         originAttaches: [],
@@ -356,8 +286,19 @@ exports.initEditAttach = function (selector, attachData, validObj) {
             validObj.isEdit = true;
         }
     };
-    var attach = plugins.initAttach(attachOptions, exports.transKey(attachData), selector);
+    var attach = attach.initAttach(attachOptions, util.transKey(attachData), selector);
     return attach;
-}
+};
 
-module.exports = exports;
+/**
+ * 初始化mobiscroll
+ *
+ * @param {string} method, 初始化mobiscroll的种类
+ * @param {string} selector, 选择器字符串
+ * @param {Object} data, 初始化参数
+ */
+editCom.initMobiscroll = function (method, selector, data) {
+    $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
+};
+
+module.exports = editCom;
