@@ -19,18 +19,26 @@ var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
 
+var tmplTitle = require('common/widgets/detail/title');
+var tmplDescribe = require('common/widgets/detail/describe');
+
 var page = new Page();
 
 page.enter = function () {
     this.$main = $('.main');
 
-    this.render('#detail-main', this.data);
+    this.data.describeTitle = '讨论描述';
+    this.render('#detail-main', this.data, {
+        partials: {
+            title: tmplTitle,
+            describe: tmplDescribe
+        }
+    });
 
     virtualInput('.goalui-fixedinput');
 
     this.ticker = new Ticker('.tick', {
-        async: true,
-        animate: false
+        async: true
     });
 
     this.bindEvents();

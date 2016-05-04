@@ -53,7 +53,7 @@ view.render = function (selector, data, options) {
         template = opts.tmpl;
     }
 
-    var html;
+    var html = '';
 
     if (opts.partials) {
         html = Mustache.to_html(template, data, opts.partials);

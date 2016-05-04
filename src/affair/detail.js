@@ -17,10 +17,12 @@ var Page = require('common/page');
 var virtualInput = require('dep/ui/virtualInput/virtualInput');
 
 // hefeng 上传组件
-var plugins = require('common/plugins');
-var editCommon = require('common/widgets/edit/editCommon');
+var AttachMid = require('common/attachMid');
 
 var Ticker = require('common/ui/ticker/ticker');
+
+var tmplTitle = require('common/widgets/detail/title');
+var tmplDescribe = require('common/widgets/detail/describe');
 
 var page = new Page();
 
@@ -89,13 +91,19 @@ var testArr = [
 
 page.enter = function () {
 
-    this.render('#detail-main', this.data);
+    this.data.describeTitle = '事件描述';
+    this.render('#detail-main', this.data, {
+        partials: {
+            title: tmplTitle,
+            describe: tmplDescribe
+        }
+    });
 
     virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
 
-    plugins.initAttach(attachOptions, editCommon.transKey(testArr), '.comments-attach');
+    AttachMid.initAttach(attachOptions, util.transKey(testArr), '.comments-attach');
 
 };
 

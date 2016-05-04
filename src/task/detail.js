@@ -16,6 +16,9 @@ var Page = require('common/page');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
 
+var tmplTitle = require('common/widgets/detail/title');
+var tmplDescribe = require('common/widgets/detail/describe');
+
 var page = new Page();
 
 page.enter = function () {
@@ -23,7 +26,15 @@ page.enter = function () {
 
     me.$main = $('.main');
 
-    me.render('#detail-main', me.data);
+    me.data.isTaskPage = true;
+    me.data.describeTitle = '任务描述';
+
+    me.render('#detail-main', me.data, {
+        partials: {
+            title: tmplTitle,
+            describe: tmplDescribe
+        }
+    });
 
     var requestPageNum = 5;
     // 初始化一个点击加载组件

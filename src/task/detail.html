@@ -13,25 +13,8 @@
 
         <!-- title -->
         <script id="detail-main-tmpl" type="x-tmpl-mustache">
-        <div class="layout detail-title">
-            <div class="detail-title-main">
-                <p class="detail-title-top">{{ title }}</p>
-                <p>{{ updateDateRaw }}</p>
-            </div>
-
-            <div class="detail-title-right">
-                <p class="star"><em></em></p>
-                <p class="detail-title-state state-doing">{{ statusText }}</p>
-            </div>
-        </div>
-
-        <div class="layout detail-comments">
-            <div class="sub-title">任务描述</div>
-
-            <div class="layout-section">{{& content }}</div>
-            <div class="layout-section">紧要程度: {{ importanceRaw }}</div>
-            <div class="layout-section">完成时间: 尽快完成</div>
-        </div>
+        {{> title}}
+        {{> describe}}
 
         <!-- 成员 -->
         <dl id="partner" class="layout-list partner">

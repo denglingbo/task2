@@ -14,33 +14,8 @@
 
         <!-- title -->
         <script id="detail-main-tmpl" type="x-tmpl-mustache">
-        <div class="layout detail-title">
-            <div class="detail-title-control">
-                <div class="detail-checkbox">
-        
-                    <div class="tick untick"></div>
-
-                </div>
-            </div>
-
-            <div class="detail-title-main">
-                <p class="detail-title-top">{{ title }}</p>
-                <p>{{ updateDateRaw }}</p>
-            </div>
-
-            <div class="detail-title-right">
-                <p class="detail-title-state detail-title-state-fixed state-doing">{{ statusText }}</p>
-            </div>
-        </div>
-
-        <div class="layout detail-comments">
-            <div class="sub-title">事件描述</div>
-
-            <div class="layout-section">{{& content }}</div>
-            <div class="layout-section">紧要程度: {{ importanceRaw }}</div>
-            <div class="layout-section">完成时间: 尽快完成</div>
-        </div>
-
+        {{> title}}
+        {{> describe}}
 
         <!-- 评论 -->
         <dl class="layout-list comments">
