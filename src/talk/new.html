@@ -6,31 +6,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="/dep/plugins/mobiscroll/css/mobiscroll-2.17.0.css">
-    <link rel="stylesheet" href="/dep/plugins/attaches/css/attaches.css">
 </head>
 <body>
     <div class="main">
     
-        <div class="edit-container">
-            <div id="edit-main"></div>
-            <div id="select-wrap"></div>
+        <div id="edit-container" class="edit-container">
+
         </div>
     </div>
-    <script id="select-wrap-tmpl" type="x-tmpl-mustache">
-        <div class="edit-option">
-            <div id="urgencyBlock" class="edit-item">
-                <span class='title'>紧要程度</span>
-                <div class="right">
-                    <span class="value">普通</span>
+    <script id="edit-container-tmpl" type="x-tmpl-mustache">
+        {{> editMain}}
+        {{#view}}
+            <div class="edit-option">
+                <div id="{{id}}" class="edit-item">
+                    <span class='title'>{{title}}</span>
+                    <div class="right">
+                        <span class="value">{{value}}</span>
+                    </div>
                 </div>
             </div>
-            <div id="attends" class="edit-item">
-                <span class='title'>参与人</span>
-                <div class="right">
-                    <span class="value">水水</span>
-                </div>
-            </div>
-        </div>
+        {{/view}}
+        {{> alertBox}}
     </script>
     <script type="text/javascript" src="/cordova.js"></script>
 </body>

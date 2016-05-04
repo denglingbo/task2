@@ -1,11 +1,11 @@
 /**
- * @file new.js
+ * @file editCommon.js
  * @author hefeng
  * 新建、编辑任务、事件、讨论的公共API
  *
  */
 var util = require('common/util');
-var attach = require('common/attach');
+var attachMid = require('common/attachMid');
 var editCom = {};
 
 // mobiscroll 公共参数
@@ -74,74 +74,6 @@ editCom.cancelValidate = function (validObj) {
 };
 
 /**
- * 切换关闭按钮的显示与隐藏
- *
- * @param {string} id, 当前输入框的id
- * @param {number} textLength, 输入框内文字长度
- *
- */
-editCom.toggleX = function (id, textLength) {
-    var $close = $('.' + id + '-wrap .close-x');
-    if (!textLength) {
-        $close.addClass('hide');
-    }
-    else {
-        $close.removeClass('hide');
-    }
-};
-
-/**
- * bind 文本框的清除按钮
- *
- * @param {Object} validObj, 验证信息对象
- *
- */
-editCom.bindTitleClear = function (validObj) {
-    $('.edit-title-wrap .close-x').on('click', function () {
-        var $parentDom = $(this).parent();
-        var $textDom = $('#edit-title');
-        if ($textDom.val().length) {
-            validObj.isEdit = true;
-        }
-        $textDom.val('');
-        $parentDom.find('.err-tip').text('');
-        $(this).addClass('hide');
-        validObj.title = false;
-    });
-};
-
-/**
- * bind title文本框的事件
- *
- * @param {Object} validObj, 验证信息对象
- *
- */
-editCom.bindTitle = function (validObj) {
-    var me = this;
-    $('#edit-title').on('input propertychange', function () {
-        var length = $(this).val().length;
-        var errTip = $(this).next('.err-tip');
-        validObj.isEdit = true;
-
-        me.toggleX('edit-title', length);
-
-        if (!length || length > 50) {
-            validObj.title = false;
-        }
-        else {
-            validObj.title = true;
-        }
-
-        if (length > 50) {
-            errTip.text(50 - length);
-        }
-        else {
-            errTip.text('');
-        }
-    });
-};
-
-/**
  * bind 文本框获得焦点事件
  *
  */
@@ -153,37 +85,6 @@ editCom.bindGetFocus = function () {
     $('.edit-words').on('click', function () {
         $('#edit-content').focus();
     });
-};
-
-/**
- * 编辑页面title初始化close按钮和提交验证
- *
- * @param {Object} validObj, 验证信息对象
- *
- */
-editCom.initTitleClose = function (validObj) {
-    var itemValue = $('#edit-title').val();
-    var itemLen = itemValue.length;
-    this.toggleX('edit-title', itemLen);
-    if (itemLen > 0 && itemLen <= 50) {
-        validObj.title = true;
-    }
-};
-
-/**
- * 编辑页面content初始化close按钮和提交验证
- *
- * @param {Object} validObj, 验证信息对象
- *
- */
-editCom.initTitleClose = function (validObj) {
-    var $textDom = $('#edit-contnet');
-    var itemValue = $textDom.text();
-    var itemLen = itemValue.length;
-    this.toggleX('edit-content', itemLen);
-    if (itemLen <= 50000) {
-        validObj.content = true;
-    }
 };
 
 /**
@@ -218,6 +119,20 @@ editCom.submitValid = function (submitFn, validObj) {
         }
     }
     this.validAlert(arr);
+};
+
+/**
+ * 验证是否能提交，进行最后的验证
+ *
+ * @param {Object} title, 标题的phoneInput对象
+ * @param {Object} content, 描述的phoneInput对象
+ * @param {Object} attach, 附件对象
+ * @param {Object} validObj, 验证信息
+ */
+editCom.setValidObj = function (title, content, attach, validObj) {
+    validObj.content = content.isAllowSubmit();
+    validObj.title = title.isAllowSubmit() && $('#edit-title').text();
+    validObj.isAttachesReady = attach.isAttachesReady();
 };
 
 /**
@@ -274,8 +189,6 @@ editCom.initImportanceLevel = function (selector, infoData, validObj) {
  */
 editCom.initEditAttach = function (selector, attachData, validObj) {
     var attachOptions = {
-        // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
-        originAttaches: [],
         dom: {
             // 附件容器DOM元素
             containerDOM: '#attachList',
@@ -286,8 +199,8 @@ editCom.initEditAttach = function (selector, attachData, validObj) {
             validObj.isEdit = true;
         }
     };
-    var attach = attach.initAttach(attachOptions, util.transKey(attachData), selector);
-    return attach;
+    var attachObj = attachMid.initAttach(attachOptions, util.transKey(attachData), selector);
+    return attachObj;
 };
 
 /**
@@ -300,5 +213,26 @@ editCom.initEditAttach = function (selector, attachData, validObj) {
 editCom.initMobiscroll = function (method, selector, data) {
     $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
 };
+
+/**
+ * 初始化完成时间填充字符串
+ *
+ * @param {time} time, 毫秒时间
+ * @return {string} 返回初始化的时间字符串
+ */
+editCom.initDoneTime = function (time) {
+    return time ? util.formatTime(time) : '尽快完成';
+}
+
+/**
+ * 初始化完成紧急程度填充字符串
+ *
+ * @param {number} level, 重要程度数字表示
+ * @return {string} 重要程度字符串表示
+ */
+editCom.initImportValue = function (level) {
+    var importanceLevel = ['普通', '重要', '紧急', '重要且紧急'];
+    return importanceLevel[level - 1];
+}
 
 module.exports = editCom;

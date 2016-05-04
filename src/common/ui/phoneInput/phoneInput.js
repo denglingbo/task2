@@ -4,8 +4,8 @@
  *
  * 模拟手机端输入框
  */
-
-
+require('./phoneInput.scss');
+var Listener = require('common/listener');
 
 /**
  * 模拟输入框
@@ -14,7 +14,7 @@
  */
 var PhoneInput = function (options) {
     var me = this;
-
+    /* eslint-disable */
     me.opts = {
         handler: '.phone-input',
         input: '.phone-input-main',
@@ -23,12 +23,15 @@ var PhoneInput = function (options) {
 
         button: false,
 
+        delete: false,
+
         selector: {
             placeholder: '.phone-input-placeholder',
-            limit: '.phone-input-limit'
+            limit: '.phone-input-limit',
+            delete: '.phone-input-delete'
         }
     };
-
+    /* eslint-enable */
     $.extend(me.opts, options);
 
     // 外层
@@ -42,7 +45,9 @@ var PhoneInput = function (options) {
 
 var controlItem = '.phone-input-item';
 
-PhoneInput.prototype = {
+PhoneInput.prototype = new Listener();
+
+$.extend(PhoneInput.prototype, {
 
     /**
      * 添加一些必须的dom 或者属性
@@ -92,6 +97,11 @@ PhoneInput.prototype = {
         // DOM button wrapper
         if (this.opts.button) {
             htmlStr += '<div class="phone-input-buttons"></div>';
+        }
+
+        // DOM button wrapper
+        if (this.opts.delete) {
+            htmlStr += '<div class="phone-input-delete"></div>';
         }
 
         return htmlStr;
@@ -172,6 +182,11 @@ PhoneInput.prototype = {
         if (isNull) {
             me.displayer('placeholder').show();
             me.displayer('limit').hide();
+            me.displayer('delete').hide();
+        }
+
+        if (isNotNull) {
+            me.displayer('delete').show();
         }
 
         // 隐藏 placeholder
@@ -218,6 +233,11 @@ PhoneInput.prototype = {
                     me.displayer('placeholder').show();
                 }
             });
+
+        me.elems.$delete.on('click', function () {
+            me.$input.text('');
+            me.inputStatusChange();
+        });
     },
 
     /**
@@ -270,6 +290,6 @@ PhoneInput.prototype = {
         var status = this.$main.attr('status');
         return status === 'unable' ? 0 : 1;
     }
-};
+});
 
 module.exports = PhoneInput;

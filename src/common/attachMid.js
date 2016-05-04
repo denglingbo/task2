@@ -1,5 +1,5 @@
 /**
- * @file plugins.js
+ * @file attachMid.js
  * @author hefeng
  * 组件调用公共API
  *

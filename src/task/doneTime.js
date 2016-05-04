@@ -9,7 +9,7 @@ require('./doneTime.scss');
 var config = require('config');
 var Page = require('common/page');
 var util = require('common/util');
-var plugins = require('common/plugins');
+var editCom = require('common/widgets/edit/editCommon');
 
 var page = new Page();
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
@@ -63,7 +63,7 @@ page.bindEvents = function () {
 
 page.initPlugin = function (initTime) {
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
-    plugins.initMobiscroll('datetime', '.custom-time', {
+    editCom.initMobiscroll('datetime', '.custom-time', {
         headerText: '<span class="dw-tab-data dw-tab-selected">日期</span><span class="dw-tab-time">时间</span>',
         minDate: new Date(date.y - 50, 0, 1),
         maxDate: new Date(date.y + 50, 11, 31, 23, 59, 59),

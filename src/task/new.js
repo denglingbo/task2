@@ -1,5 +1,5 @@
 /**
- * @file task.js
+ * @file new.js
  * @author hefeng
  * 新建任务页
  *
@@ -106,18 +106,10 @@ page.enter = function () {
 page.bindEvents = function () {
     var me = this;
 
-    editCom.bindTitleClear(valid);
-
-    editCom.bindTitle(valid);
-
-    // editCom.bindContent(valid);
-
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
-        valid.content = phoneInputContent.isAllowSubmit();
-        valid.title = phoneInputTitle.isAllowSubmit();
-        valid.isAttachesReady = attach.isAttachesReady();
+        editCom.setValidObj(phoneInputTitle, phoneInputContent, attach, valid);
         editCom.submitValid(me.submit, valid);
     });
 
@@ -134,7 +126,7 @@ page.bindEvents = function () {
             valid.isEdit = true;
             data = JSON.parse(data);
             me.data['end_time'] = data.endTime;
-            $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
+            $('#doneTime .value').text(editCom.initDoneTime(me.data['end_time']));
         });
     });
 
@@ -178,18 +170,46 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
     var template = require('common/widgets/edit/new');
-    // console.log(template)
-    var $content = $('#edit-main');
-
+    var alertTpl = require('common/widgets/edit/alert');
     var data = $.extend({}, me.data, {
-        view: {
-            placeholderTitle: '请输入任务标题(必填)',
-            placeholderContent: '请输入任务描述(选填)'
-        }
+        view: [
+            {
+                persons: [
+                    {
+                        id: 'principal',
+                        title: '负责人'
+                    },
+                    {
+                        id: 'attends',
+                        title: '参与人'
+                    }
+                ]
+            },
+            {
+                options: [
+                    {
+                        id: 'doneTime',
+                        title: '完成时间',
+                        /* eslint-disable */
+                        value: editCom.initDoneTime(me.data['end_time'])
+                        /* eslint-enable */
+                    },
+                    {
+                        id: 'urgencyBlock',
+                        title: '紧要程度',
+                        /* eslint-disable */
+                        value: editCom.initImportValue(me.data['importance_level'])
+                        /* eslint-enable */
+                    }
+                ]
+            }
+        ],
+        placeholderTitle: '请输入任务标题(必填)',
+        placeholderContent: '请输入任务描述(选填)'
     });
 
-    me.render($content, data, {
-        partials: {editMain: template}
+    me.render('#edit-container', data, {
+        partials: {editMain: template, alertBox: alertTpl}
     });
 };
 
@@ -203,30 +223,22 @@ page.initPlugin = function () {
     attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
 
     // 初始化富文本框
-
     phoneInputTitle = new PhoneInput({
-        handler: '.title-wrap',
-        input: '#edit-title',
-        limit: 50
+        'handler': '.title-wrap',
+        'input': '#edit-title',
+        'limit': 50,
+        'delete': true
     });
+
     phoneInputContent = new PhoneInput({
-        handler: '.content-wrap',
-        input: '#edit-content',
-        limit: 50000
+        'handler': '.content-wrap',
+        'input': '#edit-content',
+        'limit': 50000,
+        'delete': true
     });
 };
 
 page.initValue = function () {
-    var me = this;
-    // 设置默认值
-    var importanceLevel = ['普通', '重要', '紧急', '重要且紧急'];
-    /* eslint-disable */
-    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level'] - 1]);
-    $('#doneTime .value').text(me.data['end_time'] ? new Date(me.data['end_time']) : '尽快完成');
-    /* eslint-enable */
-    // 初始化文本框的关闭按钮
-    editCom.initTitleClose(valid);
-
     // TODO 修改存储数据
     selectValue.selectType = 1;
     localStorage.addData(principalSelectKey, selectValue);
@@ -238,7 +250,7 @@ page.submit = function () {
     var me = page;
     var dfd = new $.Deferred();
     me.data.attachements = attach.getModifyAttaches();
-    me.data.title = $('#edit-title').val();
+    me.data.title = $('#edit-title').text();
     me.data.content = $('#edit-content').text();
     /* eslint-disable */
     var promise = me.post(config.API.TASK_EDIT_URL, me.data);

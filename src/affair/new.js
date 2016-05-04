@@ -1,22 +1,25 @@
 /**
- * @file affair.js
+ * @file new.js
  * @author hefeng
  * 新建事件页, 编辑事件页面
  *
  */
 
 require('common/widgets/edit/new.scss');
-var plugins = require('common/plugins');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
-
+var PhoneInput = require('common/ui/phoneInput/phoneInput');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
 // 附件对象
 var attach = null;
+
+// 富文本对象
+var phoneInputTitle = null;
+var phoneInputContent = null;
 
 // 验证信息
 var valid = {
@@ -30,7 +33,6 @@ page.enter = function () {
     var me = this;
     me.loadPage();
     me.initPlugin();
-    me.initValue();
     me.bindEvents();
 };
 
@@ -40,19 +42,21 @@ page.enter = function () {
  */
 page.bindEvents = function () {
     var me = this;
-    editCom.bindTitleClear(valid);
-
-    editCom.bindTitle(valid);
-
-    // editCom.bindContent(valid);
 
     editCom.bindGetFocus();
 
     $('#submit').on('click', function () {
-        valid.isAttachesReady = attach.isAttachesReady();
+        editCom.setValidObj(phoneInputTitle, phoneInputContent, attach, valid);
         editCom.submitValid(me.submit, valid);
     });
 };
+
+function initAffairType() {
+    var types = ['待办', '求助', '汇报', '计划', '日志', '记录', '消息', '其他'];
+    /* eslint-disable */
+    return types[page.data['label_id']];
+    /* eslint-enable */
+}
 
 /**
  * 加载页面
@@ -60,15 +64,30 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
-
     var template = require('common/widgets/edit/new');
-    var $content = $('.edit-container');
-    me.renderFile($content, template, $.extend({}, me.data, {
-        view: {
-            affair: true,
-            placeholder: '事件'
-        }
-    }));
+    var alertTpl = require('common/widgets/edit/alert');
+    var data = $.extend({}, me.data, {
+        view: [
+            {
+                id: 'urgencyBlock',
+                title: '紧要程度',
+                /* eslint-disable */
+                value: editCom.initImportValue(me.data['importance_level'])
+                /* eslint-enable */
+            },
+            {
+                id: 'affairType',
+                title: '事件类型',
+                value: initAffairType()
+            }
+        ],
+        placeholderTitle: '请输入任务标题(必填)',
+        placeholderContent: '请输入任务描述(选填)'
+    });
+
+    me.render('#edit-container', data, {
+        partials: {editMain: template, alertBox: alertTpl}
+    });
 };
 
 page.initPlugin = function () {
@@ -77,7 +96,7 @@ page.initPlugin = function () {
     editCom.initImportanceLevel('#urgencyBlock', me.data, valid);
 
     // 事件类型
-    plugins.initMobiscroll('#affairType', {
+    editCom.initMobiscroll('select', '#affairType', {
         headerText: '事件类型',
         showInput: false,
         showMe: true,
@@ -129,25 +148,29 @@ page.initPlugin = function () {
 
     // 初始化附件组件
     attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
-};
 
-page.initValue = function () {
-    var me = this;
-    // 设置默认值
-    var importanceLevel = ['重要且紧急', '普通', '重要', '紧急'];
-    /* eslint-disable */
-    $('#urgencyBlock .value').text(importanceLevel[me.data['importance_level']]);
-    /* eslint-enable */
-    // 初始化文本框的关闭按钮
-    editCom.initTitleClose(valid);
+    // 初始化富文本框
+    phoneInputTitle = new PhoneInput({
+        'handler': '.title-wrap',
+        'input': '#edit-title',
+        'limit': 50,
+        'delete': true
+    });
+
+    phoneInputContent = new PhoneInput({
+        'handler': '.content-wrap',
+        'input': '#edit-content',
+        'limit': 50000,
+        'delete': true
+    });
 };
 
 page.submit = function () {
     var me = page;
     var dfd = new $.Deferred();
     me.data.attachements = attach.getModifyAttaches();
-    me.data.title = $('#edit-title').val();
-    me.data.content = $('#edit-content').val();
+    me.data.title = $('#edit-title').text();
+    me.data.content = $('#edit-content').text();
     /* eslint-disable */
     var promise = me.post(config.API.AFFAIR_EDIT_URL, me.data);
     console.log(me.data);

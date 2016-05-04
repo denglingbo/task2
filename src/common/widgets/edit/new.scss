@@ -47,7 +47,6 @@
 .edit-title-wrap,
 .edit-content-wrap {
 	position: relative;
-	padding: rem(15px) 0 0 rem(15px);
 	@include border-1px(bottom);
 	margin-top: rem(10px);
 	background-color: $white;
@@ -58,39 +57,36 @@
 	}
 }
 
-.err-tip {
-	position: absolute;
-	display: block;
-	width: rem(55px);
-	text-align: center;
-	right: 0;
-	font-size: rem(12px);
-	color: #fa575d;
-}
-
 .edit-title-wrap {
-	padding-bottom: rem(15px);
-
-	.err-tip {
-		bottom: rem(-12px);
-	}
+	padding: rem(15px) 0 rem(15px) rem(15px);
+	height: rem(80px);
 
 	.title-close {
 		top: rem(16px);
 	}
+	
+	.title-wrap {
+
+		.phone-input {
+
+		    &-placeholder {
+		        left: rem(20px);
+		    }
+
+		    &-limit {
+		        bottom: rem(-12px);
+		    }
+		}
+	}
 }
 
 .edit-content-wrap {
-
+	padding-left: rem(15px);
 	.edit-words {
 		height: rem(120px);
-		padding-bottom: rem(15px);
+		padding: rem(15px) 0;
 		@include border-1px(bottom, #e3e4e5);
 		font-size: rem(16px);
-
-		.words-close {
-			top: rem(2px);
-		}
 	}
 
 	.edit-attach {
@@ -132,7 +128,7 @@
     }
 }
 
-.phone-input {
+.edit-container .phone-input {
 
     &-item {
         position: absolute;
@@ -140,8 +136,8 @@
 
     &-placeholder {
         color: #999;
+        top: rem(16px);
         left: rem(5px);
-        top: rem(2px);
     }
 
     &-limit {
@@ -150,7 +146,12 @@
         right: 0;
         bottom: 0;
         padding: 0 10px;
-        background: rgba(255, 255, 255, 0.6);
+        background: transparent;
+    }
+
+    &-delete {
+    	@extend .close-x;
+    	top: rem(16px);
     }
 }
 
