@@ -149,6 +149,7 @@ page.initPlugin = function () {
 };
 
 page.initValue = function () {
+    var me = this;
     // TODO 修改存储数据
     selectValue.flter = {
         disabled: {
