@@ -298,11 +298,11 @@ $.extend(PhoneInput.prototype, {
     /**
      * 判断当前的输入框是否编辑过
      *
-     * @return {number}
+     * @return {boolean}
      */
     isEdited: function () {
         var edit = this.$main.attr('edit');
-        return edit ? 1 : 0;
+        return !!edit;
     }
 });
 

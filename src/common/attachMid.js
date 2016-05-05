@@ -50,9 +50,7 @@ var methodOption = {
             // 相册图片
             3,
             // 拍照上传
-            4,
-            // 语音上传
-            5
+            4
         ]
     },
     download: {}
@@ -64,13 +62,14 @@ var attach = {};
  * 初始化attach
  *
  * @param {Object} options, 初始化附件参数
-    // options {dom: {containerDOM: '', addBtnDOM: ''}, operateType:'', callback: function}
- * @param {Array} attachData, 附件数据
+    // options {dom: {containerDOM: selector, addBtnDOM: selector}, operateType: '', callback: function}
+                                               添加附件按钮         upload|download
+ * @param {Array} attachData, 附件数据, 需转驼峰
  * @param {string} containerSelector, 添加附件的容器
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData, containerSelector) {
-    var attachOptions = $.extend({}, attachOption, methodOption[options.operateType], options);
+    var attachOptions = $.extend({originAttaches: attachData}, attachOption, methodOption[options.operateType], options);
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);

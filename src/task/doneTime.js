@@ -42,9 +42,9 @@ function setCurr(currClass) {
 }
 
 page.enter = function () {
-    page.initValue();
-    page.bindEvents();
-    page.initPlugin();
+    this.initValue();
+    this.bindEvents();
+    this.initPlugin();
 };
 
 /**
@@ -113,7 +113,7 @@ page.returnValue = function (hasVal) {
 
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.TASK_EDIT_URL, {});
+    var promise = me.post(config.API.TASK_EDIT_URL, {});
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {

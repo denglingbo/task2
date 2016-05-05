@@ -5,19 +5,33 @@
     @include border-1px(top, #e1e4e6);
 }
 
-.alert-length-limit {
-    position: fixed;
+.alert-length-limit, .alert-submit-after {
+	position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    height: rem(90px);
-    line-height: rem(90px);
-    width: rem(210px);
-    background-color: rgba(0, 0, 0, 0.5);
-    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
     color: $white;
     font-size: rem(16px);
     border-radius: rem(4px);
+}
+.alert-length-limit {
+    height: rem(90px);
+    line-height: rem(90px);
+    width: rem(210px);
+    text-align: center;
+}
+
+.alert-submit-after {
+	width: rem(170px);
+	height: rem(110px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	i {
+		margin-bottom: rem(12px);
+		margin-top: rem(17px);
+	}
 }
 
 .edit-container {
@@ -168,6 +182,26 @@
     }
 }
 
+.mbsc-android-holo .dwb {
+	height: rem(50px);
+	line-height: rem(50px);
+}
 
+.mbsc-android-holo-light .dwbc {
+	border: none;
+	@include border-1px(top, #d9d9d9);
+}
 
+.mbsc-android-holo .dwbw:first-child .dwb {
+	@include border-1px(right, #d9d9d9);
+}
 
+.mbsc-android-holo .dwwol {
+	width: 100%;
+	left: 0;
+}
+
+.mbsc-android-holo .dwhl {
+	padding-left: rem(22px);
+	padding-right: rem(22px);
+}
