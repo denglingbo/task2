@@ -6,97 +6,99 @@
 }
 
 .alert-length-limit {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	height: rem(90px);
-	line-height: rem(90px);
-	width: rem(210px);
-	background-color: rgba(0, 0, 0, 0.5);
-	text-align: center;
-	color: $white;
-	font-size: rem(16px);
-	border-radius: rem(4px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: rem(90px);
+    line-height: rem(90px);
+    width: rem(210px);
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: $white;
+    font-size: rem(16px);
+    border-radius: rem(4px);
 }
 
 .edit-container {
-	font-size: 16px;
-	box-sizing: border-box;
-	* {
-		box-sizing: border-box;
-	}
+    font-size: 16px;
+    box-sizing: border-box;
+    * {
+        box-sizing: border-box;
+    }
 }
 
 .input {
-	border: none;
-	background-color: $white;
-	width: 100%;
-	height: 100%;
-	outline: none;
-	font-size: rem(18px);
-	resize: none;
-	padding-right: rem(55px);
-	letter-spacing: rem(2px);
+    border: none;
+    background-color: $white;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-size: rem(18px);
+    resize: none;
+    padding-right: rem(55px);
+    letter-spacing: rem(2px);
 
-	&:focus {
-        text-indent: 0.1rem;
-	}
+    &:focus {
+        & + .phone-input-placeholder {
+            text-indent: 0.1rem;
+        }
+    }
 }
 
 .edit-title-wrap,
 .edit-content-wrap {
-	position: relative;
-	@include border-1px(bottom);
-	margin-top: rem(10px);
-	background-color: $white;
+    position: relative;
+    @include border-1px(bottom);
+    margin-top: rem(10px);
+    background-color: $white;
 
-	.content-wrap, .title-wrap {
-		overflow: scroll;
-		height: 100%;
-	}
+    .content-wrap, .title-wrap {
+        overflow: scroll;
+        height: 100%;
+    }
 }
 
 .edit-title-wrap {
-	padding: rem(15px) 0 rem(15px) rem(15px);
-	height: rem(80px);
+    padding: rem(15px) 0 rem(15px) rem(15px);
+    height: rem(80px);
 
-	.title-close {
-		top: rem(16px);
-	}
-	
-	.title-wrap {
+    .title-close {
+        top: rem(16px);
+    }
+    
+    .title-wrap {
 
-		.phone-input {
+        .phone-input {
 
-		    &-placeholder {
-		        left: rem(20px);
-		    }
+            &-placeholder {
+                left: rem(17px);
+            }
 
-		    &-limit {
-		        bottom: rem(-12px);
-		    }
-		}
-	}
+            &-limit {
+                bottom: rem(-12px);
+            }
+        }
+    }
 }
 
 .edit-content-wrap {
-	padding-left: rem(15px);
-	.edit-words {
-		height: rem(120px);
-		padding: rem(15px) 0;
-		@include border-1px(bottom, #e3e4e5);
-		font-size: rem(16px);
-	}
+    padding-left: rem(15px);
+    .edit-words {
+        height: rem(120px);
+        padding: rem(15px) 0;
+        @include border-1px(bottom, #e3e4e5);
+        font-size: rem(16px);
+    }
 
-	.edit-attach {
+    .edit-attach {
 
-		.edit-add-attach {
-			min-height: rem(50px);
-			line-height: rem(48px);
-			color: #666;
-		}
-	}
+        .edit-add-attach {
+            min-height: rem(50px);
+            line-height: rem(48px);
+            color: #666;
+        }
+    }
 }
 
 .edit-option {
@@ -105,26 +107,37 @@
     background-color: $white;
     margin-top: rem(10px);
 
-	.edit-item {
-	    height: rem(44px);
-	    line-height: rem(42px);
-	    font-size: rem(14px);
-		padding-right: rem(15px);
+    .edit-item {
+        height: rem(44px);
+        line-height: rem(42px);
+        font-size: rem(14px);
+        padding-right: rem(15px);
+        display: flex;
+        align-items: center;
+        &:first-child {
+            @include border-1px(bottom, #e3e4e5);
+        }
 
-	    &:first-child {
-	    	@include border-1px(bottom, #e3e4e5);
-	    }
+        .title {
+            float: left;
+            color: #666;
+        }
 
-	    .title {
-	    	float: left;
-	    	color: #666;
-	    }
-
-	    .value {
-	    	color: $black;
-	    	font-size: 16px;
-	    	margin-right: rem(3px);
-	    }
+        .item-content {
+            flex: 1;
+			overflow: hidden;
+            .value {
+	            display: block;
+	            color: $black;
+	            font-size: 16px;
+	            margin-right: rem(10px);
+	            margin-left: rem(10px);
+	            white-space: nowrap;
+	            overflow: hidden;
+	            text-overflow: ellipsis;
+	            text-align: right;
+	        }
+        }
     }
 }
 
@@ -137,11 +150,11 @@
     &-placeholder {
         color: #999;
         top: rem(16px);
-        left: rem(5px);
+        left: rem(2px);
     }
 
     &-limit {
-    	font-size: rem(12px);
+        font-size: rem(12px);
         color: #FA575D;
         right: 0;
         bottom: 0;
@@ -150,8 +163,8 @@
     }
 
     &-delete {
-    	@extend .close-x;
-    	top: rem(16px);
+        @extend .close-x;
+        top: rem(16px);
     }
 }
 

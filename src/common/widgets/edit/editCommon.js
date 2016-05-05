@@ -21,20 +21,25 @@ var mobiOptions = {
 /**
  * 验证不通过弹窗
  *
- * @param {Array} arr, 需要弹窗提示的提示语集合
+ * @param {Array|string} alertSentence, 需要弹窗提示的提示语
  *
  */
-editCom.validAlert = function (arr) {
+editCom.validAlert = function (alertSentence) {
     var me = this;
     var $alertDom = $('.alert-length-limit');
-    var len = arr.length;
+    if (typeof alertSentence === 'string') {
+        var str = alertSentence;
+        alertSentence = [];
+        alertSentence.push(str);
+    }
+    var len = alertSentence.length;
     var time = 0;
     if (len > 1) {
-        $alertDom.text(arr[0]).removeClass('hide');
+        $alertDom.text(alertSentence[0]).removeClass('hide');
         time = 3000;
     }
     else if (len === 1) {
-        $alertDom.text(arr[0]).removeClass('hide');
+        $alertDom.text(alertSentence[0]).removeClass('hide');
         time = 3000;
     }
     else {
@@ -42,8 +47,10 @@ editCom.validAlert = function (arr) {
     }
     setTimeout(function () {
         $alertDom.addClass('hide');
-        arr.shift()
-        me.validAlert(arr);
+        alertSentence.shift();
+        if (alertSentence.length) {
+            me.validAlert(alertSentence);
+        }
     },
     time);
 };
@@ -169,11 +176,12 @@ editCom.initImportanceLevel = function (selector, infoData, validObj) {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
+            var oldVal = infoData['importance_level'];
             infoData['importance_level'] = +inst.getVal();
-            /* eslint-enable */
             $(selector + ' .value').text(text);
 
-            validObj.isEdit = true;
+            validObj.isEdit = oldVal !== infoData['importance_level'] ? true : false;
+            /* eslint-enable */
         }
     };
     this.initMobiscroll('select', selector, data);
@@ -190,7 +198,6 @@ editCom.initImportanceLevel = function (selector, infoData, validObj) {
 editCom.initEditAttach = function (selector, attachData, validObj) {
     var attachOptions = {
         dom: {
-            // 附件容器DOM元素
             containerDOM: '#attachList',
             addBtnDOM: '#addAttach'
         },

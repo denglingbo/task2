@@ -114,6 +114,7 @@ page.bindEvents = function () {
     });
 
     $('#cancel').on('click', function () {
+        valid.isEdit = phoneInputTitle.isEdit() || phoneInputContent.isEdit();
         editCom.cancelValidate(valid);
     });
     /* eslint-disable */

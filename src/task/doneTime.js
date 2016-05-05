@@ -56,8 +56,9 @@ page.bindEvents = function () {
     $('.done-early').on('click', function () {
         setCurr('done-early');
     });
+
     $('#submit').on('click', function () {
-        me.returnValue();
+        me.returnValue(true);
     });
 };
 
@@ -74,16 +75,10 @@ page.initPlugin = function (initTime) {
         hourSuffix: '时',
         minuteSuffix: '分',
         onSelect: function (text, inst) {
-            // 年
-            var y = inst._tempWheelArray[0];
-            // 月
-            var M = inst._tempWheelArray[1];
-            // 日
-            var d = inst._tempWheelArray[2];
             // 完整毫秒数
             info.endTime = new Date(inst.getVal()).getTime();
             // 此处 添加你自己的代码
-            $('.done-time-value').text(y + '年' + M + '月' + d + '日');
+            $('.done-time-value').text(util.formatTime(info.endTime));
             setCurr('custom-time');
         }
     });
@@ -95,10 +90,18 @@ page.initValue = function () {
     if (!info.endTime) {
         setCurr('done-early');
     }
+    else {
+        $('.done-time-value').text(util.formatTime(info.endTime));
+        setCurr('custom-time');
+    }
 };
-page.returnValue = function () {
+
+page.returnValue = function (hasVal) {
     /* eslint-disable */
-    CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
+    if (hasVal) {
+        CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
+    }
+    CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
 };
 /**

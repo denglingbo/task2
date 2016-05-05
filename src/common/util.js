@@ -447,7 +447,7 @@ util.camelCase = function (str) {
 };
 
 /**
- * 附件传入data key转为 camelCase
+ * 附件data传入 key转为 camelCase
  *
  * @param {Array} arr, 附件传入data.attachements
  * @return {Array}, 属性转换成驼峰命名的对象的集合

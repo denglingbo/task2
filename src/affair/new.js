@@ -49,6 +49,11 @@ page.bindEvents = function () {
         editCom.setValidObj(phoneInputTitle, phoneInputContent, attach, valid);
         editCom.submitValid(me.submit, valid);
     });
+
+    $('#cancel').on('click', function () {
+        valid.isEdit = phoneInputTitle.isEdit() || phoneInputContent.isEdit();
+        editCom.cancelValidate(valid);
+    });
 };
 
 function initAffairType() {
@@ -138,11 +143,12 @@ page.initPlugin = function () {
         ],
         onSelect: function (text, inst) {
             /* eslint-disable */
+            var oldVal = me.data['label_id'];
             me.data['label_id'] = +inst.getVal();
-            /* eslint-enable */
             $('#affairType .value').text(text);
 
-            valid.isEdit = true;
+            valid.isEdit = oldVal !== me.data['label_id'] ? true : false;
+            /* eslint-enable */
         }
     });
 

@@ -10,6 +10,7 @@ var Mustache = require('dep/mustache');
 window.Mustache = Mustache;
 require('dep/plugins/attaches/attaches');
 var localstorage = require('common/localstorage');
+var config = require('config');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -28,11 +29,11 @@ var attachOption = {
     clientMsg: clientMsg,
     url: {
         uploadUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnCreate',
+            url: config.API.ATTACH_UPLOADURL,
             mothod: 'POST'
         },
         resumeUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnContinue',
+            url: config.API.ATTACH_RESUMEURL,
             mothod: 'POST'
         }
     },
@@ -63,6 +64,7 @@ var attach = {};
  * 初始化attach
  *
  * @param {Object} options, 初始化附件参数
+    // options {dom: {containerDOM: '', addBtnDOM: ''}, operateType:'', callback: function}
  * @param {Array} attachData, 附件数据
  * @param {string} containerSelector, 添加附件的容器
  * @return {Object} 附件对象

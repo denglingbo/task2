@@ -225,6 +225,7 @@ $.extend(PhoneInput.prototype, {
             // 输入状态
             .on('input', function (event) {
                 me.inputStatusChange();
+                me.$main.attr('edit', true);
             })
 
             // 关闭
@@ -235,6 +236,9 @@ $.extend(PhoneInput.prototype, {
             });
 
         me.elems.$delete.on('click', function () {
+            if (me.$input.text().length) {
+                me.$main.attr('edit', true);
+            }
             me.$input.text('');
             me.inputStatusChange();
         });
@@ -289,6 +293,16 @@ $.extend(PhoneInput.prototype, {
     isAllowSubmit: function () {
         var status = this.$main.attr('status');
         return status === 'unable' ? 0 : 1;
+    },
+
+    /**
+     * 判断当前的输入框是否编辑过
+     *
+     * @return {number}
+     */
+    isEdited: function () {
+        var edit = this.$main.attr('edit');
+        return edit ? 1 : 0;
     }
 });
 
