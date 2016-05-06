@@ -9,11 +9,9 @@ var config = {
 
     API: {
         // 用于发送异步请求
-        host: 'http://web.test1.com',
+        host: 'http://web.jingoal.com',
 
         prefix: '/task/m/v1/',
-        // prefix: '/task/m/v1/',
-        // http://[host]/task/m/v1/get_task_detail?task_id=69585
 
         HOME_URL: 'index',
 
@@ -66,34 +64,44 @@ config.const = {
     TASK_PARAMS: 'TASK_PARAMS'
 };
 
-// 以下参数 febd.config.js 使用
+// 以下参数 febd.config.js & page.js 使用
+// 联调环境的时候，需要先在联调环境登录 [DHC]，并且把 token 保存，才可以在和后端握手的时候确认身份
 config.mock = {
+
+    // 这个需要通过
     token: '2aa69198-bd1a-4002-8722-d39ca3666705',
 
     // mock 代理服务不要最后的 '/'
-    proxyPrefix: '/api／',
+    proxyPrefix: '/api',
 
-    // node 端代理转发地址
     // target: 'http://task2.test1.com:8015/data/'
     // target: 'http://web.test1.com/task/m/v1/'
-    // http://172.16.1.108:8080/task/m/v1/
-    // proxyPath: config.API.host + config.API.prefix
-    proxyPath: 'http://172.16.1.108:8080/task/m/v1/'
+    proxyPath: config.API.host + config.API.prefix
 };
 
 
 // debug 模式
+// 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
+// prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
 
-    config.API.host = 'http://task2.test1.com:8015';
+    config.API.host = 'https://task2.test1.com:8015';
 
     // 直接走 mock server
-    config.API.prefix = '/data/';
+    // config.API.prefix = '/data/';
 
-    // 通过 mock server，由 node 转发
-    // config.API.prefix = '/api/';
+    // 通过 mock server [node] 转发
+    config.API.prefix = '/api/';
 
-    // config.mock.proxyPath = config.API.host + /data/;
+    // 后端联调位置
+    // config.mock.proxyPath = 'http://web.test1.com' + config.API.prefix;
+    // config.mock.proxyPath = 'http://172.16.1.108:8080/task/m/v1/'
+
+    // node 端代理转发地址 本地模拟转发
+    // config.mock.proxyPath = 'http://task2.test1.com:9000'
+
+    // 这是有历史意义的 一次尝试
+    config.mock.proxyPath = 'https://127.0.0.1:3000';
 }
 
 module.exports = config;

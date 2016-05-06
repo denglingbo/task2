@@ -130,14 +130,18 @@ config.devServer = {
     stats: {
         cached: false,
         colors: true
-    }
-    // ,
-    // proxy: {
-    //     '/*': {
-    //         target: 'http://web.test1.com/task/m/v1/',
-    //         secure: false
-    //     }
-    // }
+    },
+
+    /**
+     * 本地项目用 https:// 访问项目
+     * 同时需要 webpack dev server 进行 https 配置
+     */
+    https: true
+
+    // webpack dev server source
+    // options.https.key = options.https.key || fs.readFileSync(path.join(__dirname, "../ssl/server.key"));
+    // options.https.cert = options.https.cert || fs.readFileSync(path.join(__dirname, "../ssl/server.crt"));
+    // options.https.ca = options.https.ca || fs.readFileSync(path.join(__dirname, "../ssl/ca.crt"));
 
 };
 

@@ -269,13 +269,6 @@ var getRequestData = function (data) {
 
     $.extend(r, data);
 
-    // mock
-    if (config.debug) {
-        setCookie('JINSESSIONID', config.mock.token);
-        setCookie('uid', r.uid);
-        setCookie('cid', r.cid);
-    }
-
     return r;
 };
 
@@ -325,19 +318,22 @@ Page.prototype.ajax = function (api, data, options) {
     };
 
     if (config.debug) {
-        // ajaxSettings.type = 'GET';
+        ajaxSettings.type = 'GET';
+        setCookie('JINSESSIONID', config.mock.token);
+        setCookie('uid', reqData.uid);
+        setCookie('cid', reqData.cid);
 
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加虾面的配置
-        if (/api/.test(config.API.prefix)) {
+        var expr = config.API.prefix.search(new RegExp(config.mock.proxyPrefix));
+        if (expr === 0) {
             ajaxSettings.xhrFields = {
                 withCredentials: true
             };
             ajaxSettings.crossDomain = true;
         }
-        // host = host + '?task_id=69598';
-        // host = 'http://172.16.1.108:8080/task/m/v1/get_task_detail?task_id=69585';
     }
-    // console.log(host);
+    ajaxSettings.url = config.mock.proxyPath + '/' + api;
+    // console.log(ajaxSettings);
     // host = 'http://task2.test1.com:8015/data/get_task_detail';
     // host = 'http://task2.test1.com:8015/api/get_task_detail';
     // host = 'https://task2.test1.com:9000/' + api;

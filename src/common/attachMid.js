@@ -14,6 +14,11 @@ var config = require('config');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
+
+    if (!data) {
+        return;
+    }
+
     return {
         uid: data.uid,
         cid: data.cid,

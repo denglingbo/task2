@@ -7,6 +7,9 @@
  * ----------------------------------------------
  *
  */
+
+/* eslint-disable */
+
 'use strict';
 
 var gulp = require('gulp');
@@ -18,23 +21,31 @@ var febd = new MakeWebpackConfig(config);
 // var webDevServer = require('webpack-dev-server');
 // var connect = require('gulp-connect');
 
-var http = require('http');
-var fs = require('fs');
 /**
  * 这里提供一个 node 的模拟转发
  */
+var http = require('http');
+var fs = require('fs');
 var server = http.createServer(function (req, res) {
     var url = req.url;
     // console.log(url);
     res.writeHead(200, {
         'Content-Type': 'application/json',
         // 解决跨域
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': 'http://task2.test1.com:8014',
+        // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
+        'Access-Control-Allow-Credentials': true
     });
 
-    var buffer = fs.readFileSync('./mock/data' + url + '.json');
+    // var buffer = fs.readFileSync('./mock/data' + url + '.json');
+    // res.end(JSON.stringify(JSON.parse(buffer)));
 
-    res.end(JSON.stringify(JSON.parse(buffer)));
+    res.end(JSON.stringify({
+        status: 0,
+        data: {
+            key: 'Hello world'
+        }
+    }));
 
 });
 server.listen(9000);

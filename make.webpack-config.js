@@ -464,27 +464,33 @@ MakeWebpackConfig.prototype = {
             port: this.config.mockPort,
             path: '/',
             mockDir: './mock',
-            https: false,
-            // ,https: true
-            // https: {
-            //     key: './ssl/server.pem',
-            //     cert: './ssl/kibana.pem'
-            // },
+            // https: false,
+            https: true,
+
+            /**
+             * 当后端联调环境为 https 的接口
+             * @require 服务端 key.pem
+             * @require 服务端 cert.pem
+             */
+            https: {
+                // key: './ssl/keys/server-key.pem',
+                // cert: './ssl/keys/server-cert.pem'
+                key: './ssl/dev/server.key',
+                cert: './ssl/dev/server.crt',
+                ca: './ssl/dev/ca.crt'
+            },
             directoryListing: true,
             proxies: [
                 {
                     source: this.config.proxyPrefix,
                     target: this.config.proxyPath
-                    // ,options: {
-                    //     headers: {
-                    //         'header': 'name'
-                    //     }
-                    // }
                 }
             ],
-            // 这个为 true https 才有用
+
+            // liveerload = true, https 配置才有用
             livereload: true
         };
+        console.log('==============');
         console.log(mockConfig);
         _.extend(mockConfig, opts);
 
