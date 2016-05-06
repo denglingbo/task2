@@ -10,6 +10,7 @@ var Mustache = require('dep/mustache');
 window.Mustache = Mustache;
 require('dep/plugins/attaches/attaches');
 var localstorage = require('common/localstorage');
+var config = require('config');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -28,11 +29,11 @@ var attachOption = {
     clientMsg: clientMsg,
     url: {
         uploadUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnCreate',
+            url: config.API.ATTACH_UPLOADURL,
             mothod: 'POST'
         },
         resumeUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnContinue',
+            url: config.API.ATTACH_RESUMEURL,
             mothod: 'POST'
         }
     },
@@ -49,9 +50,7 @@ var methodOption = {
             // 相册图片
             3,
             // 拍照上传
-            4,
-            // 语音上传
-            5
+            4
         ]
     },
     download: {}
@@ -63,12 +62,14 @@ var attach = {};
  * 初始化attach
  *
  * @param {Object} options, 初始化附件参数
- * @param {Array} attachData, 附件数据
+    // options {dom: {containerDOM: selector, addBtnDOM: selector}, operateType: '', callback: function}
+                                               添加附件按钮         upload|download
+ * @param {Array} attachData, 附件数据, 需转驼峰
  * @param {string} containerSelector, 添加附件的容器
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData, containerSelector) {
-    var attachOptions = $.extend({}, attachOption, methodOption[options.operateType], options);
+    var attachOptions = $.extend({originAttaches: attachData}, attachOption, methodOption[options.operateType], options);
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);

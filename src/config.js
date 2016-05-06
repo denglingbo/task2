@@ -52,7 +52,12 @@ var config = {
         TALK_EDIT_URL: 'update_affair_comment',
 
         // 讨论
-        TALK_DETAIL_URL: 'get_talk_detail'
+        TALK_DETAIL_URL: 'get_talk_detail',
+
+        // attach uploadUrl
+        ATTACH_UPLOADURL: '',
+        // attach resumeUrl
+        ATTACH_RESUMEURL: ''
     }
 };
 

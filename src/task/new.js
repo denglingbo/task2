@@ -33,26 +33,11 @@ var valid = {
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
-var clientMsg = (function () {
-    var data = localStorage.getData('TASK_PARAMS');
-    return {
-        uid: data.uid,
-        cid: data.cid,
-        client: data.client,
-        lang: data.lang,
-        puse: data.puse,
-        appver: data.appver || '111.1.1'
-    };
-})();
 var selectValue = {
-    clientMsg: clientMsg,
+    clientMsg: editCom.getClientMsg(),
     selector: {
         // 选择人
-        contact: 3,
-        // 选择部门
-        dept: 0,
-        // 选择职务
-        title: 0
+        contact: 2
     },
     // 选择组件类型：1.单选 2.复选
     selectType: 2,
@@ -60,35 +45,16 @@ var selectValue = {
     filter: {
         // 指定不显示的数据
         disabled: {
-            contacts: [],
-            depts: [],
-            titles: []
-        },
-        // 指定显示的数据
-        enabled: {
-            depts: [],
-            titles: []
+            contacts: []
         },
         // 已选择的数据
         checked: {
             // 数组
-            contacts: [],
-            depts: [],
-            titles: []
+            contacts: []
         }
     },
     // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
-    dataSource: 1,
-    // 从移动网关获取数据的请求信息
-    requestInfo: {
-        // 请求方式
-        type: 'get',
-        // 请求发送的数据
-        data: '',
-        // 请求的url
-        url: '',
-        headers: {}
-    }
+    dataSource: 1
 };
 
 page.enter = function () {
@@ -108,25 +74,21 @@ page.bindEvents = function () {
 
     editCom.bindGetFocus();
 
-    $('#submit').on('click', function () {
-        editCom.setValidObj(phoneInputTitle, phoneInputContent, attach, valid);
-        editCom.submitValid(me.submit, valid);
-    });
-
-    $('#cancel').on('click', function () {
-        editCom.cancelValidate(valid);
+    editCom.subAndCancel(phoneInputTitle, phoneInputContent, attach, valid, function () {
+        editCom.submit(me, me.data, attach, config.API.TASK_EDIT_URL);
     });
     /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
+        var oldVal = me.data['end_time'];
         CPNavigationBar.redirect('/task/doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
             if (!data) {
                 return;
             }
-            valid.isEdit = true;
             data = JSON.parse(data);
             me.data['end_time'] = data.endTime;
             $('#doneTime .value').text(editCom.initDoneTime(me.data['end_time']));
+            valid.isEdit = oldVal !== me.data['end_time'] ? true : valid.isEdit;
         });
     });
 
@@ -134,6 +96,7 @@ page.bindEvents = function () {
     $('#principal, #attends').on('click', function (e) {
         var key = '';
         var itemKey = '';
+        var oldVal = null;
         if (e.target.id === 'principal') {
             key = principalSelectKey;
             itemKey = 'principal_user';
@@ -142,22 +105,23 @@ page.bindEvents = function () {
             key = attendSelectKey;
             itemKey = 'attend_ids';
         } 
-
+        oldVal = me.data[itemKey];
         CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
             if (!data) {
                 return;
             }
-            valid.isEdit = true;
             data = JSON.parse(data);
             var contacts = data.contacts;
             if ($.isArray(me.data[itemKey])) {
                 contacts.forEach(function (value, index) {
-                    me.data[itemKey].push(phoneMid.takeJid(value.jid));
+                    me.data[itemKey].push(+phoneMid.takeJid(value.jid));
                 });
             }
             else {
-                me.data[itemKey] = phoneMid.takeJid(contacts[0].jid);
+                me.data[itemKey] = +phoneMid.takeJid(contacts[0].jid);
             }
+
+            editCom.personIsChange(oldVal, me.data[itemKey], valid);
         });
     });
     /* eslint-enable */
@@ -169,8 +133,6 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
-    var template = require('common/widgets/edit/new');
-    var alertTpl = require('common/widgets/edit/alert');
     var data = $.extend({}, me.data, {
         view: [
             {
@@ -208,9 +170,7 @@ page.loadPage = function () {
         placeholderContent: '请输入任务描述(选填)'
     });
 
-    me.render('#edit-container', data, {
-        partials: {editMain: template, alertBox: alertTpl}
-    });
+    editCom.loadPage(me, data);
 };
 
 page.initPlugin = function () {
@@ -233,42 +193,45 @@ page.initPlugin = function () {
     phoneInputContent = new PhoneInput({
         'handler': '.content-wrap',
         'input': '#edit-content',
-        'limit': 50000,
+        'limit': 5000,
         'delete': true
     });
 };
 
 page.initValue = function () {
+    var me = this;
     // TODO 修改存储数据
+    var pFilter = {
+        disabled: {
+            contacts: []
+        },
+        // 已选择的数据
+        checked: {
+            // 数组
+            /* eslint-disable */
+            contacts: [editCom.transJid(me.data['principal_user'])]
+            /* eslint-enable */
+        }
+    };
+
+    var aFlter = {
+        disabled: {
+            contacts: []
+        },
+        // 已选择的数据
+        checked: {
+            // 数组
+            /* eslint-disable */
+            contacts: editCom.transJid(me.data['attend_ids'])
+            /* eslint-enable */
+        }
+    };
     selectValue.selectType = 1;
+    selectValue.filter = pFilter;
     localStorage.addData(principalSelectKey, selectValue);
     selectValue.selectType = 2;
+    selectValue.filter = aFlter;
     localStorage.addData(attendSelectKey, selectValue);
-};
-
-page.submit = function () {
-    var me = page;
-    var dfd = new $.Deferred();
-    me.data.attachements = attach.getModifyAttaches();
-    me.data.title = $('#edit-title').text();
-    me.data.content = $('#edit-content').text();
-    /* eslint-disable */
-    var promise = me.post(config.API.TASK_EDIT_URL, me.data);
-    console.log(me.data);
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            } 
-            else {
-                // TODO
-                dfd.resolve();
-            }
-        }).fail(function (result) {
-            // TODO
-            // console.log(result);
-        });
-    /* eslint-enable */
 };
 
 /**

@@ -26,3 +26,29 @@
 		}
 	}
 }
+
+.mbsc-android-holo .dwb {
+	height: rem(50px);
+	line-height: rem(50px);
+}
+
+.mbsc-android-holo-light .dwbc {
+	border: none;
+	@include border-1px(top, #d9d9d9);
+}
+
+.mbsc-android-holo .dwbw:first-child .dwb {
+	@include border-1px(right, #d9d9d9);
+}
+
+.mbsc-android-holo .dwwol {
+	width: 100%;
+	left: 50%;
+	transform: translate(-50%, 0);
+}
+
+.mbsc-android-holo .dwhl {
+	padding-left: rem(22px);
+	padding-right: rem(22px);
+}
+

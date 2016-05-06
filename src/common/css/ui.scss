@@ -76,6 +76,30 @@ $hook-height-size: rem(12px);
     background-repeat: no-repeat;
     background-size: $hook-width-size $hook-height-size;
 }
+
+/**
+ * 勾和x
+ *
+ *
+ */
+$circle-size: rem(45px);
+.circle-right, .circle-err {
+    display: inline-block;
+    padding: 0;
+    width: $circle-size;
+    height: $circle-size;
+    background-repeat: no-repeat;
+    background-size: $circle-size;
+}
+
+.circle-right {
+    background-image: url('#{$rootImg}/popup_right.png');
+}
+
+.circle-err {
+    background-image: url('#{$rootImg}/popup_error.png');
+}
+
 /**
  * 五角星
  */

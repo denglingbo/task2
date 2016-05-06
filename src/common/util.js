@@ -447,7 +447,7 @@ util.camelCase = function (str) {
 };
 
 /**
- * 附件传入data key转为 camelCase
+ * 附件data传入 key转为 camelCase
  *
  * @param {Array} arr, 附件传入data.attachements
  * @return {Array}, 属性转换成驼峰命名的对象的集合
@@ -477,6 +477,20 @@ util.transKey = function (arr) {
 };
 
 /**
+ * 数组浅层次clone
+ *
+ * @param {Array} arr, 需要clone的数组
+ * @return {Array} clone的数组
+ */
+util.arrClone = function (arr) {
+    var newArr = [];
+    arr.forEach(function (value) {
+        newArr.push(value);
+    });
+    return newArr;
+};
+
+/**
  * 把ms转换为 yyyy年MM月dd日的格式
  *
  * @param {number} ms 时间毫秒
@@ -490,6 +504,22 @@ util.formatTime = function (ms) {
     M = M < 10 ? '0' + M : M;
     d = d < 10 ? '0' + d : d;
     return y + '年' + M + '月' + d + '日';
+};
+
+/**
+ * 比较两个数组的值是否相等
+ *
+ * @param {Array} arr1, 数组1
+ * @param {Array} arr2, 数组2
+ * @return {boolean} 是否相等
+ */
+util.compareArr = function (arr1, arr2) {
+    var newArr1 = this.arrClone(arr1).sort();
+    var newArr2 = this.arrClone(arr2).sort();
+    var isDiff = newArr1.some(function (value, index) {
+        return value !== newArr2[index];
+    });
+    return isDiff;
 };
 
 module.exports = util;
