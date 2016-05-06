@@ -325,11 +325,15 @@ Page.prototype.ajax = function (api, data, options) {
     };
 
     if (config.debug) {
-        ajaxSettings.type = 'GET';
-        ajaxSettings.xhrFields = {
-            withCredentials: true
-        };
-        ajaxSettings.crossDomain = true;
+        // ajaxSettings.type = 'GET';
+
+        // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加虾面的配置
+        if (/api/.test(config.API.prefix)) {
+            ajaxSettings.xhrFields = {
+                withCredentials: true
+            };
+            ajaxSettings.crossDomain = true;
+        }
         // host = host + '?task_id=69598';
         // host = 'http://172.16.1.108:8080/task/m/v1/get_task_detail?task_id=69585';
     }

@@ -71,7 +71,7 @@ config.mock = {
     token: '2aa69198-bd1a-4002-8722-d39ca3666705',
 
     // mock 代理服务不要最后的 '/'
-    proxyPrefix: '/api',
+    proxyPrefix: '/api／',
 
     // node 端代理转发地址
     // target: 'http://task2.test1.com:8015/data/'
@@ -88,10 +88,10 @@ if (config.debug) {
     config.API.host = 'http://task2.test1.com:8015';
 
     // 直接走 mock server
-    // config.API.prefix = '/data/';
+    config.API.prefix = '/data/';
 
     // 通过 mock server，由 node 转发
-    config.API.prefix = '/api/';
+    // config.API.prefix = '/api/';
 
     // config.mock.proxyPath = config.API.host + /data/;
 }
