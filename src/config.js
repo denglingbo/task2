@@ -88,10 +88,10 @@ if (config.debug) {
     config.API.host = 'https://task2.test1.com:8015';
 
     // 直接走 mock server
-    // config.API.prefix = '/data/';
+    config.API.prefix = '/data/';
 
     // 通过 mock server [node] 转发
-    config.API.prefix = '/api/';
+    // config.API.prefix = '/api/';
 
     // 后端联调位置
     // config.mock.proxyPath = 'http://web.test1.com' + config.API.prefix;

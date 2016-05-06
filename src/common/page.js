@@ -332,7 +332,7 @@ Page.prototype.ajax = function (api, data, options) {
             ajaxSettings.crossDomain = true;
         }
     }
-    ajaxSettings.url = config.mock.proxyPath + '/' + api;
+    // ajaxSettings.url = config.mock.proxyPath + '/' + api;
     // console.log(ajaxSettings);
     // host = 'http://task2.test1.com:8015/data/get_task_detail';
     // host = 'http://task2.test1.com:8015/api/get_task_detail';
