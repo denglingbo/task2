@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
-  "dependencies": {},
+  "dependencies": {
+    "http-proxy": "^1.13.2"
+  },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
     "bell-on-bundler-error-plugin": "^1.0.8",

@@ -11,13 +11,34 @@
 
 var gulp = require('gulp');
 
-// var mockServer = require('gulp-mock-server');
-// var webDevServer = require('webpack-dev-server');
 var config = require('./febd.config');
 var MakeWebpackConfig = require('./make.webpack-config');
 var febd = new MakeWebpackConfig(config);
-// var Febd = require('febd');
-// var febd = new Febd(config);
+// var mockServer = require('gulp-mock-server');
+// var webDevServer = require('webpack-dev-server');
+// var connect = require('gulp-connect');
+
+/**
+ * 这里提供一个 node 的模拟转发
+ */
+var http = require('http');
+var fs = require('fs');
+var server = http.createServer(function (req, res) {
+    var url = req.url;
+    // console.log(url);
+    res.writeHead(200, {
+        'Content-Type': 'application/json',
+        // 解决跨域
+        'Access-Control-Allow-Origin': '*'
+    });
+
+    var buffer = fs.readFileSync('./mock/data' + url + '.json');
+
+    res.end(JSON.stringify(JSON.parse(buffer)));
+
+});
+server.listen(9000);
+
 
 /**
  * DEV - Mock
@@ -41,10 +62,9 @@ gulp.task('dev-webpack', function (callback) {
 
 // dev
 gulp.task('dev', [
-    'dev-webpack',
-    'mock'
+    'mock',
+    'dev-webpack'
 ]);
-
 
 
 /**

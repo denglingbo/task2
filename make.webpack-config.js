@@ -462,7 +462,27 @@ MakeWebpackConfig.prototype = {
             host: replaceHost(this.config.host),
             port: this.config.mockPort,
             path: '/',
-            mockDir: './mock/data'
+            mockDir: './mock',
+            https: false,
+            // ,https: true
+            // https: {
+            //     key: './ssl/dev-key.pem',
+            //     cert: './ssl/dev-cert.pem'
+            // }
+            directoryListing: true,
+            proxies: [
+                {
+                    source: '/api', 
+                    target: 'http://task2.test1.com:8015/data/' 
+                    // ,options: {
+                    //     headers: {
+                    //         'header': 'name'
+                    //     }
+                    // }
+                }
+            ],
+            // 这个为 true https 才有用
+            livereload: true
         };
 
         _.extend(mockConfig, opts);

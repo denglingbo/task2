@@ -10,6 +10,9 @@ var util = require('./util');
 var phoneMid = require('./phoneMid');
 var storage = require('./localstorage');
 
+// ** 调用 jingoal 重写的 ajax 包 ** //
+require('common/mbreq');
+
 if (!window.pageLog) {
     window.pageLog = {};
 }
@@ -226,6 +229,28 @@ Page.prototype.render = function (selector, data, options) {
 };
 
 /**
+ * 用于 mock 添加 cookie
+ *
+ * @param {string} name, cookie 名
+ * @param {string} value, name 对应的 value
+ * @param {number} seconds, 有效时间
+ * @param {string} path, 储存根位置
+ */
+function setCookie(name, value, seconds, path) {
+    seconds = seconds || 0;
+    path = path || '/';
+    var expires = '';
+
+    if (seconds !== 0) {
+        var date = new Date();
+        date.setTime(date.getTime() + (seconds * 1000));
+        expires = '; expires=' + date.toGMTString();
+    }
+
+    document.cookie = name + '=' + escape(value) + expires + '; path=' + path;
+}
+
+/**
  * 获取请求参数并可以根据需求改变参数
  *
  * @param {Object} data, 数据
@@ -240,21 +265,38 @@ var getRequestData = function (data) {
 
     var r = {};
 
-    $.extend(r, data);
+    if (!config.debug) {
+        r = storage.getData('TASK_PARAMS');
+        $.extend(r, data);
+    }
+    // mock
+    else {
+        setCookie('JINSESSIONID', config.mock.token);
+        setCookie('uid', r.uid);
+        setCookie('cid', r.cid);
+    }
 
     return r;
 };
 
+Page.prototype.get = function (api, data, options) {
+    return this.ajax(api, data, $.extend(options || {}, {type: 'GET'}));
+};
+
+Page.prototype.post = function (api, data, options) {
+    return this.ajax(api, data, $.extend(options || {}, {type: 'POST'}));
+};
+
 /**
- * Post 请求数据
+ * Ajax 请求数据
  *
  * @param {number} api api号
- * @param {Object=} data 请求数据
- * @param {Object=} opts 选项
- * @param {string} opts.url 请求的host
+ * @param {Object} data 请求数据
+ * @param {Object} options 选项
+ *      @param {string} options.url 请求的host
  * @return {Deferred}
  */
-Page.prototype.post = function (api, data, opts) {
+Page.prototype.ajax = function (api, data, options) {
 
     var dfd = new $.Deferred();
     var isNetwork = phoneMid.isNetwork();
@@ -266,19 +308,31 @@ Page.prototype.post = function (api, data, opts) {
 
     var reqData = getRequestData(data);
 
-    opts = opts || {};
+    var opts = {
+        type: 'POST',
+        dataType: 'json'
+    };
+
+    $.extend(opts, options);
 
     var host = config.API.host + config.API.prefix + api;
 
+    // host = 'http://task2.test1.com:8015/data/get_task_detail';
+    // host = 'http://task2.test1.com:8015/api/get_task_detail';
+    // host = 'https://task2.test1.com:9000/' + api;
+    // host = 'https://task2.test1.com:9000/' + api;
+
     var promise = $.ajax({
-        type: 'post',
+        type: opts.type,
         url: host,
-        data: reqData
+        data: reqData,
+        dataType: opts.dataType
     });
 
     // 请求完成
     promise.done(function (result, status, xhr) {
         // Just debug test
+        // 模拟网络延迟
         if (config.debug) {
             setTimeout(function () {
                 dfd.resolve(result);

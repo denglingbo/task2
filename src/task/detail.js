@@ -12,6 +12,7 @@ var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
 var phoneMid = require('common/phoneMid');
 var ListLoader = require('common/ui/listLoader/listLoader');
+var util = require('common/util');
 var Page = require('common/page');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
@@ -302,7 +303,11 @@ page.renderUser = function (originArr, dataArr) {
 page.addParallelTask(function (dfd) {
     var me = this;
 
-    var promise = page.post(config.API.TASK_DETAIL_URL);
+    /* eslint-disable */
+    var promise = page.post(config.API.TASK_DETAIL_URL, {
+        task_id: util.params('task_id')
+    });
+    /* eslint-enable */
 
     promise
         .done(function (result) {

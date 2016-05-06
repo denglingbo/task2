@@ -9,7 +9,7 @@ var config = {
 
     API: {
 
-        host: 'http://localhost:8015',
+        host: 'http://web.test1.com',
 
         prefix: '/task/m/v1/',
         // prefix: '/task/m/v1/',
@@ -61,8 +61,19 @@ config.const = {
     TASK_PARAMS: 'TASK_PARAMS'
 };
 
+config.mock = {
+    token: '376087e6-7c7a-4534-94f6-e94104162d28'
+};
+
+// debug 模式
 if (config.debug) {
-    config.API.prefix = '/';
+    config.API.host = 'http://task2.test1.com:8015';
+
+    // 直接走 mock server
+    // config.API.prefix = '/data/';
+
+    // 通过 mock server，由 node 转发
+    config.API.prefix = '/api/';
 }
 
 module.exports = config;

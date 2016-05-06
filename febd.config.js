@@ -20,7 +20,7 @@ var config = {
      * host
      * @params {string}
      */
-    host: srcConfig.API.host,
+    host: '127.0.0.1',
 
     /**
      * 监听端口
@@ -131,6 +131,14 @@ config.devServer = {
         cached: false,
         colors: true
     }
+    // ,
+    // proxy: {
+    //     '/*': {
+    //         target: 'http://web.test1.com/task/m/v1/',
+    //         secure: false
+    //     }
+    // }
+
 };
 
 // 输出到其他物理目录
