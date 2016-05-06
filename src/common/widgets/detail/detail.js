@@ -8,6 +8,8 @@
  */
 var util = require('../../util');
 var phoneMid = require('common/phoneMid');
+var AttachMid = require('common/attachMid');
+var util = require('common/util');
 
 var detail = {};
 
@@ -28,6 +30,15 @@ var importanceMap = {
     2: '尽快完成',
     3: '提早完成',
     4: '普通'
+};
+
+// 初始化附件组件
+var attachOptions = {
+    dom: {
+        // 附件容器DOM元素
+        containerDOM: '.comments-attach'
+    },
+    operateType: 'download'
 };
 
 detail.statusMap = statusMap;
@@ -109,5 +120,18 @@ detail.getEventTalkList = function (arr) {
  * @param {Object} rights, 后端权限数据
  */
 detail.rightsView = function (rights) {};
+
+/**
+ * 初始化附件
+ *
+ * @param {Object} attachData, 附件数据
+ * @param {string} containerSelector, 容器选择器
+ * @return {Object}, 附件对象
+ */
+detail.initDetailAttach = function (attachData, containerSelector) {
+    attachOptions.dom.containerDOM = containerSelector;
+    var attachObj = AttachMid.initAttach(attachOptions, util.transKey(attachData));
+    return attachObj;
+};
 
 module.exports = detail;

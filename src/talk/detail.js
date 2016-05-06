@@ -24,6 +24,23 @@ var tmplDescribe = require('common/widgets/detail/describe');
 
 var page = new Page();
 
+/* eslint-disable */
+var testArr = [
+    {
+        deleted: false,
+        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
+        file_name: 'ca1.crt',
+        size: 1391
+    },
+    {
+        deleted: false,
+        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
+        file_name: 'cb2.crt',
+        size: 1311
+    }
+];
+/* eslint-enable */
+
 page.enter = function () {
     this.$main = $('.main');
 
@@ -42,6 +59,8 @@ page.enter = function () {
     });
 
     this.bindEvents();
+
+    this.attach = detailUtil.initDetailAttach(testArr, '.attach-container');
 };
 
 page.bindEvents = function () {
@@ -63,11 +82,11 @@ page.bindEvents = function () {
 
     // 完成按钮点击事件
     var map = {
-        0: {
+        '0': {
             done: 'untick',
             fail: 'ticked'
         },
-        1: {
+        '1': {
             done: 'ticked',
             fail: 'untick'
         }

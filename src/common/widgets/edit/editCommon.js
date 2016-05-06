@@ -11,17 +11,6 @@ var localStorage = require('common/localstorage');
 
 var editCom = {};
 
-// mobiscroll 公共参数
-var mobiOptions = {
-    theme: 'android-holo-light',
-    mode: 'scroller',
-    // ios 底部上滑, android 中间显示
-    display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-    lang: 'zh',
-    buttons: ['cancel', 'set'],
-    height: 50
-};
-
 /**
  * bind 文本框获得焦点事件
  *
@@ -155,37 +144,33 @@ editCom.submitValid = function (submitFn, validObj) {
 /**
  * 验证是否能提交，进行最后的验证
  *
- * @param {Object} title, 标题的phoneInput对象
- * @param {Object} content, 描述的phoneInput对象
- * @param {Object} attach, 附件对象
- * @param {Object} validObj, 验证信息
+ * @param {Object} page, 页面对象
  */
-editCom.setValidObj = function (title, content, attach, validObj) {
-    validObj.isEdit = title.isEdited() || content.isEdited() || validObj.isEdit;
-    validObj.content = !!content.isAllowSubmit();
-    validObj.title = !!(title.isAllowSubmit() && $('#edit-title').text());
-    validObj.isAttachesReady = attach.isAttachesReady();
+editCom.setValidObj = function (page) {
+    var validObj = page.valid;
+    validObj.isEdit = page.phoneInputTitle.isEdited() || page.phoneInputContent.isEdited() || validObj.isEdit;
+    validObj.content = !!page.phoneInputContent.isAllowSubmit();
+    validObj.title = !!(page.phoneInputTitle.isAllowSubmit() && $('#edit-title').text());
+    validObj.isAttachesReady = page.attach.isAttachesReady();
 };
 
 /**
  * 虚拟手机端提交和取消按钮
  *
- * @param {Object} phoneInputTitle, 标题的phoneInput对象
- * @param {Object} phoneInputContent, 描述的phoneInput对象
- * @param {Object} attach, 附件对象
- * @param {Object} validObj, 验证信息
+ * @param {Object} page, 页面对象
  * @param {Function} submitFn, 验证成功的提交操作
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, validObj, submitFn) {
+editCom.subAndCancel = function (page, submitFn) {
     var me = this;
+    var validObj = page.valid;
     $('#submit').on('click', function () {
-        me.setValidObj(phoneInputTitle, phoneInputContent, attach, validObj);
+        me.setValidObj(page);
         console.log(validObj);
         me.submitValid(submitFn, validObj);
     });
 
     $('#cancel').on('click', function () {
-        validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
+        validObj.isEdit = page.phoneInputTitle.isEdited() || page.phoneInputContent.isEdited() || validObj.isEdit;
         me.cancelValidate(validObj);
     });
 };
@@ -198,9 +183,11 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, val
  * @param {Object} attach, 附件对象
  * @param {string} postUrl, 上传url
  */
-editCom.submit = function (page, data, attach, postUrl) {
+editCom.submit = function (page, postUrl) {
     var me = this;
     var dfd = new $.Deferred();
+    var data = page.data;
+    var attach = page.attach;
     data.attachements = attach.getModifyAttaches();
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').text();
@@ -213,13 +200,13 @@ editCom.submit = function (page, data, attach, postUrl) {
                 dfd.reject(result);
             } 
             else {
-                editCom.submitAlert(true);
+                me.submitAlert(true);
                 // TODO
                 dfd.resolve();
             }
         }).fail(function (result) {
             // TODO
-            editCom.submitAlert(false);
+            me.submitAlert(false);
         });
     /* eslint-enable */
 }
@@ -228,10 +215,11 @@ editCom.submit = function (page, data, attach, postUrl) {
  * 初始化紧急程度mobiscroll
  *
  * @param {string} selector, 选择器字符串
- * @param {Object} infoData, 初始化参数
- * @param {Object} validObj, 提交验证信息
+ * @param {Object} page, 页面对象
  */
-editCom.initImportanceLevel = function (selector, infoData, validObj) {
+editCom.initImportanceLevel = function (selector, page) {
+    var infoData = page.data;
+    var validObj = page.valid;
     var data = {
         headerText: '紧急程度',
         showInput: false,
@@ -272,12 +260,12 @@ editCom.initImportanceLevel = function (selector, infoData, validObj) {
 /**
  * 初始化新建、编辑页面附件
  *
- * @param {string} selector, 选择器字符串
- * @param {Object} attachData, 附件信息
- * @param {Object} validObj, 提交验证信息
+ * @param {Object} page, 页面对象
  * @return {Object} 附件对象
  */
-editCom.initEditAttach = function (selector, attachData, validObj) {
+editCom.initEditAttach = function (page) {
+    var attachData = page.data.attachements;
+    var validObj = page.valid;
     var attachOptions = {
         dom: {
             containerDOM: '#attachList',
@@ -288,7 +276,7 @@ editCom.initEditAttach = function (selector, attachData, validObj) {
             validObj.isEdit = true;
         }
     };
-    var attachObj = attachMid.initAttach(attachOptions, util.transKey(attachData), selector);
+    var attachObj = attachMid.initAttach(attachOptions, util.transKey(attachData));
     return attachObj;
 };
 
@@ -300,6 +288,16 @@ editCom.initEditAttach = function (selector, attachData, validObj) {
  * @param {Object} data, 初始化参数
  */
 editCom.initMobiscroll = function (method, selector, data) {
+    // mobiscroll 公共参数
+    var mobiOptions = {
+        theme: 'android-holo-light',
+        mode: 'scroller',
+        // ios 底部上滑, android 中间显示
+        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
+        lang: 'zh',
+        buttons: ['cancel', 'set'],
+        height: 50
+    };
     $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
 };
 
@@ -397,4 +395,25 @@ editCom.getClientMsg = function () {
         appver: data.appver || '111.1.1'
     };
 };
+
+/**
+ * 存储选人组件所需的数据到本地
+ *
+ * @param {string} key
+ * @param {Object} value, 存储的数据
+ */
+editCom.setChoosePersonLoc = function (key, value) {
+    var me = this;
+    var selectValue = {
+        clientMsg: me.getClientMsg(),
+        selector: {
+            // 选择人
+            contact: 2
+        },
+        // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
+        dataSource: 1
+    };
+    localStorage.addData(key, $.extend(selectValue, value));
+};
+
 module.exports = editCom;

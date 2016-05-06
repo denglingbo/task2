@@ -10,21 +10,13 @@ var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
 var phoneMid = require('common/phoneMid');
-var localStorage = require('common/localstorage');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 
-// 附件对象
-var attach = null;
-
-// 富文本对象
-var phoneInputTitle = null;
-var phoneInputContent = null;
-
 // 验证信息
-var valid = {
+page.valid = {
     isEdit: false,
     title: false,
     content: true,
@@ -32,36 +24,13 @@ var valid = {
 };
 
 var selectKey = 'talkAttandSelectKey';
-var selectValue = {
-    clientMsg: editCom.getClientMsg(),
-    selector: {
-        // 选择人
-        contact: 2
-    },
-    // 选择组件类型：1.单选 2.复选
-    selectType: 2,
-    // 指定的过滤数据
-    filter: {
-        // 指定不显示的数据
-        disabled: {
-            contacts: []
-        },
-        // 已选择的数据
-        checked: {
-            // 数组
-            contacts: []
-        }
-    },
-    // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
-    dataSource: 1
-};
 
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.initPlugin();
-    me.initValue();
     me.bindEvents();
+    me.initValue();
+    me.initPlugin();
 };
 
 /**
@@ -70,11 +39,11 @@ page.enter = function () {
  */
 page.bindEvents = function () {
     var me = this;
-
+    var valid = me.valid;
     editCom.bindGetFocus();
 
-    editCom.subAndCancel(phoneInputTitle, phoneInputContent, attach, valid, function () {
-        editCom.submit(me, me.data, attach, config.API.TALK_EDIT_URL);
+    editCom.subAndCancel(me, function () {
+        editCom.submit(me, config.API.TALK_EDIT_URL);
     });
 
     /* eslint-disable */
@@ -125,22 +94,21 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
-
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', me.data, valid);
+    editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 初始化附件组件
-    attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
+    me.attach = editCom.initEditAttach(me);
 
     // 初始化富文本框
-    phoneInputTitle = new PhoneInput({
+    me.phoneInputTitle = new PhoneInput({
         'handler': '.title-wrap',
         'input': '#edit-title',
         'limit': 50,
         'delete': true
     });
 
-    phoneInputContent = new PhoneInput({
+    me.phoneInputContent = new PhoneInput({
         'handler': '.content-wrap',
         'input': '#edit-content',
         'limit': 5000,
@@ -151,19 +119,23 @@ page.initPlugin = function () {
 page.initValue = function () {
     var me = this;
     // TODO 修改存储数据
-    selectValue.flter = {
-        disabled: {
-            contacts: []
-        },
-        // 已选择的数据
-        checked: {
-            // 数组
-            /* eslint-disable */
-            contacts: editCom.transJid(me.data['attend_ids'])
-            /* eslint-enable */
+    var val = {
+        selectType: 2,
+        filter: {
+            disabled: {
+                contacts: []
+            },
+            // 已选择的数据
+            checked: {
+                // 数组
+                /* eslint-disable */
+                contacts: editCom.transJid(me.data['attend_ids'])
+                /* eslint-enable */
+            }
         }
     };
-    localStorage.addData(selectKey, selectValue);
+
+    editCom.setChoosePersonLoc(selectKey, val);
 };
 
 /**
@@ -172,7 +144,7 @@ page.initValue = function () {
  * @param {deferred} dfd, deferred
  *
  */
-var doing = 'new';
+var doing = 'edit';
 page.addParallelTask(function (dfd) {
     var me = this;
     var url = doing === 'new' ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;

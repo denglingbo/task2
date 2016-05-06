@@ -68,15 +68,15 @@ var attach = {};
  * @param {string} containerSelector, 添加附件的容器
  * @return {Object} 附件对象
  */
-attach.initAttach = function (options, attachData, containerSelector) {
+attach.initAttach = function (options, attachData) {
     var attachOptions = $.extend({originAttaches: attachData}, attachOption, methodOption[options.operateType], options);
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
     var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
 
-    $(containerSelector).append(renderString.attach);
-    Attach.initEvent(containerSelector, attachOptions.clientMsg.lang);
+    $(options.dom.containerDOM).append(renderString.attach);
+    Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
     /* eslint-enable */
     return attachObj;
 };

@@ -16,61 +16,12 @@ var detailUtil = require('common/widgets/detail/detail');
 var Page = require('common/page');
 var virtualInput = require('common/ui/virtualInput/virtualInput');
 
-// hefeng 上传组件
-var AttachMid = require('common/attachMid');
-
 var Ticker = require('common/ui/ticker/ticker');
 
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
 var page = new Page();
-
-
-// 初始化附件组件
-var attachOptions = {
-    // 客户端信息
-    clientMsg: {
-        uid: '1',
-        cid: '1',
-        client: '',
-        lang: '',
-        pause: '',
-        appver: '111.1.1'
-    },
-    // 已经有的附件信息, 没有传空数组, 这个主要是用于修改
-    originAttaches: [],
-    url: {
-        uploadUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnCreate',
-            mothod: 'POST'
-        },
-        resumeUrl: {
-            url: '/mgw/approve/attachment/getFSTokensOnContinue',
-            mothod: 'POST'
-        }
-    },
-    supportType: [
-        // 本地文件
-        1,
-        // 网盘文件
-        2,
-        // 相册图片
-        3,
-        // 拍照上传
-        4,
-        // 语音上传
-        5
-    ],
-    dom: {
-        // 附件容器DOM元素
-        containerDOM: '#attachList',
-        addBtnDOM: '#addAttach'
-    },
-    operateType: 'upload',
-    attachesCount: 10,
-    callback: function () {}
-};
 
 /* eslint-disable */
 var testArr = [
@@ -102,9 +53,7 @@ page.enter = function () {
     virtualInput('.goalui-fixedinput');
 
     this.bindEvents();
-
-    AttachMid.initAttach(attachOptions, util.transKey(testArr), '.comments-attach');
-
+    this.attach = detailUtil.initDetailAttach(testArr, '.comments-attach');
 };
 
 page.bindEvents = function () {

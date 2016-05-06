@@ -20,8 +20,6 @@ $add-attach-width: rem(18px);
 	background-image: url('#{$rootImg}/button_import_add-accessory.png');
 	background-repeat: no-repeat;
 	background-size: $add-attach-width;
-	vertical-align: rem(-2px);
-	margin-right: rem(-3px);
 }
 
 /**
@@ -57,7 +55,6 @@ $arrow-height-size: rem(14px);
     background-image: url('#{$rootImg}/icon_list_to-right-arrow.png');
     background-repeat: no-repeat;
     background-size: $arrow-width-size $arrow-height-size;
-    vertical-align: rem(-1px);
 }
 
 /**

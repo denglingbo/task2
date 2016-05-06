@@ -236,7 +236,7 @@ $.extend(PhoneInput.prototype, {
             });
 
         me.elems.$delete.on('click', function () {
-            if (me.$input.text().length) {
+            if (me.isNotNull()) {
                 me.$main.attr('edit', true);
             }
             me.$input.text('');

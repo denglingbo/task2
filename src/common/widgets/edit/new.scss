@@ -1,10 +1,6 @@
 @import '../../css/global';
 @import '../../css/ui';
 
-.componentAttachItem {
-    @include border-1px(top, #e1e4e6);
-}
-
 .alert-length-limit, .alert-submit-after {
 	position: fixed;
     left: 50%;
@@ -15,6 +11,7 @@
     font-size: rem(16px);
     border-radius: rem(4px);
 }
+
 .alert-length-limit {
     height: rem(90px);
     line-height: rem(90px);
@@ -28,6 +25,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
 	i {
 		margin-bottom: rem(12px);
 		margin-top: rem(17px);
@@ -37,6 +35,7 @@
 .edit-container {
     font-size: 16px;
     box-sizing: border-box;
+
     * {
         box-sizing: border-box;
     }
@@ -51,9 +50,9 @@
     font-size: rem(18px);
     resize: none;
     padding-right: rem(55px);
-    letter-spacing: rem(2px);
 
     &:focus {
+
         & + .phone-input-placeholder {
             text-indent: 0.1rem;
         }
@@ -98,6 +97,7 @@
 
 .edit-content-wrap {
     padding-left: rem(15px);
+
     .edit-words {
         height: rem(120px);
         padding: rem(15px) 0;
@@ -110,7 +110,14 @@
         .edit-add-attach {
             min-height: rem(50px);
             line-height: rem(48px);
-            color: #666;
+            color: #797c80;
+            font-size: rem(14px);
+            display: flex;
+            align-items: center;
+            
+            >i {
+            	margin-right: rem(6px);
+            }
         }
     }
 }
@@ -128,6 +135,7 @@
         padding-right: rem(15px);
         display: flex;
         align-items: center;
+
         &:first-child {
             @include border-1px(bottom, #e3e4e5);
         }
@@ -140,6 +148,7 @@
         .item-content {
             flex: 1;
 			overflow: hidden;
+
             .value {
 	            display: block;
 	            color: $black;
@@ -155,6 +164,10 @@
     }
 }
 
+.componentAttachItem {
+    @include border-1px(top, #e1e4e6);
+}
+
 .edit-container .phone-input {
 
     &-item {
@@ -162,7 +175,7 @@
     }
 
     &-placeholder {
-        color: #999;
+        color: #aaafb2;
         top: rem(16px);
         left: rem(2px);
     }
@@ -182,26 +195,29 @@
     }
 }
 
-.mbsc-android-holo .dwb {
-	height: rem(50px);
-	line-height: rem(50px);
-}
-
 .mbsc-android-holo-light .dwbc {
 	border: none;
 	@include border-1px(top, #d9d9d9);
 }
 
-.mbsc-android-holo .dwbw:first-child .dwb {
-	@include border-1px(right, #d9d9d9);
-}
+.mbsc-android-holo {
 
-.mbsc-android-holo .dwwol {
-	width: 100%;
-	left: 0;
-}
+	.dwb {
+		height: rem(50px);
+		line-height: rem(50px);
+	}
 
-.mbsc-android-holo .dwhl {
-	padding-left: rem(22px);
-	padding-right: rem(22px);
+	.dwbw:first-child .dwb {
+		@include border-1px(right, #d9d9d9);
+	}
+
+	.dwwol {
+		width: 100%;
+		left: 0;
+	}
+
+	.dwhl {
+		padding-left: rem(22px);
+		padding-right: rem(22px);
+	}
 }

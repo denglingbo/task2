@@ -14,15 +14,8 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 
 var page = new Page();
 
-// 附件对象
-var attach = null;
-
-// 富文本对象
-var phoneInputTitle = null;
-var phoneInputContent = null;
-
 // 验证信息
-var valid = {
+page.valid = {
     isEdit: false,
     title: false,
     content: true,
@@ -32,8 +25,8 @@ var valid = {
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.initPlugin();
     me.bindEvents();
+    me.initPlugin();
 };
 
 /**
@@ -45,8 +38,8 @@ page.bindEvents = function () {
 
     editCom.bindGetFocus();
 
-    editCom.subAndCancel(phoneInputTitle, phoneInputContent, attach, valid, function () {
-        editCom.submit(me, me.data, attach, config.API.AFFAIR_EDIT_URL);
+    editCom.subAndCancel(me, function () {
+        editCom.submit(me, config.API.AFFAIR_EDIT_URL);
     });
 };
 
@@ -82,8 +75,9 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
+    var valid = me.valid;
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', me.data, valid);
+    editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 事件类型
     editCom.initMobiscroll('select', '#affairType', {
@@ -138,17 +132,17 @@ page.initPlugin = function () {
     });
 
     // 初始化附件组件
-    attach = editCom.initEditAttach('.attach-list', me.data.attachements, valid);
+    me.attach = editCom.initEditAttach(me);
 
     // 初始化富文本框
-    phoneInputTitle = new PhoneInput({
+    me.phoneInputTitle = new PhoneInput({
         'handler': '.title-wrap',
         'input': '#edit-title',
         'limit': 50,
         'delete': true
     });
 
-    phoneInputContent = new PhoneInput({
+    me.phoneInputContent = new PhoneInput({
         'handler': '.content-wrap',
         'input': '#edit-content',
         'limit': 5000,
@@ -162,7 +156,7 @@ page.initPlugin = function () {
  * @param {deferred} dfd, deferred
  *
  */
-var doing = 'new';
+var doing = 'edit';
 page.addParallelTask(function (dfd) {
     var me = this;
     var url = doing === 'new' ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
