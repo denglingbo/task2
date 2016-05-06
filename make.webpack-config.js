@@ -458,6 +458,7 @@ MakeWebpackConfig.prototype = {
      *
      */
     mock: function (opts) {
+
         var mockConfig = {
             host: replaceHost(this.config.host),
             port: this.config.mockPort,
@@ -466,14 +467,14 @@ MakeWebpackConfig.prototype = {
             https: false,
             // ,https: true
             // https: {
-            //     key: './ssl/dev-key.pem',
-            //     cert: './ssl/dev-cert.pem'
-            // }
+            //     key: './ssl/server.pem',
+            //     cert: './ssl/kibana.pem'
+            // },
             directoryListing: true,
             proxies: [
                 {
-                    source: '/api', 
-                    target: 'http://task2.test1.com:8015/data/' 
+                    source: this.config.proxyPrefix,
+                    target: this.config.proxyPath
                     // ,options: {
                     //     headers: {
                     //         'header': 'name'
@@ -484,7 +485,7 @@ MakeWebpackConfig.prototype = {
             // 这个为 true https 才有用
             livereload: true
         };
-
+        console.log(mockConfig);
         _.extend(mockConfig, opts);
 
         return mockServer(mockConfig);

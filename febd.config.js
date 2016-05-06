@@ -141,6 +141,9 @@ config.devServer = {
 
 };
 
+config.proxyPrefix = srcConfig.mock.proxyPrefix;
+config.proxyPath = srcConfig.mock.proxyPath;
+
 // 输出到其他物理目录
 // config.output.root = 'D:\\output';
 

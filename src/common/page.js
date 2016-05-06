@@ -265,12 +265,12 @@ var getRequestData = function (data) {
 
     var r = {};
 
-    if (!config.debug) {
-        r = storage.getData('TASK_PARAMS');
-        $.extend(r, data);
-    }
+    r = storage.getData(config.const.TASK_PARAMS);
+
+    $.extend(r, data);
+
     // mock
-    else {
+    if (config.debug) {
         setCookie('JINSESSIONID', config.mock.token);
         setCookie('uid', r.uid);
         setCookie('cid', r.cid);
@@ -317,17 +317,29 @@ Page.prototype.ajax = function (api, data, options) {
 
     var host = config.API.host + config.API.prefix + api;
 
+    var ajaxSettings = {
+        type: opts.type,
+        url: host,
+        data: reqData,
+        dataType: opts.dataType
+    };
+
+    if (config.debug) {
+        ajaxSettings.type = 'GET';
+        ajaxSettings.xhrFields = {
+            withCredentials: true
+        };
+        ajaxSettings.crossDomain = true;
+        // host = host + '?task_id=69598';
+        // host = 'http://172.16.1.108:8080/task/m/v1/get_task_detail?task_id=69585';
+    }
+    // console.log(host);
     // host = 'http://task2.test1.com:8015/data/get_task_detail';
     // host = 'http://task2.test1.com:8015/api/get_task_detail';
     // host = 'https://task2.test1.com:9000/' + api;
     // host = 'https://task2.test1.com:9000/' + api;
 
-    var promise = $.ajax({
-        type: opts.type,
-        url: host,
-        data: reqData,
-        dataType: opts.dataType
-    });
+    var promise = $.ajax(ajaxSettings);
 
     // 请求完成
     promise.done(function (result, status, xhr) {

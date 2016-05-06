@@ -1,0 +1,1 @@
+openssl x509 -req -CA kibana-cert.pem -CAkey server-key.pem -CAcreateserial -in client-csr.pem -out client-cert.pem
