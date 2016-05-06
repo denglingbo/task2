@@ -2,5 +2,5 @@
 /dist
 /npm-debug.log
 .DS_Store
-/ssl/test
-/ssl/bak
+/ssl/test/*
+/ssl/bak/*
