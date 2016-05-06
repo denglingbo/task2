@@ -182,11 +182,11 @@ $.extend(PhoneInput.prototype, {
         if (isNull) {
             me.displayer('placeholder').show();
             me.displayer('limit').hide();
-            me.displayer('delete').hide();
+            me.displayer('delete') && me.displayer('delete').hide();
         }
 
         if (isNotNull) {
-            me.displayer('delete').show();
+            me.displayer('delete') && me.displayer('delete').show();
         }
 
         // 隐藏 placeholder

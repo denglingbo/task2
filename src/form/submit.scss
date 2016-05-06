@@ -1,4 +1,27 @@
 
 @import "../common/css/global.scss";
 @import "../common/ui/phoneInput/phoneInput.scss";
+@import '../common/css/ui';
 
+.edit-attach {
+	background-color: $white;
+	padding-left: rem(15px);
+
+    .edit-add-attach {
+        min-height: rem(50px);
+        line-height: rem(48px);
+        color: #797c80;
+        font-size: rem(14px);
+        display: flex;
+        align-items: center;
+        @include border-1px(top);
+
+        >i {
+        	margin-right: rem(6px);
+        }
+    }
+}
+
+.componentAttachItem {
+    @include border-1px(top, #e1e4e6);
+}

@@ -41,6 +41,7 @@ editCom.validAlert = function (alertSentence) {
     }
     var len = alertSentence.length;
     var time = 0;
+    me.clearAlert();
     if (len > 1) {
         $alertDom.text(alertSentence[0]).removeClass('hide');
         time = 3000;
@@ -73,6 +74,7 @@ editCom.submitAlert = function (isOk) {
     var me = this;
     var $alertDom = $('#alert-submit-after');
 
+    this.clearAlert();
     $alertDom.find('i').className = isOk ? 'circle-right' : 'circle-err';
     $alertDom.find('.alert-words').text(alertSentence[+isOk]);
     $alertDom.removeClass('hide');
@@ -82,6 +84,9 @@ editCom.submitAlert = function (isOk) {
     3000);
 };
 
+editCom.clearAlert = function () {
+    $('#alert-box .alert').addClass('hide');
+};
 /**
  * 取消确认是否编辑过, 是否离开弹窗
  *
@@ -209,7 +214,7 @@ editCom.submit = function (page, postUrl) {
             me.submitAlert(false);
         });
     /* eslint-enable */
-}
+};
 
 /**
  * 初始化紧急程度mobiscroll

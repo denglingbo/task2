@@ -11,6 +11,7 @@ require('./submit.scss');
 var Page = require('common/page');
 var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
+var attachMid = require('common/attachMid');
 
 var page = new Page();
 
@@ -69,13 +70,35 @@ page.enter = function () {
     // 获取当前页面配置
     var curPage = pages[pageType];
 
+    var childTpl = '';
+    if (+pageType === 0) {
+        childTpl = '<div class="edit-attach">'
+                 +     '<div id="addAttach" class="edit-add-attach">'
+                 +          '<i class="add-attach"></i>'
+                 +          '<span>添加附件</span>'
+                 +     '</div>'
+                 +     '<div id="attachList" class="attach-list"></div>'
+                 + '</div>';
+    }
     // 如果没有问题就渲染对应模板
     if (curPage) {
         this.render('#main', {
             list: curPage(isMaster)
+        }, {
+            partials: {attach: childTpl}
         });
     }
 
+    if (+pageType === 0) {
+        var attachOptions = {
+            dom: {
+                containerDOM: '#attachList',
+                addBtnDOM: '#addAttach'
+            },
+            operateType: 'upload'
+        };
+        attachMid.initAttach(attachOptions);
+    }
     // 这里两个输入框的 limit 相同，所以都用一样的配置
     $('.phone-input').each(function () {
         new PhoneInput({
