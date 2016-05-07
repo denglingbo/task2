@@ -1,6 +1,5 @@
-/node_modules
-/dist
-/npm-debug.log
+node_modules
+dist
+npm-debug.log
 .DS_Store
-/ssl/test/*
-/ssl/bak/*
+ssl
