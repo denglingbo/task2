@@ -9,7 +9,7 @@ require('common/widgets/edit/new.scss');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
-var phoneMid = require('common/phoneMid');
+var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
@@ -57,7 +57,7 @@ page.bindEvents = function () {
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                me.data['user_ids'].push(+phoneMid.takeJid(value.jid));
+                me.data['user_ids'].push(+users.takeJid(value.jid));
             });
             editCom.personIsChange(oldVal, me.data['user_ids'], valid);
         });

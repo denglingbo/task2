@@ -1,5 +1,5 @@
 /**
- * @file attachMid.js
+ * @file attachWraper.js
  * @author hefeng
  * 组件调用公共API
  *

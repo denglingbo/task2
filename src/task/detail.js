@@ -10,7 +10,7 @@ require('./detail.scss');
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
-var phoneMid = require('common/phoneMid');
+var users = require('common/middleware/user/users');
 var ListLoader = require('common/ui/listLoader/listLoader');
 var util = require('common/util');
 var Page = require('common/page');
@@ -227,7 +227,7 @@ page.findOwner = function (srcObject, itemObject, appendObject) {
 
     if (itemObject && itemObject.jid) {
 
-        var id = parseInt(phoneMid.takeJid(itemObject.jid), 10);
+        var id = parseInt(users.takeJid(itemObject.jid), 10);
 
         for (var key in srcObject) {
             if (srcObject.hasOwnProperty(key)) {
@@ -299,7 +299,7 @@ page.renderUser = function (originArr, dataArr) {
         var partnerJids = [];
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
-            partnerJids.push(phoneMid.takeJid(item.jid));
+            partnerJids.push(users.takeJid(item.jid));
         });
 
         if (partnerRaw.length) {
@@ -323,7 +323,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
 
     /* eslint-disable */
-    var promise = page.post(config.API.TASK_DETAIL_URL, {
+    var promise = page.get(config.API.TASK_DETAIL_URL, {
         task_id: util.params('task_id')
     });
     /* eslint-enable */
@@ -344,8 +344,8 @@ page.addParallelTask(function (dfd) {
                     partner: data.attend_ids
                 };
 
-                var jids = phoneMid.makeArray(obj);
-                var dfdPub = phoneMid.getUserInfo(jids, data.cid);
+                var jids = users.makeArray(obj);
+                var dfdPub = users.getUserInfo(jids, data.cid);
 
                 // 查询用户信息失败
                 if (dfdPub === null) {

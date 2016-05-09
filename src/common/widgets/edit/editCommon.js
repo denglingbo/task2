@@ -5,8 +5,8 @@
  *
  */
 var util = require('common/util');
-var attachMid = require('common/attachMid');
-var phoneMid = require('common/phoneMid');
+var attachWraper = require('common/middleware/attach/attachWraper');
+var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
 
 var editCom = {};
@@ -204,12 +204,12 @@ editCom.submit = function (page, postUrl) {
     data.content = $('#edit-content').text();
     /* eslint-disable */
     var promise = page.post(postUrl, data);
-    console.log(data);
+    
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
                 dfd.reject(result);
-            } 
+            }
             else {
                 me.submitAlert(true);
                 // TODO
@@ -287,7 +287,7 @@ editCom.initEditAttach = function (page) {
             validObj.isEdit = true;
         }
     };
-    var attachObj = attachMid.initAttach(attachOptions, util.transKey(attachData));
+    var attachObj = attachWraper.initAttach(attachOptions, util.transKey(attachData));
     return attachObj;
 };
 
@@ -384,11 +384,11 @@ editCom.transJid = function (id) {
     var cid = localStorage.getData('cid');
     var jid = [];
     if (!$.isArray(id)) {
-        return phoneMid.makeJid(id, cid);
+        return users.makeJid(id, cid);
     }
     else {
         id.forEach(function (itemId) {
-            jid.push(phoneMid.makeJid(itemId, cid));
+            jid.push(users.makeJid(itemId, cid));
         });
 
         return jid;

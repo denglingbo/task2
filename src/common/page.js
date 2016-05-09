@@ -7,7 +7,7 @@
 var config = require('../config');
 var view = require('./ui/view');
 var util = require('./util');
-var phoneMid = require('./phoneMid');
+var users = require('./middleware/user/users');
 var storage = require('./localstorage');
 
 // ** 调用 jingoal 重写的 ajax 包 ** //
@@ -292,7 +292,7 @@ Page.prototype.post = function (api, data, options) {
 Page.prototype.ajax = function (api, data, options) {
 
     var dfd = new $.Deferred();
-    var isNetwork = phoneMid.isNetwork();
+    var isNetwork = users.isNetwork();
 
     if (!isNetwork) {
         dfd.reject({error: 'Connection None'});
@@ -318,7 +318,7 @@ Page.prototype.ajax = function (api, data, options) {
     };
 
     if (config.debug) {
-        ajaxSettings.type = 'GET';
+        // ajaxSettings.type = 'GET';
         setCookie('JINSESSIONID', config.mock.token);
         setCookie('uid', reqData.uid);
         setCookie('cid', reqData.cid);
@@ -331,6 +331,23 @@ Page.prototype.ajax = function (api, data, options) {
             // ajaxSettings.crossDomain = true;
         }
     }
+    // ajaxSettings.data = {
+    //     "id" : 0,
+    //     "title": "asdasd",
+    //     "content": "",
+    //     "end_time": 0,
+    //     "importance_level": 1,
+    //     "attend_ids": [],
+    //     "notice": 0,
+    //     "principal_user": 0,
+    //     "attachements": [],
+    //     "message": {
+    //         "sent_eim": true,
+    //         "sent_emai": false,
+    //         "sent_sms": false
+    //     }
+    // }
+    // console.log(ajaxSettings)
     // ajaxSettings.url = config.mock.proxyPath + '/' + api;
     // console.log(ajaxSettings);
     // host = 'http://task2.test1.com:8015/data/get_task_detail';

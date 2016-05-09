@@ -8,7 +8,7 @@
 require('./list.scss');
 
 var util = require('../common/util');
-var phoneMid = require('../common/phoneMid.js');
+var users = require('common/middleware/user/users.js');
 var Page = require('../common/page');
 
 var page = new Page();
@@ -27,7 +27,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
     var jids = util.params('jids');
 
-    phoneMid.getUserAndPhoto(jids)
+    users.getUserAndPhoto(jids)
         .done(function (data) {
             me.data = {
                 list: data

@@ -51,9 +51,9 @@ var config = {
         TALK_DETAIL_URL: 'get_talk_detail',
 
         // attach uploadUrl
-        ATTACH_UPLOADURL: '',
+        ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
         // attach resumeUrl
-        ATTACH_RESUMEURL: ''
+        ATTACH_RESUMEURL: '/task/m/v1/attachment/getFSTokensOnContinue'
     }
 };
 
@@ -69,7 +69,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '8892f13f-fd95-41bd-aa42-b9031dcbec5b',
+    token: 'fdcc2d7a-50ff-474b-81df-94e5a78ee402',
 
     // mock 代理服务不要最后的 '/'
     proxyPrefix: '/api',
