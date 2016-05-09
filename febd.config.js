@@ -136,7 +136,7 @@ config.devServer = {
      * 本地项目用 https:// 访问项目
      * 同时需要 webpack dev server 进行 https 配置
      */
-    https: true
+    https: false
 
     // webpack dev server source
     // options.https.key = options.https.key || fs.readFileSync(path.join(__dirname, "../ssl/server.key"));

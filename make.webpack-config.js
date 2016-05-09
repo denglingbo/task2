@@ -461,24 +461,25 @@ MakeWebpackConfig.prototype = {
 
         var mockConfig = {
             host: replaceHost(this.config.host),
+            // host: 'task2.test1.com',
             port: this.config.mockPort,
             path: '/',
             mockDir: './mock',
             // https: false,
-            https: true,
+            https: false,
 
             /**
              * 当后端联调环境为 https 的接口
              * @require 服务端 key.pem
              * @require 服务端 cert.pem
              */
-            https: {
-                // key: './ssl/keys/server-key.pem',
-                // cert: './ssl/keys/server-cert.pem'
-                key: './ssl/dev/server.key',
-                cert: './ssl/dev/server.crt',
-                ca: './ssl/dev/ca.crt'
-            },
+            // https: {
+            //     // key: './ssl/keys/server-key.pem',
+            //     // cert: './ssl/keys/server-cert.pem'
+            //     key: './ssl/dev/server.key',
+            //     cert: './ssl/dev/server.crt',
+            //     ca: './ssl/dev/ca.crt'
+            // },
             directoryListing: true,
             proxies: [
                 {
