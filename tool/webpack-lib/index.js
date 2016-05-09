@@ -8,18 +8,44 @@
 var _ = require('underscore');
 var glob = require('glob');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var BellOnBundlerErrorPlugin = require('bell-on-bundler-error-plugin');
 
-var Webpacker = function (config, dirMap) {
+/**
+ * Main
+ *
+ * @param {Object} config, 默认使用 make.webpack.js 中的 config
+ * @param {string} root, 项目根目录
+ */
+var Webpacker = function (config, root) {
 
-    this.config = config;
-    this.dirMap = dirMap;
+    this.config = {};
+
+    _.extend(this.config, config);
+
+    if (!config) {
+        throw new Error('[webpacker] webpack-lib/index.js not find {this.config} && {this.dirMap}'); 
+        return;
+    }
+
+    this.root = root;
+    this.src = root + 'src/';
+
+    // 先把 js 遍历出来
+    this.jsFiles = this.getJsFiles();
+
+    // 获取和 页面相关的 属性
+    var getPager = this.getPager();
+
+    this.htmlPlugins = getPager.htmlPlugins;
+    this.jsEntries = getPager.jsEntries;
+    this.allChunks = getPager.allChunks;
 
     // 默认引入项目根目录下的 make.webpack.js
-    this.MakeWebpackConfig = require(dirMap.root + 'make.webpack.js');
+    // make.webpack.js
+    this.MakeWebpackConfig = require(this.root + 'make.webpack.js');
 
-    this.webpackConfig = this.MakeWebpackConfig(this, config);
+    this.webpackConfig = this.MakeWebpackConfig.call(this);
 };
 
 /**
@@ -50,13 +76,13 @@ Webpacker.prototype.fixFolder = function (folderName, sign) {
 Webpacker.prototype.file = function (filePath, options) {
     
     var opts = {
-        noFolder: ['index']
+        notFolder: ['index']
     };
 
     _.extend(opts, options);
 
     // 获取 {folderName}/{pageName}.js
-    var p = filePath.replace(this.dirMap.src, '');
+    var p = filePath.replace(this.src, '');
 
     p = p.substring(0, p.lastIndexOf('.'));
 
@@ -68,9 +94,9 @@ Webpacker.prototype.file = function (filePath, options) {
 
         // 不添加 folder
         // EG: index 前面不添加文件名
-        var expr = new RegExp('^(' + opts.noFolder.join('|') + ')$');
+        var expr = new RegExp('^(' + opts.notFolder.join('|') + ')$');
 
-        if (!expr.test(fileName)) {
+        if (!expr.test(arr[0])) {
             folderName = arr[0];
         }
 
@@ -92,7 +118,7 @@ Webpacker.prototype.getJsFiles = function () {
     var me = this;
     var map = {};
 
-    var entryFiles = glob.sync(me.dirMap.src + '**/*.js');
+    var entryFiles = glob.sync(me.src + '**/*.js');
 
     entryFiles.forEach(function (filePath) {
         var page = me.file(filePath);
@@ -107,10 +133,10 @@ Webpacker.prototype.getJsFiles = function () {
  * 入口js 必须和 入口模板名相同
  * EG: a页的入口文件是 [a].tpl|html，那么在 js 目录下必须有一个 [a].js 作为入口文件
  */
-Webpacker.prototype.page = function () {
+Webpacker.prototype.getPager = function () {
     var me = this;
 
-    var jsFiles = me.getJsFiles();
+    var jsFiles = this.jsFiles;
 
     var htmlPlugins = [];
     var jsEntries = {};
@@ -118,7 +144,7 @@ Webpacker.prototype.page = function () {
     var allChunks = [];
 
     // 查找 模板 根目录下的入口文件
-    var pages = glob.sync(me.dirMap.src + '**/*.html');
+    var pages = glob.sync(me.src + '**/*.html');
 
     pages.forEach(function (filePath) {
 
@@ -149,7 +175,7 @@ Webpacker.prototype.page = function () {
             allChunks.push(page.name);
         }
     });
-console.log(jsEntries)
+
     return {
         htmlPlugins: htmlPlugins,
         jsEntries: jsEntries,
@@ -162,7 +188,20 @@ console.log(jsEntries)
  */
 Webpacker.prototype.getCommonPlugins = function () {
 
-    var plugins = [];
+    var plugins = [
+
+        new BellOnBundlerErrorPlugin(),
+
+        new webpack.ProgressPlugin(function (percentage, msg) {
+            console.log('progress: ' + percentage.toFixed(2) + ' -- ' + msg)
+        }),
+
+        // 提取所有 打包后 js 入口文件中的公共部分
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            chunks: this.allChunks
+        })
+    ];
 
     // 非开发环境 打包
     if (!this.config.debug) {
@@ -175,20 +214,11 @@ Webpacker.prototype.getCommonPlugins = function () {
         plugins.push(
             new webpack.NoErrorsPlugin()
         );
-
-        // 提取样式
-        plugins.push(
-
-            // Reference: https://github.com/webpack/extract-text-webpack-plugin
-            new ExtractTextPlugin(
-                // config.output.assets + '/css/[contenthash:8].[name].min.css'
-                this.config.output.assets + '/css/[name].min.css'
-            )
-        );
     }
 
     // 开发环境
     else {
+
         plugins.push(
             new webpack.HotModuleReplacementPlugin()
         );

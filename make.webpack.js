@@ -7,27 +7,22 @@
 var _ = require('underscore');
 var path = require('path');
 var webpack = require('webpack');
-var BellOnBundlerErrorPlugin = require('bell-on-bundler-error-plugin');
 var CopyPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-// Webapck utils
-var Webpacker = require('./tool/webpack-lib/index');
 
-// var dirMap = {
-//     root: path.join(__dirname, '/'),
-//     src: path.join(__dirname, '/src/'),
-//     dep: path.join(__dirname, '/dep/'),
-//     common: path.join(__dirname, '/src/common/')
-// };
+var dep = path.join(__dirname, '/dep/');
+var common = path.join(__dirname, '/src/common/');
+
 
 /**
  * Make webpack config method
- *
- * @param {Webpacker} webpacker, new Webpacker webpack-lib 会自动调用 make.webpack.js
+ * webpack-lib 会自动调用 make.webpack.js
+ * function 的 this 指向 webpack-lib/index.js
  */
-var MakeWebpackConfig = function (webpacker, config) {
+module.exports = function () {
 
-    var page = webpacker.page();
+    var config = this.config;
 
     var webpackConfig = {};
 
@@ -35,18 +30,11 @@ var MakeWebpackConfig = function (webpacker, config) {
         webpackConfig.devtool = 'eval-source-map';
     }
 
-
     // 页面 js 入口
-    webpackConfig.entry = page.jsEntries;
+    webpackConfig.entry = this.jsEntries;
     
     // 插件集合
     webpackConfig.plugins = [
-
-        new BellOnBundlerErrorPlugin(),
-
-        new webpack.ProgressPlugin(function (percentage, msg) {
-            console.log('progress: ' + percentage.toFixed(2) + ' -- ' + msg)
-        }),
 
         // to: 实际为 path/xxx
         new CopyPlugin([
@@ -64,36 +52,42 @@ var MakeWebpackConfig = function (webpacker, config) {
             }
         ]),
 
-        // 提取所有 打包后 js 入口文件中的公共部分
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'common',
-            chunks: page.allChunks
-        }),
-
         // 提供全局使用
         new webpack.ProvidePlugin({
             $: 'zepto'
         })
     ];
 
-    var commonPlugins = webpacker.getCommonPlugins();
+    var commonPlugins = this.getCommonPlugins();
 
     // 提取公共部分
     webpackConfig.plugins = webpackConfig.plugins.concat(commonPlugins);
 
     // * 最为重要的部分，其中包含页面入口配置
-    webpackConfig.plugins = webpackConfig.plugins.concat(page.htmlPlugins);
+    webpackConfig.plugins = webpackConfig.plugins.concat(this.htmlPlugins);
+
+    if (!config.debug) {
+        // 提取样式
+        webpackConfig.plugins.push(
+
+            // Reference: https://github.com/webpack/extract-text-webpack-plugin
+            new ExtractTextPlugin(
+                // 'common/css/[contenthash:8].[name].min.css'
+                'common/css/[name].min.css'
+            )
+        );
+    }
 
     // 设置 resolve
     webpackConfig.resolve = {
 
         // 指定模块查找的根目录
-        root: [this.dirMap.src, '/node_modules'],
+        root: [this.src, '/node_modules'],
 
         alias: {
-            zepto: this.dirMap.dep + 'zepto',
-            dep: this.dirMap.dep,
-            common: this.dirMap.common
+            zepto: dep + 'zepto',
+            dep: dep,
+            common: common
         },
 
         extensions: ['', '.js', '.tpl', '.html']
@@ -142,7 +136,7 @@ var MakeWebpackConfig = function (webpacker, config) {
             },
             {
                 test: /\.css$/, 
-                loader: webpacker.getCssLoader()
+                loader: this.getCssLoader()
             },
             { 
                 // sass 加载器
@@ -151,17 +145,16 @@ var MakeWebpackConfig = function (webpacker, config) {
                 // Reference: https://github.com/webpack/sass-loader
                 // Reference: https://github.com/webpack/extract-text-webpack-plugin
                 test: /\.scss$/, 
-                loader: webpacker.getCssLoader('sass')
+                loader: this.getCssLoader('sass')
                 // include: [path.resolve(__dirname, config.srcDir + 'static/css')],  //把要处理的目录包括进来
                 // exclude: []  //排除不处理的目录
             }
         ]
     };
 
+    // console.log(this.htmlPlugins);
     // console.log(webpackConfig);
 
     return webpackConfig;
 
 };
-
-module.exports = MakeWebpackConfig;

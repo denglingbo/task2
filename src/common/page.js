@@ -318,25 +318,18 @@ Page.prototype.ajax = function (api, data, options) {
     };
 
     if (config.debug) {
-        ajaxSettings.type = 'GET';
+        
         setCookie('JINSESSIONID', config.mock.token);
         setCookie('uid', reqData.uid);
         setCookie('cid', reqData.cid);
 
-        // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加虾面的配置
+        // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
         if (!/^\/data/.test(config.API.prefix)) {
             ajaxSettings.xhrFields = {
                 withCredentials: true
             };
-            // ajaxSettings.crossDomain = true;
         }
     }
-    // ajaxSettings.url = config.mock.proxyPath + '/' + api;
-    // console.log(ajaxSettings);
-    // host = 'http://task2.test1.com:8015/data/get_task_detail';
-    // host = 'http://task2.test1.com:8015/api/get_task_detail';
-    // host = 'https://task2.test1.com:9000/' + api;
-    // host = 'https://task2.test1.com:9000/' + api;
 
     var promise = $.ajax(ajaxSettings);
 
