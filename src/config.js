@@ -51,9 +51,9 @@ var config = {
         TALK_DETAIL_URL: 'get_talk_detail',
 
         // attach uploadUrl
-        ATTACH_UPLOADURL: '',
+        ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
         // attach resumeUrl
-        ATTACH_RESUMEURL: ''
+        ATTACH_RESUMEURL: '/task/m/v1/attachment/getFSTokensOnContinue'
     }
 };
 
@@ -103,7 +103,7 @@ if (config.debug) {
 
     // 这是有历史意义的 一次尝试
     // config.mock.proxyPath = 'https://127.0.0.1:3000';
-    // config.mock.proxyPath = 'http://web.test1.com/task/m/v1/';
+    // config.mock.proxyPath = 'https://web.test1.com/task/m/v1/';
 }
 
 module.exports = config;

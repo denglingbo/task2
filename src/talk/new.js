@@ -9,8 +9,9 @@ require('common/widgets/edit/new.scss');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
-var phoneMid = require('common/phoneMid');
+var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
+var util = require('common/util');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
@@ -50,14 +51,14 @@ page.bindEvents = function () {
     // 选择人员跳转页面
     $('#attends').click(function () {
         var oldVal = me.data['user_ids'];
-        CPNavigationBar.redirect('selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                me.data['user_ids'].push(+phoneMid.takeJid(value.jid));
+                me.data['user_ids'].push(+users.takeJid(value.jid));
             });
             editCom.personIsChange(oldVal, me.data['user_ids'], valid);
         });
@@ -144,25 +145,47 @@ page.initValue = function () {
  * @param {deferred} dfd, deferred
  *
  */
-var doing = 'edit';
-page.addParallelTask(function (dfd) {
-    var me = this;
-    var url = doing === 'new' ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
-    var promise = me.post(url);
-
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                me.data = result.data;
-                dfd.resolve();
-            }
+/* eslint-disable */
+var doing = 'new';
+if (doing === 'new') {
+    page.data = {
+        "id": 0,
+        "attachements": [],
+        "content": "",
+        "importance_level": 1,
+        "inheritance": true,
+        "message": {
+            "sent_eim": true,
+            "sent_emai": false,
+            "sent_sms": false
+        },
+        "task_id": 69598,
+        "title": "",
+        "user_ids": []
+    }
+}
+else {
+    page.addParallelTask(function (dfd) {
+        var me = this;
+        var url = config.API.TALK_EDIT_URL;
+        var promise = me.post(url, {
+            talk_id: util.params('id')
         });
-    return dfd;
-});
 
+        promise
+            .done(function (result) {
+                if (result.meta.code !== 200) {
+                    dfd.reject(result);
+                }
+                else {
+                    me.data = result.data;
+                    dfd.resolve();
+                }
+            });
+        return dfd;
+    });
+}
+/* eslint-enable */
 $(function () {
     page.start();
 });

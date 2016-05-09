@@ -3451,6 +3451,7 @@ if (!window.jQuery) {
                 opt,
                 txt,
                 val,
+                currDefaultChooseValue,
                 l = 0,
                 c = 0,
                 groupIndexes = {};
@@ -3463,7 +3464,6 @@ if (!window.jQuery) {
 
             // Reset invalids
             invalid.length = 0;
-
             if (hasData) {
                 $.each(s.data, function (i, v) {
                     txt = v[s.dataText];
@@ -3504,6 +3504,7 @@ if (!window.jQuery) {
                     //dhj 新增 默认选择的元素
                     if(v[s.dataSelected] && !s.isSelected){
                         selectedValues[val] = val;
+                        currDefaultChooseValue = val;
                     }
                 });
             } else {
@@ -3548,7 +3549,7 @@ if (!window.jQuery) {
             }
 
             if (optionArray.length) {
-                defaultValue = defaultValue || optionArray[0].value;  //dhj 改
+                defaultValue = defaultValue || selectedValues[currDefaultChooseValue] || optionArray[0].value;  //dhj 改
             }
 
             if (groupHdr) {

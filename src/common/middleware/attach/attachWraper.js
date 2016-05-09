@@ -1,5 +1,5 @@
 /**
- * @file attachMid.js
+ * @file attachWraper.js
  * @author hefeng
  * 组件调用公共API
  *
@@ -28,6 +28,7 @@ var clientMsg = (function () {
         appver: data.appver || '111.1.1'
     };
 })();
+
 // attach 公共参数
 var attachOption = {
     // 客户端信息
@@ -75,7 +76,12 @@ var attach = {};
  */
 attach.initAttach = function (options, attachData) {
     attachData = attachData || {};
-    var attachOptions = $.extend({originAttaches: attachData}, attachOption, methodOption[options.operateType], options);
+    var attachOptions = $.extend(
+        {originAttaches: attachData},
+        attachOption,
+        methodOption[options.operateType],
+        options
+    );
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);

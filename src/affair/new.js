@@ -10,6 +10,7 @@ var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
+var util = require('common/util');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
@@ -80,46 +81,49 @@ page.initPlugin = function () {
     editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 事件类型
+    var typeData = [
+        {
+            text: '待办',
+            value: 0
+        },
+        {
+            text: '求助',
+            value: 1
+        },
+        {
+            text: '汇报',
+            value: 2
+        },
+        {
+            text: '计划',
+            value: 3
+        },
+        {
+            text: '日志',
+            value: 4
+        },
+        {
+            text: '记录',
+            value: 5
+        },
+        {
+            text: '消息',
+            value: 6
+        },
+        {
+            text: '其他',
+            value: 7
+        }
+    ];
+    /* eslint-disable */
+    typeData[me.data['label_id']].selected = true;
+    /* eslint-enable */
     editCom.initMobiscroll('select', '#affairType', {
         headerText: '事件类型',
         showInput: false,
         showMe: true,
         rows: 3,
-        data: [
-            {
-                text: '待办',
-                value: 0
-            },
-            {
-                text: '求助',
-                value: 1,
-                selected: true
-            },
-            {
-                text: '汇报',
-                value: 2
-            },
-            {
-                text: '计划',
-                value: 3
-            },
-            {
-                text: '日志',
-                value: 4
-            },
-            {
-                text: '记录',
-                value: 5
-            },
-            {
-                text: '消息',
-                value: 6
-            },
-            {
-                text: '其他',
-                value: 7
-            }
-        ],
+        data: typeData,
         onSelect: function (text, inst) {
             /* eslint-disable */
             var oldVal = me.data['label_id'];
@@ -156,25 +160,46 @@ page.initPlugin = function () {
  * @param {deferred} dfd, deferred
  *
  */
-var doing = 'edit';
-page.addParallelTask(function (dfd) {
-    var me = this;
-    var url = doing === 'new' ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
-    var promise = me.post(url);
-
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                me.data = result.data;
-                dfd.resolve();
-            }
+/* eslint-disable */
+var doing = 'new';
+if (doing === 'new') {
+    page.data = {
+        "id": 0,
+        "attachements": [],
+        "message" : {
+            "sent_eim": true,
+            "sent_emai": false,
+            "sent_sms": false
+        },
+        "task_id": 0,
+        "title": "",
+        "content": "",
+        "importance_level": 1,
+        "label_id": 0
+    }  
+}
+else {
+    page.addParallelTask(function (dfd) {
+        var me = this;
+        var url = config.API.AFFAIR_EDIT_URL;
+        var promise = me.post(url, {
+            affair_id: util.params('id')
         });
-    return dfd;
-});
 
+        promise
+            .done(function (result) {
+                if (result.meta.code !== 200) {
+                    dfd.reject(result);
+                }
+                else {
+                    me.data = result.data;
+                    dfd.resolve();
+                }
+            });
+        return dfd;
+    });
+}
+/* eslint-enable */
 $(function () {
     page.start();
 });

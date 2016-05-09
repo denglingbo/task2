@@ -5,8 +5,8 @@
  *
  */
 var util = require('common/util');
-var attachMid = require('common/attachMid');
-var phoneMid = require('common/phoneMid');
+var attachWraper = require('common/middleware/attach/attachWraper');
+var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
 
 var editCom = {};
@@ -203,13 +203,12 @@ editCom.submit = function (page, postUrl) {
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').text();
     /* eslint-disable */
-    var promise = page.post(postUrl, data);
-    console.log(data);
+    var promise = page.post(postUrl, JSON.stringify(data));
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
                 dfd.reject(result);
-            } 
+            }
             else {
                 me.submitAlert(true);
                 // TODO
@@ -231,30 +230,33 @@ editCom.submit = function (page, postUrl) {
 editCom.initImportanceLevel = function (selector, page) {
     var infoData = page.data;
     var validObj = page.valid;
+    var importData = [
+        {
+            text: '重要且紧急',
+            value: 4
+        },
+        {
+            text: '普通',
+            value: 1
+        },
+        {
+            text: '重要',
+            value: 2
+        },
+        {
+            text: '紧急',
+            value: 3
+        }
+    ];
+    /* eslint-disable */
+    importData[infoData['importance_level']].selected = true;
+    /* eslint-enable */
     var data = {
         headerText: '紧急程度',
         showInput: false,
         showMe: true,
         rows: 3,
-        data: [
-            {
-                text: '重要且紧急',
-                value: 4
-            },
-            {
-                text: '普通',
-                value: 1,
-                selected: true
-            },
-            {
-                text: '重要',
-                value: 2
-            },
-            {
-                text: '紧急',
-                value: 3
-            }
-        ],
+        data: importData,
         onSelect: function (text, inst) {
             /* eslint-disable */
             var oldVal = +infoData['importance_level'];
@@ -266,29 +268,6 @@ editCom.initImportanceLevel = function (selector, page) {
         }
     };
     this.initMobiscroll('select', selector, data);
-};
-
-/**
- * 初始化新建、编辑页面附件
- *
- * @param {Object} page, 页面对象
- * @return {Object} 附件对象
- */
-editCom.initEditAttach = function (page) {
-    var attachData = page.data.attachements;
-    var validObj = page.valid;
-    var attachOptions = {
-        dom: {
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        },
-        operateType: 'upload',
-        callback: function () {
-            validObj.isEdit = true;
-        }
-    };
-    var attachObj = attachMid.initAttach(attachOptions, util.transKey(attachData));
-    return attachObj;
 };
 
 /**
@@ -310,6 +289,29 @@ editCom.initMobiscroll = function (method, selector, data) {
         height: 50
     };
     $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
+};
+
+/**
+ * 初始化新建、编辑页面附件
+ *
+ * @param {Object} page, 页面对象
+ * @return {Object} 附件对象
+ */
+editCom.initEditAttach = function (page) {
+    var attachData = page.data.attachements;
+    var validObj = page.valid;
+    var attachOptions = {
+        dom: {
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
+        },
+        operateType: 'upload',
+        callback: function () {
+            validObj.isEdit = true;
+        }
+    };
+    var attachObj = attachWraper.initAttach(attachOptions, util.transKey(attachData));
+    return attachObj;
 };
 
 /**
@@ -384,11 +386,11 @@ editCom.transJid = function (id) {
     var cid = localStorage.getData('cid');
     var jid = [];
     if (!$.isArray(id)) {
-        return phoneMid.makeJid(id, cid);
+        return users.makeJid(id, cid);
     }
     else {
         id.forEach(function (itemId) {
-            jid.push(phoneMid.makeJid(itemId, cid));
+            jid.push(users.makeJid(itemId, cid));
         });
 
         return jid;

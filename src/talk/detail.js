@@ -13,7 +13,7 @@ require('common/ui/virtualInput/virtualInput.scss');
 var config = require('../config');
 var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail.js');
-var phoneMid = require('common/phoneMid.js');
+var users = require('common/middleware/user/users.js');
 var Page = require('common/page');
 var virtualInput = require('common/ui/virtualInput/virtualInput');
 
@@ -81,6 +81,7 @@ page.bindEvents = function () {
     });
 
     // 完成按钮点击事件
+    /* eslint-disable */
     var map = {
         '0': {
             done: 'untick',
@@ -91,6 +92,7 @@ page.bindEvents = function () {
             fail: 'untick'
         }
     };
+    /* eslint-enable */
 
     this.ticker.on('click', function (isCurTicked) {
         var myTicker = this;
@@ -136,7 +138,7 @@ page.renderUser = function (arr) {
         var partnerJids = [];
         arr.forEach(function (item) {
             partnerRaw.push(item.name);
-            partnerJids.push(phoneMid.takeJid(item.jid));
+            partnerJids.push(users.takeJid(item.jid));
         });
 
         if (partnerRaw.length) {
@@ -160,7 +162,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
 
     /* eslint-disable */
-    var promise = page.post(config.API.TALK_DETAIL_URL, {
+    var promise = page.get(config.API.TALK_DETAIL_URL, {
         talk_id: util.params('id')
     });
     /* eslint-enable */
@@ -175,7 +177,7 @@ page.addParallelTask(function (dfd) {
             else {
                 me.data = data;
 
-                var dfdPub = phoneMid.getUserInfo(data.user_ids);
+                var dfdPub = users.getUserInfo(data.user_ids);
 
                 // 查询用户信息失败
                 if (dfdPub === null) {

@@ -7,8 +7,8 @@
  *
  */
 var util = require('../../util');
-var phoneMid = require('common/phoneMid');
-var AttachMid = require('common/attachMid');
+var users = require('common/middleware/user/users');
+var AttachWraper = require('common/middleware/attach/attachWraper');
 var util = require('common/util');
 
 var detail = {};
@@ -73,7 +73,7 @@ detail.dealPageData = function (result) {
 
     // 负责人到完成任务页面有备注信息填写
     // 判断这个用户点击完成任务过去的页面的展示权限
-    if (phoneMid.uid() === data.principal_user) {
+    if (users.uid() === data.principal_user) {
         data.isMaster = 1;
     }
 
@@ -130,7 +130,7 @@ detail.rightsView = function (rights) {};
  */
 detail.initDetailAttach = function (attachData, containerSelector) {
     attachOptions.dom.containerDOM = containerSelector;
-    var attachObj = AttachMid.initAttach(attachOptions, util.transKey(attachData));
+    var attachObj = AttachWraper.initAttach(attachOptions, util.transKey(attachData));
     return attachObj;
 };
 
