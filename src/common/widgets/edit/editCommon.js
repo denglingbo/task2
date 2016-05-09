@@ -53,7 +53,7 @@ editCom.validAlert = function (alertSentence) {
     else {
         return;
     }
-    setTimeout(function () {
+    me.timer = setTimeout(function () {
         $alertDom.addClass('hide');
         alertSentence.shift();
         if (alertSentence.length) {
@@ -78,15 +78,21 @@ editCom.submitAlert = function (isOk) {
     $alertDom.find('i').className = isOk ? 'circle-right' : 'circle-err';
     $alertDom.find('.alert-words').text(alertSentence[+isOk]);
     $alertDom.removeClass('hide');
-    setTimeout(function () {
+    me.timer = setTimeout(function () {
         $alertDom.addClass('hide');
     },
     3000);
 };
 
+/**
+ * 清除弹窗
+ *
+ */
 editCom.clearAlert = function () {
+    clearTimeout(this.timer);
     $('#alert-box .alert').addClass('hide');
 };
+
 /**
  * 取消确认是否编辑过, 是否离开弹窗
  *
@@ -136,7 +142,7 @@ editCom.submitValid = function (submitFn, validObj) {
         }
 
         if (!validObj.content) {
-            arr.push('输入内容不能超过5万字');
+            arr.push('输入内容不能超过5千字');
         }
 
         if (!validObj.isAttachesReady) {
