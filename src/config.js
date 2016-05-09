@@ -9,7 +9,7 @@ var config = {
 
     API: {
         // 用于发送异步请求
-        host: 'http://web.jingoal.com',
+        host: 'https://web.jingoal.com',
 
         prefix: '/task/m/v1/',
 
@@ -85,7 +85,7 @@ config.mock = {
 // prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
 
-    config.API.host = 'https://task2.test1.com:8015';
+    config.API.host = document.location.protocol + '//task2.test1.com:8015';
     // config.API.host = 'https://web.test1.com';
 
     // 直接走 mock server

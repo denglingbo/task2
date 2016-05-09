@@ -52,7 +52,7 @@ gulp.task('dev', function () {
     
     webpacker.mockStart({
         mockDir: './mock',
-        https: true
+        https: config.https
     });
 
     webpacker.devStart();
