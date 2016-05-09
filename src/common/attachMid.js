@@ -48,7 +48,7 @@ var attachOption = {
 var methodOption = {
     upload: {
         supportType: [
-        // 本地文件
+            // 本地文件
             1,
             // 网盘文件
             2,
@@ -74,6 +74,7 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
+    attachData = attachData || {};
     var attachOptions = $.extend({originAttaches: attachData}, attachOption, methodOption[options.operateType], options);
     // 初始化附件组件
     /* eslint-disable */

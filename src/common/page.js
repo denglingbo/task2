@@ -324,12 +324,11 @@ Page.prototype.ajax = function (api, data, options) {
         setCookie('cid', reqData.cid);
 
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加虾面的配置
-        var expr = config.API.prefix.search(new RegExp(config.mock.proxyPrefix));
-        if (expr === 0) {
+        if (!/^\/data/.test(config.API.prefix)) {
             ajaxSettings.xhrFields = {
                 withCredentials: true
             };
-            ajaxSettings.crossDomain = true;
+            // ajaxSettings.crossDomain = true;
         }
     }
     // ajaxSettings.url = config.mock.proxyPath + '/' + api;

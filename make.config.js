@@ -5,7 +5,9 @@ var config = {
 
     host: '127.0.0.1',
 
-    port: 8014
+    port: 8014,
+
+    publicPath: '/'
 };
 
 config.https = {
@@ -19,9 +21,11 @@ config.mock = {
 
     host: config.host,
 
-    port: config.port,
+    port: 8015,
 
-    proxyPrefix: '',
+    proxyPrefix: null,
 
-    proxyPath: ''
+    proxyPath: null
 }
+
+module.exports = config;
