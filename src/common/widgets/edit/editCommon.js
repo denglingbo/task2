@@ -203,8 +203,7 @@ editCom.submit = function (page, postUrl) {
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').text();
     /* eslint-disable */
-    var promise = page.post(postUrl, data);
-    
+    var promise = page.post(postUrl, JSON.stringify(data));
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
@@ -231,30 +230,33 @@ editCom.submit = function (page, postUrl) {
 editCom.initImportanceLevel = function (selector, page) {
     var infoData = page.data;
     var validObj = page.valid;
+    var importData = [
+        {
+            text: '重要且紧急',
+            value: 4
+        },
+        {
+            text: '普通',
+            value: 1
+        },
+        {
+            text: '重要',
+            value: 2
+        },
+        {
+            text: '紧急',
+            value: 3
+        }
+    ];
+    /* eslint-disable */
+    importData[infoData['importance_level']].selected = true;
+    /* eslint-enable */
     var data = {
         headerText: '紧急程度',
         showInput: false,
         showMe: true,
         rows: 3,
-        data: [
-            {
-                text: '重要且紧急',
-                value: 4
-            },
-            {
-                text: '普通',
-                value: 1,
-                selected: true
-            },
-            {
-                text: '重要',
-                value: 2
-            },
-            {
-                text: '紧急',
-                value: 3
-            }
-        ],
+        data: importData,
         onSelect: function (text, inst) {
             /* eslint-disable */
             var oldVal = +infoData['importance_level'];
@@ -266,6 +268,27 @@ editCom.initImportanceLevel = function (selector, page) {
         }
     };
     this.initMobiscroll('select', selector, data);
+};
+
+/**
+ * 初始化mobiscroll
+ *
+ * @param {string} method, 初始化mobiscroll的种类
+ * @param {string} selector, 选择器字符串
+ * @param {Object} data, 初始化参数
+ */
+editCom.initMobiscroll = function (method, selector, data) {
+    // mobiscroll 公共参数
+    var mobiOptions = {
+        theme: 'android-holo-light',
+        mode: 'scroller',
+        // ios 底部上滑, android 中间显示
+        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
+        lang: 'zh',
+        buttons: ['cancel', 'set'],
+        height: 50
+    };
+    $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
 };
 
 /**
@@ -289,27 +312,6 @@ editCom.initEditAttach = function (page) {
     };
     var attachObj = attachWraper.initAttach(attachOptions, util.transKey(attachData));
     return attachObj;
-};
-
-/**
- * 初始化mobiscroll
- *
- * @param {string} method, 初始化mobiscroll的种类
- * @param {string} selector, 选择器字符串
- * @param {Object} data, 初始化参数
- */
-editCom.initMobiscroll = function (method, selector, data) {
-    // mobiscroll 公共参数
-    var mobiOptions = {
-        theme: 'android-holo-light',
-        mode: 'scroller',
-        // ios 底部上滑, android 中间显示
-        display: (/(iphone|ipad)/i).test(navigator.appVersion) ? 'bottom' : 'modal',
-        lang: 'zh',
-        buttons: ['cancel', 'set'],
-        height: 50
-    };
-    $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
 };
 
 /**

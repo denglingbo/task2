@@ -354,7 +354,6 @@ Page.prototype.ajax = function (api, data, options) {
     // host = 'http://task2.test1.com:8015/api/get_task_detail';
     // host = 'https://task2.test1.com:9000/' + api;
     // host = 'https://task2.test1.com:9000/' + api;
-
     var promise = $.ajax(ajaxSettings);
 
     // 请求完成

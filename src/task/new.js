@@ -212,7 +212,7 @@ page.initValue = function () {
  * @param {deferred} dfd, deferred
  *
  */
- /* eslint-disable */
+/* eslint-disable */
 var doing = 'new';
 if (doing === 'new') {
     page.data = {
@@ -237,7 +237,7 @@ else {
         var me = this;
         var url = config.API.TASK_EDIT_URL;
         var promise = me.post(url, {
-            talk_id: util.params('id')
+            task_id: util.params('task_id')
         });
 
         promise

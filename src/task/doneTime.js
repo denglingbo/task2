@@ -6,13 +6,13 @@
  */
 
 require('./doneTime.scss');
-var config = require('config');
 var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
+// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
-// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
+
 
 var info = {
     endTime: 0
@@ -104,29 +104,6 @@ page.returnValue = function (hasVal) {
     CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
 };
-/**
- * 请求页面接口
- *
- * @param {deferred} dfd, deferred
- *
- */
-
-page.addParallelTask(function (dfd) {
-    var me = this;
-    var promise = me.post(config.API.TASK_EDIT_URL, {});
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                me.data = result.data;
-                dfd.resolve();
-            }
-        });
-
-    return dfd;
-});
 
 $(function () {
     page.start();

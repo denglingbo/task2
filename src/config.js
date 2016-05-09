@@ -69,7 +69,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: 'fdcc2d7a-50ff-474b-81df-94e5a78ee402',
+    token: '9beab9c0-95a6-4488-ac99-b472fb6cca36',
 
     // mock 代理服务不要最后的 '/'
     proxyPrefix: '/api',
@@ -89,21 +89,21 @@ if (config.debug) {
     config.API.host = 'https://web.test1.com';
 
     // 直接走 mock server
-    // config.API.prefix = '/data/';
+    config.API.prefix = '/data/';
 
     // 通过 mock server [node] 转发
     // config.API.prefix = '/api/';
 
     // 后端联调位置
     // config.mock.proxyPath = 'http://web.test1.com' + config.API.prefix;
-    config.mock.proxyPath = 'http://172.16.1.108:8080/task/m/v1/';
+    // config.mock.proxyPath = 'http://172.16.1.108:8080/task/m/v1/';
 
     // node 端代理转发地址 本地模拟转发
     // config.mock.proxyPath = 'http://task2.test1.com:9000'
 
     // 这是有历史意义的 一次尝试
     // config.mock.proxyPath = 'https://127.0.0.1:3000';
-    // config.mock.proxyPath = 'http://web.test1.com/task/m/v1/';
+    // config.mock.proxyPath = 'https://web.test1.com/task/m/v1/';
 }
 
 module.exports = config;

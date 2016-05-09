@@ -74,7 +74,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
 
     /* eslint-disable */
-    var promise = page.post(config.API.AFFAIR_DETAIL_URL, {
+    var promise = page.get(config.API.AFFAIR_DETAIL_URL, {
         affair_id: util.params('id')
     });
     /* eslint-enable */
