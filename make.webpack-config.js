@@ -465,7 +465,7 @@ MakeWebpackConfig.prototype = {
             path: '/',
             mockDir: './mock',
             // https: false,
-            https: true,
+            // https: true,
 
             /**
              * 当后端联调环境为 https 的接口
@@ -475,9 +475,9 @@ MakeWebpackConfig.prototype = {
             https: {
                 // key: './ssl/keys/server-key.pem',
                 // cert: './ssl/keys/server-cert.pem'
+                // ca: './ssl/dev/ca.crt'
                 key: './ssl/dev/server.key',
-                cert: './ssl/dev/server.crt',
-                ca: './ssl/dev/ca.crt'
+                cert: './ssl/dev/server.crt'
             },
             directoryListing: true,
             proxies: [

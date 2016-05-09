@@ -17,7 +17,6 @@ var gulp = require('gulp');
 var config = require('./febd.config');
 var MakeWebpackConfig = require('./make.webpack-config');
 var febd = new MakeWebpackConfig(config);
-// var mockServer = require('gulp-mock-server');
 // var webDevServer = require('webpack-dev-server');
 // var connect = require('gulp-connect');
 
