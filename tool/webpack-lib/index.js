@@ -80,10 +80,10 @@ Webpacker.prototype.file = function (filePath, options) {
     };
 
     _.extend(opts, options);
-    
+    console.log(filePath,this.src);
     // 获取 {folderName}/{pageName}.js
     var p = filePath.replace(this.src, '');
-    
+
     p = p.substring(p.indexOf('src')+4, p.length);
     
     p = p.substring(0, p.lastIndexOf('.'));
@@ -91,6 +91,7 @@ Webpacker.prototype.file = function (filePath, options) {
     var folderName = '';
     var fileName = '';
     var arr = p.split('/');
+
     if (arr && arr.length === 2) {
 
         // 不添加 folder

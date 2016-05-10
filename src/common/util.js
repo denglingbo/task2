@@ -522,4 +522,19 @@ util.compareArr = function (arr1, arr2) {
     return isDiff;
 };
 
+/**
+ * 从另一个对象获取与当前对象的属性相同的值
+ *
+ * @param {Object} target, 被赋值的对象
+ * @param {Object} source, 源对象
+ *
+ */
+util.getDataFromObj = function (target, source) {
+    for (var key in target) {
+        if (target.hasOwnProperty(key)) {
+            target[key] = source[key] ? source[key] : target[key];
+        }
+    }
+};
+
 module.exports = util;

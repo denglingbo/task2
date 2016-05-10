@@ -59,7 +59,7 @@ page.enter = function () {
     me.listLoader = new ListLoader({
         promise: function () {
             /* eslint-disable */
-            return page.post(config.API.AFFAIR_TALK_MORE_URL, {
+            return page.get(config.API.AFFAIR_TALK_MORE_URL, {
                 task_id: me.data.id,
                 curr_page: this.page,
                 number: requestPageNum,
@@ -199,7 +199,7 @@ page.follow = function (target) {
 
     /* eslint-disable */
     var promise = page.post(config.API.TASK_FOLLOW, {
-        task_id: me.data.task_id,
+        task_id: me.data.id,
         level: status
     });
     /* eslint-enable */
@@ -330,7 +330,6 @@ page.addParallelTask(function (dfd) {
         task_id: util.params('task_id')
     });
     /* eslint-enable */
-
     promise
         .done(function (result) {
             var data = detailUtil.dealPageData(result);
@@ -365,7 +364,6 @@ page.addParallelTask(function (dfd) {
                 }
 
                 me.data = data;
-
                 dfd.resolve(data);
             }
 

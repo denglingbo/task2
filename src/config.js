@@ -38,14 +38,14 @@ var config = {
         // 事件新建
         AFFAIR_NEW_URL: 'create_affair',
         // 讨论新建
-        TALK_NEW_URL: 'create_affair_comment',
+        TALK_NEW_URL: 'create_talk',
 
         // 任务编辑
         TASK_EDIT_URL: 'update_task',
         // 事件编辑
         AFFAIR_EDIT_URL: 'update_affair',
         // 讨论编辑
-        TALK_EDIT_URL: 'update_affair_comment',
+        TALK_EDIT_URL: 'update_talk',
 
         // 讨论
         TALK_DETAIL_URL: 'get_talk_detail',
@@ -69,7 +69,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '9ac652d9-c9b7-4495-8919-b0e0d6366723'
+    token: '915565c8-3b96-4a2e-835e-6af4eb856426'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 

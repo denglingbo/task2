@@ -44,7 +44,9 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     editCom.subAndCancel(me, function () {
-        editCom.submit(me, config.API.TALK_EDIT_URL);
+        me.data.attachs = me.attach.getModifyAttaches();
+        var url = me.data.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
+        editCom.submit(me, url);
     });
 
     /* eslint-disable */
@@ -99,7 +101,7 @@ page.initPlugin = function () {
     editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me);
+    me.attach = editCom.initEditAttach(me, me.data.attachs);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -146,30 +148,29 @@ page.initValue = function () {
  *
  */
 /* eslint-disable */
-var doing = 'new';
-if (doing === 'new') {
-    page.data = {
-        "id": 0,
-        "attachements": [],
-        "content": "",
-        "importance_level": 1,
-        "inheritance": true,
-        "message": {
-            "sent_eim": true,
-            "sent_emai": false,
-            "sent_sms": false
-        },
-        "task_id": 69598,
-        "title": "",
-        "user_ids": []
-    }
+var doing = 'edit';
+page.data = {
+    "id": 0,
+    "attachs": [],
+    "content": "",
+    "importance_level": 1,
+    "inheritance": true,
+    "message": {
+        "sent_eim": true,
+        "sent_emai": false,
+        "sent_sms": false
+    },
+    "task_id": +util.params('task_id') || 0,
+    "title": "",
+    "user_ids": []
 }
-else {
+
+if (doing === 'edit') {
     page.addParallelTask(function (dfd) {
         var me = this;
-        var url = config.API.TALK_EDIT_URL;
-        var promise = me.post(url, {
-            talk_id: util.params('id')
+        var url = config.API.TALK_DETAIL_URL;
+        var promise = me.get(url, {
+            talk_id: util.params('talk_id')
         });
 
         promise
@@ -178,7 +179,7 @@ else {
                     dfd.reject(result);
                 }
                 else {
-                    me.data = result.data;
+                    util.getDataFromObj(me.data, result.data);
                     dfd.resolve();
                 }
             });

@@ -40,7 +40,9 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     editCom.subAndCancel(me, function () {
-        editCom.submit(me, config.API.AFFAIR_EDIT_URL);
+        me.data.attachs = me.attach.getModifyAttaches();
+        var url = me.data.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
+        editCom.submit(me, url);
     });
 };
 
@@ -84,39 +86,42 @@ page.initPlugin = function () {
     var typeData = [
         {
             text: '待办',
-            value: 0
+            value: 1502
         },
         {
             text: '求助',
-            value: 1
+            value: 1503
         },
         {
             text: '汇报',
-            value: 2
+            value: 1504
         },
         {
             text: '计划',
-            value: 3
+            value: 1505
         },
         {
             text: '日志',
-            value: 4
+            value: 1506
         },
         {
             text: '记录',
-            value: 5
+            value: 1507
         },
         {
             text: '消息',
-            value: 6
+            value: 1508
         },
         {
             text: '其他',
-            value: 7
+            value: 1510
         }
     ];
     /* eslint-disable */
-    typeData[me.data['label_id']].selected = true;
+    typeData.forEach(function (item) {
+        (item.value === me.data['label_id']) && (item.selected = true);
+    });
+    console.log(me.data['label_id']);
     /* eslint-enable */
     editCom.initMobiscroll('select', '#affairType', {
         headerText: '事件类型',
@@ -136,7 +141,7 @@ page.initPlugin = function () {
     });
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me);
+    me.attach = editCom.initEditAttach(me, me.data.attachs);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -161,29 +166,28 @@ page.initPlugin = function () {
  *
  */
 /* eslint-disable */
-var doing = 'new';
-if (doing === 'new') {
-    page.data = {
-        "id": 0,
-        "attachements": [],
-        "message" : {
-            "sent_eim": true,
-            "sent_emai": false,
-            "sent_sms": false
-        },
-        "task_id": 0,
-        "title": "",
-        "content": "",
-        "importance_level": 1,
-        "label_id": 0
-    }  
+var doing = 'edit';
+page.data = {
+    "id": 0,
+    "attachs": [],
+    "message" : {
+        "sent_eim": true,
+        "sent_emai": false,
+        "sent_sms": false
+    },
+    "task_id": +util.params('task_id') || 0,
+    "title": "",
+    "content": "",
+    "importance_level": 1,
+    "label_id": 1502
 }
-else {
+
+if (doing === 'edit') {
     page.addParallelTask(function (dfd) {
         var me = this;
-        var url = config.API.AFFAIR_EDIT_URL;
-        var promise = me.post(url, {
-            affair_id: util.params('id')
+        var url = config.API.AFFAIR_DETAIL_URL;
+        var promise = me.get(url, {
+            affair_id: util.params('affair_id')
         });
 
         promise
@@ -192,7 +196,7 @@ else {
                     dfd.reject(result);
                 }
                 else {
-                    me.data = result.data;
+                    util.getDataFromObj(me.data, result.data);
                     dfd.resolve();
                 }
             });

@@ -299,7 +299,13 @@ Page.prototype.ajax = function (api, data, options) {
         return dfd;
     }
 
-    var reqData = getRequestData(data);
+    var reqData;
+    if (/create|update/.test(api)) {
+        reqData = data;
+    }
+    else {
+        reqData = getRequestData(data);
+    }
 
     var opts = {
         type: 'POST',
@@ -327,6 +333,11 @@ Page.prototype.ajax = function (api, data, options) {
             ajaxSettings.xhrFields = {
                 withCredentials: true
             };
+        }
+
+        if (ajaxSettings.type === 'POST') {
+            ajaxSettings.contentType = 'application/json';
+            ajaxSettings.data = JSON.stringify(ajaxSettings.data);
         }
     }
 

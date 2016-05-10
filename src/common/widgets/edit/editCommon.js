@@ -190,20 +190,17 @@ editCom.subAndCancel = function (page, submitFn) {
  * 提交操作
  *
  * @param {Object} page, 页面对象
- * @param {Object} data, 提交的数据
- * @param {Object} attach, 附件对象
  * @param {string} postUrl, 上传url
  */
 editCom.submit = function (page, postUrl) {
     var me = this;
     var dfd = new $.Deferred();
     var data = page.data;
-    var attach = page.attach;
-    data.attachements = attach.getModifyAttaches();
+    
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').text();
     /* eslint-disable */
-    var promise = page.post(postUrl, JSON.stringify(data));
+    var promise = page.post(postUrl, data);
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
@@ -249,7 +246,9 @@ editCom.initImportanceLevel = function (selector, page) {
         }
     ];
     /* eslint-disable */
-    importData[infoData['importance_level']].selected = true;
+    importData.forEach(function (item) {
+        (item.value === infoData['importance_level']) && (item.selected = true);
+    });
     /* eslint-enable */
     var data = {
         headerText: '紧急程度',
@@ -295,10 +294,11 @@ editCom.initMobiscroll = function (method, selector, data) {
  * 初始化新建、编辑页面附件
  *
  * @param {Object} page, 页面对象
+ * @param {Object} data, 附件数据
  * @return {Object} 附件对象
  */
-editCom.initEditAttach = function (page) {
-    var attachData = page.data.attachements;
+editCom.initEditAttach = function (page, data) {
+    var attachData = data;
     var validObj = page.valid;
     var attachOptions = {
         dom: {
@@ -343,7 +343,7 @@ editCom.initImportValue = function (level) {
  */
 editCom.initAffairType = function (labelId) {
     var types = ['待办', '求助', '汇报', '计划', '日志', '记录', '消息', '其他'];
-    return types[labelId];
+    return types[labelId - 1502];
 }
 /**
  * 选择人员是否改变
@@ -383,7 +383,7 @@ editCom.loadPage = function (page, data) {
  * @return {Array|string}, jid
  */
 editCom.transJid = function (id) {
-    var cid = localStorage.getData('cid');
+    var cid = localStorage.getData('TASK_PARAMS')['cid'];
     var jid = [];
     if (!$.isArray(id)) {
         return users.makeJid(id, cid);

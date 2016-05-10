@@ -12,6 +12,7 @@ var Page = require('common/page');
 var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
+var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
@@ -45,7 +46,9 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     editCom.subAndCancel(me, function () {
-        editCom.submit(me, config.API.TASK_NEW_URL);
+        me.data.attachements = me.attach.getModifyAttaches();
+        var url = me.data.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
+        editCom.submit(me, url);
     });
     /* eslint-disable */
     // 完成时间跳转页面
@@ -149,7 +152,7 @@ page.initPlugin = function () {
     editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me);
+    me.attach = editCom.initEditAttach(me, me.data.attachements);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -206,6 +209,99 @@ page.initValue = function () {
     editCom.setChoosePersonLoc(attendSelectKey, aVal);
 };
 
+// 修改
+/**
+ * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
+ *
+ * @param {Object} srcObject, 源数据对象
+ * @param {Object} itemObject, 子对象
+ * @param {Object} appendObject, 匹配到某对象上
+ *
+ */
+page.findOwner = function (srcObject, itemObject, appendObject) {
+
+    if (itemObject && itemObject.jid) {
+
+        var id = parseInt(users.takeJid(itemObject.jid), 10);
+
+        for (var key in srcObject) {
+            if (srcObject.hasOwnProperty(key)) {
+
+                var objIds = srcObject[key];
+
+                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+
+                    var appender = appendObject[key];
+                    if (!$.isArray(appender)) {
+                        appendObject[key] = [];
+                    }
+
+                    appendObject[key].push(itemObject);
+                }
+                // 非数组直接判断是否相等
+                else if (objIds === id) {
+                    appendObject[key] = itemObject;
+                }
+
+            }
+        }
+    }
+};
+
+/**
+ * 成员获取失败
+ *
+ */
+page.failUser = function () {
+    $('#attends .value').html('数据加载失败, 刷新重试');
+};
+
+/**
+ * 渲染成员数据
+ *
+ * @param {Array} originArr, 原始数组数据 jids，未merge 过的数组
+ * @param {Array} dataArr, 匹配到的数据
+ *
+ */
+page.renderUser = function (originArr, dataArr) {
+    var me = this;
+
+    var data = {
+        principal: null,
+        partner: null
+    };
+
+    dataArr.forEach(function (item) {
+        me.findOwner(originArr, item, data);
+    });
+
+    var dataRaw = {};
+
+    // 负责人数据
+    if (data.principal) {
+        dataRaw.principal = data.principal.name;
+    }
+
+    // 成员数据
+    if (data.partner) {
+        var partnerRaw = [];
+        var partnerJids = [];
+        data.partner.forEach(function (item) {
+            partnerRaw.push(item.name);
+            partnerJids.push(users.takeJid(item.jid));
+        });
+
+        if (partnerRaw.length) {
+            dataRaw.partnerLength = partnerRaw.length;
+        }
+
+        dataRaw.partnerRaw = partnerRaw.join('、');
+        dataRaw.partnerJids = partnerJids.join(',');
+    }
+    $('#principal .value').text(dataRaw.principal);
+    $('#attends .value').text(dataRaw.partnerRaw);
+};
+
 /**
  * 请求页面接口
  *
@@ -213,31 +309,31 @@ page.initValue = function () {
  *
  */
 /* eslint-disable */
-var doing = 'new';
-if (doing === 'new') {
-    page.data = {
-        "id" : 0,
-        "title": "",
-        "content": "",
-        "end_time": 0,
-        "importance_level": 1,
-        "attend_ids": [],
-        "notice": 0,
-        "principal_user": 0,
-        "attachements": [],
-        "message": {
-            "sent_eim": true,
-            "sent_emai": false,
-            "sent_sms": false
-        }
+var doing = 'edit';
+
+page.data = {
+    "id" : 0,
+    "title": "",
+    "content": "",
+    "end_time": 0,
+    "importance_level": 1,
+    "attend_ids": [],
+    "notice": 0,
+    "principal_user": 0,
+    "attachements": [],
+    "message": {
+        "sent_eim": true,
+        "sent_emai": false,
+        "sent_sms": false
     }
 }
-else {
+
+if (doing === 'edit') {
     page.addParallelTask(function (dfd) {
         var me = this;
-        var url = config.API.TASK_EDIT_URL;
-        var promise = me.post(url, {
-            task_id: util.params('task_id')
+        var url = config.API.TASK_DETAIL_URL;
+        var promise = me.get(url, {
+            task_id: +util.params('task_id')
         });
 
         promise
@@ -246,7 +342,32 @@ else {
                     dfd.reject(result);
                 }
                 else {
-                    me.data = result.data;
+                    util.getDataFromObj(me.data, result.data);
+
+                    // 下面为获取人员信息的配置
+                    var obj = {
+                        principal: me.data['principal_user'],
+                        partner: me.data['attend_ids']
+                    };
+                    var cid = ls.getData('TASK_PARAMS')['cid'];
+                    var jids = users.makeArray(obj);
+                    var dfdPub = users.getUserInfo(jids, cid);
+
+                    // 查询用户信息失败
+                    if (dfdPub === null) {
+                        me.userInfoFail = true;
+                    }
+                    else {
+                        dfdPub
+                            .done(function (pubData) {
+                                console.log(pubData);
+                                me.renderUser(obj, pubData.contacts);
+                            })
+                            .fail(function () {
+                                me.failUser();
+                            });
+                    }
+
                     dfd.resolve();
                 }
             });
