@@ -152,8 +152,8 @@ module.exports = function () {
         ]
     };
 
-    // console.log(this.htmlPlugins);
-    // console.log(webpackConfig);
+     console.log(this.htmlPlugins);
+     console.log(webpackConfig);
 
     return webpackConfig;
 

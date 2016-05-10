@@ -69,8 +69,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '2a2e2cf3-3125-4278-be67-ecae6aac0753',
-
+    token: '9ac652d9-c9b7-4495-8919-b0e0d6366723'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -85,14 +84,14 @@ config.mock = {
 // prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
 
-    config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    config.API.host = document.location.protocol + '//web.test1.com';
     // config.API.host = 'https://web.test1.com';
 
     // 直接走 mock server
-    config.API.prefix = '/data/';
+    // config.API.prefix = '/data/';
 
     // 通过 mock server [node] 转发
-    // config.API.prefix = '/api/';
+    config.API.prefix = '/task/m/v1/';
 
     // 后端联调位置
     // config.mock.proxyPath = 'http://web.test1.com' + config.API.prefix;

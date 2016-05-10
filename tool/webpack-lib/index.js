@@ -80,25 +80,26 @@ Webpacker.prototype.file = function (filePath, options) {
     };
 
     _.extend(opts, options);
-
+    
     // 获取 {folderName}/{pageName}.js
     var p = filePath.replace(this.src, '');
-
+    
+    p = p.substring(p.indexOf('src')+4, p.length);
+    
     p = p.substring(0, p.lastIndexOf('.'));
 
     var folderName = '';
     var fileName = '';
     var arr = p.split('/');
-
     if (arr && arr.length === 2) {
 
         // 不添加 folder
         // EG: index 前面不添加文件名
-        var expr = new RegExp('^(' + opts.notFolder.join('|') + ')$');
+        //var expr = new RegExp('^(' + opts.notFolder.join('|') + ')$');
 
-        if (!expr.test(arr[0])) {
+        //if (!expr.test(arr[0])) {
             folderName = arr[0];
-        }
+        //}
 
         fileName = arr[1];
     }
@@ -133,6 +134,7 @@ Webpacker.prototype.getJsFiles = function () {
  * 入口js 必须和 入口模板名相同
  * EG: a页的入口文件是 [a].tpl|html，那么在 js 目录下必须有一个 [a].js 作为入口文件
  */
+
 Webpacker.prototype.getPager = function () {
     var me = this;
 
@@ -169,7 +171,7 @@ Webpacker.prototype.getPager = function () {
             htmlPlugins.push(
                 new HtmlWebpackPlugin(conf)
             );
-
+            
             jsEntries[page.name] = jsFiles[page.name];
 
             allChunks.push(page.name);
