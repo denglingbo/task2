@@ -11,35 +11,6 @@ var storage = require('common/localstorage');
 var middleware = {};
 
 /**
- * 判断网络状态
- *
- * @return {boolean} 是否联网
- */
-middleware.isNetwork = function () {
-    var networkState = null;
-
-    // 非手机环境不判断
-    if (!navigator || !navigator.connection) {
-        return true;
-    }
-
-    try {
-        networkState = navigator.connection.type;
-        /* eslint-disable */
-        if (networkState === Connection.NONE) {
-            return false;
-        }
-        else {
-            return true;
-        }
-        /* eslint-enable */
-    }
-    catch (e) {
-        // throw 'get navigator.connection.type failed!'
-    }
-};
-
-/**
  * 获取 uid, uid 是在页面入口位置传递进来，并且通过 ls 进行持续保存
  *
  * @return {string} uid
@@ -174,7 +145,6 @@ middleware.mergeObject2Array = function (arr1, arr2, key) {
 
     return arr;
 };
-
 
 /**
  * 封装原生接口 改为 deferred

@@ -7,7 +7,7 @@
 var config = require('../config');
 var view = require('./ui/view');
 var util = require('./util');
-var users = require('./middleware/user/users');
+var mobileUtil = require('./middleware/util');
 var storage = require('./localstorage');
 
 // ** 调用 jingoal 重写的 ajax 包 ** //
@@ -272,6 +272,15 @@ var getRequestData = function (data) {
     return r;
 };
 
+/*
+window.addEventListener('online', function () {
+    console.log('online');
+});
+window.addEventListener('offline', function () {
+    console.log('offline');
+});
+*/
+
 Page.prototype.get = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'GET'}));
 };
@@ -292,7 +301,7 @@ Page.prototype.post = function (api, data, options) {
 Page.prototype.ajax = function (api, data, options) {
 
     var dfd = new $.Deferred();
-    var isNetwork = users.isNetwork();
+    var isNetwork = mobileUtil.isNetwork();
 
     if (!isNetwork) {
         dfd.reject({error: 'Connection None'});
