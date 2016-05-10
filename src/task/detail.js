@@ -60,7 +60,7 @@ page.enter = function () {
     me.listLoader = new ListLoader({
         promise: function () {
             /* eslint-disable */
-            return page.post(config.API.AFFAIR_TALK_MORE_URL, {
+            return page.get(config.API.AFFAIR_TALK_MORE_URL, {
                 task_id: me.data.id,
                 curr_page: this.page,
                 number: requestPageNum,

@@ -84,25 +84,12 @@ config.mock = {
 // prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
 
+    // 联调地址
     config.API.host = document.location.protocol + '//web.test1.com';
-    // config.API.host = 'https://web.test1.com';
 
     // 直接走 mock server
+    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
     // config.API.prefix = '/data/';
-
-    // 通过 mock server [node] 转发
-    config.API.prefix = '/task/m/v1/';
-
-    // 后端联调位置
-    // config.mock.proxyPath = 'http://web.test1.com' + config.API.prefix;
-    // config.mock.proxyPath = 'http://172.16.1.108:8080/task/m/v1/';
-
-    // node 端代理转发地址 本地模拟转发
-    // config.mock.proxyPath = 'http://task2.test1.com:9000'
-
-    // 这是有历史意义的 一次尝试
-    // config.mock.proxyPath = 'https://127.0.0.1:3000';
-    // config.mock.proxyPath = 'https://web.test1.com/task/m/v1/';
 }
 
 module.exports = config;
