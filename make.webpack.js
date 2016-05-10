@@ -152,7 +152,7 @@ module.exports = function () {
         ]
     };
 
-     console.log(this.htmlPlugins);
+     // console.log(this.htmlPlugins);
      console.log(webpackConfig);
 
     return webpackConfig;

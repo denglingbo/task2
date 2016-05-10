@@ -73,43 +73,32 @@ Webpacker.prototype.fixFolder = function (folderName, sign) {
  *  object.url 用户的访问路径 index.html, task/detail.html
  *  object.name 页面名 index, task-detail (自动连接文件夹和文件名)
  */
-Webpacker.prototype.file = function (filePath, options) {
-    
-    var opts = {
-        notFolder: ['index']
-    };
-
-    _.extend(opts, options);
+Webpacker.prototype.file = function (filePath) {
     
     // 获取 {folderName}/{pageName}.js
-    var p = filePath.replace(this.src, '');
-    
-    p = p.substring(p.indexOf('src')+4, p.length);
-    
-    p = p.substring(0, p.lastIndexOf('.'));
+    var pathArr = filePath.split('/');
+    var len = pathArr.length;
 
-    var folderName = '';
-    var fileName = '';
-    var arr = p.split('/');
-    if (arr && arr.length === 2) {
+    if (pathArr && pathArr.length >= 2) {
+
+        var folderName = pathArr[len - 2];
+        var fileName = pathArr[len - 1];
+
+        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
         // 不添加 folder
         // EG: index 前面不添加文件名
-        //var expr = new RegExp('^(' + opts.notFolder.join('|') + ')$');
+        var expr = /^(index)$/;
 
-        //if (!expr.test(arr[0])) {
-            folderName = arr[0];
-        //}
-
-        fileName = arr[1];
+        if (expr.test(fileName) && folderName === fileName) {
+            folderName = '';
+        }
     }
 
     return {
         path: this.fixFolder(folderName, '/') + fileName + '.html',
         name: this.fixFolder(folderName, '-') + fileName
     };
-
-
 };
 
 /**
@@ -152,7 +141,7 @@ Webpacker.prototype.getPager = function () {
 
         // 这里为了避免文件名重复，所以会在前面添加上文件夹名字
         var page = me.file(filePath);
-
+        console.log(page);
         var conf = {};
 
         if (page.name in jsFiles) {
