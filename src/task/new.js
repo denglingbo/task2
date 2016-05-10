@@ -209,7 +209,7 @@ page.initValue = function () {
     editCom.setChoosePersonLoc(attendSelectKey, aVal);
 };
 
-// 修改
+// 来自于deo, 获取人员信息
 /**
  * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
  *
@@ -285,18 +285,11 @@ page.renderUser = function (originArr, dataArr) {
     // 成员数据
     if (data.partner) {
         var partnerRaw = [];
-        var partnerJids = [];
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
-            partnerJids.push(users.takeJid(item.jid));
         });
 
-        if (partnerRaw.length) {
-            dataRaw.partnerLength = partnerRaw.length;
-        }
-
         dataRaw.partnerRaw = partnerRaw.join('、');
-        dataRaw.partnerJids = partnerJids.join(',');
     }
     $('#principal .value').text(dataRaw.principal);
     $('#attends .value').text(dataRaw.partnerRaw);
@@ -360,7 +353,6 @@ if (doing === 'edit') {
                     else {
                         dfdPub
                             .done(function (pubData) {
-                                console.log(pubData);
                                 me.renderUser(obj, pubData.contacts);
                             })
                             .fail(function () {

@@ -216,7 +216,6 @@ middleware.getUserInfo = function (jids, cid, dataFlag) {
             dataFlag: dataFlag
         }
     };
-
     return this.getPubData(options);
 };
 

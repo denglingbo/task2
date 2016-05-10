@@ -12,6 +12,7 @@ var Page = require('common/page');
 var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
+var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
@@ -142,6 +143,37 @@ page.initValue = function () {
 };
 
 /**
+ * 成员获取失败
+ *
+ */
+page.failUser = function () {
+    $('#attends .value').html('数据加载失败, 刷新重试');
+};
+
+/**
+ * 渲染成员数据
+ *
+ * @param {Array} dataArr, 匹配到的数据
+ *
+ */
+page.renderUser = function (dataArr) {
+
+    var dataRaw = {};
+
+    // 成员数据
+    if (dataArr.length) {
+        var partnerRaw = [];
+        dataArr.forEach(function (item) {
+            partnerRaw.push(item.name);
+        });
+
+        dataRaw.partnerRaw = partnerRaw.join('、');
+    }
+
+    $('#attends .value').text(dataRaw.partnerRaw);
+};
+
+/**
  * 请求页面接口
  *
  * @param {deferred} dfd, deferred
@@ -180,6 +212,29 @@ if (doing === 'edit') {
                 }
                 else {
                     util.getDataFromObj(me.data, result.data);
+
+                    // 下面为获取人员信息的配置
+                    var obj = {
+                        partner: me.data['user_ids']
+                    };
+                    var cid = ls.getData('TASK_PARAMS')['cid'];
+                    var jids = users.makeArray(obj);
+                    var dfdPub = users.getUserInfo(jids, cid);
+
+                    // 查询用户信息失败
+                    if (dfdPub === null) {
+                        me.userInfoFail = true;
+                    }
+                    else {
+                        dfdPub
+                            .done(function (pubData) {
+                                me.renderUser(pubData.contacts);
+                            })
+                            .fail(function () {
+                                me.failUser();
+                            });
+                    }
+
                     dfd.resolve();
                 }
             });
