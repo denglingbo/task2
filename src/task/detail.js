@@ -202,42 +202,61 @@ page.follow = function (target) {
         });
 };
 
+page.arr2Object = function (arr, key) {
+    var obj = {};
+
+    for (var i = 0; i < arr.length; i++) {
+        var item = arr[i];
+
+        if (item[key]) {
+            var itemId = users.takeJid(item[key]);
+            var id = parseInt(itemId, 10);
+            obj[id] = item;
+        }
+    }
+
+    return obj;
+};
+
 /**
  * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
  *
  * @param {Object} srcObject, 源数据对象
- * @param {Object} itemObject, 子对象
- * @param {Object} appendObject, 匹配到某对象上
+ * @param {Object} arr, 数组
+ * @return {Object}
  *
  */
-page.findOwner = function (srcObject, itemObject, appendObject) {
+page.findOwner = function (srcObject, arr) {
+    var data = {};
+    var obj = this.arr2Object(arr, 'jid');
 
-    if (itemObject && itemObject.jid) {
+    var getData = function (ids, key) {
+        var data = {};
 
-        var id = parseInt(users.takeJid(itemObject.jid), 10);
+        if ($.isArray(ids)) {
+            data[key] = [];
 
-        for (var key in srcObject) {
-            if (srcObject.hasOwnProperty(key)) {
+            ids.forEach(function (item) {
+                data[key].push(obj[item]);
+            });
+        }
+        else {
+            data[key] = obj[ids];
+        }
 
-                var objIds = srcObject[key];
+        return data;
+    };
 
-                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+    for (var key in srcObject) {
+        if (srcObject.hasOwnProperty(key)) {
 
-                    var appender = appendObject[key];
-                    if (!$.isArray(appender)) {
-                        appendObject[key] = [];
-                    }
+            var ids = srcObject[key];
 
-                    appendObject[key].push(itemObject);
-                }
-                // 非数组直接判断是否相等
-                else if (objIds === id) {
-                    appendObject[key] = itemObject;
-                }
-
-            }
+            data[key] = getData(ids, key);
         }
     }
+
+    return data;
 };
 
 /**
@@ -258,15 +277,7 @@ page.failUser = function () {
 page.renderUser = function (originArr, dataArr) {
     var me = this;
 
-    var data = {
-        creator: null,
-        principal: null,
-        partner: null
-    };
-
-    dataArr.forEach(function (item) {
-        me.findOwner(originArr, item, data);
-    });
+    var data = me.findOwner(originArr, dataArr);
 
     var dataRaw = {};
 
@@ -284,6 +295,7 @@ page.renderUser = function (originArr, dataArr) {
     if (data.partner) {
         var partnerRaw = [];
         var partnerJids = [];
+
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
             partnerJids.push(users.takeJid(item.jid));
@@ -331,6 +343,7 @@ page.addParallelTask(function (dfd) {
                 };
 
                 var jids = users.makeArray(obj);
+
                 var dfdPub = users.getUserInfo(jids, data.cid);
 
                 // 查询用户信息失败

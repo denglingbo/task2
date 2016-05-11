@@ -85,11 +85,11 @@ config.mock = {
 if (config.debug) {
 
     // 联调地址
-    config.API.host = document.location.protocol + '//web.test1.com';
+    // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
-    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.prefix = '/data/';
+    config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    config.API.prefix = '/data/';
 }
 
 module.exports = config;

@@ -57,3 +57,16 @@ gulp.task('dev', function () {
 
     webpacker.devStart();
 });
+
+// dev
+// gulp.task('release', function () {
+
+//     var webpacker = new Webpacker(config, root);
+    
+//     webpacker.mockStart({
+//         mockDir: './mock',
+//         https: config.https
+//     });
+
+//     webpacker.releaseStart();
+// });

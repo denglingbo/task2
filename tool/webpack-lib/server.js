@@ -4,7 +4,24 @@ var _ = require('underscore');
 var devServer = require('webpack-dev-server');
 var webpack = require('webpack');
 
-module.exports = function () {
+var server = function () {
+    // console.log(this);
+    // if (!this.config.debug) {
+        
+    //     // Run webpack
+    //     webpack(
+
+    //         // webpack config
+    //         this.webpackConfig,
+
+    //         function (err, stats) {
+    //             if (err) {
+    //                 throw new gutil.PluginError('webpack', err);
+    //             }
+    //         }
+    //     );
+    // }
+    
 
     /**
      * webpack dev server 配置
@@ -50,3 +67,5 @@ module.exports = function () {
 
     return server;
 };
+
+module.exports = server;
