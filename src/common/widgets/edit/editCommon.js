@@ -298,19 +298,14 @@ editCom.initMobiscroll = function (method, selector, data) {
  * @return {Object} 附件对象
  */
 editCom.initEditAttach = function (page, data) {
-    var attachData = data;
-    var validObj = page.valid;
-    var attachOptions = {
-        dom: {
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        },
-        operateType: 'upload',
+    var attachObj = attachWraper.initDetailAttach({
+        attachData: data,
+        container: '#attachList',
+        addBtn: '#addAttach',
         callback: function () {
-            validObj.isEdit = true;
+            page.valid.isEdit = true;
         }
-    };
-    var attachObj = attachWraper.initAttach(attachOptions, util.transKey(attachData));
+    })
     return attachObj;
 };
 

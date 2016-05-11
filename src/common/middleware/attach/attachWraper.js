@@ -11,6 +11,7 @@ window.Mustache = Mustache;
 require('dep/plugins/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
+var util = require('common/util');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -90,6 +91,43 @@ attach.initAttach = function (options, attachData) {
     $(options.dom.containerDOM).append(renderString.attach);
     Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
     /* eslint-enable */
+    return attachObj;
+};
+
+/**
+ * 初始化附件
+ *
+ * @param {Object} options, 配置参数
+ *      // {Object} attachData, 附件数据
+ *      // {string} container, 容器选择器, 必传
+ *      // {string} addBtn, 添加附件选择器, 没有则是查看附件
+ *      // {string} wrapper, 附件的最外层容器, 不传参则不隐藏最外层容器, 下方附件列表位置显示提示文字
+ *      // {Function} callback, 回掉函数
+ * @return {Object}, 附件对象
+ */
+attach.initDetailAttach = function (options) {
+    var me = this;
+    if (!options.addBtn && (!options.attachData || options.attachData.length < 1)) {
+        if (options.wrapper) {
+            $(options.wrapper).addClass('hide');
+        }
+        else {
+            $(options.container).text('无附件');
+        }
+        return;
+    }
+    // 初始化附件组件
+    var attachOptions = {
+        dom: {
+            // 附件容器DOM元素
+            containerDOM: options.container,
+            addBtnDom: options.addBtn
+        },
+        operateType: options.addBtn ? 'upload' : 'download',
+        callback: options.callback
+    };
+
+    var attachObj = me.initAttach(attachOptions, util.transKey(options.attachData));
     return attachObj;
 };
 

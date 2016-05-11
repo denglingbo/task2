@@ -14,6 +14,7 @@ var users = require('common/middleware/user/users');
 var ListLoader = require('common/ui/listLoader/listLoader');
 var util = require('common/util');
 var Page = require('common/page');
+var AttachWraper = require('common/middleware/attach/attachWraper');
 // var mobileUtil = require('common/middleware/util');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
@@ -59,7 +60,11 @@ page.enter = function () {
     me.bindEvents();
 
     /* eslint-disable */
-    me.attach = detailUtil.initDetailAttach(me.data.summary_attachs, '.attach-container', '.attach');
+    me.attach = AttachWraper.initDetailAttach({
+        attachData: me.data.summary_attachs, 
+        container: '.attach-container', 
+        wrapper: '.attach'
+    });
     /* eslint-enable */
 };
 

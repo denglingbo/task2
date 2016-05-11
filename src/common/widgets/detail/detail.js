@@ -6,9 +6,7 @@
  * 处理 任务详情页，事件详情页，讨论详情页
  *
  */
-var util = require('../../util');
 var users = require('common/middleware/user/users');
-var AttachWraper = require('common/middleware/attach/attachWraper');
 var util = require('common/util');
 
 var detail = {};
@@ -30,15 +28,6 @@ var importanceMap = {
     2: '尽快完成',
     3: '提早完成',
     4: '普通'
-};
-
-// 初始化附件组件
-var attachOptions = {
-    dom: {
-        // 附件容器DOM元素
-        containerDOM: '.comments-attach'
-    },
-    operateType: 'download'
 };
 
 detail.statusMap = statusMap;
@@ -120,24 +109,5 @@ detail.getEventTalkList = function (arr) {
  * @param {Object} rights, 后端权限数据
  */
 detail.rightsView = function (rights) {};
-
-/**
- * 初始化附件
- *
- * @param {Object} attachData, 附件数据
- * @param {string} containerSelector, 容器选择器
- * @param {string} wrapper, 附件的最外层容器
- * @return {Object}, 附件对象
- */
-detail.initDetailAttach = function (attachData, containerSelector, wrapper) {
-    if (!attachData || attachData.length < 1) {
-        $(wrapper).addClass('hide');
-        return;
-    }
-
-    attachOptions.dom.containerDOM = containerSelector;
-    var attachObj = AttachWraper.initAttach(attachOptions, util.transKey(attachData));
-    return attachObj;
-};
 
 module.exports = detail;

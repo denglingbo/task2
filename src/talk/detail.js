@@ -21,27 +21,12 @@ var Ticker = require('common/ui/ticker/ticker');
 
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
+var AttachWraper = require('common/middleware/attach/attachWraper');
 
 var page = new Page();
 
-/* eslint-disable */
-var testArr = [
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'ca1.crt',
-        size: 1391
-    },
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'cb2.crt',
-        size: 1311
-    }
-];
-/* eslint-enable */
-
 page.enter = function () {
+    var me = this;
     this.$main = $('.main');
 
     this.data.describeTitle = '讨论描述';
@@ -60,7 +45,13 @@ page.enter = function () {
 
     this.bindEvents();
 
-    this.attach = detailUtil.initDetailAttach(testArr, '.attach-container');
+    /* eslint-disable */
+    this.attach = AttachWraper.initDetailAttach({
+        attachData: me.data.summary_attachs, 
+        container: '.attach-container', 
+        wrapper: '.attach'
+    });
+    /* eslint-enable */
 };
 
 page.bindEvents = function () {
