@@ -21,27 +21,12 @@ var Ticker = require('common/ui/ticker/ticker');
 
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var page = new Page();
 
-/* eslint-disable */
-var testArr = [
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'ca1.crt',
-        size: 1391
-    },
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'cb2.crt',
-        size: 1311
-    }
-];
-/* eslint-enable */
-
 page.enter = function () {
+    var me = this;
     this.$main = $('.main');
 
     this.data.describeTitle = '讨论描述';
@@ -60,12 +45,19 @@ page.enter = function () {
 
     this.bindEvents();
 
-    this.attach = detailUtil.initDetailAttach(testArr, '.attach-container');
+    /* eslint-disable */
+    this.attach = AttachWrapper.initDetailAttach({
+        attachData: me.data.summary_attachs, 
+        container: '.attach-container', 
+        wrapper: '.attach'
+    });
+    /* eslint-enable */
 };
 
 page.bindEvents = function () {
+    /* eslint-disable */
     var me = this;
-
+    /* eslint-enable */
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
@@ -94,34 +86,34 @@ page.bindEvents = function () {
     };
     /* eslint-enable */
 
-    this.ticker.on('click', function (isCurTicked) {
-        var myTicker = this;
-        // 0: 取消
-        // 1: 完成
-        var changeStatus = isCurTicked ? 0 : 1;
+    // this.ticker.on('click', function (isCurTicked) {
+    //     var myTicker = this;
+    //     // 0: 取消
+    //     // 1: 完成
+    //     var changeStatus = isCurTicked ? 0 : 1;
 
-        /* eslint-disable */
-        var promise = page.post(config.API.TASK_FOLLOW, {
-            task_id: me.data.task_id,
-            level: changeStatus
-        });
-        /* eslint-enable */
+    //     /* eslint-disable */
+    //     var promise = page.post(config.API.TASK_FOLLOW, {
+    //         task_id: me.data.task_id,
+    //         level: changeStatus
+    //     });
+    //     /* eslint-enable */
 
-        var type = map[changeStatus];
+    //     var type = map[changeStatus];
 
-        promise
-            .done(function (result) {
-                if (result && result.meta.code === 200) {
-                    myTicker[type.done]();
-                }
-                else {
-                    myTicker[type.fail]();
-                }
-            })
-            .fail(function () {
-                myTicker[type.fail]();
-            });
-    });
+    //     promise
+    //         .done(function (result) {
+    //             if (result && result.meta.code === 200) {
+    //                 myTicker[type.done]();
+    //             }
+    //             else {
+    //                 myTicker[type.fail]();
+    //             }
+    //         })
+    //         .fail(function () {
+    //             myTicker[type.fail]();
+    //         });
+    // });
 };
 
 /**

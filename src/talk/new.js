@@ -63,6 +63,7 @@ page.bindEvents = function () {
             contacts.forEach(function (value, index) {
                 me.data['user_ids'].push(+users.takeJid(value.jid));
             });
+            $('#attends .value').text(util.getPersonsName(contacts));
             editCom.personIsChange(oldVal, me.data['user_ids'], valid);
         });
     });
@@ -180,7 +181,7 @@ page.renderUser = function (dataArr) {
  *
  */
 /* eslint-disable */
-var doing = 'edit';
+var doing = +util.params('talk_id');
 page.data = {
     "id": 0,
     "attachs": [],
@@ -197,12 +198,12 @@ page.data = {
     "user_ids": []
 }
 
-if (doing === 'edit') {
+if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
         var url = config.API.TALK_DETAIL_URL;
         var promise = me.get(url, {
-            talk_id: util.params('talk_id')
+            talk_id: +util.params('talk_id')
         });
 
         promise

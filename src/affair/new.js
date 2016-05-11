@@ -63,10 +63,7 @@ page.loadPage = function () {
             },
             {
                 id: 'affairType',
-                title: '事件类型',
-                /* eslint-disable */
-                value: editCom.initAffairType(me.data['label_id'])
-                /* eslint-enable */
+                title: '事件类型'
             }
         ],
         placeholderTitle: '请输入任务标题(必填)',
@@ -82,62 +79,42 @@ page.initPlugin = function () {
     // 初始化紧急程度
     editCom.initImportanceLevel('#urgencyBlock', me);
 
-    // 事件类型
-    var typeData = [
-        {
-            text: '待办',
-            value: 1502
-        },
-        {
-            text: '求助',
-            value: 1503
-        },
-        {
-            text: '汇报',
-            value: 1504
-        },
-        {
-            text: '计划',
-            value: 1505
-        },
-        {
-            text: '日志',
-            value: 1506
-        },
-        {
-            text: '记录',
-            value: 1507
-        },
-        {
-            text: '消息',
-            value: 1508
-        },
-        {
-            text: '其他',
-            value: 1510
+    // 初始化事件标签
+    var promise = me.get(config.API.GET_AFFAIR_TAGS);
+    promise.done(function (result) {
+        if (result.meta.code !== 200) {
+            return;
         }
-    ];
-    /* eslint-disable */
-    typeData.forEach(function (item) {
-        (item.value === me.data['label_id']) && (item.selected = true);
-    });
-    console.log(me.data['label_id']);
-    /* eslint-enable */
-    editCom.initMobiscroll('select', '#affairType', {
-        headerText: '事件类型',
-        showInput: false,
-        showMe: true,
-        rows: 3,
-        data: typeData,
-        onSelect: function (text, inst) {
-            /* eslint-disable */
-            var oldVal = me.data['label_id'];
-            me.data['label_id'] = +inst.getVal();
-            $('#affairType .value').text(text);
+        var currName = '';
+        // 事件类型
+        me.affairType = result.data;
+        var typeData = [];
+        /* eslint-disable */
+        me.affairType.forEach(function (item) {
+            typeData.push({
+                text: item.name,
+                value: item['sub_id'],
+                selected: (item['sub_id'] === me.data['label_id']) && (currName = item.name)
+            });
+        });
+        $('#affairType .value').text(currName);
+        /* eslint-enable */
+        editCom.initMobiscroll('select', '#affairType', {
+            headerText: '事件类型',
+            showInput: false,
+            showMe: true,
+            rows: 3,
+            data: typeData,
+            onSelect: function (text, inst) {
+                /* eslint-disable */
+                var oldVal = me.data['label_id'];
+                me.data['label_id'] = +inst.getVal();
+                $('#affairType .value').text(text);
 
-            valid.isEdit = oldVal !== me.data['label_id'] ? true : valid.isEdit;
-            /* eslint-enable */
-        }
+                valid.isEdit = oldVal !== me.data['label_id'] ? true : valid.isEdit;
+                /* eslint-enable */
+            }
+        });
     });
 
     // 初始化附件组件
@@ -166,7 +143,7 @@ page.initPlugin = function () {
  *
  */
 /* eslint-disable */
-var doing = 'edit';
+var doing = +util.params('affair_id');
 page.data = {
     "id": 0,
     "attachs": [],
@@ -179,15 +156,15 @@ page.data = {
     "title": "",
     "content": "",
     "importance_level": 1,
-    "label_id": 1502
+    "label_id": 1506
 }
 
-if (doing === 'edit') {
+if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
         var url = config.API.AFFAIR_DETAIL_URL;
         var promise = me.get(url, {
-            affair_id: util.params('affair_id')
+            affair_id: +util.params('affair_id')
         });
 
         promise

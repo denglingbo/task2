@@ -69,14 +69,17 @@ page.bindEvents = function () {
     $('#principal, #attends').on('click', function (e) {
         var key = '';
         var itemKey = '';
+        var id = '';
         var oldVal = null;
         if (e.target.id === 'principal') {
             key = principalSelectKey;
             itemKey = 'principal_user';
+            id = '#principal';
         }
         else {
             key = attendSelectKey;
             itemKey = 'attend_ids';
+            id = '#attends';
         } 
         oldVal = me.data[itemKey];
         CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
@@ -93,7 +96,7 @@ page.bindEvents = function () {
             else {
                 me.data[itemKey] = +users.takeJid(contacts[0].jid);
             }
-
+            $(id + ' .value').text(util.getPersonsName(contacts));
             editCom.personIsChange(oldVal, me.data[itemKey], valid);
         });
     });
@@ -183,7 +186,7 @@ page.initValue = function () {
             checked: {
                 // 数组
                 /* eslint-disable */
-                contacts: [editCom.transJid(me.data['principal_user'])]
+                contacts: editCom.transJid(me.data['principal_user'])
                 /* eslint-enable */
             }
         }
@@ -302,7 +305,7 @@ page.renderUser = function (originArr, dataArr) {
  *
  */
 /* eslint-disable */
-var doing = 'edit';
+var doing = +util.params('task_id');
 
 page.data = {
     "id" : 0,
@@ -321,7 +324,7 @@ page.data = {
     }
 }
 
-if (doing === 'edit') {
+if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
         var url = config.API.TASK_DETAIL_URL;
