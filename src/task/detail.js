@@ -231,21 +231,21 @@ page.arr2Object = function (arr, key) {
  *
  */
 page.findOwner = function (srcObject, arr) {
-    var data = {};
+    var finder = {};
     var obj = this.arr2Object(arr, 'jid');
 
     var getData = function (ids, key) {
-        var data = {};
+        var data;
 
         if ($.isArray(ids)) {
-            data[key] = [];
+            data = [];
 
             ids.forEach(function (item) {
-                data[key].push(obj[item]);
+                data.push(obj[item]);
             });
         }
         else {
-            data[key] = obj[ids];
+            data = obj[ids];
         }
 
         return data;
@@ -256,11 +256,11 @@ page.findOwner = function (srcObject, arr) {
 
             var ids = srcObject[key];
 
-            data[key] = getData(ids, key);
+            finder[key] = getData(ids, key);
         }
     }
 
-    return data;
+    return finder;
 };
 
 /**
