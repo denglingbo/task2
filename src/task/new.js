@@ -302,7 +302,7 @@ page.renderUser = function (originArr, dataArr) {
  *
  */
 /* eslint-disable */
-var doing = 'edit';
+var doing = +util.params('task_id');
 
 page.data = {
     "id" : 0,
@@ -321,7 +321,7 @@ page.data = {
     }
 }
 
-if (doing === 'edit') {
+if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
         var url = config.API.TASK_DETAIL_URL;

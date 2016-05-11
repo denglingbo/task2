@@ -166,7 +166,7 @@ page.initPlugin = function () {
  *
  */
 /* eslint-disable */
-var doing = 'edit';
+var doing = +util.params('affair_id');
 page.data = {
     "id": 0,
     "attachs": [],
@@ -182,12 +182,12 @@ page.data = {
     "label_id": 1502
 }
 
-if (doing === 'edit') {
+if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
         var url = config.API.AFFAIR_DETAIL_URL;
         var promise = me.get(url, {
-            affair_id: util.params('affair_id')
+            affair_id: +util.params('affair_id')
         });
 
         promise
