@@ -23,23 +23,6 @@ var tmplDescribe = require('common/widgets/detail/describe');
 
 var page = new Page();
 
-/* eslint-disable */
-var testArr = [
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'ca1.crt',
-        size: 1391
-    },
-    {
-        deleted: false,
-        dfs_path: '00012AE75593C73341F7927F567E0C49AD6D',
-        file_name: 'cb2.crt',
-        size: 1311
-    }
-];
-/* eslint-enable */
-
 page.enter = function () {
     var me = this;
 
@@ -75,7 +58,9 @@ page.enter = function () {
 
     me.bindEvents();
 
-    me.attach = detailUtil.initDetailAttach(testArr, '.attach-container');
+    /* eslint-disable */
+    me.attach = detailUtil.initDetailAttach(me.data.summary_attachs, '.attach-container', '.attach');
+    /* eslint-enable */
 };
 
 page.bindEvents = function () {

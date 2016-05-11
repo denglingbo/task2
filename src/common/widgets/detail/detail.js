@@ -126,9 +126,15 @@ detail.rightsView = function (rights) {};
  *
  * @param {Object} attachData, 附件数据
  * @param {string} containerSelector, 容器选择器
+ * @param {string} wrapper, 附件的最外层容器
  * @return {Object}, 附件对象
  */
-detail.initDetailAttach = function (attachData, containerSelector) {
+detail.initDetailAttach = function (attachData, containerSelector, wrapper) {
+    if (!attachData || attachData.length < 1) {
+        $(wrapper).addClass('hide');
+        return;
+    }
+
     attachOptions.dom.containerDOM = containerSelector;
     var attachObj = AttachWraper.initAttach(attachOptions, util.transKey(attachData));
     return attachObj;
