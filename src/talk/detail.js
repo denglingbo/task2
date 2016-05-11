@@ -21,7 +21,7 @@ var Ticker = require('common/ui/ticker/ticker');
 
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
-var AttachWraper = require('common/middleware/attach/attachWraper');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var page = new Page();
 
@@ -46,7 +46,7 @@ page.enter = function () {
     this.bindEvents();
 
     /* eslint-disable */
-    this.attach = AttachWraper.initDetailAttach({
+    this.attach = AttachWrapper.initDetailAttach({
         attachData: me.data.summary_attachs, 
         container: '.attach-container', 
         wrapper: '.attach'
@@ -55,8 +55,9 @@ page.enter = function () {
 };
 
 page.bindEvents = function () {
+    /* eslint-disable */
     var me = this;
-
+    /* eslint-enable */
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
@@ -85,34 +86,34 @@ page.bindEvents = function () {
     };
     /* eslint-enable */
 
-    this.ticker.on('click', function (isCurTicked) {
-        var myTicker = this;
-        // 0: 取消
-        // 1: 完成
-        var changeStatus = isCurTicked ? 0 : 1;
+    // this.ticker.on('click', function (isCurTicked) {
+    //     var myTicker = this;
+    //     // 0: 取消
+    //     // 1: 完成
+    //     var changeStatus = isCurTicked ? 0 : 1;
 
-        /* eslint-disable */
-        var promise = page.post(config.API.TASK_FOLLOW, {
-            task_id: me.data.task_id,
-            level: changeStatus
-        });
-        /* eslint-enable */
+    //     /* eslint-disable */
+    //     var promise = page.post(config.API.TASK_FOLLOW, {
+    //         task_id: me.data.task_id,
+    //         level: changeStatus
+    //     });
+    //     /* eslint-enable */
 
-        var type = map[changeStatus];
+    //     var type = map[changeStatus];
 
-        promise
-            .done(function (result) {
-                if (result && result.meta.code === 200) {
-                    myTicker[type.done]();
-                }
-                else {
-                    myTicker[type.fail]();
-                }
-            })
-            .fail(function () {
-                myTicker[type.fail]();
-            });
-    });
+    //     promise
+    //         .done(function (result) {
+    //             if (result && result.meta.code === 200) {
+    //                 myTicker[type.done]();
+    //             }
+    //             else {
+    //                 myTicker[type.fail]();
+    //             }
+    //         })
+    //         .fail(function () {
+    //             myTicker[type.fail]();
+    //         });
+    // });
 };
 
 /**

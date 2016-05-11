@@ -7,6 +7,7 @@
 
 @import "../common/css/global.scss";
 @import "../common/css/ui.scss";
+@import "../common/middleware/attach/attachWrapper";
 
 .main {
     padding-bottom: rem(44px);

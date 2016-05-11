@@ -14,7 +14,7 @@ var users = require('common/middleware/user/users');
 var ListLoader = require('common/ui/listLoader/listLoader');
 var util = require('common/util');
 var Page = require('common/page');
-var AttachWraper = require('common/middleware/attach/attachWraper');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 // var mobileUtil = require('common/middleware/util');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
@@ -31,7 +31,9 @@ page.enter = function () {
 
     me.data.isTaskPage = true;
     me.data.describeTitle = '任务描述';
-
+    /* eslint-disable */
+    me.data.rights['task_id'] = me.data.id;
+    /* eslint-enable */
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
@@ -60,9 +62,9 @@ page.enter = function () {
     me.bindEvents();
 
     /* eslint-disable */
-    me.attach = AttachWraper.initDetailAttach({
-        attachData: me.data.summary_attachs, 
-        container: '.attach-container', 
+    me.attach = AttachWrapper.initDetailAttach({
+        attachData: me.data.summary_attachs,
+        container: '.attach-container',
         wrapper: '.attach'
     });
     /* eslint-enable */
@@ -187,10 +189,7 @@ page.follow = function (target) {
     var type = map[status];
 
     /* eslint-disable */
-    var promise = page.post(config.API.TASK_FOLLOW, {
-        task_id: me.data.id,
-        level: status
-    });
+    var promise = page.post(config.API.TASK_FOLLOW + '?task_id=' + me.data.id + '&level=' + status);
     /* eslint-enable */
 
     promise

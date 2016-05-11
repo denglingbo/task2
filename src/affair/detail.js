@@ -20,7 +20,7 @@ var Ticker = require('common/ui/ticker/ticker');
 
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
-var AttachWraper = require('common/middleware/attach/attachWraper');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var page = new Page();
 
@@ -38,7 +38,7 @@ page.enter = function () {
 
     this.bindEvents();
     /* eslint-disable */
-    this.attach = AttachWraper.initDetailAttach({
+    this.attach = AttachWrapper.initDetailAttach({
         attachData: me.data.attachs, 
         container: '.attach-container', 
         wrapper: '.attach'

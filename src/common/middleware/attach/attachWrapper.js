@@ -112,7 +112,7 @@ attach.initDetailAttach = function (options) {
             $(options.wrapper).addClass('hide');
         }
         else {
-            $(options.container).text('无附件');
+            $(options.container).html('<div class="no-attach">无附件</div>');
         }
         return;
     }

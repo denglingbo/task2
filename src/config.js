@@ -46,6 +46,7 @@ var config = {
         AFFAIR_EDIT_URL: 'update_affair',
         // 讨论编辑
         TALK_EDIT_URL: 'update_talk',
+        GET_AFFAIR_TAGS: 'get_affair_tags',
 
         // 讨论
         TALK_DETAIL_URL: 'get_talk_detail',

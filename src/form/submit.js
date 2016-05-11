@@ -11,7 +11,7 @@ require('./submit.scss');
 var Page = require('common/page');
 var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
-var attachWraper = require('common/middleware/attach/attachWraper');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var page = new Page();
 
@@ -98,7 +98,7 @@ page.enter = function () {
             },
             operateType: 'upload'
         };
-        attachWraper.initAttach(attachOptions);
+        AttachWrapper.initAttach(attachOptions);
     }
     // 这里两个输入框的 limit 相同，所以都用一样的配置
     $('.phone-input').each(function () {

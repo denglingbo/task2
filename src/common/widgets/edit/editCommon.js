@@ -5,7 +5,7 @@
  *
  */
 var util = require('common/util');
-var attachWraper = require('common/middleware/attach/attachWraper');
+var attachWrapper = require('common/middleware/attach/attachWrapper');
 var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
 
@@ -298,14 +298,14 @@ editCom.initMobiscroll = function (method, selector, data) {
  * @return {Object} 附件对象
  */
 editCom.initEditAttach = function (page, data) {
-    var attachObj = attachWraper.initDetailAttach({
+    var attachObj = attachWrapper.initDetailAttach({
         attachData: data,
         container: '#attachList',
         addBtn: '#addAttach',
         callback: function () {
             page.valid.isEdit = true;
         }
-    })
+    });
     return attachObj;
 };
 
@@ -338,8 +338,9 @@ editCom.initImportValue = function (level) {
  */
 editCom.initAffairType = function (labelId) {
     var types = ['待办', '求助', '汇报', '计划', '日志', '记录', '消息', '其他'];
-    return types[labelId - 1502];
+    return types[labelId - 1506];
 }
+
 /**
  * 选择人员是否改变
  *
@@ -375,13 +376,13 @@ editCom.loadPage = function (page, data) {
  * 转换参与人和负责人的id为jid
  *
  * @param {Array|number} id, 人员id
- * @return {Array|string}, jid
+ * @return {Array}, jid
  */
 editCom.transJid = function (id) {
     var cid = localStorage.getData('TASK_PARAMS')['cid'];
     var jid = [];
     if (!$.isArray(id)) {
-        return users.makeJid(id, cid);
+        return [users.makeJid(id, cid)];
     }
     else {
         id.forEach(function (itemId) {
@@ -392,6 +393,10 @@ editCom.transJid = function (id) {
     }
 };
 
+/**
+ * 获取客户端信息
+ *
+ */
 editCom.getClientMsg = function () {
     var data = localStorage.getData('TASK_PARAMS');
     return {

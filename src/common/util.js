@@ -537,4 +537,19 @@ util.getDataFromObj = function (target, source) {
     }
 };
 
+/**
+ * 从选人组件返回数据获取人员名
+ *
+ * @param {Array} arr, 选人组件返回的contacts
+ * @return {string}, 人员字符串
+ *
+ */
+util.getPersonsName = function (arr) {
+    var nameArr = [];
+    arr.forEach(function (item) {
+        nameArr.push(item.name);
+    });
+    return nameArr.join('、');
+};
+
 module.exports = util;

@@ -63,6 +63,7 @@ page.bindEvents = function () {
             contacts.forEach(function (value, index) {
                 me.data['user_ids'].push(+users.takeJid(value.jid));
             });
+            $('#attends .value').text(util.getPersonsName(contacts));
             editCom.personIsChange(oldVal, me.data['user_ids'], valid);
         });
     });
