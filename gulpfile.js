@@ -17,6 +17,7 @@ var server = require('./tool/webpack-lib/server');
 // Webapck utils
 var Webpacker = require('./tool/webpack-lib/index');
 
+var connect = require('gulp-connect');
 
 /**
  * webpack config
@@ -48,6 +49,8 @@ var root = path.join(__dirname, '/');
 // dev
 gulp.task('dev', function () {
 
+    config.debug = true;
+
     var webpacker = new Webpacker(config, root);
     
     webpacker.mockStart({
@@ -58,15 +61,17 @@ gulp.task('dev', function () {
     webpacker.devStart();
 });
 
-// dev
-// gulp.task('release', function () {
+// release
+gulp.task('release', function () {
 
-//     var webpacker = new Webpacker(config, root);
+    config.debug = false;
+
+    var webpacker = new Webpacker(config, root);
     
-//     webpacker.mockStart({
-//         mockDir: './mock',
-//         https: config.https
-//     });
+    webpacker.mockStart({
+        mockDir: './mock',
+        https: config.https
+    });
 
-//     webpacker.releaseStart();
-// });
+    webpacker.releaseStart();
+});

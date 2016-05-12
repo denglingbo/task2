@@ -10,8 +10,9 @@ var glob = require('glob');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var BellOnBundlerErrorPlugin = require('bell-on-bundler-error-plugin');
-var server = require('./server');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+var servers = require('./server');
 
 /**
  * Main
@@ -48,6 +49,8 @@ var Webpacker = function (config, root) {
     this.MakeWebpackConfig = require(this.root + 'make.webpack.js');
 
     this.webpackConfig = this.MakeWebpackConfig.call(this);
+
+    return this;
 };
 
 /**
@@ -248,9 +251,13 @@ Webpacker.prototype.getCssLoader = function (name) {
 };
 
 
-Webpacker.prototype.devStart = server;
+Webpacker.prototype.devStart = function () {
+    servers.dev.call(this);
+};
 
-// Webpacker.prototype.releaseStart = server;
+Webpacker.prototype.releaseStart = function () {
+    servers.release.call(this);
+};
 
 Webpacker.prototype.mockStart = require('./mock');
 

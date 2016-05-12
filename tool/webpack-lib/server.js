@@ -4,39 +4,23 @@ var _ = require('underscore');
 var devServer = require('webpack-dev-server');
 var webpack = require('webpack');
 
-var server = function () {
-    // console.log(this);
-    // if (!this.config.debug) {
-        
-    //     // Run webpack
-    //     webpack(
+var connect = require('gulp-connect');
 
-    //         // webpack config
-    //         this.webpackConfig,
+/**
+ * webpack dev server 配置
+ */
+var getServerConfig = function (me) {
 
-    //         function (err, stats) {
-    //             if (err) {
-    //                 throw new gutil.PluginError('webpack', err);
-    //             }
-    //         }
-    //     );
-    // }
-    
-
-    /**
-     * webpack dev server 配置
-     *
-     */
-    var serverConfig = {
-
+    return {
         // dev 模式 静态入口文件访问位置
         contentBase: '',
-        publicPath: this.config.publicPath,
-        port: this.config.port,
+        publicPath: me.config.publicPath,
+        port: me.config.port,
         hot: true,
         historyApiFallback: true,
         noInfo: false,
         inline: true,
+        watch: true,
         stats: {
             cached: false,
             colors: true
@@ -46,7 +30,7 @@ var server = function () {
          * 本地项目用 https:// 访问项目
          * 同时需要 webpack dev server 进行 https 配置
          */
-        https: this.config.https
+        https: me.config.https
 
         // webpack dev server source
         // options.https.key = options.https.key || fs.readFileSync(path.join(__dirname, "../ssl/server.key"));
@@ -54,18 +38,57 @@ var server = function () {
         // options.https.ca = options.https.ca || fs.readFileSync(path.join(__dirname, "../ssl/ca.crt"));
 
     };
-
-    // var webpackConfig = this.MakeWebpackConfig(this.config);
-
-    var compiler = webpack(this.webpackConfig);
-
-    var server = new devServer(compiler, serverConfig);
-
-    server.listen(this.config.port, this.config.host, function() {
-        console.log('----- [server.js] webpack server start -----');
-    });
-
-    return server;
 };
 
-module.exports = server;
+var servers = {
+    
+    /**
+     * dev server
+     */
+    dev: function () {
+
+        var serverConfig = getServerConfig(this);
+
+        var compiler = webpack(this.webpackConfig);
+
+        var server = new devServer(compiler, serverConfig);
+
+        server.listen(this.config.port, this.config.host, function() {
+            console.log('----- [server.js] webpack server start -----');
+        });
+
+        return server;
+    },
+
+    connect: function () {
+
+        return connect.server({
+            root: this.webpackConfig.output.path,
+            port: this.config.port,
+            livereload: true
+        });
+    },
+
+    /**
+     * 模拟打包
+     */
+    release: function () {
+
+        this.connect();
+
+        // Run webpack
+        webpack(
+
+            // webpack config
+            this.webpackConfig,
+
+            function (err, stats) {
+                if (err) {
+                    throw new gutil.PluginError('webpack', err);
+                }
+            }
+        );
+    }
+}
+
+module.exports = servers;

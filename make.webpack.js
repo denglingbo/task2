@@ -32,25 +32,33 @@ module.exports = function () {
 
     // 页面 js 入口
     webpackConfig.entry = this.jsEntries;
+
+    var copyPlugins = [
+        {
+            from: './dep/',
+            to: './dep/'
+        },
+        {
+            from: './src/common/img/',
+            to: './common/img/'
+        }
+    ];
+
+    if (process.env.NODE_ENV !== 'prod') {
+        copyPlugins.push({
+            from: './cordova.js',
+            to: './cordova.js'
+        });
+    }
+    else {
+        webpackConfig.devtool = true;
+    }
     
     // 插件集合
     webpackConfig.plugins = [
 
         // to: 实际为 path/xxx
-        new CopyPlugin([
-            {
-                from: './dep/',
-                to: './dep/'
-            },
-            {
-                from: './src/common/img/',
-                to: './common/img/'
-            },
-            {
-                from: './cordova.js',
-                to: './cordova.js'
-            }
-        ]),
+        new CopyPlugin(copyPlugins),
 
         // 提供全局使用
         new webpack.ProvidePlugin({
@@ -110,7 +118,7 @@ module.exports = function () {
         chunkFilename: config.debug ? 'chunk.js' : 'common/js/chunk.min.js'
     };
 
-
+    // 图片 path
     var imgPath = config.debug ? '' : 'common/img/';
 
     // module 加载器
@@ -125,7 +133,8 @@ module.exports = function () {
                 // Reference: https://github.com/webpack/url
                 test: /\.(jpe?g|png|gif)$/i,
                 loaders: [
-                    'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
+                    'url-loader?limit=1&name=' + imgPath + '[name].[ext]'
+                    // 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
                 ]
             },
             {

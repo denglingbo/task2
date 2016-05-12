@@ -84,36 +84,36 @@ page.bindEvents = function () {
             fail: 'untick'
         }
     };
+
+    this.ticker.on('click', function (isCurTicked) {
+        var myTicker = this;
+        // 0: 取消
+        // 1: 完成
+        var changeStatus = isCurTicked ? 0 : 1;
+
+        /* eslint-disable */
+        var promise = page.post(config.API.TASK_FOLLOW, {
+            task_id: me.data.task_id,
+            level: changeStatus
+        });
+        /* eslint-enable */
+
+        var type = map[changeStatus];
+
+        promise
+            .done(function (result) {
+                if (result && result.meta.code === 200) {
+                    myTicker[type.done]();
+                }
+                else {
+                    myTicker[type.fail]();
+                }
+            })
+            .fail(function () {
+                myTicker[type.fail]();
+            });
+    });
     /* eslint-enable */
-
-    // this.ticker.on('click', function (isCurTicked) {
-    //     var myTicker = this;
-    //     // 0: 取消
-    //     // 1: 完成
-    //     var changeStatus = isCurTicked ? 0 : 1;
-
-    //     /* eslint-disable */
-    //     var promise = page.post(config.API.TASK_FOLLOW, {
-    //         task_id: me.data.task_id,
-    //         level: changeStatus
-    //     });
-    //     /* eslint-enable */
-
-    //     var type = map[changeStatus];
-
-    //     promise
-    //         .done(function (result) {
-    //             if (result && result.meta.code === 200) {
-    //                 myTicker[type.done]();
-    //             }
-    //             else {
-    //                 myTicker[type.fail]();
-    //             }
-    //         })
-    //         .fail(function () {
-    //             myTicker[type.fail]();
-    //         });
-    // });
 };
 
 /**

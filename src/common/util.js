@@ -268,7 +268,6 @@ util.guid = function () {
  * @return {Object} data
  */
 util.inherits = function (subClass, superClass) {
-    // by Tangram 1.x: baidu.lang.inherits
     var Empty = function () {
     };
     Empty.prototype = superClass.prototype;

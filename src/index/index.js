@@ -62,7 +62,7 @@ page.bindEvents = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.HOME_URL, {});
+    var promise = page.get(config.API.HOME_URL, {});
     promise
         .done(function (result) {
             if (result.meta && result.meta.code !== 200) {
