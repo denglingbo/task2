@@ -48,7 +48,10 @@ page.enter = function () {
 
     this.bindEvents();
 
-    new Search('#search');
+    new Search('#search', {
+        url: config.API.SEARCH,
+        listDir: ['list']
+    });
 };
 
 page.bindEvents = function () {
