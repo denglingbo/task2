@@ -6,12 +6,14 @@
  */
 
 require('./list.scss');
+require('common/widgets/search/searchPlugin.scss');
 
 var config = require('../config');
 var Page = require('common/page');
 // var Sticky = require('../common/ui/sticky');
 var PageSlider = require('common/ui/pageSlider');
 var InitScroll = require('./list/initScroll');
+var Search = require('common/widgets/search/searchPlugin');
 var page = new Page();
 
 var pages = [
@@ -45,6 +47,8 @@ page.enter = function () {
     this.initSlider();
 
     this.bindEvents();
+
+    new Search('#search');
 };
 
 page.bindEvents = function () {
@@ -96,9 +100,11 @@ page.loadPage = function (info, data) {
     require.ensure(['./list/item'], function () {
 
         var template = require('./list/item');
-        var $content = $(info.selector).find('.list-wrapper-content');
-        me.renderFile($content, template, data);
-
+        // var $content = $(info.selector).find('.list-wrapper-content');
+        // me.renderFile($content, template, data);
+        me.render('.list-wrapper-content', data, {
+            tmpl: template
+        });
         pageCache[info.name] = 1;
 
         // 为了 IScroll 一定能被绑定正确，需要添加一个 timeout
@@ -106,7 +112,6 @@ page.loadPage = function (info, data) {
             new InitScroll(me, info);
         }, 0);
     });
-
 };
 
 /**
@@ -117,7 +122,7 @@ page.loadPage = function (info, data) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.post(config.API.LIST_URL, {});
+    var promise = page.get(config.API.LIST_URL, {});
 
     promise
         .done(function (result) {

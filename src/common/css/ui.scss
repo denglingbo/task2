@@ -98,6 +98,21 @@ $circle-size: rem(45px);
 }
 
 /**
+ *
+ *
+ */
+$search-size: rem(14px);
+.icon-search {
+    display: inline-block;
+    padding: 0;
+    width: $search-size;
+    height: $search-size;
+    background-image: url('#{$rootImg}/icon_top_search.png');
+    background-repeat: no-repeat;
+    background-size: $search-size;
+}
+
+/**
  * 五角星
  */
 $star-size: rem(16px);
