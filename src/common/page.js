@@ -5,7 +5,7 @@
  */
 
 var config = require('../config');
-var view = require('./ui/view');
+var view = require('./view');
 var util = require('./util');
 var storage = require('./localstorage');
 var lang = require('./lang');
@@ -139,7 +139,9 @@ Page.prototype.start = function () {
         me.execute()
             .done(function () {
                 // 将语言包数据添加到 this.data
-                me.mergeLang();
+                me.initTemplateLang();
+
+                // 页面逻辑
                 me.enter();
             })
             .fail(function () {
@@ -167,7 +169,7 @@ Page.prototype.start = function () {
 /**
  * 如果有语言包数据，则添加到 data 上
  */
-Page.prototype.mergeLang =  function () {
+Page.prototype.initTemplateLang =  function () {
     if (lang.data) {
 
         this.lang = lang.data;
@@ -239,7 +241,7 @@ Page.prototype.addParallelTask = function (task) {
  *
  * @param {string} selector, #id|.class|tagname
  * @param {Object} data, 数据
- * @param {string} options, see ui/view.js
+ * @param {string} options, see view.js
  * @return {string} html 字符串
  *
  */

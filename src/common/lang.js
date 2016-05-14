@@ -4,6 +4,16 @@
  *
  * 语言包主函数, 该函数需要 language/index.js 作为配置入口
  * 根据 language/index.js 中的返回做成将要使用的 object
+ * ---------注意---------
+ * 1. 默认会在 page.js 中把 lang 数据添加到 data 对象节点上，由模版引擎通过模版数据直接负责语言包输出 [推荐]
+ *      <script type='x-tmpl-mustache'>
+ *          <div>{{ lang.key }}</div>
+ *      ...
+ *
+ * 2. 如果有语言包是在非 <script type='x-tmpl-mustache'> 的普通节点上，则会调用 parseDOM 来完成语言包输出
+ *      <div data-lang='langKey'></dt>
+ *
+ * 3. 默认情况下，view.js 的 render 之后 会自动调用 parseDOM
  */
 
 var util = require('./util');
@@ -32,6 +42,8 @@ var Lang = function () {
     }
 };
 
+var valueArr = ['textarea', 'input'];
+
 Lang.prototype = {
 
     getType: function () {
@@ -42,26 +54,67 @@ Lang.prototype = {
         return this.failed;
     },
 
-    getData: function () {
-        return this.data;
-    }
+    /**
+     * 获取 语言包 数据
+     *
+     * @param {string} key [options], 指定获取某语言包数据
+     */
+    getData: function (key) {
 
-    /*
-    parse: function (tmpl) {
+        if (!key) {
+            return this.data;
+        }
+
+        return this.data[key] || '';
+    },
+
+    /**
+     * 判断是否是输入类型的 dom
+     */
+    valueDOM: function ($elem) {
+
+        for(var i = 0; i < valueArr.length; i++) {
+            var type = valueArr[i];
+
+            if ($elem.is(type)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * 将 dom 节点上的 语言包替换到指定位置
+     */
+    parseDOM: function () {
         var me = this;
 
-        tmpl = tmpl.replace(/{{lang\.(\w+)}}/g, function (w, d) {
+        try {
+            var $elems = $('[data-lang]');
 
-            if (me.data[d]) {
-                return me.data[d];
+            if ($elems.length <= 0) {
+                return;
             }
 
-            return '';
-        });
+            $elems.each(function () {
+                var $elem = $(this);
 
-        return tmpl;
+                if ($elem.attr('nodeType') === 1) {
+                    var langKey = $elem.data('lang');
+                    var value = me.getData(langKey);
+
+                    if (me.valueDOM($elem)) {
+                        $elem.val(value);
+                    }
+                    else {
+                        $elem.html(value);
+                    }
+                }
+            });
+        }
+        catch (ex) {}
     }
-    */
 };
 
 module.exports = new Lang();

@@ -7,6 +7,7 @@
  */
 
 var Mustache = require('dep/mustache');
+var lang = require('./lang');
 
 /**
  * Mustache
@@ -63,6 +64,9 @@ view.render = function (selector, data, options) {
     }
 
     $elem[opts.type](html);
+
+    // 输出 dom 节点上的 语言包数据
+    lang.parseDOM();
 
     return html;
 };
