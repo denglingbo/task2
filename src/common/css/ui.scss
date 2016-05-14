@@ -98,6 +98,36 @@ $circle-size: rem(45px);
 }
 
 /**
+ * 搜索图标
+ *
+ */
+$search-size: rem(14px);
+.icon-search {
+    display: inline-block;
+    padding: 0;
+    width: $search-size;
+    height: $search-size;
+    background-image: url('#{$rootImg}/icon_top_search.png');
+    background-repeat: no-repeat;
+    background-size: $search-size;
+}
+
+/**
+ * 搜索图标
+ *
+ */
+$search-big-size: rem(73px);
+.icon-search-big {
+    display: inline-block;
+    padding: 0;
+    width: $search-big-size;
+    height: $search-big-size;
+    background-image: url('#{$rootImg}/icon_middle_empty_serch.png');
+    background-repeat: no-repeat;
+    background-size: $search-big-size;
+}
+
+/**
  * 五角星
  */
 $star-size: rem(16px);

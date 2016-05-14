@@ -54,7 +54,9 @@ var config = {
         // attach uploadUrl
         ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
         // attach resumeUrl
-        ATTACH_RESUMEURL: '/task/m/v1/attachment/getFSTokensOnContinue'
+        ATTACH_RESUMEURL: '/task/m/v1/attachment/getFSTokensOnContinue',
+
+        SEARCH: 'search'
     }
 };
 

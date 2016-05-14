@@ -54,7 +54,7 @@ module.exports = function () {
     else {
         webpackConfig.devtool = true;
     }
-    
+
     // 插件集合
     webpackConfig.plugins = [
 
@@ -163,7 +163,6 @@ module.exports = function () {
     };
 
      // console.log(this.htmlPlugins);
-     console.log(webpackConfig);
 
     return webpackConfig;
 
