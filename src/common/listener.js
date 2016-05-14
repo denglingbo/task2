@@ -43,12 +43,29 @@ Listener.prototype = {
     },
 
     /**
+     * 解除绑定的事件
+     *
+     * @param {string} type, 事件类型
+     * @param {Function} fn, 回调
+     */
+    off: function (type, fn) {
+        if (!this._events[type]) {
+            return;
+        }
+
+        var index = this._events[type].indexOf(fn);
+
+        if (index > -1) {
+            this._events[type].splice(index, 1);
+        }
+    },
+
+    /**
      * 执行绑定的事件
      *
      * @param {string} type, 事件类型
-     *
      */
-    execEvent: function (type) {
+    fire: function (type) {
         if (!this._events[type]) {
             return;
         }
@@ -60,7 +77,8 @@ Listener.prototype = {
         }
 
         for (var i = 0; i < len; i++) {
-            this._events[type][i].apply(this, [].slice.call(arguments, 1));
+            var args = [].slice.call(arguments, 1);
+            this._events[type][i].apply(this, args);
         }
     }
 };

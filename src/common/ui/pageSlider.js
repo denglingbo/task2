@@ -150,7 +150,7 @@ PageSlider.prototype = {
             me.$outer.removeClass('slide-fast');
         });
 
-        this.slide.on('slideMoveX', function (event, pos) {
+        this.slide.on('slideMoveX', function (pos) {
             // 正数表示往右，负数表示往左
             me.step = (pos.diffX / me.winWidth) * 100;
             var step = me.step + me.defaultX;
@@ -158,8 +158,8 @@ PageSlider.prototype = {
             me.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
         });
 
-        this.slide.on('slideEndX', function (event, pos) {
-            var item = me.find(event);
+        this.slide.on('slideEndX', function (pos) {
+            var item = me.find();
             me.gotoPage(item, pos);
         });
     },

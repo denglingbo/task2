@@ -8,7 +8,7 @@
 
 require('./listLoader.scss');
 
-var Listener = require('common/listener');
+var Control = require('common/control');
 
 var getDom = function (classObject) {
 
@@ -47,6 +47,9 @@ var STATUS_CLASS = {
  *  options.promise: 用于 ajax
  */
 var Loader = function (options) {
+
+    Control.call(this, options);
+    
     var me = this;
 
     me.opts = {
@@ -81,7 +84,7 @@ var Loader = function (options) {
     me.init();
 };
 
-Loader.prototype = new Listener();
+$.extend(Loader.prototype, Control.prototype);
 
 $.extend(Loader.prototype, {
 
@@ -98,11 +101,11 @@ $.extend(Loader.prototype, {
 
         if (me.opts.promise) {
             me.req(function (data) {
-                me.execEvent('complete', me, data);
+                me.fire('complete', data);
             });
         }
         else {
-            me.execEvent('complete', me);
+            me.fire('complete');
         }
 
         this.bindEvents();
@@ -126,11 +129,11 @@ $.extend(Loader.prototype, {
 
             if (me.opts.promise) {
                 me.req(function (data) {
-                    me.execEvent('loadmore', me, data);
+                    me.fire('loadmore', data);
                 });
             }
             else {
-                me.execEvent('loadmore', me);
+                me.fire('loadmore');
             }
 
 

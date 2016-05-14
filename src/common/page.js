@@ -9,6 +9,7 @@ var view = require('./view');
 var util = require('./util');
 var storage = require('./localstorage');
 var lang = require('./lang');
+var log = require('./log');
 
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
@@ -101,6 +102,8 @@ function Page(opts) {
      * @type {Boolean}
      */
     this.isDone = false;
+
+    this.opts = opts;
 }
 
 /**
@@ -143,6 +146,8 @@ Page.prototype.start = function () {
 
                 // 页面逻辑
                 me.enter();
+
+                me.done();
             })
             .fail(function () {
                 // Do something
@@ -191,6 +196,8 @@ Page.prototype.initTemplateLang =  function () {
  */
 Page.prototype.done = function () {
     this.isDone = true;
+
+    log.init(this.opts && this.opts.pageName);
 };
 
 /**

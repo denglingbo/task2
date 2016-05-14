@@ -5,7 +5,8 @@
  * 模拟手机端输入框
  */
 require('./phoneInput.scss');
-var Listener = require('common/listener');
+
+var Control = require('common/control');
 
 /**
  * 模拟输入框
@@ -13,6 +14,9 @@ var Listener = require('common/listener');
  * @param {Ojbect} options, 配置项
  */
 var PhoneInput = function (options) {
+
+    Control.call(this, options);
+
     var me = this;
     /* eslint-disable */
     me.opts = {
@@ -45,7 +49,7 @@ var PhoneInput = function (options) {
 
 var controlItem = '.phone-input-item';
 
-PhoneInput.prototype = new Listener();
+$.extend(PhoneInput.prototype, Control.prototype);
 
 $.extend(PhoneInput.prototype, {
 

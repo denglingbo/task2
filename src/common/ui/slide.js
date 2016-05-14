@@ -5,13 +5,14 @@
  * 触屏滑动基类，待优化
  */
 
-var Listener = require('common/listener');
+var Control = require('common/control');
 
 var EVENTS = {
     slideX: 'slideX',
     slideY: 'slideY',
     slideDir: 'slideDir',
     slideMoveX: 'slideMoveX',
+    slideMoveY: 'slideMoveY',
     slideMove: 'slideMove',
     slideEndX: 'slideEndX',
     slideEndY: 'slideEndY',
@@ -19,6 +20,8 @@ var EVENTS = {
 };
 
 var Slide = function (selector) {
+
+    Control.call(this);
 
     this.$elem = $(selector);
 
@@ -40,7 +43,7 @@ var Slide = function (selector) {
     this.init();
 };
 
-Slide.prototype = new Listener();
+$.extend(Slide.prototype, Control.prototype);
 
 $.extend(Slide.prototype, {
 
@@ -102,13 +105,13 @@ $.extend(Slide.prototype, {
             event.preventDefault();
 
             if (me._dir === 0) {
-                me.execEvent(EVENTS.slideEndX, event, me._pos);
+                me.fire(EVENTS.slideEndX, me._pos);
             }
             else if (me._dir === 1) {
-                me.execEvent(EVENTS.slideEndY, event, me._pos);
+                me.fire(EVENTS.slideEndY, me._pos);
             }
 
-            me.execEvent(EVENTS.slideEnd, event, me._dir, me._pos);
+            me.fire(EVENTS.slideEnd, me._dir, me._pos);
         });
     },
 
@@ -134,25 +137,25 @@ $.extend(Slide.prototype, {
                 // 左右滑屏
                 if (diffX > diffY) {
                     me._dir = 0;
-                    me.execEvent(EVENTS.slideX, event, data);
+                    me.fire(EVENTS.slideX, data);
                 }
                 // 上下滑屏
                 else {
                     me._dir = 1;
-                    me.execEvent(EVENTS.slideY, event, data);
+                    me.fire(EVENTS.slideY, data);
                 }
 
-                me.execEvent(EVENTS.slideDir, event, me._dir, data);
+                me.fire(EVENTS.slideDir, me._dir, data);
             }, 10);
         }
         if (me._dir === 0) {
-            me.execEvent(EVENTS.slideMoveX, event, me._pos);
+            me.fire(EVENTS.slideMoveX, me._pos);
         }
         else if (me._dir === 1) {
-            me.execEvent(EVENTS.slideMoveY, event, me._pos);
+            me.fire(EVENTS.slideMoveY, me._pos);
         }
 
-        me.execEvent(EVENTS.slideMove, event, me._dir, me._pos);
+        me.fire(EVENTS.slideMove, me._dir, me._pos);
 
     }
 });

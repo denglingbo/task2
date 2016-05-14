@@ -8,7 +8,16 @@
 
 require('./ticker.scss');
 
-var Listener = require('common/listener');
+var Control = require('common/control');
+
+var CLASSES = {
+    UNTICK: 'untick',
+    TICKED: 'ticked',
+    CIRCLE_SQUARE: 'tick-circle-to-square',
+    TICKED_ANIMATE: 'tick-ticked-animate',
+    SQUARE_CIRCLE: 'tick-square-to-circle',
+    UNTICK_ANIMATE: 'tick-untick-animate'
+};
 
 /**
  * 打勾的动画函数包
@@ -20,6 +29,9 @@ var Listener = require('common/listener');
  *      @param {boolean} options.animate 是否需要动画
  */
 var Ticker = function (target, options) {
+
+    Control.call(this, options);
+
     var me = this;
 
     me.opts = {
@@ -34,16 +46,7 @@ var Ticker = function (target, options) {
     this.init();
 };
 
-var CLASSES = {
-    UNTICK: 'untick',
-    TICKED: 'ticked',
-    CIRCLE_SQUARE: 'tick-circle-to-square',
-    TICKED_ANIMATE: 'tick-ticked-animate',
-    SQUARE_CIRCLE: 'tick-square-to-circle',
-    UNTICK_ANIMATE: 'tick-untick-animate'
-};
-
-Ticker.prototype = new Listener();
+$.extend(Ticker.prototype, Control.prototype);
 
 $.extend(Ticker.prototype, {
 
@@ -79,7 +82,7 @@ $.extend(Ticker.prototype, {
             }
 
             // 点击的时候是否为勾选状态
-            me.execEvent('click', isCurTicked);
+            me.fire('click', isCurTicked);
         });
     },
 

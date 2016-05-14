@@ -51,8 +51,9 @@ module.exports = function () {
             to: './cordova.js'
         });
     }
+    // 生产环境
     else {
-        webpackConfig.devtool = true;
+        webpackConfig.devtool = false;
     }
 
     // 插件集合

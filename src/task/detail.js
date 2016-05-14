@@ -21,7 +21,9 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'task-detail'
+});
 
 page.enter = function () {
     var me = this;
@@ -132,7 +134,8 @@ page.bindEvents = function () {
     //     });
     // });
 
-    me.listLoader.on(['complete', 'loadmore'], function (loader, data) {
+    me.listLoader.on(['complete', 'loadmore'], function (data) {
+        var loader = this;
 
         // Mustache.js 的逗比之处
         // {{#list}}

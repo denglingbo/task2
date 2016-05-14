@@ -13,7 +13,7 @@ var Page = require('common/page');
 // var Sticky = require('../common/ui/sticky');
 var PageSlider = require('common/ui/pageSlider');
 var InitScroll = require('./list/initScroll');
-var Search = require('common/widgets/search/searchPlugin');
+// var Search = require('common/widgets/search/searchPlugin');
 var page = new Page();
 
 var pages = [
@@ -48,10 +48,10 @@ page.enter = function () {
 
     this.bindEvents();
 
-    new Search('#search', {
-        url: config.API.SEARCH,
-        listDir: ['list']
-    });
+    // new Search('#search', {
+    //     url: config.API.SEARCH,
+    //     listDir: ['list']
+    // });
 };
 
 page.bindEvents = function () {
