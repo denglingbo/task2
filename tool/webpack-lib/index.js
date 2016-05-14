@@ -250,13 +250,19 @@ Webpacker.prototype.getCssLoader = function (name) {
     return cssLoader;
 };
 
-
+/**
+ * dev 开发模式服务
+ */
 Webpacker.prototype.devStart = function () {
     servers.dev.call(this);
 };
 
-Webpacker.prototype.releaseStart = function () {
-    servers.release.call(this);
+/**
+ * 模拟生产环境，测试打包后的文件等，是否正确
+ */
+Webpacker.prototype.testStart = function () {
+    servers.connect.call(this);
+    servers.build.call(this);
 };
 
 Webpacker.prototype.mockStart = require('./mock');

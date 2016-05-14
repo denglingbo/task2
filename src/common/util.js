@@ -4,6 +4,9 @@
  * 工具包
  *
  */
+var config = require('../config');
+var storage = require('./localstorage');
+
 var util = {};
 
 /**
@@ -135,6 +138,21 @@ util.params = function (key) {
     return query[key] || null;
 };
 
+/**
+ * 获取 url param ，如果没有则获取 localstorage 中的指定值
+ *
+ * @param {string} key, 要获取的指定值
+ * @return {string}
+ */
+util.getParam = function (key) {
+    if (!key) {
+        return null;
+    }
+
+    var data = storage.getData(config.const.TASK_PARAMS);
+
+    return this.params(key) || (data && data[key]);
+};
 
 /**
  * decode HTML
@@ -549,6 +567,36 @@ util.getPersonsName = function (arr) {
         nameArr.push(item.name);
     });
     return nameArr.join('、');
+};
+
+
+/**
+ * 判断网络状态
+ *
+ * @return {boolean} 是否联网
+ */
+util.isNetwork = function () {
+    var networkState = null;
+
+    // 非手机环境不判断
+    if (!navigator || !navigator.connection) {
+        return true;
+    }
+
+    try {
+        networkState = navigator.connection.type;
+        /* eslint-disable */
+        if (networkState === Connection.NONE) {
+            return false;
+        }
+        else {
+            return true;
+        }
+        /* eslint-enable */
+    }
+    catch (e) {
+        // throw 'get navigator.connection.type failed!'
+    }
 };
 
 module.exports = util;

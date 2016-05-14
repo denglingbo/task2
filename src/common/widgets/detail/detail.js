@@ -8,18 +8,19 @@
  */
 var users = require('common/middleware/user/users');
 var util = require('common/util');
+var lang = require('common/lang').getData();
 
 var detail = {};
 
 // 状态显示
 var statusMap = {
-    1: '已完成',
-    2: '已撤销',
-    3: '进行中',
-    4: '待接收',
-    5: '指派中',
-    6: '审核中',
-    7: '已拒绝'
+    1: lang.doneText,
+    2: lang.cancelText,
+    3: lang.doingText,
+    4: lang.receivedText,
+    5: lang.assignmentText,
+    6: lang.reviewText,
+    7: lang.refuseText
 };
 
 // 紧要程度
@@ -89,11 +90,11 @@ detail.getEventTalkList = function (arr) {
 
     arr.forEach(function (item) {
         if (item.type === 1) {
-            item.typeRaw = '讨论';
+            item.typeRaw = lang.talk;
             item.pageType = 'talk';
         }
         if (item.type === 2) {
-            item.typeRaw = '事件';
+            item.typeRaw = lang.affair;
             item.pageType = 'affair';
         }
 

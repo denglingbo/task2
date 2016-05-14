@@ -46,7 +46,9 @@ var config = {
 
 var root = path.join(__dirname, '/');
 
-// dev
+/**
+ * 开发环境
+ */
 gulp.task('dev', function () {
 
     config.debug = true;
@@ -61,8 +63,10 @@ gulp.task('dev', function () {
     webpacker.devStart();
 });
 
-// release
-gulp.task('release', function () {
+/**
+ * 模拟生产环境, NODE_ENV 非 pro，pro环境下，无 mock cordava.js
+ */
+gulp.task('test', function () {
 
     config.debug = false;
 
@@ -73,5 +77,5 @@ gulp.task('release', function () {
         https: config.https
     });
 
-    webpacker.releaseStart();
+    webpacker.testStart();
 });

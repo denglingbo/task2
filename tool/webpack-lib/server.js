@@ -14,7 +14,7 @@ var getServerConfig = function (me) {
     return {
         // dev 模式 静态入口文件访问位置
         contentBase: '',
-        publicPath: me.config.publicPath,
+        publicPath: '/',
         port: me.config.port,
         hot: true,
         historyApiFallback: true,
@@ -60,6 +60,9 @@ var servers = {
         return server;
     },
 
+    /**
+     * 启动一个模拟生产环境的 connect
+     */
     connect: function () {
 
         return connect.server({
@@ -72,9 +75,7 @@ var servers = {
     /**
      * 模拟打包
      */
-    release: function () {
-
-        this.connect();
+    build: function () {
 
         // Run webpack
         webpack(

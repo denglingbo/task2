@@ -44,6 +44,7 @@ module.exports = function () {
         }
     ];
 
+    // 非生产环境，需要使用 mock cordova.js 
     if (process.env.NODE_ENV !== 'prod') {
         copyPlugins.push({
             from: './cordova.js',

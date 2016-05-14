@@ -7,8 +7,8 @@
 var config = require('../config');
 var view = require('./ui/view');
 var util = require('./util');
-var mobileUtil = require('./middleware/util');
 var storage = require('./localstorage');
+var lang = require('./lang');
 
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
@@ -84,6 +84,8 @@ function Page(opts) {
      */
     this.data;
 
+    this.lang;
+
     /**
      * 保存上一个页面传过来的数据
      */
@@ -121,10 +123,11 @@ Page.prototype.start = function () {
     if (!me.isDone) {
         window.pageLog.compileTemplateStart = Date.now();
         me.addParallelTask(function (dfd) {
-            // 如果页面在这之前已经done过了，那就不继续编译
+            // 如果页面在这之前已经done过了，就不继续编译
             $('[type="x-tmpl-mustache"]').each(function (index, node) {
-                // 通通拿出来编译一发
-                view.getRenderer(node.innerHTML);
+                var tmpl = node.innerHTML;
+                // 通通拿出来预编译一发
+                view.getRenderer(tmpl);
             });
             window.pageLog.compileTemplateEnd = Date.now();
             dfd.resolve();
@@ -135,6 +138,8 @@ Page.prototype.start = function () {
         // 执行任务
         me.execute()
             .done(function () {
+                // 将语言包数据添加到 this.data
+                me.mergeLang();
                 me.enter();
             })
             .fail(function () {
@@ -159,6 +164,21 @@ Page.prototype.start = function () {
     return dfd;
 };
 
+/**
+ * 如果有语言包数据，则添加到 data 上
+ */
+Page.prototype.mergeLang =  function () {
+    if (lang.data) {
+
+        this.lang = lang.data;
+
+        if (!this.data) {
+            this.data = {};
+        }
+
+        this.data.lang = lang.data;
+    }
+};
 
 /**
  * Done
@@ -301,7 +321,7 @@ Page.prototype.post = function (api, data, options) {
 Page.prototype.ajax = function (api, data, options) {
 
     var dfd = new $.Deferred();
-    var isNetwork = mobileUtil.isNetwork();
+    var isNetwork = util.isNetwork();
 
     if (!isNetwork) {
         dfd.reject({error: 'Connection None'});

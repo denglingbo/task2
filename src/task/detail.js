@@ -15,7 +15,6 @@ var ListLoader = require('common/ui/listLoader/listLoader');
 var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
-// var mobileUtil = require('common/middleware/util');
 // 定位器
 // var Fixer = require('common/ui/fixer/fixer');
 
@@ -30,10 +29,11 @@ page.enter = function () {
     me.$main = $('.main');
 
     me.data.isTaskPage = true;
-    me.data.describeTitle = '任务描述';
+    me.data.describeTitle = this.lang.taskTitle;
     /* eslint-disable */
     me.data.rights['task_id'] = me.data.id;
     /* eslint-enable */
+
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
@@ -312,6 +312,8 @@ page.renderUser = function (originArr, dataArr) {
         dataRaw.partnerRaw = partnerRaw.join('、');
         dataRaw.partnerJids = partnerJids.join(',');
     }
+
+    dataRaw.lang = this.lang;
 
     this.render('#partner', dataRaw);
 };
