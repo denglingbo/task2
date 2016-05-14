@@ -166,6 +166,10 @@ Page.prototype.start = function () {
     return dfd;
 };
 
+Page.prototype.failed = function ($dom) {
+    $dom.html('Error.');
+};
+
 /**
  * 如果有语言包数据，则添加到 data 上
  */

@@ -78,12 +78,14 @@ page.initSlider = function () {
 
             if (info && info.name && !pageCache[info.name]) {
 
-                me.post(info.api)
+                me.get(info.api)
                     .done(function (result) {
                         me.loadPage(info, result.data);
                     })
                     .fail(function () {
                         // Do something
+                        var $content = $(info.selector).find('.list-wrapper-content');
+                        me.failed($content);
                     });
             }
         }
@@ -103,9 +105,8 @@ page.loadPage = function (info, data) {
     require.ensure(['./list/item'], function () {
 
         var template = require('./list/item');
-        // var $content = $(info.selector).find('.list-wrapper-content');
-        // me.renderFile($content, template, data);
-        me.render('.list-wrapper-content', data, {
+        var $content = $(info.selector).find('.list-wrapper-content');
+        me.render($content, data, {
             tmpl: template
         });
         pageCache[info.name] = 1;
