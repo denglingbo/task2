@@ -8,7 +8,7 @@
 
 require('./searchPlugin.scss');
 require('dep/touch');
-var view = require('common/ui/view');
+var view = require('common/view');
 var Page = require('common/page');
 
 // var IScroll = require('dep/iscroll');
