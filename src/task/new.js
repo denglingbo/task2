@@ -4,7 +4,6 @@
  * 新建任务页
  *
  */
-/* eslint-disable */
 require('common/widgets/edit/new.scss');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
@@ -19,30 +18,24 @@ var page = new Page();
 
 // new: 默认值
 // edit: $.extend(pageData, page.data);
+/* eslint-disable */
 var pageData = {
-    "id" : 0,
-    "title": "",
-    "content": "",
-    "end_time": 0,
-    "importance_level": 1,
-    "attend_ids": [],
-    "notice": 0,
-    "principal_user": 0,
-    "attachements": [],
-    "message": {
-        "sent_eim": true,
-        "sent_emai": false,
-        "sent_sms": false
+    id : 0,
+    title: '',
+    content: '',
+    end_time: 0,
+    importance_level: 1,
+    attend_ids: [],
+    notice: 0,
+    principal_user: 0,
+    attachements: [],
+    message: {
+        sent_eim: true,
+        sent_emai: false,
+        sent_sms: false
     }
 };
-
-// 验证信息
-page.valid = {
-    isEdit: false,
-    title: false,
-    content: true,
-    isAttachesReady: true
-};
+/* eslint-ensable */
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
@@ -50,9 +43,9 @@ var attendSelectKey = 'taskAttandSelectKey';
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.bindEvents();
     me.initValue();
     me.initPlugin();
+    me.bindEvents();
 };
 
 /**
@@ -64,12 +57,17 @@ page.bindEvents = function () {
     var valid = me.valid;
     editCom.bindGetFocus();
 
-    editCom.subAndCancel(me, function () {
+    editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         pageData.attachements = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
-        // editCom.submit(data, url);
 
-        editCom.submit(page, pageData, url);
+        var promise = editCom.submit(page, pageData, url);
+        promise.done(function (result) {
+            var taskId = result.data || pageData.id;
+            /* eslint-disable */
+            CPNavigationBar.redirect('/task/detail.html?task_id=' + taskId);
+            /* eslint-enable */
+        });
     });
     /* eslint-disable */
     // 完成时间跳转页面
@@ -173,10 +171,10 @@ page.loadPage = function () {
 page.initPlugin = function () {
     var me = this;
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', me);
+    editCom.initImportanceLevel('#urgencyBlock', pageData);
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me, pageData.attachements);
+    me.attach = editCom.initEditAttach(pageData.attachements);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -342,7 +340,7 @@ if (doing) {
                     dfd.reject(result);
                 }
                 else {
-                    $.extend(pageData, pageData);
+                    // $.extend(pageData, result.data);
 
                     util.getDataFromObj(pageData, result.data);
 
@@ -375,7 +373,6 @@ if (doing) {
         return dfd;
     });
 }
-/* eslint-enable */
 
 $(function () {
     page.start();

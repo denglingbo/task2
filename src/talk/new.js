@@ -16,23 +16,31 @@ var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
-
-// 验证信息
-page.valid = {
-    isEdit: false,
-    title: false,
-    content: true,
-    isAttachesReady: true
+/* eslint-disable */
+var pageData = {
+    id: 0,
+    attachs: [],
+    content: '',
+    importance_level: 1,
+    inheritance: true,
+    message: {
+        sent_eim: true,
+        sent_emai: false,
+        sent_sms: false
+    },
+    task_id: +util.params('task_id') || 0,
+    title: '',
+    user_ids: []
 };
-
+/* eslint-enable */
 var selectKey = 'talkAttandSelectKey';
 
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.bindEvents();
     me.initValue();
     me.initPlugin();
+    me.bindEvents();
 };
 
 /**
@@ -44,16 +52,24 @@ page.bindEvents = function () {
     var valid = me.valid;
     editCom.bindGetFocus();
 
-    editCom.subAndCancel(me, function () {
-        me.data.attachs = me.attach.getModifyAttaches();
-        var url = me.data.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
-        editCom.submit(me, url);
+    editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
+        pageData.attachs = me.attach.getModifyAttaches();
+        var url = pageData.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
+        // editCom.submit(me, url);
+        var promise = editCom.submit(page, pageData, url);
+        promise.done(function (result) {
+            var taskId = pageData.task_id;
+            var talkId = result.data || pageData.id;
+            /* eslint-disable */
+            CPNavigationBar.redirect('/talk/detail.html?id=' + talkId + '&task_id' + taskId);
+            /* eslint-enable */
+        });
     });
 
     /* eslint-disable */
     // 选择人员跳转页面
     $('#attends').click(function () {
-        var oldVal = me.data['user_ids'];
+        var oldVal = pageData['user_ids'];
         CPNavigationBar.redirect('/selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
             if (!data) {
                 return;
@@ -61,10 +77,10 @@ page.bindEvents = function () {
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                me.data['user_ids'].push(+users.takeJid(value.jid));
+                pageData['user_ids'].push(+users.takeJid(value.jid));
             });
             $('#attends .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, me.data['user_ids'], valid);
+            editCom.personIsChange(oldVal, pageData['user_ids'], valid);
         });
     });
     /* eslint-enable */
@@ -76,13 +92,13 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
-    var data = $.extend({}, me.data, {
+    var data = $.extend({}, pageData, {
         view: [
             {
                 id: 'urgencyBlock',
                 title: '紧要程度',
                 /* eslint-disable */
-                value: editCom.initImportValue(me.data['importance_level'])
+                value: editCom.initImportValue(pageData['importance_level'])
                 /* eslint-enable */
             },
             {
@@ -90,8 +106,8 @@ page.loadPage = function () {
                 title: '参与人'
             }
         ],
-        placeholderTitle: '请输入任务标题(必填)',
-        placeholderContent: '请输入任务描述(选填)'
+        placeholderTitle: '请输入讨论标题(必填)',
+        placeholderContent: '请输入讨论描述(选填)'
     });
 
     editCom.loadPage(me, data);
@@ -100,10 +116,10 @@ page.loadPage = function () {
 page.initPlugin = function () {
     var me = this;
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', me);
+    editCom.initImportanceLevel('#urgencyBlock', pageData);
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me, me.data.attachs);
+    me.attach = editCom.initEditAttach(pageData.attachs);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -122,7 +138,6 @@ page.initPlugin = function () {
 };
 
 page.initValue = function () {
-    var me = this;
     // TODO 修改存储数据
     var val = {
         selectType: 2,
@@ -134,7 +149,7 @@ page.initValue = function () {
             checked: {
                 // 数组
                 /* eslint-disable */
-                contacts: editCom.transJid(me.data['attend_ids'])
+                contacts: editCom.transJid(pageData['attend_ids'])
                 /* eslint-enable */
             }
         }
@@ -182,21 +197,7 @@ page.renderUser = function (dataArr) {
  */
 /* eslint-disable */
 var doing = +util.params('talk_id');
-page.data = {
-    "id": 0,
-    "attachs": [],
-    "content": "",
-    "importance_level": 1,
-    "inheritance": true,
-    "message": {
-        "sent_eim": true,
-        "sent_emai": false,
-        "sent_sms": false
-    },
-    "task_id": +util.params('task_id') || 0,
-    "title": "",
-    "user_ids": []
-}
+
 
 if (doing) {
     page.addParallelTask(function (dfd) {
@@ -212,11 +213,12 @@ if (doing) {
                     dfd.reject(result);
                 }
                 else {
-                    util.getDataFromObj(me.data, result.data);
+                    // $.extend(pageData, result.data);
+                    util.getDataFromObj(pageData, result.data);
 
                     // 下面为获取人员信息的配置
                     var obj = {
-                        partner: me.data['user_ids']
+                        partner: pageData['user_ids']
                     };
                     var cid = ls.getData('TASK_PARAMS')['cid'];
                     var jids = users.makeArray(obj);
