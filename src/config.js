@@ -9,7 +9,7 @@ var config = {
 
     API: {
         // 用于发送异步请求
-        host: 'https://web.jingoal.com',
+        host: 'https://web.test1.com',
 
         prefix: '/task/m/v1/',
 
@@ -24,6 +24,7 @@ var config = {
 
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
+        AFFAIR_DONE: 'finish_affair',
 
         // 加载更多事件和讨论
         AFFAIR_TALK_MORE_URL: 'get_task_slaves',
@@ -39,6 +40,7 @@ var config = {
         AFFAIR_NEW_URL: 'create_affair',
         // 讨论新建
         TALK_NEW_URL: 'create_talk',
+        TALK_DONE: 'close_talk',
 
         // 任务编辑
         TASK_EDIT_URL: 'update_task',
@@ -72,7 +74,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '233f0f1c-08bb-4eb5-b686-fe4d5150aa27'
+    token: 'a22854e4-ec5d-4484-8288-ee2ad4005ff6'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -91,8 +93,8 @@ if (config.debug) {
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
-    config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    config.API.prefix = '/data/';
+    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    // config.API.prefix = '/data/';
 }
 
 module.exports = config;

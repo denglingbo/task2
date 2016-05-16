@@ -43,7 +43,7 @@ page.bindEvents = function () {
 
     $('#add-newtask').on('click', function () {
         /* eslint-disable */
-        CPNavigationBar.redirect('/task/detail.html?cid=4');
+        CPNavigationBar.redirect('/task/new.html');
         /* eslint-enable */
     });
 
@@ -62,6 +62,11 @@ page.bindEvents = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
+/* eslint-disable */
+// test 后端暂无首页接口
+dfd.resolve();
+return;
+
     var promise = page.get(config.API.HOME_URL, {});
     promise
         .done(function (result) {

@@ -38,6 +38,10 @@ page.enter = function () {
 
     virtualInput('.goalui-fixedinput');
 
+    this.ticker = new Ticker('.tick', {
+        async: true
+    });
+
     this.bindEvents();
     /* eslint-disable */
     this.attach = AttachWrapper.initDetailAttach({
@@ -49,11 +53,52 @@ page.enter = function () {
 };
 
 page.bindEvents = function () {
+    var me = this;
 
     this.$more = $('#affair-talk-more-handler');
     this.$affairTalk = $('#affair-talk');
 
-    new Ticker('.tick');
+    /* eslint-disable */
+    var map = {
+        '0': {
+            done: 'untick',
+            fail: 'ticked'
+        },
+        '1': {
+            done: 'ticked',
+            fail: 'untick'
+        }
+    };
+
+    this.ticker.on('click', function (isCurTicked) {
+        var myTicker = this;
+        // 0: 取消
+        // 1: 完成
+        var changeStatus = isCurTicked ? 0 : 1;
+
+        /* eslint-disable */
+        var promise = page.post(config.API.AFFAIR_DONE, {
+            task_id: me.data.task_id,
+            affair_id: me.data.id
+        });
+        /* eslint-enable */
+
+        var type = map[changeStatus];
+
+        promise
+            .done(function (result) {
+                if (result && result.meta.code === 200) {
+                    myTicker[type.done]();
+                }
+                else {
+                    myTicker[type.fail]();
+                }
+            })
+            .fail(function () {
+                myTicker[type.fail]();
+            });
+    });
+    /* eslint-enable */
 };
 
 /**

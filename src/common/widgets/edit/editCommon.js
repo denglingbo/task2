@@ -192,15 +192,17 @@ editCom.subAndCancel = function (page, submitFn) {
  * @param {Object} page, 页面对象
  * @param {string} postUrl, 上传url
  */
-editCom.submit = function (page, postUrl) {
+editCom.submit = function (page, data, ajaxUrl) {
     var me = this;
     var dfd = new $.Deferred();
-    var data = page.data;
+    // var data = page.data;
     
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').text();
+
     /* eslint-disable */
-    var promise = page.post(postUrl, data);
+    var promise = page.post(ajaxUrl, data);
+
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
@@ -216,6 +218,8 @@ editCom.submit = function (page, postUrl) {
             me.submitAlert(false);
         });
     /* eslint-enable */
+
+    return dfd;
 };
 
 /**

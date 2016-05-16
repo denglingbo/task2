@@ -92,9 +92,9 @@ page.bindEvents = function () {
         var changeStatus = isCurTicked ? 0 : 1;
 
         /* eslint-disable */
-        var promise = page.post(config.API.TASK_FOLLOW, {
+        var promise = page.post(config.API.TALK_DONE, {
             task_id: me.data.task_id,
-            level: changeStatus
+            talk_id: me.data.id
         });
         /* eslint-enable */
 

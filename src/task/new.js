@@ -4,7 +4,7 @@
  * 新建任务页
  *
  */
-
+/* eslint-disable */
 require('common/widgets/edit/new.scss');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
@@ -16,6 +16,25 @@ var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
+
+// new: 默认值
+// edit: $.extend(pageData, page.data);
+var pageData = {
+    "id" : 0,
+    "title": "",
+    "content": "",
+    "end_time": 0,
+    "importance_level": 1,
+    "attend_ids": [],
+    "notice": 0,
+    "principal_user": 0,
+    "attachements": [],
+    "message": {
+        "sent_eim": true,
+        "sent_emai": false,
+        "sent_sms": false
+    }
+};
 
 // 验证信息
 page.valid = {
@@ -46,22 +65,24 @@ page.bindEvents = function () {
     editCom.bindGetFocus();
 
     editCom.subAndCancel(me, function () {
-        me.data.attachements = me.attach.getModifyAttaches();
-        var url = me.data.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
-        editCom.submit(me, url);
+        pageData.attachements = me.attach.getModifyAttaches();
+        var url = pageData.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
+        // editCom.submit(data, url);
+
+        editCom.submit(page, pageData, url);
     });
     /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
-        var oldVal = me.data['end_time'];
-        CPNavigationBar.redirect('/task/doneTime.html?endTime=' + me.data['end_time'], '完成时间', false, function (data) {
+        var oldVal = pageData['end_time'];
+        CPNavigationBar.redirect('/task/doneTime.html?endTime=' + pageData['end_time'], '完成时间', false, function (data) {
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
-            me.data['end_time'] = data.endTime;
-            $('#doneTime .value').text(editCom.initDoneTime(me.data['end_time']));
-            valid.isEdit = oldVal !== me.data['end_time'] ? true : valid.isEdit;
+            pageData['end_time'] = data.endTime;
+            $('#doneTime .value').text(editCom.initDoneTime(pageData['end_time']));
+            valid.isEdit = oldVal !== pageData['end_time'] ? true : valid.isEdit;
         });
     });
 
@@ -81,23 +102,23 @@ page.bindEvents = function () {
             itemKey = 'attend_ids';
             id = '#attends';
         } 
-        oldVal = me.data[itemKey];
+        oldVal = pageData[itemKey];
         CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
             var contacts = data.contacts;
-            if ($.isArray(me.data[itemKey])) {
+            if ($.isArray(pageData[itemKey])) {
                 contacts.forEach(function (value, index) {
-                    me.data[itemKey].push(+users.takeJid(value.jid));
+                    pageData[itemKey].push(+users.takeJid(value.jid));
                 });
             }
             else {
-                me.data[itemKey] = +users.takeJid(contacts[0].jid);
+                pageData[itemKey] = +users.takeJid(contacts[0].jid);
             }
             $(id + ' .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, me.data[itemKey], valid);
+            editCom.personIsChange(oldVal, pageData[itemKey], valid);
         });
     });
     /* eslint-enable */
@@ -109,7 +130,7 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
-    var data = $.extend({}, me.data, {
+    var data = $.extend({}, pageData, {
         view: [
             {
                 persons: [
@@ -129,14 +150,14 @@ page.loadPage = function () {
                         id: 'doneTime',
                         title: '完成时间',
                         /* eslint-disable */
-                        value: editCom.initDoneTime(me.data['end_time'])
+                        value: editCom.initDoneTime(pageData['end_time'])
                         /* eslint-enable */
                     },
                     {
                         id: 'urgencyBlock',
                         title: '紧要程度',
                         /* eslint-disable */
-                        value: editCom.initImportValue(me.data['importance_level'])
+                        value: editCom.initImportValue(pageData['importance_level'])
                         /* eslint-enable */
                     }
                 ]
@@ -155,7 +176,7 @@ page.initPlugin = function () {
     editCom.initImportanceLevel('#urgencyBlock', me);
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(me, me.data.attachements);
+    me.attach = editCom.initEditAttach(me, pageData.attachements);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -186,7 +207,7 @@ page.initValue = function () {
             checked: {
                 // 数组
                 /* eslint-disable */
-                contacts: editCom.transJid(me.data['principal_user'])
+                contacts: editCom.transJid(pageData['principal_user'])
                 /* eslint-enable */
             }
         }
@@ -202,7 +223,7 @@ page.initValue = function () {
             checked: {
                 // 数组
                 /* eslint-disable */
-                contacts: editCom.transJid(me.data['attend_ids'])
+                contacts: editCom.transJid(pageData['attend_ids'])
                 /* eslint-enable */
             }
         }
@@ -307,23 +328,6 @@ page.renderUser = function (originArr, dataArr) {
 /* eslint-disable */
 var doing = +util.params('task_id');
 
-page.data = {
-    "id" : 0,
-    "title": "",
-    "content": "",
-    "end_time": 0,
-    "importance_level": 1,
-    "attend_ids": [],
-    "notice": 0,
-    "principal_user": 0,
-    "attachements": [],
-    "message": {
-        "sent_eim": true,
-        "sent_emai": false,
-        "sent_sms": false
-    }
-}
-
 if (doing) {
     page.addParallelTask(function (dfd) {
         var me = this;
@@ -338,12 +342,14 @@ if (doing) {
                     dfd.reject(result);
                 }
                 else {
-                    util.getDataFromObj(me.data, result.data);
+                    $.extend(pageData, pageData);
+
+                    util.getDataFromObj(pageData, result.data);
 
                     // 下面为获取人员信息的配置
                     var obj = {
-                        principal: me.data['principal_user'],
-                        partner: me.data['attend_ids']
+                        principal: pageData['principal_user'],
+                        partner: pageData['attend_ids']
                     };
                     var cid = ls.getData('TASK_PARAMS')['cid'];
                     var jids = users.makeArray(obj);
