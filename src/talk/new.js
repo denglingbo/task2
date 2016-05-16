@@ -61,7 +61,7 @@ page.bindEvents = function () {
             var taskId = pageData.task_id;
             var talkId = result.data || pageData.id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/talk/detail.html?id=' + talkId + '&task_id' + taskId);
+            CPNavigationBar.redirect('/talk/detail.html?id=' + talkId + '&task_id=' + taskId);
             /* eslint-enable */
         });
     });
