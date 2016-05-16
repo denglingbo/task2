@@ -113,7 +113,7 @@ $search-size: rem(14px);
 }
 
 /**
- * 搜索图标
+ * 大搜索图标
  *
  */
 $search-big-size: rem(73px);
@@ -125,6 +125,23 @@ $search-big-size: rem(73px);
     background-image: url('#{$rootImg}/icon_middle_empty_serch.png');
     background-repeat: no-repeat;
     background-size: $search-big-size;
+}
+
+/**
+ * 网络故障图标
+ *
+ */
+$net-err-width-size: rem(79px);
+$net-err-height-size: rem(69px);
+
+.net-err {
+    display: inline-block;
+    padding: 0;
+    width: $net-err-width-size;
+    height: $net-err-height-size;
+    background-image: url('#{$rootImg}/icon_middle_empty_no-network.png');
+    background-repeat: no-repeat;
+    background-size: $net-err-width-size $net-err-height-size;
 }
 
 /**

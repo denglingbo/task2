@@ -19,7 +19,7 @@ var Page = require('common/page');
  * @param {string} selector, 需要初始化搜索框的容器;
  * @param {Object} options, 配置参数
  *      @param {Object} url config.API配置的请求
- *      @param {Array} listDir, 搜索结果中结果列表的目录层次, 到数组一级
+ *      @param {string} listDir, 搜索结果中结果列表的目录层次, 到数组一级
  *      @param {string} inject, 搜索页的插入地方
  *      @param {string} keyClassName, 搜索结果中关键字的显示样式
  *      @param {string} itemTpl, 搜索结果的Mustache渲染模板
@@ -29,7 +29,7 @@ function Search(selector, options) {
     // this.destroySearch();
     var opts = {
         inject: 'body',
-        listDir: [],
+        listDir: '',
         keyClassName: 'input-key',
         url: '',
         itemTpl: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& .}}</a></li>{{/.}}'
@@ -47,6 +47,10 @@ function Search(selector, options) {
         page: '.search-page',
         content: '.search-content'
     });
+
+    this.options.listDir = this.options.listDir.length
+                           && (typeof this.options.listDir === 'string')
+                           && this.options.listDir.replace(/^\s*\/|\/\s*$/g, '').split('/');
 
     options = this.options;
 
@@ -452,4 +456,3 @@ Search.prototype.bindEvents = function () {
 };
 
 module.exports = Search;
-

@@ -50,7 +50,7 @@ page.enter = function () {
 
     // new Search('#search', {
     //     url: config.API.SEARCH,
-    //     listDir: ['list']
+    //     listDir: 'list'
     // });
 };
 
