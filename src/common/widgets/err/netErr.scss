@@ -1,0 +1,24 @@
+@import "../css/global.scss";
+@import "../css/ui.scss";
+.net-err {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	background-color: #f2f3f5;
+
+	p:first-of-type {
+		font-size: rem(16px);
+		color: #5c6166;
+		margin-top: rem(30px);
+	}
+
+	p:last-of-type {
+		font-size: rem(12px);
+		color: #aaaeb2;
+		margin-top: rem(10px);
+	}
+}

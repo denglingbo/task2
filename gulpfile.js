@@ -32,7 +32,7 @@ var config = {
 
     publicPath: '/',
 
-    https: true,
+    https: false,
 
     // mock
     mock: {

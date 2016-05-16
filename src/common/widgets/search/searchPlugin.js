@@ -8,8 +8,9 @@
 
 require('./searchPlugin.scss');
 require('dep/touch');
-var view = require('common/view');
+// var view = require('common/view');
 var Page = require('common/page');
+var lang = require('common/lang').getData();
 
 // var IScroll = require('dep/iscroll');
 
@@ -43,25 +44,26 @@ function Search(selector, options) {
 
     this.options = $.extend(opts, options, {
         selector: selector,
-        wrap: '#search-wrap',
-        page: '.search-page',
-        content: '.search-content'
+        wrap: '#search-wrap'
     });
 
-    this.options.listDir = this.options.listDir.length
-                           && (typeof this.options.listDir === 'string')
-                           && this.options.listDir.replace(/^\s*\/|\/\s*$/g, '').split('/');
+    $.extend(this.options, {
+        search: lang.search,
+        noMatchResults: lang.noMatchResults
+    });
+    // this.options.listDir = this.options.listDir.length
+    //                        && (typeof this.options.listDir === 'string')
+    //                        && this.options.listDir.replace(/^\s*\/|\/\s*$/g, '').split('/');
 
     options = this.options;
-
     // 页面上展示的搜索框
     options.searchInHtml = '<div class="search-in"><i class="icon-search"></i>搜索</div>';
 
     // 无搜索结果页面
-    options.searchNull = '<li class="no-output"><i class="icon-search-big"></i>暂无匹配结果</div>';
+    // options.searchNull = '<li class="no-output"><i class="icon-search-big"></i>暂无匹配结果</div>';
 
     // 搜索页面
-    options.searchOutHtml = '<div id="search-wrap" class="search-wrap hide">'
+    options.searchMaskHtml = '<div id="search-wrap" class="search-wrap hide">'
                             + '<div class="search-inner">'
                                 + '<div class="search-in search-input-wrap">'
                                     + '<input class="search-input">'
@@ -72,12 +74,8 @@ function Search(selector, options) {
                                 + '<span class="cancel">取消</span>'
                             + '</div>'
                             + '<div class="search-mask"></div>'
-                            + '<div class="search-page hide">'
-                                + '<ul class="search-content"></ul>'
-                            + '</div>'
                         + '</div>';
-
-    this.loadHtml();
+    this.loadMaskHtml();
 
     this.dom = {
         $main: $(options.selector),
@@ -85,34 +83,62 @@ function Search(selector, options) {
     };
 
     var dom = this.dom;
-    var $wrap = dom.$wrap;
-    var $main = dom.$main;
 
-    $.extend(dom, {
-        $searchIn: $main.find('.search-in'),
-        $cancel: $wrap.find('.cancel'),
-        $input: $wrap.find('.search-input'),
-        $tip: $wrap.find('.search-tip'),
-        $clear: $wrap.find('.clear'),
-        $page: $wrap.find('.search-page'),
-        $content: $wrap.find('.search-content'),
-        $mask: $wrap.find('.search-mask')
-    });
+    $.extend(dom, this.getDom());
 
     this.bindEvents();
 }
 
 /**
+ * 获取DOM元素
+ *
+ * @return {Object}, 获取的DOM
+ */
+Search.prototype.getDom = function () {
+    var dom = this.dom;
+    var $wrap = dom.$wrap;
+    var $main = dom.$main;
+
+    return {
+        $searchIn: $main.find('.search-in'),
+        $cancel: $wrap.find('.cancel'),
+        $input: $wrap.find('.search-input'),
+        $tip: $wrap.find('.search-tip'),
+        $clear: $wrap.find('.clear'),
+        $mask: $wrap.find('.search-mask')
+    };
+};
+
+/**
  * 加载页面搜索框和搜索页面的html
  *
  */
-Search.prototype.loadHtml = function () {
+Search.prototype.loadMaskHtml = function () {
     var me = this;
     var options = me.options;
-
+    // var searchTmpl = require(options.tmplUrl);
     $(options.selector).addClass('search-box');
+    // view.render(options.selector, {
+    //     searchIn: true,
+    //     search: lang.search
+    // }, {tmpl: searchTmpl});
+    // view.render(options.inject, {
+    //     searchMask: true,
+    //     search: lang.search
+    // }, {tmpl: searchTmpl});
     $(options.selector).html(options.searchInHtml);
-    $(options.inject).append(options.searchOutHtml);
+    $(options.inject).append(options.searchMaskHtml);
+};
+
+/**
+ * 进入搜索页
+ *
+ *
+ */
+Search.prototype.redirectSearch = function () {
+    /* eslint-disable */
+    CPNavigationBar.redirect('/search/search.html?key=' + encodeURI(this.dom.$input.val()), '搜索');
+    /* eslint-enable */
 };
 
 /**
@@ -216,9 +242,9 @@ Search.prototype.toggleClear = function (show) {
  *
  * @param {boolean} show, 是否显示
  */
-Search.prototype.togglePage = function (show) {
-    this.toggle(this.dom.$page, show);
-};
+// Search.prototype.togglePage = function (show) {
+//     this.toggle(this.dom.$page, show);
+// };
 
 /**
  * 切换整个搜索页的显示与隐藏
@@ -233,10 +259,9 @@ Search.prototype.toggleWrap = function (show) {
  * 清空搜索结果并隐藏结果展示区域
  *
  */
-Search.prototype.clearList = function () {
-    this.dom.$page.addClass('hide');
-    this.dom.$content.html('');
-};
+// Search.prototype.clearList = function () {
+//     this.dom.$content.html('');
+// };
 
 /**
  * 清空搜索框并清空搜索结果和隐藏展示区域
@@ -244,7 +269,6 @@ Search.prototype.clearList = function () {
  */
 Search.prototype.clearInput = function () {
     this.dom.$input.val('');
-    this.clearList();
 };
 
 /**
@@ -252,116 +276,116 @@ Search.prototype.clearInput = function () {
  *
  * @return {boolean}, 搜索结果是否为空
  */
-Search.prototype.listDataIsNull = function () {
-    return !(this.listData && this.listData.length);
-};
+// Search.prototype.listDataIsNull = function () {
+//     return !(this.listData && this.listData.length);
+// };
 
 /**
  * 获取搜索结果数据
  *
  */
-Search.prototype.getListData = function () {
-    var data = this.data;
-    var options = this.options;
-    var list = options.listDir;
-    var listData = [];
-    if (list.length >= 1) {
-        list.forEach(function (item, index) {
-            listData = index !== 0 ? listData[item] : data[item];
-        });
-    }
-    this.listData = null;
-    this.listData = listData;
-};
+// Search.prototype.getListData = function () {
+//     var data = this.data;
+//     var options = this.options;
+//     var list = options.listDir;
+//     var listData = [];
+//     if (list.length >= 1) {
+//         list.forEach(function (item, index) {
+//             listData = index !== 0 ? listData[item] : data[item];
+//         });
+//     }
+//     this.listData = null;
+//     this.listData = listData;
+// };
 
 /**
  * 发送请求, 获取搜索结果
  *
  */
-Search.prototype.loadList = function () {
-    var me = this;
+// Search.prototype.loadList = function () {
+//     var me = this;
 
-    var promise = me.page.get(me.options.url);
+//     var promise = me.page.get(me.options.url);
 
-    promise
-        .done(function (result) {
-            if (result.meta.code === 200) {
-                me.data = result.data;
-                me.getListData();
-                me.renderOutput();
-            }
-            else {
-                me.renderNull();
-            }
-        })
-        .fail(function (result) {
-            me.renderNull();
-        })
-        .always(function () {
-            if (me.isNull()) {
-                me.isNullHandler();
-            }
-        });
-};
+//     promise
+//         .done(function (result) {
+//             if (result.meta.code === 200) {
+//                 me.data = result.data;
+//                 me.getListData();
+//                 me.renderOutput();
+//             }
+//             else {
+//                 me.renderNull();
+//             }
+//         })
+//         .fail(function (result) {
+//             me.renderNull();
+//         })
+//         .always(function () {
+//             if (me.isNull()) {
+//                 me.isNullHandler();
+//             }
+//         });
+// };
 
 /**
  * 搜索结果为空时的处理函数, 渲染为空的展示页
  *
  */
-Search.prototype.renderNull = function () {
-    var me = this;
-    me.dom.$content.html(me.options.searchNull);
-};
+// Search.prototype.renderNull = function () {
+//     var me = this;
+//     me.dom.$content.html(me.options.searchNull);
+// };
 
-/**
- * 搜索结果不为空的处理函数, 渲染搜索结果列表
- *
- */
-Search.prototype.renderList = function () {
-    var me = this;
-    var options = me.options;
-    me.setResultKey();
+// /**
+//  * 搜索结果不为空的处理函数, 渲染搜索结果列表
+//  *
+//  */
+// Search.prototype.renderList = function () {
+//     var me = this;
+//     var options = me.options;
+//     me.setResultKey();
 
-    var selector = options.wrap + ' ' + options.content;
-    view.render(selector, me.listData, {
-        tmpl: options.itemTpl
-    });
-    // me.destroyScroll();
-    // me.initScroll();
-};
+//     var selector = options.wrap + ' ' + options.content;
+//     view.render(selector, me.listData, {
+//         tmpl: options.itemTpl
+//     });
+//     // me.destroyScroll();
+//     // me.initScroll();
+// };
 
-/**
- * 根据搜索结果来调用渲染页面的处理函数
- *
- */
-Search.prototype.renderOutput = function () {
-    var me = this;
-    var listDataIsNull = me.listDataIsNull();
+// /**
+//  * 根据搜索结果来调用渲染页面的处理函数
+//  *
+//  */
+// Search.prototype.renderOutput = function () {
+//     var me = this;
+//     var listDataIsNull = me.listDataIsNull();
 
-    if (listDataIsNull) {
-        me.renderNull();
-    }
-    else {
-        me.renderList();
-    }
-};
+//     if (listDataIsNull) {
+//         me.renderNull();
+//     }
+//     else {
+//         me.renderList();
+//     }
+// };
 
-/**
- * 匹配搜索结果中的关键字, 为关键字添加红色的className
- *
- */
-Search.prototype.setResultKey = function () {
-    var me = this;
-    var listData = me.listData;
-    var options = me.options;
-    var key = me.getKey();
-    var reg = new RegExp(key, 'g');
+// /**
+//  * 匹配搜索结果中的关键字, 为关键字添加红色的className
+//  *
+//  */
+// Search.prototype.setResultKey = function () {
+//     var me = this;
+//     var listData = me.listData;
+//     var options = me.options;
+//     var key = me.getKey();
+//     var reg = new RegExp(key, 'g');
 
-    me.listData = listData.map(function (item) {
-        item = item + '';
-        return item.replace(reg, '<span class="' + options.keyClassName + '">' + key + '</span>');
-    });
-};
+//     me.listData = listData.map(function (item) {
+//         item = item + '';
+//         return item.replace(reg, '<span class="' + options.keyClassName + '">' + key + '</span>');
+//     });
+// };
 
 /**
  * 状态改变的处理函数
@@ -386,7 +410,7 @@ Search.prototype.isNullHandler = function () {
     var me = this;
     me.toggleTip(true);
     me.toggleClear(false);
-    me.clearList();
+    // me.clearList();
 };
 
 /**
@@ -397,8 +421,7 @@ Search.prototype.isNotNullHandler = function () {
     var me = this;
     me.toggleTip(false);
     me.toggleClear(true);
-    me.togglePage(true);
-    me.loadList();
+    // me.loadList();
 };
 
 /**
@@ -414,45 +437,70 @@ Search.prototype.bindEvents = function () {
         dom.$input.focus();
     });
 
-    dom.$wrap.on({
-        tap: function (e) {
-            var target = e.target;
-            if (target === dom.$cancel[0]) {
-                me.clearInput();
-                me.toggleWrap(false);
-            }
-            else if (target === dom.$clear[0]) {
-                me.clearInput();
-                me.stateChange();
-                dom.$input.focus();
-            }
-            else if (target === dom.$mask[0]) {
-                me.toggleWrap(false);
-            }
-        },
-        touchstart: function (e) {
-            var target = e.target;
-            if (target !== dom.$input[0] && target !== dom.$clear[0]) {
-                dom.$input.blur();
-                me.toggleClear(false);
-            }
+    dom.$wrap.on('tap', function (e) {
+        var target = e.target;
+        if (target === dom.$cancel[0]) {
+            me.toggleWrap(false);
+        }
+        else if (target === dom.$clear[0]) {
+            me.clearInput();
+            dom.$input.focus();
+        }
+        else if (target === dom.$mask[0]) {
+            me.toggleWrap(false);
+        }
+        me.stateChange();
+    });
+
+    dom.$input.on('input', function () {
+        me.stateChange();
+    });
+
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 13) {
+            me.redirectSearch();
         }
     });
 
-    dom.$input.on({
-        input: function () {
-            me.stateChange();
-        },
-        blur: function () {
-            me.toggleClear(false);
-        },
-        focus: function () {
-            var isNull = me.isNull();
-            if (!isNull) {
-                me.toggleClear(true);
-            }
-        }
-    });
+    // dom.$wrap.on({
+    //     tap: function (e) {
+    //         var target = e.target;
+    //         if (target === dom.$cancel[0]) {
+    //             me.clearInput();
+    //             me.toggleWrap(false);
+    //         }
+    //         else if (target === dom.$clear[0]) {
+    //             me.clearInput();
+    //             dom.$input.focus();
+    //         }
+    //         else if (target === dom.$mask[0]) {
+    //             me.toggleWrap(false);
+    //         }
+    //     },
+    //     touchstart: function (e) {
+    //         var target = e.target;
+    //         if (target !== dom.$input[0] && target !== dom.$clear[0]) {
+    //             dom.$input.blur();
+    //             me.toggleClear(false);
+    //         }
+    //     }
+    // });
+
+    // dom.$input.on({
+    //     input: function () {
+    //         me.stateChange();
+    //     },
+    //     blur: function () {
+    //         me.toggleClear(false);
+    //     },
+    //     focus: function () {
+    //         var isNull = me.isNull();
+    //         if (!isNull) {
+    //             me.toggleClear(true);
+    //         }
+    //     }
+    // });
+
 };
 
 module.exports = Search;

@@ -9,7 +9,7 @@ var config = {
 
     API: {
         // 用于发送异步请求
-        host: 'https://web.test1.com',
+        host: 'http://web.test1.com',
 
         prefix: '/task/m/v1/',
 
@@ -88,13 +88,12 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
-
     // 联调地址
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
-    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.prefix = '/data/';
+    config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    config.API.prefix = '/data/';
 }
 
 module.exports = config;
