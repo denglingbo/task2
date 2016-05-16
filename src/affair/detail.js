@@ -22,14 +22,17 @@ var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
+var widgetCommentList = require('common/widgets/comment/list');
+
 var page = new Page({
     pageName: 'affair-detail'
 });
 
 page.enter = function () {
     var me = this;
-    this.data.describeTitle = '事件描述';
-    this.render('#detail-main', this.data, {
+
+    me.data.describeTitle = '事件描述';
+    me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
             describe: tmplDescribe
@@ -38,18 +41,21 @@ page.enter = function () {
 
     virtualInput('.goalui-fixedinput');
 
-    this.ticker = new Ticker('.tick', {
+    me.ticker = new Ticker('.tick', {
         async: true
     });
 
-    this.bindEvents();
+    me.bindEvents();
+
     /* eslint-disable */
-    this.attach = AttachWrapper.initDetailAttach({
+    me.attach = AttachWrapper.initDetailAttach({
         attachData: me.data.attachs, 
         container: '.attach-container', 
         wrapper: '.attach'
     });
     /* eslint-enable */
+
+    me.initCommentList();
 };
 
 page.bindEvents = function () {
@@ -97,6 +103,23 @@ page.bindEvents = function () {
             .fail(function () {
                 myTicker[type.fail]();
             });
+    });
+    /* eslint-enable */
+};
+
+page.initCommentList = function () {
+    var me = this;
+
+    /* eslint-disable */
+    widgetCommentList.init({
+        promise: function () {
+            return me.get(config.API.AFFAIR_COMMENT_LIST, {
+                affair_id: me.data.id,
+                curr_page: 1,
+                sort_type: 0,
+                number: 5
+            });
+        }
     });
     /* eslint-enable */
 };

@@ -22,36 +22,36 @@ var config = {
         // 列表页，已撤销
         LIST_CANCEL_URL: 1003,
 
+        // 任务详情
+        TASK_DETAIL_URL: 'get_task_detail',
+        // 添加关注
+        TASK_FOLLOW: 'attention_task',
+        // 任务新建
+        TASK_NEW_URL: 'create_task',
+        // 任务编辑
+        TASK_EDIT_URL: 'update_task',
+
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
         AFFAIR_DONE: 'finish_affair',
 
         // 加载更多事件和讨论
         AFFAIR_TALK_MORE_URL: 'get_task_slaves',
-
-        // 任务详情
-        TASK_DETAIL_URL: 'get_task_detail',
-        // 添加关注
-        TASK_FOLLOW: 'attention_task',
-
-        // 任务新建
-        TASK_NEW_URL: 'create_task',
         // 事件新建
         AFFAIR_NEW_URL: 'create_affair',
+        // 事件编辑
+        AFFAIR_EDIT_URL: 'update_affair',
+        // 事件评论列表
+        AFFAIR_COMMENT_LIST: 'get_affair_comment_list',
+        GET_AFFAIR_TAGS: 'get_affair_tags',
+
+        // 讨论编辑
+        TALK_EDIT_URL: 'update_talk',
+        // 讨论
+        TALK_DETAIL_URL: 'get_talk_detail',
         // 讨论新建
         TALK_NEW_URL: 'create_talk',
         TALK_DONE: 'close_talk',
-
-        // 任务编辑
-        TASK_EDIT_URL: 'update_task',
-        // 事件编辑
-        AFFAIR_EDIT_URL: 'update_affair',
-        // 讨论编辑
-        TALK_EDIT_URL: 'update_talk',
-        GET_AFFAIR_TAGS: 'get_affair_tags',
-
-        // 讨论
-        TALK_DETAIL_URL: 'get_talk_detail',
 
         // attach uploadUrl
         ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
