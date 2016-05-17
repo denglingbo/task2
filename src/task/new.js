@@ -14,7 +14,9 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'task-new'
+});
 
 // new: 默认值
 // edit: $.extend(pageData, page.data);

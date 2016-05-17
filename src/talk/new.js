@@ -15,7 +15,9 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'talk-new'
+});
 /* eslint-disable */
 var pageData = {
     id: 0,

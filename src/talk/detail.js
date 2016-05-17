@@ -23,7 +23,9 @@ var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'talk-detail'
+});
 
 page.enter = function () {
     var me = this;

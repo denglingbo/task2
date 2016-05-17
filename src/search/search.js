@@ -18,8 +18,8 @@ page.enter = function () {
     var me = this;
 
     new Search(me, {
-        selector: '#search',
         isSearchPage: true,
+        selector: '#search',
         url: config.API.SEARCH,
         listDir: 'list'
     });

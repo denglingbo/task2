@@ -13,7 +13,9 @@ var Page = require('common/page');
 var PageSlider = require('common/ui/pageSlider');
 var InitScroll = require('./list/initScroll');
 var Search = require('common/widgets/search/searchPage');
-var page = new Page();
+var page = new Page({
+    pageName: 'task-list'
+});
 
 var pages = [
     {
