@@ -5,7 +5,7 @@
  * 讨论详情页
  */
 
-require('dep/plugins/attaches/css/attaches.css');
+require('dep/ui/attaches/css/attaches.css');
 
 require('./detail.scss');
 require('common/ui/virtualInput/virtualInput.scss');
@@ -52,6 +52,8 @@ page.enter = function () {
         wrapper: '.attach'
     });
     /* eslint-enable */
+
+    me.initCommentList();
 };
 
 page.bindEvents = function () {
@@ -142,6 +144,35 @@ page.renderUser = function (arr) {
     }
 
     this.render('#partner', dataRaw);
+};
+
+/**
+ * 调用 widgets/comment/list 初始化评论列表相关代码
+ */
+page.initCommentList = function () {
+    var me = this;
+
+    /* eslint-disable */
+    new widgetCommentList(me, {
+
+        data: me.data,
+
+        API: {
+            delete: config.API.TALK_COMMENT_DELETE,
+            add: config.API.TALK_COMMENT_ADD
+        },
+
+        // 获取列表
+        promise: function () {
+            return me.get(config.API.TALK_COMMENT_LIST, {
+                talk_id: me.data.id,
+                curr_page: this.page,
+                sort_type: 0,
+                number: 5
+            });
+        }
+    });
+    /* eslint-enable */
 };
 
 /**

@@ -202,7 +202,8 @@ Control.prototype.render = function (data) {
 
     var selector = $(this.opts.wrapper);
     var options = {
-        tmpl: this.opts.tpl
+        tmpl: this.opts.tpl,
+        partials: this.opts.partials
     };
 
     view.render(selector, data, options);

@@ -4,11 +4,11 @@
  * 组件调用公共API
  *
  */
-require('dep/plugins/attaches/css/attaches.css');
+require('dep/ui/attaches/css/attaches.css');
 var Mustache = require('dep/mustache');
 // attaches 需要使用
 window.Mustache = Mustache;
-require('dep/plugins/attaches/attaches');
+require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
 var util = require('common/util');

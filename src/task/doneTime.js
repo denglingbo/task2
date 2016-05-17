@@ -9,7 +9,7 @@ require('./doneTime.scss');
 var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
-// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
+// var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 

@@ -29,5 +29,6 @@ module.exports = {
     'commentTitle': '评论',
     'delete': '删除',
     'search': '搜索',
-    'noMatchResults': '暂无匹配结果'
+    'noMatchResults': '暂无匹配结果',
+    'commentNotFound': '暂无评论'
 };

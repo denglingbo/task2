@@ -226,6 +226,11 @@
                     }
                 }
             }
+
+            &.list-null {
+                padding: rem(13px) 0 rem(11px) 0;
+                color: $gray;
+            }
         }
 
         // dt next dd [first dd]

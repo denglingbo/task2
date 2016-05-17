@@ -12,7 +12,7 @@ var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
-// var CPNavigationBar = require('dep/plugins/campo-navigationbar/campo-navigationbar');
+// var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
 var page = new Page();
 

@@ -4,7 +4,7 @@
  *
  * 事件详情页
  */
-require('dep/plugins/attaches/css/attaches.css');
+require('dep/ui/attaches/css/attaches.css');
 
 require('./detail.scss');
 require('common/ui/virtualInput/virtualInput.scss');
@@ -107,12 +107,23 @@ page.bindEvents = function () {
     /* eslint-enable */
 };
 
+/**
+ * 调用 widgets/comment/list 初始化评论列表相关代码
+ */
 page.initCommentList = function () {
     var me = this;
 
     /* eslint-disable */
-    widgetCommentList.init({
+    new widgetCommentList(me, {
 
+        data: me.data,
+
+        API: {
+            delete: config.API.AFFAIR_COMMENT_DELETE,
+            add: config.API.AFFAIR_COMMENT_ADD
+        },
+
+        // 获取列表
         promise: function () {
             return me.get(config.API.AFFAIR_COMMENT_LIST, {
                 affair_id: me.data.id,

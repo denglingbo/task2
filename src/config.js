@@ -9,7 +9,7 @@ var config = {
 
     API: {
         // 用于发送异步请求
-        host: 'http://web.test1.com',
+        host: 'https://web.test1.com',
 
         prefix: '/task/m/v1/',
 
@@ -34,7 +34,8 @@ var config = {
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
         AFFAIR_DONE: 'finish_affair',
-
+        AFFAIR_COMMENT_DELETE: 'delete_affair_comment',
+        AFFAIR_COMMENT_ADD: 'add_affair_comment',
         // 加载更多事件和讨论
         AFFAIR_TALK_MORE_URL: 'get_task_slaves',
         // 事件新建
@@ -52,6 +53,8 @@ var config = {
         // 讨论新建
         TALK_NEW_URL: 'create_talk',
         TALK_DONE: 'close_talk',
+        TALK_COMMENT_DELETE: 'delete_talk_comment',
+        TALK_COMMENT_ADD: 'add_talk_comment',
 
         // attach uploadUrl
         ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
@@ -74,7 +77,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '83ad1081-93c0-492e-b47e-8891cd0644aa'
+    token: 'e51d962c-4cb5-47a5-93b4-ee73909cb420'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -92,8 +95,8 @@ if (config.debug) {
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
-    config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    config.API.prefix = '/data/';
+    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    // config.API.prefix = '/data/';
 }
 
 module.exports = config;

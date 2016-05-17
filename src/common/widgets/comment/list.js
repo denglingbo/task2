@@ -1,6 +1,6 @@
 /* eslint-disable */
-var config = require('common/util');
-var tmpl = require('./list.tpl');
+var tmplList = require('./list.tpl');
+var tmplMsg = require('./msg.tpl');
 var users = require('common/middleware/user/users');
 var util = require('common/util');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
@@ -10,23 +10,33 @@ var Loader = require('common/ui/loader');
 /**
  * 初始化 评论数据
  *
+ * @param {Page} page, new Page
  * @param {Object} options, 配置
  */
-var init = function (options) {
+var fn = function (page, options) {
 
-    var opts = {
+    this.opts = {
         dataKey: 'obj_list',
         wrapper: '#comments-main',
-        tpl: tmpl
+        tpl: tmplList,
+        partials: {
+            msg: tmplMsg
+        },
+        API: {},
+        data: null
     };
 
-    $.extend(opts, options);
+    $.extend(this.opts, options);
 
-    var loader = new Loader(opts);
+    this.page = page;
 
-    var jids = [];
+    this.data = this.opts.data;
 
-    loader.req(function (data) {
+    this.$main = $(this.opts.wrapper);
+
+    this.loader = new Loader(this.opts);
+
+    this.loader.req(function (data) {
 
         // 时间展示
         data.dataRaw = function () {
@@ -40,8 +50,6 @@ var init = function (options) {
         // 渲染组件
         this.render(data);
 
-        bindEvents();
-
         /* eslint-disable */
         getUserAndPhoto(data.obj_list);
         /* eslint-enable */
@@ -53,7 +61,104 @@ var init = function (options) {
             });
         }
     });
+
+    this.bindEvents();
 };
+
+$.extend(fn.prototype, {
+
+    bindEvents: function () {
+        var me = this;
+        var $main = $('#comments-main');
+
+        $main.on('click', '.delete', function () {
+
+            me.removeData(this);
+        });
+
+        $('.send').on('click', function () {
+            me.addComment();
+        });
+    },
+
+    /**
+     * 删除评论
+     *
+     * @param {string} id, user id
+     */
+    removeData: function (target) {
+
+        var $target = $(target);
+        var id = $target.data('id');
+        var uid = $target.data('uid');
+        var $item = $('#user-' + uid);
+
+        var promise = this.page.post(this.opts.API.delete, {
+            id: id
+        });
+
+        promise
+            .done(function (data) {
+
+                if (!data) {
+                    return;
+                }
+
+                if (data.meta.code === 200) {
+                    $item.addClass('hide');
+                }
+                else {
+
+                }
+            })
+            .fail(function (err) {
+                
+            });
+    },
+
+    /**
+     * 添加评论
+     */
+    addComment: function () {
+        var $content = $('.editable');
+        var text = $content.text();
+        var $null = $('.list-null');
+
+        var promise = this.page.post(this.opts.API.add, {
+            // 0 代表新增评论
+            id: 0,
+            module_id: this.data.id,
+            content: text,
+            message: {
+                'sent_eim': true,
+                'sent_emai': false,
+                'sent_sms': false
+            },
+            // 附件暂时为空
+            attachements: []
+        });
+
+
+
+        promise
+            .done(function (data) {
+
+                if (!data) {
+                    return;
+                }
+
+                // 添加成功
+                if (data.meta.code === 200) {
+                }
+                else {
+
+                }
+            })
+            .fail(function (err) {
+                
+            });
+    }
+});
 
 /**
  * 获取人员信息
@@ -100,25 +205,4 @@ function render(data) {
     });
 }
 
-/**
- * 删除评论
- *
- * @param {string} id, user id
- */
-function removeData(id) {
-    console.log(id);
-}
-
-function bindEvents() {
-    var $main = $('#comments-main');
-
-    $main.on('click', '.delete', function () {
-        var id = $(this).attr('target-id');
-
-        removeData(id);
-    });
-}
-
-module.exports = {
-    init: init
-};
+module.exports = fn;
