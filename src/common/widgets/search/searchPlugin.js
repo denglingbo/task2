@@ -412,7 +412,7 @@ Search.prototype.stateChange = function () {
 Search.prototype.isNullHandler = function () {
     var me = this;
     me.toggleTip(true);
-    me.toggleClear(false);
+    // me.toggleClear(false);
     // me.clearList();
 };
 
@@ -423,7 +423,7 @@ Search.prototype.isNullHandler = function () {
 Search.prototype.isNotNullHandler = function () {
     var me = this;
     me.toggleTip(false);
-    me.toggleClear(true);
+    // me.toggleClear(true);
     // me.loadList();
 };
 
@@ -442,7 +442,9 @@ Search.prototype.bindEvents = function () {
 
     dom.$wrap.on('tap', function (e) {
         var target = e.target;
+        me.stateChange();
         if (target === dom.$cancel[0]) {
+            me.clearInput();
             me.toggleWrap(false);
         }
         else if (target === dom.$clear[0]) {
@@ -450,13 +452,22 @@ Search.prototype.bindEvents = function () {
             dom.$input.focus();
         }
         else if (target === dom.$mask[0]) {
+            me.clearInput();
             me.toggleWrap(false);
         }
-        me.stateChange();
     });
 
-    dom.$input.on('input', function () {
-        me.stateChange();
+    dom.$input.on(
+    {
+        input: function () {
+            me.stateChange();
+        },
+        blur: function () {
+            me.toggleClear(false);
+        },
+        focus: function () {
+            me.toggleClear(true);
+        }
     });
 
     $(document).on('keyup', function (e) {

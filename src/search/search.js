@@ -226,7 +226,7 @@ var search = {
     isNullHandler: function () {
         var me = this;
         me.toggleTip(true);
-        me.toggleClear(false);
+        // me.toggleClear(false);
         // me.clearList();
     },
 
@@ -237,7 +237,7 @@ var search = {
     isNotNullHandler: function () {
         var me = this;
         me.toggleTip(false);
-        me.toggleClear(true);
+        // me.toggleClear(true);
         // me.loadList();
     },
 
@@ -288,7 +288,6 @@ page.bindEvents = function () {
             }
             else if (target === dom.$clear[0]) {
                 dom.$input.val('');
-                search.toggleClear(false);
                 dom.$input.focus();
             }
         },
@@ -309,9 +308,7 @@ page.bindEvents = function () {
             search.toggleClear(false);
         },
         focus: function () {
-            if (search.getLength()) {
-                search.toggleClear(true);
-            }
+            search.toggleClear(true);
         }
     });
 
