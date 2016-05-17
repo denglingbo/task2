@@ -11,6 +11,7 @@ var Page = require('common/page');
 var lang = require('common/lang').getData();
 var view = require('common/view');
 var util = require('common/util');
+var ls = require('common/localstorage');
 
 var page = new Page({
     pageName: 'search-search'
@@ -19,7 +20,7 @@ var page = new Page({
 var search = {
     // 存放一些参数
     options: {
-        searchNull: '<li class="no-output"><i class="icon-search-big"></i>暂无匹配结果</div>',
+        searchNull: '<li class="no-output"><i class="icon-search-big"></i>{{noMatchResults}}</div>',
         searchList: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& .}}</a></li>{{/.}}',
         keyClassName: 'input-key',
         content: '.search-content'
@@ -148,7 +149,13 @@ var search = {
      */
     renderNull: function () {
         var me = this;
-        me.dom.$content.html(me.options.searchNull);
+        page.render(me.options.content,
+        {
+            noMatchResults: lang.noMatchResults
+        },
+        {
+            tmpl: me.options.searchNull
+        });
     },
 
     /**
@@ -249,10 +256,11 @@ var search = {
 
 page.enter = function () {
     var me = this;
+
     me.render('#search', {search: lang.search});
     me.getDom();
     me.bindEvents();
-
+    me.history = ls.getData('history');
     var key = decodeURI(util.params('key'));
     search.dom.$input.val(key);
     search.stateChange();
@@ -270,12 +278,13 @@ page.getDom = function () {
     };
 };
 page.bindEvents = function () {
+    var me = this;
     var dom = search.dom;
     $('#search-wrap').on({
         tap: function (e) {
             var target = e.target;
             if (target === dom.$cancel[0]) {
-                search.redirect('');
+                search.redirect(me.history);
             }
             else if (target === dom.$clear[0]) {
                 dom.$input.val('');

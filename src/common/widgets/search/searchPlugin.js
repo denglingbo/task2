@@ -11,6 +11,7 @@ require('dep/touch');
 // var view = require('common/view');
 var Page = require('common/page');
 var lang = require('common/lang').getData();
+var ls = require('common/localstorage');
 
 // var IScroll = require('dep/iscroll');
 
@@ -136,6 +137,8 @@ Search.prototype.loadMaskHtml = function () {
  *
  */
 Search.prototype.redirectSearch = function () {
+    var href = location.href;
+    ls.addData('history', href);
     /* eslint-disable */
     CPNavigationBar.redirect('/search/search.html?key=' + encodeURI(this.dom.$input.val()), '搜索');
     /* eslint-enable */

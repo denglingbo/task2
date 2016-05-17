@@ -145,6 +145,23 @@ $net-err-height-size: rem(69px);
 }
 
 /**
+ * 旗帜图标
+ *
+ */
+$flag-width-size: rem(75px);
+$flag-height-size: rem(71px);
+
+.icon-flag {
+    display: inline-block;
+    padding: 0;
+    width: $flag-width-size;
+    height: $flag-height-size;
+    background-image: url('#{$rootImg}/icon_middle_empty_task.png');
+    background-repeat: no-repeat;
+    background-size: $flag-width-size $flag-height-size;
+}
+
+/**
  * 五角星
  */
 $star-size: rem(16px);
