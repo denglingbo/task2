@@ -6,7 +6,9 @@
  */
 
 var Page = require('../common/page');
-var page = new Page();
+var page = new Page({
+    pageName: 'selector-selector'
+});
 
 page.enter = function () {
 

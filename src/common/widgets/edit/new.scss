@@ -2,7 +2,7 @@
 @import '../../css/ui';
 
 .alert-length-limit, .alert-submit-after {
-	position: fixed;
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -20,16 +20,16 @@
 }
 
 .alert-submit-after {
-	width: rem(170px);
-	height: rem(110px);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+    width: rem(170px);
+    height: rem(110px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-	i {
-		margin-bottom: rem(12px);
-		margin-top: rem(17px);
-	}
+    i {
+        margin-bottom: rem(12px);
+        margin-top: rem(17px);
+    }
 }
 
 .edit-container {
@@ -116,7 +116,7 @@
             align-items: center;
             
             >i {
-            	margin-right: rem(6px);
+                margin-right: rem(6px);
             }
         }
     }
@@ -147,17 +147,17 @@
 
         .item-content {
             flex: 1;
-			overflow: hidden;
+            overflow: hidden;
 
             .value {
-	            display: block;
-	            color: $black;
-	            font-size: 16px;
-	            margin-right: rem(10px);
-	            margin-left: rem(10px);
-	            @include ellipsis(1);
-	            text-align: right;
-	        }
+                display: block;
+                color: $black;
+                font-size: 16px;
+                margin-right: rem(10px);
+                margin-left: rem(10px);
+                @include ellipsis(1);
+                text-align: right;
+            }
         }
     }
 }
@@ -194,28 +194,28 @@
 }
 
 .mbsc-android-holo-light .dwbc {
-	border: none;
-	@include border-1px(top, #d9d9d9);
+    border: none;
+    @include border-1px(top, #d9d9d9);
 }
 
 .mbsc-android-holo {
 
-	.dwb {
-		height: rem(50px);
-		line-height: rem(50px);
-	}
+    .dwb {
+        height: rem(50px);
+        line-height: rem(50px);
+    }
 
-	.dwbw:first-child .dwb {
-		@include border-1px(right, #d9d9d9);
-	}
+    .dwbw:first-child .dwb {
+        @include border-1px(right, #d9d9d9);
+    }
 
-	.dwwol {
-		width: 100%;
-		left: 0;
-	}
+    .dwwol {
+        width: 100%;
+        left: 0;
+    }
 
-	.dwhl {
-		padding-left: rem(22px);
-		padding-right: rem(22px);
-	}
+    .dwhl {
+        padding-left: rem(22px);
+        padding-right: rem(22px);
+    }
 }

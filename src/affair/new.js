@@ -13,7 +13,9 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'affair-new'
+});
 /* eslint-disable */
 var pageData = {
     id: 0,

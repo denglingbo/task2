@@ -13,13 +13,13 @@
 $add-attach-width: rem(18px);
 
 .add-attach {
-	padding: 0;
-	display: inline-block;
-	width: $add-attach-width;
-	height: $add-attach-width;
-	background-image: url('#{$rootImg}/button_import_add-accessory.png');
-	background-repeat: no-repeat;
-	background-size: $add-attach-width;
+    padding: 0;
+    display: inline-block;
+    width: $add-attach-width;
+    height: $add-attach-width;
+    background-image: url('#{$rootImg}/button_import_add-accessory.png');
+    background-repeat: no-repeat;
+    background-size: $add-attach-width;
 }
 
 /**
@@ -29,15 +29,15 @@ $add-attach-width: rem(18px);
 $add-attach-width: rem(18px);
 
 .close-x {
-	padding: 0;
-	display: block;
-	position: absolute;
-	right:rem(20px);
-	width: $add-attach-width;
-	height: $add-attach-width;
-	background-image: url('#{$rootImg}/button_top_search_close.png');
-	background-repeat: no-repeat;
-	background-size: $add-attach-width;
+    padding: 0;
+    display: block;
+    position: absolute;
+    right:rem(20px);
+    width: $add-attach-width;
+    height: $add-attach-width;
+    background-image: url('#{$rootImg}/button_top_search_close.png');
+    background-repeat: no-repeat;
+    background-size: $add-attach-width;
 }
 
 /**

@@ -10,7 +10,9 @@ require('./index.scss');
 var config = require('../config');
 var Page = require('common/page');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'index-index'
+});
 
 page.enter = function () {
 

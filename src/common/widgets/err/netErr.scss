@@ -1,27 +1,27 @@
 @import "../../css/global.scss";
 @import "../../css/ui.scss";
 .net-err {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	background-color: #f2f3f5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f2f3f5;
 
-	p:first-of-type {
-		font-size: rem(16px);
-		color: #5c6166;
-		margin-top: rem(30px);
-	}
+    p:first-of-type {
+        font-size: rem(16px);
+        color: #5c6166;
+        margin-top: rem(30px);
+    }
 
-	p:last-of-type {
-		font-size: rem(12px);
-		color: #aaaeb2;
-		margin-top: rem(10px);
-	}
+    p:last-of-type {
+        font-size: rem(12px);
+        color: #aaaeb2;
+        margin-top: rem(10px);
+    }
 }

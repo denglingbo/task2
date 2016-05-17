@@ -11,7 +11,9 @@ var util = require('../common/util');
 var users = require('common/middleware/user/users');
 var Page = require('../common/page');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'users-list'
+});
 
 page.enter = function () {
     this.render('#users-list', this.data);

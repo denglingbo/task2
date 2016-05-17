@@ -3,35 +3,35 @@
 
 $btn-color: #42abf8;
 .task-empty {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	background-color: #f2f3f5;
-	
-	i {
-		margin-bottom: rem(30px);
-	}
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f2f3f5;
+    
+    i {
+        margin-bottom: rem(30px);
+    }
 
-	span {
-		color: #5c6166;
-		font-size: rem(16px);
-	}
+    span {
+        color: #5c6166;
+        font-size: rem(16px);
+    }
 
-	button {
-		margin-top: rem(50px);
-		color: $white;
-		background-color: $btn-color;
-		font-size: rem(16px);
-		width: rem(220px);
-		height: rem(45px);
-		border: none;
-		border-radius: rem(4px);
-	}
+    button {
+        margin-top: rem(50px);
+        color: $white;
+        background-color: $btn-color;
+        font-size: rem(16px);
+        width: rem(220px);
+        height: rem(45px);
+        border: none;
+        border-radius: rem(4px);
+    }
 }

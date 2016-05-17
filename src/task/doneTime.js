@@ -11,7 +11,9 @@ var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
 // var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
-var page = new Page();
+var page = new Page({
+    pageName: 'task-doneTime'
+});
 
 
 var info = {
