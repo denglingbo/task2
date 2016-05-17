@@ -27,5 +27,7 @@ module.exports = {
     'startTalk': '发起讨论',
     'taskDone': '完成任务',
     'commentTitle': '评论',
-    'delete': '删除'
+    'delete': '删除',
+    'search': '搜索',
+    'noMatchResults': '暂无匹配结果'
 };

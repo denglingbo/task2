@@ -134,7 +134,7 @@ $search-big-size: rem(73px);
 $net-err-width-size: rem(79px);
 $net-err-height-size: rem(69px);
 
-.net-err {
+.icon-net-err {
     display: inline-block;
     padding: 0;
     width: $net-err-width-size;
@@ -142,6 +142,23 @@ $net-err-height-size: rem(69px);
     background-image: url('#{$rootImg}/icon_middle_empty_no-network.png');
     background-repeat: no-repeat;
     background-size: $net-err-width-size $net-err-height-size;
+}
+
+/**
+ * 旗帜图标
+ *
+ */
+$flag-width-size: rem(75px);
+$flag-height-size: rem(71px);
+
+.icon-flag {
+    display: inline-block;
+    padding: 0;
+    width: $flag-width-size;
+    height: $flag-height-size;
+    background-image: url('#{$rootImg}/icon_middle_empty_task.png');
+    background-repeat: no-repeat;
+    background-size: $flag-width-size $flag-height-size;
 }
 
 /**
