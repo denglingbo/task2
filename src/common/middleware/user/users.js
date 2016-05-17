@@ -282,8 +282,14 @@ middleware.getUserIcon = function (jids, cid) {
  *
  */
 middleware.getUserAndPhoto = function (jids, cid) {
-    var dfd = new $.Deferred();
     var me = this;
+    var dfd = new $.Deferred();
+
+    if (!jids || jids.length <= 0) {
+        dfd.reject(null);
+        return dfd;
+    }
+
     var promiseList = [this.getUserInfo(jids, cid), this.getUserIcon(jids, cid)];
 
     $.when.apply($, promiseList)

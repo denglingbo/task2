@@ -85,7 +85,7 @@ function Page(opts) {
      */
     this.data;
 
-    this.lang;
+    this.lang = lang.data;
 
     /**
      * 保存上一个页面传过来的数据
@@ -141,9 +141,6 @@ Page.prototype.start = function () {
         // 执行任务
         me.execute()
             .done(function () {
-                // 将语言包数据添加到 this.data
-                me.initTemplateLang();
-
                 // 页面逻辑
                 me.enter();
 
@@ -173,22 +170,6 @@ Page.prototype.start = function () {
 
 Page.prototype.failed = function ($dom) {
     $dom.html('Error.');
-};
-
-/**
- * 如果有语言包数据，则添加到 data 上
- */
-Page.prototype.initTemplateLang =  function () {
-    if (lang.data) {
-
-        this.lang = lang.data;
-
-        if (!this.data) {
-            this.data = {};
-        }
-
-        this.data.lang = lang.data;
-    }
 };
 
 /**
@@ -332,7 +313,7 @@ Page.prototype.post = function (api, data, options) {
  * @return {Deferred}
  */
 Page.prototype.ajax = function (api, data, options) {
-
+    var me = this;
     var dfd = new $.Deferred();
     var isNetwork = util.isNetwork();
 
@@ -387,6 +368,12 @@ Page.prototype.ajax = function (api, data, options) {
 
     // 请求完成
     promise.done(function (result, status, xhr) {
+
+        // 将语言包数据添加到 this.data
+        if (result && result.data) {
+            result.data.lang = me.lang;
+        }
+
         // Just debug test
         // 模拟网络延迟
         if (config.debug) {

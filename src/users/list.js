@@ -8,7 +8,7 @@
 require('./list.scss');
 
 var util = require('../common/util');
-var users = require('common/middleware/user/users.js');
+var users = require('common/middleware/user/users');
 var Page = require('../common/page');
 
 var page = new Page();

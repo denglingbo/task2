@@ -112,10 +112,11 @@ page.initCommentList = function () {
 
     /* eslint-disable */
     widgetCommentList.init({
+
         promise: function () {
             return me.get(config.API.AFFAIR_COMMENT_LIST, {
                 affair_id: me.data.id,
-                curr_page: 1,
+                curr_page: this.page,
                 sort_type: 0,
                 number: 5
             });

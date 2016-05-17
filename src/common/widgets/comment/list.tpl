@@ -1,20 +1,21 @@
-
 <dl class="layout-list comments">
-    <dt class="sub-title">评论</dt>
+    <dt class="sub-title">{{ lang.commentTitle }}</dt>
 
-    <dd>
-        <div class="column-left">
-            <img src="" />
+    {{#obj_list}}
+    <dd id="user-{{ user_id }}" data-id="{{ user_id }}">
+        <div class="column-left user-photo">
+            <!-- <img src="base64" /> -->
         </div>
         <div class="column-middle">
             <div class="column-inner">
-                <p class="columnu-title">DEO</p>
-                <p class="columnu-date">2015-01-22 21:12</p>
+                <p class="columnu-title user-name"></p>
+                <p class="columnu-date">{{ dataRaw }}</p>
 
                 <div class="comments-main">
-                    asflsfjsjfksalf<br>
-                    asfjksadfkasdjkfsdk
+                    {{&content}}
                 </div>
+
+                <div class="comments-button delete" target-id="{{ user_id }}">{{ lang.delete }}</div>
 
                 <div class="comments-attach">
                     <!-- By Attach js -->
@@ -22,4 +23,5 @@
             </div>
         </div>
     </dd>
+    {{/obj_list}}
 </dl>

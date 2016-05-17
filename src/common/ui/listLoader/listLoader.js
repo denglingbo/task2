@@ -49,7 +49,7 @@ var STATUS_CLASS = {
 var Loader = function (options) {
 
     Control.call(this, options);
-    
+
     var me = this;
 
     me.opts = {
@@ -226,7 +226,7 @@ $.extend(Loader.prototype, {
                 clearTimeout(me.statusTimerId);
                 me.statusChange('fail');
 
-                fn(me, false);
+                fn.call(me, false);
             })
             .always(function () {
                 me.reqEnd = +new Date();

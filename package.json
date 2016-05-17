@@ -9,6 +9,7 @@
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
     "bell-on-bundler-error-plugin": "^1.0.8",
+    "connect": "^3.4.1",
     "copy-webpack-plugin": "^1.1.1",
     "css-loader": "^0.23.1",
     "ejs-loader": "^0.2.1",
@@ -23,7 +24,6 @@
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.15.0",
     "image-webpack-loader": "^1.6.3",
-    "iscroll": "^5.2.0",
     "mustache": "^2.2.1",
     "mustache-loader": "^0.3.1",
     "node-sass": "^3.6.0",
@@ -39,7 +39,9 @@
   },
   "scripts": {
     "build": "export NODE_ENV=prod && webpack -p",
-    "build-win": "set NODE_ENV=prod && webpack -p"
+    "build-win": "set NODE_ENV=prod && webpack -p",
+    "build-test": "export NODE_ENV=prod && webpack",
+    "build-test-win": "set NODE_ENV=prod && webpack"
   },
   "repository": {
     "type": "git",

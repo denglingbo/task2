@@ -199,12 +199,12 @@ Webpacker.prototype.getCommonPlugins = function () {
         })
     ];
 
-    // 非开发环境 打包
+    // 生产环境 打包
     if (!this.config.debug) {
 
-        plugins.push(
-            new webpack.optimize.UglifyJsPlugin()
-        );
+        // plugins.push(
+        //     new webpack.optimize.UglifyJsPlugin()
+        // );
 
         // 没有报错才发布文件
         plugins.push(
@@ -244,7 +244,7 @@ Webpacker.prototype.getCssLoader = function (name) {
     }
     else {
         // 编译阶段，css 分离出来单独引入
-        cssLoader = ExtractTextPlugin.extract('style', 'css-loader' + xCss + '!autoprefixer-loader');
+        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader');
     }
 
     return cssLoader;

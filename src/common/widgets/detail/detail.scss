@@ -57,6 +57,8 @@
     }
 
     .detail-title-main {
+        max-width: 60%;
+        overflow: hidden;
         float: left;
 
         .detail-title-top {
@@ -212,6 +214,15 @@
                 .column-inner {
                     @include border-1px(top, #e1e4e6);
                     padding: rem(17px) 0 rem(11px) 0;
+
+                    .comments-button {
+                        text-align: right;
+                        display: block;
+                        width: 100%;
+                        padding-right: rem(15px);
+                        position: relative;
+                        float: right;
+                    }
                 }
             }
         }

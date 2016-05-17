@@ -25,5 +25,7 @@ module.exports = {
     'notAgree': '不同意',
     'newAffair': '新建事件',
     'startTalk': '发起讨论',
-    'taskDone': '完成任务'
+    'taskDone': '完成任务',
+    'commentTitle': '评论',
+    'delete': '删除'
 };

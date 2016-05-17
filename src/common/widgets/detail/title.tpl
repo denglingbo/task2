@@ -9,7 +9,7 @@
 
     <div class="detail-title-main">
         <p class="detail-title-top">{{ title }}</p>
-        <p data-log='{"da_src":"tick"}'>{{ updateDateRaw }}</p>
+        <p>{{ updateDateRaw }}</p>
     </div>
 
     <div class="detail-title-right">

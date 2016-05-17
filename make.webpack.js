@@ -56,38 +56,6 @@ module.exports = function () {
         webpackConfig.devtool = false;
     }
 
-    // 插件集合
-    webpackConfig.plugins = [
-
-        // to: 实际为 path/xxx
-        new CopyPlugin(copyPlugins),
-
-        // 提供全局使用
-        new webpack.ProvidePlugin({
-            $: 'zepto'
-        })
-    ];
-
-    var commonPlugins = this.getCommonPlugins();
-
-    // 提取公共部分
-    webpackConfig.plugins = webpackConfig.plugins.concat(commonPlugins);
-
-    // * 最为重要的部分，其中包含页面入口配置
-    webpackConfig.plugins = webpackConfig.plugins.concat(this.htmlPlugins);
-
-    if (!config.debug) {
-        // 提取样式
-        webpackConfig.plugins.push(
-
-            // Reference: https://github.com/webpack/extract-text-webpack-plugin
-            new ExtractTextPlugin(
-                // 'common/css/[contenthash:8].[name].min.css'
-                'common/css/[name].min.css'
-            )
-        );
-    }
-
     // 设置 resolve
     webpackConfig.resolve = {
 
@@ -163,7 +131,36 @@ module.exports = function () {
         ]
     };
 
-     console.log(webpackConfig);
+    // 插件集合
+    webpackConfig.plugins = [
+
+        // to: 实际为 path/xxx
+        new CopyPlugin(copyPlugins),
+
+        // 提供全局使用
+        new webpack.ProvidePlugin({
+            $: 'zepto'
+        })
+    ];
+
+    var commonPlugins = this.getCommonPlugins();
+
+    // 提取公共部分
+    webpackConfig.plugins = webpackConfig.plugins.concat(commonPlugins);
+
+    // * 最为重要的部分，其中包含页面入口配置
+    webpackConfig.plugins = webpackConfig.plugins.concat(this.htmlPlugins);
+
+    if (!config.debug) {
+        // 提取样式
+        // Reference: https://github.com/webpack/extract-text-webpack-plugin
+        // 'common/css/[contenthash:8].[name].min.css'
+        webpackConfig.plugins.push(
+            new ExtractTextPlugin('common/css/[name].min.css')
+        );
+    }
+
+    console.log(webpackConfig);
 
     return webpackConfig;
 

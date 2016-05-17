@@ -75,3 +75,8 @@
     -webkit-box-align: center;
     -moz-box-align: center;
 }
+
+/* 强制换行 */
+.word-content {
+    word-wrap: break-word;
+}

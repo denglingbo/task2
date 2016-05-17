@@ -195,36 +195,17 @@ Control.prototype.init = function () {};
  * 渲染控件
  *
  * @param {Object} data 渲染所需数据
+ * @return {string}
  */
 Control.prototype.render = function (data) {
     var me = this;
-    data = data || me.opts.data;
-    var ele = document.createElement('div');
-    var html = view.render(ele, data, {
-        tmpl: me.tpl
-    });
 
-    me.html = html;
+    var selector = $(this.opts.wrapper);
+    var options = {
+        tmpl: this.opts.tpl
+    };
 
-    var childNodes = ele.children;
-    if (childNodes.length === 1) {
-        me.main = childNodes[0];
-    }
-    else {
-        me.main = childNodes;
-    }
-
-    if (me.wrapper) {
-        // var node;
-        // for (var i = 0, l = childNodes.length; i < l; i++) {
-        //     node = childNodes[i];
-        //     me.wrapper.appendChild(node);
-        // }
-        // bugfix
-        while (childNodes.length) {
-            me.wrapper.appendChild(childNodes[0]);
-        }
-    }
+    view.render(selector, data, options);
 
     me.bindEvents();
 };
