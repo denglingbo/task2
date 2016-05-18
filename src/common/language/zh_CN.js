@@ -8,6 +8,10 @@
 /* eslint-disable */
 
 module.exports = {
+    'director': '我负责的',
+    'dispatch': '我派发的',
+    'partake': '我参与的',
+    'newTask': '新建任务',
     'taskTitle': '任务描述',
     'partner': '团队成员',
     'importance': '紧要程度',

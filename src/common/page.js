@@ -379,7 +379,7 @@ Page.prototype.ajax = function (api, data, options) {
         if (config.debug) {
             setTimeout(function () {
                 dfd.resolve(result);
-            }, 200);
+            }, 40);
         }
         else {
             dfd.resolve(result);

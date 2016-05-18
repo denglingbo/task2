@@ -6,17 +6,17 @@
     "data": {
         "list": [
             {
-                "name": "lead",
+                "name": "director",
                 "text": "我负责的",
                 "num": 12
             },
             {
-                "name": "dist",
+                "name": "dispatch",
                 "text": "我派发的",
                 "num": 2
             },
             {
-                "name": "join",
+                "name": "partake",
                 "text": "我参与的",
                 "num": 32
             },
