@@ -7,33 +7,24 @@
 
 require('./searchPage.scss');
 require('dep/touch');
-var lang = require('common/lang').getData();
 var ls = require('common/localstorage');
-var util = require('common/util');
-var Mustache = require('dep/mustache');
 
 /**
  * Search
  *
  * @param {Object} page 页面对象
  * @param {Object} options, 配置参数
- *      @param {Object} url config.API配置的请求
- *      @param {string} selector, 需要初始化搜索框的容器;
- *      @param {string} listDir, 搜索结果中结果列表的目录层次, 到数组一级
- *      @param {string} inject, 搜索页的插入地方
- *      @param {string} keyClassName, 搜索结果中关键字的显示样式
- *      @param {string} itemTpl, 搜索结果的Mustache渲染模板
+ *      param {boolean} isSearchPage 搜索页面为true
+ *      param {string} selector, 需要初始化搜索框的容器;
+ *      param {string} inject, 搜索页的插入地方
+ * @param {Function} fn, 搜索页的执行逻辑
  * @constructor
  */
-function Search(page, options) {
+function Search(page, options, fn) {
 
     this.opts = {
         isSearchPage: false,
         selector: '',
-        listDir: '',
-        keyClassName: 'input-key',
-        url: '',
-        itemTpl: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& .}}</a></li>{{/.}}',
         inject: 'body'
     };
 
@@ -45,32 +36,25 @@ function Search(page, options) {
 
     $.extend(this.opts, options, {
         wrap: '#search-wrap',
-        content: '.search-content',
-        search: lang.search,
-        noMatchResults: lang.noMatchResults
+        content: '.search-content'
     });
 
     var opts = this.opts;
 
     // 页面上展示的搜索框
-    opts.searchInHtml = '<div class="search-in"><i class="icon-search"></i>{{search}}</div>';
+    opts.searchInHtml = '<div class="search-in"><i class="icon-search"></i>{{lang.search}}</div>';
 
     this.loadHtml();
 
     $.extend(this.dom, this.getDom());
 
-    if (this.opts.isSearchPage) {
-        // 无搜索结果页面
-        opts.searchNull = '<li class="no-output"><i class="icon-search-big"></i>{{noMatchResults}}</div>';
-
-        opts.listDirArr = opts.listDir.length
-                    && (typeof this.opts.listDir === 'string')
-                    && this.opts.listDir.replace(/^\s*\/|\/\s*$/g, '').split('/');
-
-        this.initSearchPage();
+    if (opts.isSearchPage && fn) {
+        fn.call(this, null);
+        // this.initSearchPage();
     }
-
-    this.bindEvents();
+    else {
+        this.bindEvents();
+    }
 }
 
 /**
@@ -85,12 +69,12 @@ Search.prototype.getDom = function () {
     var $main = dom.$main = $(opts.selector);
 
     return {
-        $searchIn: opts.isSearchPage ? null : $main.find('.search-in'),
+        $searchIn: $main.find('.search-in'),
         $cancel: $wrap.find('.cancel'),
         $input: $wrap.find('.search-input'),
         $tip: $wrap.find('.search-tip'),
         $clear: $wrap.find('.clear'),
-        $mask: opts.isSearchPage ? null : $wrap.find('.search-mask'),
+        $mask: $wrap.find('.search-mask'),
         $content: $wrap.find('.search-content')
     };
 };
@@ -105,9 +89,9 @@ Search.prototype.loadHtml = function () {
 
     var tmpl = require('./searchPage.tpl');
     if (opts.isSearchPage) {
-        me.page.render('#search',
+        me.page.render(opts.selector,
         {
-            search: lang.search,
+            lang: me.page.lang,
             isSearchPage: opts.isSearchPage
         },
         {
@@ -117,32 +101,39 @@ Search.prototype.loadHtml = function () {
     else {
         $(opts.selector).addClass('search-box');
 
-        var searchIn = Mustache.render(opts.searchInHtml, {
-            search: lang.search
+        me.page.render(opts.selector,
+        {
+            lang: me.page.lang
+        },
+        {
+            tmpl: opts.searchInHtml
         });
-        $(opts.selector).html(searchIn);
 
-        tmpl = Mustache.render(tmpl, {
-            search: lang.search,
+        me.page.render(opts.inject,
+        {
+            lang: me.page.lang,
             isSearchPage: opts.isSearchPage
+        },
+        {
+            tmpl: tmpl,
+            type: 'append'
         });
-        $(opts.inject).append(tmpl);
     }
 };
 
-/**
- * 初始化搜索页
- *
- *
- */
-Search.prototype.initSearchPage = function () {
-    var me = this;
-    var key = util.params('key');
-    key = key ? decodeURI(key) : '';
-    me.dom.$input.val(key);
-    me.stateChange();
-    me.loadList();
-};
+// /**
+//  * 初始化搜索页
+//  *
+//  *
+//  */
+// Search.prototype.initSearchPage = function () {
+//     var me = this;
+//     var key = util.params('key');
+//     key = key ? decodeURI(key) : '';
+//     me.dom.$input.val(key);
+//     me.stateChange();
+//     me.loadList();
+// };
 
 /**
  * 进入搜索页
@@ -249,121 +240,102 @@ Search.prototype.clearInput = function () {
  *
  * @return {boolean}, 搜索结果是否为空
  */
-Search.prototype.listDataIsNull = function () {
-    return !(this.listData && this.listData.length);
-};
-
-/**
- * 获取搜索结果数据
- *
- */
-Search.prototype.getListData = function () {
-    var data = this.data;
-    var opts = this.opts;
-    var list = opts.listDirArr;
-    var listData = [];
-    if (list.length >= 1) {
-        list.forEach(function (item, index) {
-            listData = index !== 0 ? listData[item] : data[item];
-        });
-    }
-    this.listData = null;
-    this.listData = listData;
-};
+// Search.prototype.dataIsNull = function () {
+//     return !(this.data && this.data.length);
+// };
 
 /**
  * 发送请求, 获取搜索结果
  *
  */
-Search.prototype.loadList = function () {
-    var me = this;
-    var key = me.dom.$input.val();
+// Search.prototype.loadList = function () {
+//     var me = this;
+//     var key = me.dom.$input.val();
 
-    var promise = me.page.get(me.opts.url, {key: key});
+//     var promise = me.page.get(me.opts.url, {key: key});
 
-    promise
-        .done(function (result) {
-            if (result.meta.code === 200) {
-                me.data = result.data;
-                me.getListData();
-                me.renderOutput();
-            }
-            else {
-                me.renderNull();
-            }
-        })
-        .fail(function (result) {
-            me.renderNull();
-        })
-        .always(function () {
-            if (me.isNull()) {
-                me.isNullHandler();
-            }
-        });
-};
+//     promise
+//         .done(function (result) {
+//             if (result.meta.code === 200) {
+//                 me.data = result.data[me.opts.dataKey];
+//                 me.renderOutput();
+//             }
+//             else {
+//                 me.renderNull();
+//             }
+//         })
+//         .fail(function (result) {
+//             me.renderNull();
+//         })
+//         .always(function () {
+//             if (me.isNull()) {
+//                 me.isNullHandler();
+//             }
+//         });
+// };
 
 /**
  * 搜索结果为空时的处理函数, 渲染为空的展示页
  *
  */
-Search.prototype.renderNull = function () {
-    var me = this;
-    me.page.render(me.opts.content,
-    {
-        noMatchResults: lang.noMatchResults
-    },
-    {
-        tmpl: me.opts.searchNull
-    });
-};
+// Search.prototype.renderNull = function () {
+//     var me = this;
+//     me.page.render(me.opts.content,
+//     {
+//         lang: me.page.lang
+//     },
+//     {
+//         tmpl: me.opts.searchNull
+//     });
+// };
 
 /**
  * 搜索结果不为空的处理函数, 渲染搜索结果列表
  *
  */
-Search.prototype.renderList = function () {
-    var me = this;
-    var opts = me.opts;
-    me.setResultKey();
+// Search.prototype.renderList = function () {
+//     var me = this;
+//     var opts = me.opts;
+//     me.setResultKey();
 
-    var selector = opts.wrap + ' ' + opts.content;
-    me.page.render(selector, me.listData, {
-        tmpl: opts.itemTpl
-    });
-};
+//     var selector = opts.wrap + ' ' + opts.content;
+//     me.page.render(selector, me.data, {
+//         tmpl: opts.itemTpl
+//     });
+// };
 
 /**
  * 根据搜索结果来调用渲染页面的处理函数
  *
  */
-Search.prototype.renderOutput = function () {
-    var me = this;
-    var listDataIsNull = me.listDataIsNull();
+// Search.prototype.renderOutput = function () {
+//     var me = this;
+//     var dataIsNull = me.dataIsNull();
 
-    if (listDataIsNull) {
-        me.renderNull();
-    }
-    else {
-        me.renderList();
-    }
-};
+//     if (dataIsNull) {
+//         me.renderNull();
+//     }
+//     else {
+//         me.renderList();
+//     }
+// };
 
 /**
  * 匹配搜索结果中的关键字, 为关键字添加红色的className
  *
  */
-Search.prototype.setResultKey = function () {
-    var me = this;
-    var listData = me.listData;
-    var opts = me.opts;
-    var key = me.getKey();
-    var reg = new RegExp(key, 'g');
+// Search.prototype.setResultKey = function () {
+//     var me = this;
+//     var data = me.data;
+//     var opts = me.opts;
+//     var key = me.getKey();
+//     var reg = new RegExp(key, 'g');
 
-    me.listData = listData.map(function (item) {
-        item = item + '';
-        return item.replace(reg, '<span class="' + opts.keyClassName + '">' + key + '</span>');
-    });
-};
+//     me.data = data.map(function (item) {
+//         item = item + '';
+//         return item.replace(reg, '<span class="' + opts.keyClassName + '">' + key + '</span>');
+//     });
+// };
 
 /**
  * 状态改变的处理函数
@@ -401,8 +373,9 @@ Search.prototype.isNotNullHandler = function () {
 /**
  * bind事件处理函数
  *
+ * @param {Function} callback, 搜索页面的回调函数
  */
-Search.prototype.bindEvents = function () {
+Search.prototype.bindEvents = function (callback) {
     var me = this;
     var opts = me.opts;
     var dom = me.dom;
@@ -410,6 +383,12 @@ Search.prototype.bindEvents = function () {
         dom.$searchIn.on('tap', function () {
             me.toggleWrap(true);
             dom.$input.focus();
+        });
+
+        $(document).on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                me.redirectSearch();
+            }
         });
     }
 
@@ -451,16 +430,9 @@ Search.prototype.bindEvents = function () {
         }
     });
 
-    $(document).on('keyup', function (e) {
-        if (e.keyCode === 13) {
-            if (!opts.isSearchPage) {
-                me.redirectSearch();
-            }
-            else {
-                me.loadList();
-            }
-        }
-    });
+    if (callback) {
+        callback();
+    }
 };
 
 module.exports = Search;

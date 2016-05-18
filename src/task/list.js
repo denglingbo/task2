@@ -50,7 +50,6 @@ page.enter = function () {
     this.bindEvents();
 
     new Search(this, {
-        isSearchPage: false,
         selector: '#search'
     });
 };

@@ -32,7 +32,12 @@ module.exports = {
     'taskDone': '完成任务',
     'commentTitle': '评论',
     'delete': '删除',
+    'cancel': '取消',
     'search': '搜索',
     'noMatchResults': '暂无匹配结果',
-    'commentNotFound': '暂无评论'
+    'commentNotFound': '暂无评论',
+    'noTask': '您还没有创建过任务',
+    'createTask': '创建任务',
+    'netErr': '网络出现故障',
+    'reLoadingPage': '点击页面重新加载'
 };

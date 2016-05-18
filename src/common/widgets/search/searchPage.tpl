@@ -3,10 +3,10 @@
         <div class="search-in search-input-wrap">
             <input id="search-input" class="search-input" type="text">
             <i class="icon-search"></i>
-            <span class="search-tip">{{search}}</span>
+            <span class="search-tip">{{lang.search}}</span>
             <i class="close-x clear hide"></i>
         </div>
-        <span class="cancel">取消</span>
+        <span class="cancel">{{lang.cancel}}</span>
     </div>
     {{^isSearchPage}}
     <div class="search-mask"></div>
