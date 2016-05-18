@@ -8,6 +8,7 @@
 
 require('./submit.scss');
 
+var config = require('config');
 var Page = require('common/page');
 var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
@@ -16,7 +17,17 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var page = new Page({
     pageName: 'form-submit'
 });
-
+/* eslint-disable */
+// 提交的数据
+var upData = {
+    task_id : +util.params('task_id'),
+    message: {
+        sent_emai: false,
+        sent_eim: true,
+        sent_sms: false
+    }
+}
+/* eslint-enable */
 /* eslint-disable */
 var pages = {
     // 完成任务
@@ -28,7 +39,7 @@ var pages = {
 
         if (isMaster === 0) {
             arr.unshift({
-                name: 'comments',
+                name: 'applyReason',
                 holder: '请输入申请理由(选填)'
             });
         }
@@ -61,12 +72,56 @@ var pages = {
     }
 };
 /* eslint-ensable */
+/**
+ * 根据传入的type不同选择不同的页面需要的上传数据
+ *
+ * @param {number} type, 页面类型参数
+ * @return {Object}, 返回的上传数据和上传API
+ */
+page.getData = function (type) {
+    var me = this;
+    var d = null;
+    var api = '';
+    switch(type) {
+        case 0:
+            d = {
+                attachements: me.attach.getModifyAttaches(),
+                complete_remark: $('[data-name=applyReason]').text(),
+                summary: $('[data-name=summary]').text()
+            };
+            api = config.API.SUMMARY_TASK
+            break;
+        case 1:
+            d = {
+                suspend_remark: $('[data-name=cancel]').text()
+            };
+            api = config.API.REVOKE_TASK
+            break;
+        case 2:
+            d = {
+                refuse_reason: $('[data-name=oppose]').text()
+            };
+            api = config.API.REFUSE_TASE
+            break;
+        case 3:
+            d = {
+                audit_remark: $('[data-name=agree]').text(),
+                audit_result: true
+            };
+            api = config.API.AUDIT_TASK
+    }
+
+    return {
+        api: api,
+        data: $.extend(upData, d)
+    }
+};
 
 page.enter = function () {
 
     // 页面类型
-    var pageType = util.params('type');
-
+    var pageType = this.pageType = util.params('type');
+    
     // 判断是不是 master，完成总结的 master
     var isMaster = parseInt(util.params('master'), 2);
 
@@ -100,7 +155,7 @@ page.enter = function () {
             },
             operateType: 'upload'
         };
-        AttachWrapper.initAttach(attachOptions);
+        this.attach = AttachWrapper.initAttach(attachOptions);
     }
     // 这里两个输入框的 limit 相同，所以都用一样的配置
     $('.phone-input').each(function () {
@@ -114,7 +169,12 @@ page.enter = function () {
 };
 
 page.bindEvents = function () {
-
+    var me = this;
+    
+    $('#submit').on('click', function () {
+        var dataArg = me.getData(+me.pageType);
+        var promise = me.post(dataArg.api, dataArg.data)
+    })
 };
 
 $(function () {

@@ -30,7 +30,14 @@ var config = {
         TASK_NEW_URL: 'create_task',
         // 任务编辑
         TASK_EDIT_URL: 'update_task',
-        COMPLETE_TASK: 'complete_task',
+        // 任务总结
+        SUMMARY_TASK: 'summary_task',
+        // 任务撤销
+        REVOKE_TASK: 'revoke_task',
+        // 任务拒绝
+        REFUSE_TASE: 'refuse_task',
+        // 任务同意
+        AUDIT_TASK: 'audit_task',
 
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
@@ -81,7 +88,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: 'cce15be2-8fea-48ed-850b-b483bb7cbae4'
+    token: 'f9794f08-75f0-4368-8005-af865f256b84'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
