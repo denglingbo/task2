@@ -6,7 +6,6 @@
  */
 
 require('./detail.scss');
-require('common/widgets/err/netErr.scss');
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
@@ -21,7 +20,9 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 require('common/ui/pagination/pagination.scss');
 var Pagination = require('common/ui/pagination/pagination');
 */
-var tmplError = require('common/widgets/err/netErr');
+
+require('common/widgets/emptyPage/netErr.scss');
+var tmplError = require('common/widgets/emptyPage/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 

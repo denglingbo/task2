@@ -21,9 +21,11 @@ var virtualInput = require('common/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
 
-var tmplError = require('common/widgets/err/netErr');
+require('common/widgets/emptyPage/netErr.scss');
+var tmplError = require('common/widgets/emptyPage/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
+
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var widgetCommentList = require('common/widgets/comment/list');
@@ -234,8 +236,6 @@ page.addParallelTask(function (dfd) {
                     dfdPub
                         .done(function (pubData) {
                             me.renderUser(pubData.contacts);
-                        })
-                        .fail(function () {
                         });
                 }
 

@@ -164,12 +164,12 @@ Page.prototype.start = function () {
             })
             .fail(function () {
                 // Do something
-                me.error();
+                // me.failed();
             });
     })
     .fail(function () {
         // Do something
-        me.error();
+        me.failed();
     });
 
     var readyFn = function () {
@@ -183,8 +183,13 @@ Page.prototype.start = function () {
     timeId = setTimeout(function () {
         document.removeEventListener('deviceready', readyFn);
 
-        me.failed();
-        dfd.reject({error: 'deviceready timeout'});
+        var err = {
+            code: 2,
+            msg: 'deviceready timeout'
+        };
+
+        me.failed(err);
+        dfd.reject(err);
     }, timeout);
 
     // -------------------------------------
@@ -199,19 +204,30 @@ Page.prototype.start = function () {
 
 /**
  * Failed
+ *
+ * @param {Object} errObj, 错误信息
  */
-Page.prototype.failed = function () {
+Page.prototype.failed = function (errObj) {
     var me = this;
-    // console.log('Error');
+
+    var err = {
+        code: 0,
+        msg: 'failed'
+    };
+
+    $.extend(err, errObj);
 
     me.isFailed = true;
 
-    /* eslint-disable */
-    log.send({
-        'da_src': 'err: device-timeout url: ' + window.location.href + ' pageLog: ' + util.qs.stringify(window.pageLog),
-        'da_act': 'error'
-    });
-    /* eslint-enable */
+    // 掉线不发送错误 log
+    if (err.code !== 1) {
+        /* eslint-disable */
+        log.send({
+            'da_src': 'err: ' + err.msg + ' url: ' + window.location.href + ' pageLog: ' + util.qs.stringify(window.pageLog),
+            'da_act': 'error'
+        });
+        /* eslint-enable */
+    }
 
     // 根据储存策略保存 local data 数据
     if (localcache.isCache(me.opts.pageName)) {
@@ -223,8 +239,11 @@ Page.prototype.failed = function () {
         // 页面逻辑
         me.enter();
     }
+    // 没有离线数据
     else {
-        me.data = null;
+        me.data = {
+            lang: this.lang
+        };
 
         // 页面失败逻辑
         me.error();
@@ -232,7 +251,7 @@ Page.prototype.failed = function () {
 };
 
 /**
- * 错误页面
+ * 错误逻辑
  */
 Page.prototype.error = function () {};
 
@@ -314,40 +333,51 @@ Page.prototype.render = function (selector, data, options) {
  * @param {number} seconds, 有效时间
  * @param {string} path, 储存根位置
  */
-function setCookie(name, value, seconds, path) {
-    seconds = seconds || 0;
-    path = path || '/';
-    var expires = '';
+// function setCookie(name, value, seconds, path) {
+//     seconds = seconds || 0;
+//     path = path || '/';
+//     var expires = '';
 
-    if (seconds !== 0) {
-        var date = new Date();
-        date.setTime(date.getTime() + (seconds * 1000));
-        expires = '; expires=' + date.toGMTString();
-    }
+//     if (seconds !== 0) {
+//         var date = new Date();
+//         date.setTime(date.getTime() + (seconds * 1000));
+//         expires = '; expires=' + date.toGMTString();
+//     }
 
-    document.cookie = name + '=' + escape(value) + expires + '; path=' + path;
-}
+//     document.cookie = name + '=' + escape(value) + expires + '; path=' + path;
+// }
 
 /**
  * 获取请求参数并可以根据需求改变参数
  *
  * @param {Object} data, 数据
- * @return {Object}
+ * @return {string}
  *
  */
-var getRequestData = function (data) {
+var getRequestData = function () {
 
-    if (!$.isPlainObject(data)) {
-        return {};
-    }
+    // if (!$.isPlainObject(data)) {
+    //     return {};
+    // }
 
+    var arr = [];
     var r = {};
 
     r = storage.getData(config.const.TASK_PARAMS);
 
-    $.extend(r, data);
+    // setCookie('JINSESSIONID', config.mock.token);
+    // setCookie('uid', r.uid);
+    // setCookie('cid', r.cid);
 
-    return r;
+    // $.extend(r, data);
+
+    for (var key in r) {
+        if (r.hasOwnProperty(key)) {
+            arr.push(key + '=' + r[key]);
+        }
+    }
+
+    return arr.join('&');
 };
 
 /*
@@ -381,19 +411,6 @@ Page.prototype.ajax = function (api, data, options) {
     var dfd = new $.Deferred();
     var isNetwork = util.isNetwork();
 
-    if (!isNetwork) {
-        dfd.reject({error: 'Connection None'});
-        return dfd;
-    }
-
-    var reqData;
-    if (/create|update/.test(api)) {
-        reqData = data;
-    }
-    else {
-        reqData = getRequestData(data);
-    }
-
     var opts = {
         type: 'POST',
         dataType: 'json'
@@ -401,20 +418,32 @@ Page.prototype.ajax = function (api, data, options) {
 
     $.extend(opts, options);
 
+    if (!isNetwork) {
+        var err = {
+            code: 1,
+            msg: 'Offline'
+        };
+
+        if (/get/i.test(opts.type)) {
+            me.failed(err);
+        }
+
+        dfd.reject(err);
+        return dfd;
+    }
+
     var host = config.API.host + config.API.prefix + api;
+
+    host = host + '?' + getRequestData();
 
     var ajaxSettings = {
         type: opts.type,
         url: host,
-        data: reqData,
+        data: data,
         dataType: opts.dataType
     };
 
     if (config.debug) {
-        setCookie('JINSESSIONID', config.mock.token);
-        setCookie('uid', reqData.uid);
-        setCookie('cid', reqData.cid);
-
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
         if (!/^\/data/.test(config.API.prefix)) {
             ajaxSettings.xhrFields = {
