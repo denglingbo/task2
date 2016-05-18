@@ -29,14 +29,15 @@ var fn = function (page, options) {
     $.extend(this.opts, options);
 
     this.page = page;
-
     this.data = this.opts.data;
-
     this.$main = $(this.opts.wrapper);
 
     this.loader = new Loader(this.opts);
-
     this.loader.req(function (data) {
+
+        if (!data) {
+            return;
+        }
 
         // 时间展示
         data.dataRaw = function () {

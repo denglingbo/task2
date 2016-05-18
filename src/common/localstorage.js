@@ -2,7 +2,7 @@
  * @file localstorage.js
  * @author deo
  *
- * localstorage
+ * localstorage 基类
  */
 
 (function (window, document) {

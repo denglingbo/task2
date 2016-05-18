@@ -57,14 +57,15 @@
     }
 
     .detail-title-main {
-        max-width: 60%;
-        overflow: hidden;
+        max-width: 65%;
         float: left;
 
         .detail-title-top {
             color: $black;
             font-size: rem(16px);
             margin-bottom: rem(8px);
+
+            @include ellipsis();
         }
     }
 

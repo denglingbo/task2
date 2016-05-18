@@ -74,34 +74,6 @@ page.bindEvents = function () {
     }, false);
 };
 
-
-/**
- * 请求页面接口
- *
- * @param {deferred} dfd, deferred
- *
- */
-// page.addParallelTask(function (dfd) {
-//     var me = this;
-// /* eslint-disable */
-// // test 后端暂无首页接口
-// dfd.resolve();
-// return;
-
-//     var promise = page.get(config.API.HOME_URL, {});
-//     promise
-//         .done(function (result) {
-//             if (result.meta && result.meta.code !== 200) {
-//                 dfd.reject(result);
-//             }
-//             else {
-//                 me.data = result.data;
-//                 dfd.resolve();
-//             }
-//         });
-// });
-
-
 $(function () {
     page.start();
 });

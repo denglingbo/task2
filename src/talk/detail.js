@@ -5,6 +5,8 @@
  * 讨论详情页
  */
 
+var pageName = 'talk-detail';
+
 require('dep/ui/attaches/css/attaches.css');
 
 require('./detail.scss');
@@ -19,15 +21,29 @@ var virtualInput = require('common/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
 
+var tmplError = require('common/widgets/err/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var widgetCommentList = require('common/widgets/comment/list');
 
-var page = new Page({
-    pageName: 'talk-detail'
+var localcache = require('common/localcache');
+localcache.init(pageName, function () {
+    return util.getParam('id');
 });
+
+var page = new Page({
+    pageName: pageName
+});
+
+page.error = function () {
+    this.render('#detail-main', this.data, {
+        partials: {
+            title: tmplError
+        }
+    });
+};
 
 page.enter = function () {
     var me = this;
@@ -56,6 +72,10 @@ page.enter = function () {
         wrapper: '.attach'
     });
     /* eslint-enable */
+
+    if (me.isFailed) {
+        return;
+    }
 
     me.initCommentList();
 };
@@ -172,7 +192,7 @@ page.initCommentList = function () {
                 talk_id: me.data.id,
                 curr_page: this.page,
                 sort_type: 0,
-                number: 5
+                number: 10
             });
         }
     });
@@ -222,6 +242,9 @@ page.addParallelTask(function (dfd) {
                 dfd.resolve(data);
             }
 
+        })
+        .fail(function () {
+            dfd.reject();
         });
 
     return dfd;

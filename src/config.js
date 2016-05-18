@@ -55,6 +55,8 @@ var config = {
         TALK_DONE: 'close_talk',
         TALK_COMMENT_DELETE: 'delete_talk_comment',
         TALK_COMMENT_ADD: 'add_talk_comment',
+        // 讨论评论列表
+        TALK_COMMENT_LIST: 'get_talk_comment_list',
 
         // attach uploadUrl
         ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
@@ -69,7 +71,8 @@ var config = {
  * 静态参数
  */
 config.const = {
-    TASK_PARAMS: 'TASK_PARAMS'
+    TASK_PARAMS: 'TASK_PARAMS',
+    TASK_CACHE: 'TASK_CACHE'
 };
 
 // 以下参数 febd.config.js & page.js 使用
@@ -92,7 +95,7 @@ config.mock = {
 // prefix = '/data/' 为前端本地开发调试使用
 if (config.debug) {
     // 联调地址
-    // config.API.host = document.location.protocol + '//web.test1.com';
+    config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
     config.API.host = document.location.protocol + '//task2.test1.com:8015';

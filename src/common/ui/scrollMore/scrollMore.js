@@ -1,12 +1,12 @@
 /**
- * @file listLoader.js
+ * @file scrollMore.js
  * @author deo
  *
  * 点击加载功能，不需要指定内容容器，该组建点击之后会返回 data
  * require ticker.scss
  */
 
-require('./listLoader.scss');
+require('./scrollMore.scss');
 
 var Control = require('common/control');
 
@@ -46,13 +46,15 @@ var STATUS_CLASS = {
  * @param {Ojbect} options, 配置项
  *  options.promise: 用于 ajax
  */
-var Loader = function (options) {
+var ScrollMore = function (options) {
 
     Control.call(this, options);
 
     var me = this;
 
     me.opts = {
+        wrapper: null,
+
         // promise 一定要在 function 内部 return，不然一万年都不是一个新的请求了
         promise: null,
 
@@ -76,6 +78,7 @@ var Loader = function (options) {
 
     me.promise = me.opts.promise;
 
+    me.$wrapper = $(me.opts.wrapper);
     me.$main = $(me.opts.handler);
 
     // 当前是第几页数据
@@ -84,9 +87,9 @@ var Loader = function (options) {
     me.init();
 };
 
-$.extend(Loader.prototype, Control.prototype);
+$.extend(ScrollMore.prototype, Control.prototype);
 
-$.extend(Loader.prototype, {
+$.extend(ScrollMore.prototype, {
 
     // 更改状态
     statusTimerId: null,
@@ -100,7 +103,20 @@ $.extend(Loader.prototype, {
         this.addDom();
 
         if (me.opts.promise) {
+
             me.req(function (data) {
+
+                if (data) {
+                    var list = data[me.opts.listKey];
+
+                    if (list.length <= 0) {
+                        me.$wrapper.addClass('hide');
+                    }
+                    else {
+                        me.$wrapper.removeClass('hide');
+                    }
+                }
+
                 me.fire('complete', data);
             });
         }
@@ -135,8 +151,6 @@ $.extend(Loader.prototype, {
             else {
                 me.fire('loadmore');
             }
-
-
         });
     },
 
@@ -234,4 +248,4 @@ $.extend(Loader.prototype, {
     }
 });
 
-module.exports = Loader;
+module.exports = ScrollMore;

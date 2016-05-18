@@ -1,7 +1,7 @@
-$fixer-default-y: 40px;
-$fixer-show-y: -54px;
+$pagination-default-y: 40px;
+$pagination-show-y: -54px;
 
-.fixer-tips {
+.pagination-tips {
     position: fixed;
     padding: 4px 6px 2px 6px;
     height: 12px;
@@ -21,11 +21,11 @@ $fixer-show-y: -54px;
     -webkit-box-align: center;
     -moz-box-align: center;
     z-index: 9;
-    transform: translate3d(0, $fixer-default-y, 0);
+    transform: translate3d(0, $pagination-default-y, 0);
     transition: transform .4s ease-out;
 }
 
-.fixer-show {
-    transform: translate3d(0, $fixer-show-y, 0);
+.pagination-show {
+    transform: translate3d(0, $pagination-show-y, 0);
     transition: transform .4s ease-out;
 }

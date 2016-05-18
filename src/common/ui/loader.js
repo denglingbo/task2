@@ -101,7 +101,6 @@ $.extend(Loader.prototype, {
                 }
             })
             .fail(function (err) {
-
                 fn && fn.call(me, false);
             })
             .always(function () {

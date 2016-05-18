@@ -6,24 +6,36 @@
  */
 
 require('./detail.scss');
-/* require('common/ui/fixer/fixer.scss'); */
+require('common/widgets/err/netErr.scss');
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
 var users = require('common/middleware/user/users');
-var ListLoader = require('common/ui/listLoader/listLoader');
+var ScrollMore = require('common/ui/scrollMore/scrollMore');
 var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
-// 定位器
-// var Fixer = require('common/ui/fixer/fixer');
 
+// 页码提示
+/*
+require('common/ui/pagination/pagination.scss');
+var Pagination = require('common/ui/pagination/pagination');
+*/
+var tmplError = require('common/widgets/err/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
 var page = new Page({
     pageName: 'task-detail'
 });
+
+var requestPageNum = 10;
+
+page.error = function () {
+    this.render('#detail-main', this.data, {
+        tmpl: tmplError
+    });
+};
 
 page.enter = function () {
     var me = this;
@@ -43,9 +55,9 @@ page.enter = function () {
         }
     });
 
-    var requestPageNum = 5;
     // 初始化一个点击加载组件
-    me.listLoader = new ListLoader({
+    me.scrollMore = new ScrollMore({
+        wrapper: '.affair-talk-wrapper',
         promise: function () {
             /* eslint-disable */
             return page.get(config.API.AFFAIR_TALK_MORE_URL, {
@@ -119,13 +131,12 @@ page.bindEvents = function () {
 
 
     // 第一次的时候把 page 相关的参数配置好
-    // me.listLoader.on('complete', function (loader, data) {
-
-    //     me.fixer = new Fixer({
+    // me.scrollMore.on('complete', function (data) {
+    //     me.pagination = new Pagination({
     //         elems: '#affair-talk dd',
     //         // data-pagenum，数据来源
     //         finder: 'pagenum',
-    //         pageNum: 10,
+    //         pageNum: requestPageNum,
     //         // 可视偏移量
     //         offset: -44,
     //         total: data.total,
@@ -134,7 +145,7 @@ page.bindEvents = function () {
     //     });
     // });
 
-    me.listLoader.on(['complete', 'loadmore'], function (data) {
+    me.scrollMore.on(['complete', 'loadmore'], function (data) {
         var loader = this;
 
         // Mustache.js 的逗比之处
@@ -153,7 +164,7 @@ page.bindEvents = function () {
         me.render('#affair-talk', data, {type: 'append'});
 
         // 分页要放在render 之后
-        // me.fixer.complete();
+        // me.pagination.complete();
     });
 };
 

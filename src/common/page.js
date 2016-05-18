@@ -11,12 +11,19 @@ var storage = require('./localstorage');
 var lang = require('./lang');
 var log = require('./log');
 
+var localcache = require('./localcache');
+
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
 
 if (!window.pageLog) {
     window.pageLog = {};
+    window.isDeviceready = false;
 }
+
+var timeId = null;
+// 3s 后设备为就绪，则认为失败
+var timeout = 3000;
 
 /**
  * 不储存空数据
@@ -103,6 +110,8 @@ function Page(opts) {
      */
     this.isDone = false;
 
+    this.isFailed = false;
+
     this.opts = opts;
 }
 
@@ -119,8 +128,9 @@ Page.prototype.enter = function () {};
  */
 Page.prototype.start = function () {
     var me = this;
-
     var dfd = new $.Deferred();
+
+    clearTimeout(timeId);
 
     // 增加编译模板的任务
     if (!me.isDone) {
@@ -141,6 +151,12 @@ Page.prototype.start = function () {
         // 执行任务
         me.execute()
             .done(function () {
+
+                // 根据储存策略保存 local data 数据
+                if (localcache.isCache(me.opts.pageName)) {
+                    localcache.save(me.opts.pageName, me.data);
+                }
+
                 // 页面逻辑
                 me.enter();
 
@@ -148,29 +164,77 @@ Page.prototype.start = function () {
             })
             .fail(function () {
                 // Do something
+                me.error();
             });
     })
     .fail(function () {
         // Do something
+        me.error();
     });
+
+    var readyFn = function () {
+        clearTimeout(timeId);
+        window.pageLog.devicereadyEnd = +new Date();
+        window.isDeviceready = true;
+        me._data = getParams();
+        dfd.resolve();
+    };
+
+    timeId = setTimeout(function () {
+        document.removeEventListener('deviceready', readyFn);
+
+        me.failed();
+        dfd.reject({error: 'deviceready timeout'});
+    }, timeout);
 
     // -------------------------------------
     // 这里不适用于所有环境，此处为 cordova 服务
     // 等待 deviceready 完成
     // -------------------------------------
     window.pageLog.devicereadyStart = +new Date();
-    document.addEventListener('deviceready', function () {
-        me._data = getParams();
-        dfd.resolve();
-    }, false);
-    window.pageLog.devicereadyEnd = +new Date();
+    document.addEventListener('deviceready', readyFn, false);
 
     return dfd;
 };
 
-Page.prototype.failed = function ($dom) {
-    $dom.html('Error.');
+/**
+ * Failed
+ */
+Page.prototype.failed = function () {
+    var me = this;
+    // console.log('Error');
+
+    me.isFailed = true;
+
+    /* eslint-disable */
+    log.send({
+        'da_src': 'err: device-timeout url: ' + window.location.href + ' pageLog: ' + util.qs.stringify(window.pageLog),
+        'da_act': 'error'
+    });
+    /* eslint-enable */
+
+    // 根据储存策略保存 local data 数据
+    if (localcache.isCache(me.opts.pageName)) {
+
+        var localData = localcache.getByLocal(me.opts.pageName);
+
+        me.data = localData;
+
+        // 页面逻辑
+        me.enter();
+    }
+    else {
+        me.data = null;
+
+        // 页面失败逻辑
+        me.error();
+    }
 };
+
+/**
+ * 错误页面
+ */
+Page.prototype.error = function () {};
 
 /**
  * Done

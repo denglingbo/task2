@@ -1,14 +1,16 @@
 /**
- * @file fixer.js
+ * @file pagination.js
  * @author deo
  *
  * 用于判断当前滚动时定位到的某元素
- * 默认需要 fixer.scss
- * 如果不使用默认的 view (.fixer-tips), 需要自己添加 view 的样式，同时需要 对 js 自动添加的 .fixer-show 添加对应样式
+ *
+ * require pagination.scss
+ *
+ * 如果不使用默认的 view (.pagination-tips), 需要自己添加 view 的样式，同时需要 对 js 自动添加的 .pagination-show 添加对应样式
  *
  EG 1:
     JS:
-        var fixer = new Fixer({
+        var pagination = new Pagination({
             elems: '#id div',
             // data-pagenum，数据来源, 如果使用 template，该值可忽略
             finder: 'pagenum',
@@ -20,14 +22,14 @@
             screen: 1
         });
 
-        fixer.complete();
+        pagination.complete();
 
 EG 2:
     DOM:
-        <div id="tips">[数据来源为 {fixer.opts.template} return 的值]</div>
+        <div id="tips">[数据来源为 {pagination.opts.template} return 的值]</div>
 
     JS:
-        var fixer = new Fixer({
+        var pagination = new Pagination({
             elems: 'ul li',
             view: '#tips',
             template: function (match) {
@@ -35,11 +37,11 @@ EG 2:
             }
         });
 
-        fixer.complete();
+        pagination.complete();
  */
 (function (window, document) {
 
-    var Fixer = function (options) {
+    var Pagination = function (options) {
 
         // 该对象用于储存临界点的元素
         this.finder = {};
@@ -50,7 +52,7 @@ EG 2:
             screen: 0,
             // 用于判断的元素
             elems: null,
-            // 用于获取数据，fixer 会从 dom 节点的 data-[name] 上获取数据: data-pagenum, data-date
+            // 用于获取数据，pagination 会从 dom 节点的 data-[name] 上获取数据: data-pagenum, data-date
             // 如果使用 template() 该值可忽略
             finder: '',
             // pageNum & total: 这两个用于 分页模型
@@ -61,7 +63,7 @@ EG 2:
             // 可视区域偏移量
             offset: 0,
             // view 模版输出
-            // @param {new Fixer} this, function 中返回的第一个参数是 fixer
+            // @param {new Pagination} this, function 中返回的第一个参数是 pagination
             // @param {Object} match, 匹配到的当前的进入临界位置的配置
             template: function (match) {
                 return $(match.target).data(this.opts.finder) + '/' + this.totalPage;
@@ -70,7 +72,7 @@ EG 2:
             // {Function}, function () { return ''; }
             // {selector|Element}, '.class', '#id', div, $()
             view: function () {
-                return '<div class="fixer-tips"></div>';
+                return '<div class="pagination-tips"></div>';
             }
         };
 
@@ -96,7 +98,7 @@ EG 2:
         this.init();
     };
 
-    Fixer.prototype = {
+    Pagination.prototype = {
 
         init: function () {
             var me = this;
@@ -104,7 +106,7 @@ EG 2:
             // 默认会添加的 dom
             if ($.isFunction(this.opts.view)) {
                 $('body').append(this.opts.view());
-                me.$view = $('.fixer-tips');
+                me.$view = $('.pagination-tips');
             }
             // 直接在指定的已经存在位置展示
             else {
@@ -146,11 +148,11 @@ EG 2:
 
             // 展示分页提示容器
             if (top > this.boxTop && top < this.boxBottom && match !== null) {
-                this.$view.addClass('fixer-show');
+                this.$view.addClass('pagination-show');
             }
             // 隐藏分页提示容器
             else {
-                this.$view.removeClass('fixer-show');
+                this.$view.removeClass('pagination-show');
                 this.curTop = null;
             }
         },
@@ -239,15 +241,15 @@ EG 2:
     };
 
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = Fixer;
+        module.exports = Pagination;
     }
     else if (typeof define === 'function' && define.amd) {
         define(function () {
-            return Fixer;
+            return Pagination;
         });
     }
     else {
-        window.Fixer = Fixer;
+        window.Pagination = Pagination;
     }
 
 })(window, document);

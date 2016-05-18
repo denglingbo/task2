@@ -7,7 +7,7 @@ setTimeout(function () {
     var evt = document.createEvent('HTMLEvents');
     evt.initEvent('deviceready', true, true);
     document.dispatchEvent(evt);
-}, 100);
+}, 200);
 
 
 var CPNavigationBar = {
