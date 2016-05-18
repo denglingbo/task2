@@ -72,6 +72,7 @@ var pages = {
     }
 };
 /* eslint-ensable */
+
 /**
  * 根据传入的type不同选择不同的页面需要的上传数据
  *
@@ -158,10 +159,14 @@ page.enter = function () {
         this.attach = AttachWrapper.initAttach(attachOptions);
     }
     // 这里两个输入框的 limit 相同，所以都用一样的配置
-    $('.phone-input').each(function () {
+    $('.phone-input').each(function (i) {
+        var limits = 50;
+        if (!+pageType && !i) {
+            limits = 500;
+        }
         new PhoneInput({
             handler: this,
-            limit: 5
+            limit: limits
         });
     });
 
@@ -173,7 +178,16 @@ page.bindEvents = function () {
     
     $('#submit').on('click', function () {
         var dataArg = me.getData(+me.pageType);
-        var promise = me.post(dataArg.api, dataArg.data)
+        var promise = me.post(dataArg.api, dataArg.data);
+        promise
+            .done(function (result) {
+                if (result.meta.code === 200) {
+                    CPNavigationBar.redirect('/task/detail.html?task_id=' + taskId);
+                }
+            })
+            .fail(function (result) {
+
+            });
     })
 };
 
