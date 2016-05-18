@@ -161,7 +161,7 @@ page.enter = function () {
     // 这里两个输入框的 limit 相同，所以都用一样的配置
     $('.phone-input').each(function (i) {
         var limits = 50;
-        if (!+pageType && !i) {
+        if (!+pageType && i) {
             limits = 500;
         }
         new PhoneInput({
@@ -188,7 +188,7 @@ page.bindEvents = function () {
             .fail(function (result) {
 
             });
-    })
+    });
 };
 
 $(function () {
