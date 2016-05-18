@@ -15,6 +15,30 @@ var lang = require('./lang');
  */
 var view = {};
 
+
+/**
+ * 获取模板数据
+ *
+ * @param {string} template, 模板
+ * @param {Object} data, 数据
+ * @param {Object} opts, 可选配置
+ *      @param {Object} options.partials, 子模版配置 {tempName: 'html string'}
+ * @return {string} html 片段
+ *
+ */
+view.getHtml = function (template, data, opts) {
+    var html = '';
+
+    if (opts && opts.partials) {
+        html = Mustache.to_html(template, data, opts.partials);
+    }
+    else {
+        html = Mustache.render(template, data);
+    }
+
+    return html;
+};
+
 /**
  * Mustache 渲染模板
  * 模板输出 dom $(selector), 模板源: selector'-tmpl'
@@ -43,7 +67,7 @@ view.render = function (selector, data, options) {
     var $elem = $(selector);
 
     if (!$elem.length) {
-        return;
+        return this.getHtml(opts.tmpl, data, opts);
     }
 
     if (!opts.tmpl) {
@@ -54,14 +78,7 @@ view.render = function (selector, data, options) {
         template = opts.tmpl;
     }
 
-    var html = '';
-
-    if (opts.partials) {
-        html = Mustache.to_html(template, data, opts.partials);
-    }
-    else {
-        html = Mustache.render(template, data);
-    }
+    var html = this.getHtml(template, data, opts);
 
     $elem[opts.type](html);
 

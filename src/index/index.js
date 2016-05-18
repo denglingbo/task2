@@ -9,6 +9,7 @@ require('./index.scss');
 
 var config = require('../config');
 var Page = require('common/page');
+var Pharos = require('common/ui/pharos');
 
 var page = new Page({
     pageName: 'index-index'
@@ -16,22 +17,40 @@ var page = new Page({
 
 page.enter = function () {
 
-    this.setMenuHeight();
-
-    this.render('#menu', {
-        list: this.data.list
+    this.render('#main', {
+        lang: this.lang
     });
 
+    this.initHomeNum();
+
+    this.setMenuHeight();
+
     this.bindEvents();
+};
+
+page.initHomeNum = function () {
+
+    var promise = this.get(config.API.HOME_URL);
+
+    promise
+        .done(function (result) {
+
+            if (result && result.meta.code === 200) {
+                new Pharos('#menu', result.data);
+            }
+        });
 };
 
 page.setMenuHeight = function () {
 
     var winHeight = $(window).height();
-    var buttonHeight = $('.add-task').height();
-    var menuHeight = winHeight - buttonHeight;
 
-    $('#menu').height(menuHeight);
+    var topHeight = winHeight * .7;
+    var bottomHeight = winHeight - topHeight;
+
+    $('.add-task').height(bottomHeight);
+
+    $('#menu').height(topHeight);
 };
 
 page.bindEvents = function () {
@@ -62,25 +81,25 @@ page.bindEvents = function () {
  * @param {deferred} dfd, deferred
  *
  */
-page.addParallelTask(function (dfd) {
-    var me = this;
-/* eslint-disable */
-// test 后端暂无首页接口
-dfd.resolve();
-return;
+// page.addParallelTask(function (dfd) {
+//     var me = this;
+// /* eslint-disable */
+// // test 后端暂无首页接口
+// dfd.resolve();
+// return;
 
-    var promise = page.get(config.API.HOME_URL, {});
-    promise
-        .done(function (result) {
-            if (result.meta && result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                me.data = result.data;
-                dfd.resolve();
-            }
-        });
-});
+//     var promise = page.get(config.API.HOME_URL, {});
+//     promise
+//         .done(function (result) {
+//             if (result.meta && result.meta.code !== 200) {
+//                 dfd.reject(result);
+//             }
+//             else {
+//                 me.data = result.data;
+//                 dfd.resolve();
+//             }
+//         });
+// });
 
 
 $(function () {

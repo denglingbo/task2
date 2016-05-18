@@ -15,15 +15,15 @@ html, body {
 
 .menu {
     position: relative;
-    height: 75%;
     padding: 0 rem(10px);
+    overflow: hidden;
 
     ul {
         height: 100%;
 
         li {
             position: relative;
-            height: 25%;
+            height: 33%;
             color: $white;
             overflow: hidden;
 
@@ -69,7 +69,7 @@ html, body {
             }
 
             // 我负责的
-            &.lead {
+            &.director {
                 div {
                     background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
                 }
@@ -80,7 +80,7 @@ html, body {
             }
 
             // 我派发的
-            &.dist {
+            &.dispatch {
                 div {
                     background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
                 }
@@ -91,24 +91,13 @@ html, body {
             }
 
             // 我参与的
-            &.join {
+            &.partake {
                 div {
                     background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
                 }
 
                 &:after {
                     background-image: url(#{$rootImg}/home_page_participation.png);
-                }
-            }
-
-            // 我关注的
-            &.follow {
-                div {
-                    background: linear-gradient(to bottom, #febb06 0%, #fed809 100%);
-                }
-
-                &:after {
-                    background-image: url(#{$rootImg}/home_page_attention.png);
                 }
             }
 
@@ -123,52 +112,56 @@ html, body {
     left: 50%;
     bottom: 0;
     margin-left: rem(-40px);
-    padding: rem(20px) 0;
 
-    .button {
-        position: relative;
-        display: block;
-        width: rem(80px);
-        height: rem(80px);
-        border-radius: 100%;
-        background: $color-add-task;
+    .button-layout {
+        position: absolute;
+        bottom: rem(20px);
 
-        &:before {
-            position: absolute;
+        .button {
+            position: relative;
             display: block;
-            content: ' ';
-            width: rem(36px);
-            height: rem(3px);
-            background: $white;
-            margin: 0 auto;
-            margin-top: rem(-1px) !important; // 初步怀疑是 webpack loader 把权重顺序输出反了
-            margin-left: rem(-18px) !important;
-            top: 50%;
-            left: 50%;
-            border-radius: 50px;
+            width: rem(80px);
+            height: rem(80px);
+            border-radius: 100%;
+            background: $color-add-task;
+
+            &:before {
+                position: absolute;
+                display: block;
+                content: ' ';
+                width: rem(36px);
+                height: rem(3px);
+                background: $white;
+                margin: 0 auto;
+                margin-top: rem(-1px) !important; // 初步怀疑是 webpack loader 把权重顺序输出反了
+                margin-left: rem(-18px) !important;
+                top: 50%;
+                left: 50%;
+                border-radius: 50px;
+            }
+
+            &:after {
+                position: absolute;
+                display: block;
+                content: ' ';
+                width: rem(3px);
+                height: rem(36px);
+                background: $white;
+                margin: 0 auto;
+                margin-top: rem(-18px);
+                margin-left: rem(-1px);
+                top: 50%;
+                left: 50%;
+                border-radius: 50px;
+            }
         }
 
-        &:after {
-            position: absolute;
-            display: block;
-            content: ' ';
-            width: rem(3px);
-            height: rem(36px);
-            background: $white;
-            margin: 0 auto;
-            margin-top: rem(-18px);
-            margin-left: rem(-1px);
-            top: 50%;
-            left: 50%;
-            border-radius: 50px;
+        .text {
+            padding-top: rem(20px);
+            text-align: center;
+            color: $color-add-task;
+            font-size: rem(16px);
         }
-    }
-
-    .text {
-        padding-top: rem(10px);
-        text-align: center;
-        color: $color-add-task;
-        font-size: rem(16px);
     }
 }
 
