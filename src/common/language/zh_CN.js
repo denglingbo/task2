@@ -39,5 +39,5 @@ module.exports = {
     'noTask': '您还没有创建过任务',
     'createTask': '创建任务',
     'netErr': '网络出现故障',
-    'reLoadingPage': '点击页面重新加载'
+    'tapPageReLoad': '点击页面重新加载'
 };

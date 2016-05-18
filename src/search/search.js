@@ -9,7 +9,7 @@ require('dep/touch');
 var config = require('config');
 var util = require('common/util');
 var Page = require('common/page');
-var Search = require('common/widgets/search/searchPage');
+var Search = require('common/widgets/search/searchEnter');
 
 var page = new Page({
     pageName: 'search-search'
@@ -25,7 +25,7 @@ page.enter = function () {
     function () {
         var that = this;
         var key = util.params('key');
-        key = key ? decodeURI(key) : '';
+        key = key ? decodeURIComponent(key) : '';
         that.dom.$input.val(key);
         that.stateChange();
         me.loadList(key);

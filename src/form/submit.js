@@ -26,10 +26,10 @@ var pages = {
             holder: '请输入任务总结(选填)'
         }];
 
-        if (isMaster === 1) {
-            arr.push({
+        if (isMaster === 0) {
+            arr.unshift({
                 name: 'comments',
-                holder: '请输入任务备注(选填)'
+                holder: '请输入申请理由(选填)'
             });
         }
 

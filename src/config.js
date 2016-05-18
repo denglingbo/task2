@@ -30,6 +30,7 @@ var config = {
         TASK_NEW_URL: 'create_task',
         // 任务编辑
         TASK_EDIT_URL: 'update_task',
+        COMPLETE_TASK: 'complete_task',
 
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
@@ -57,9 +58,9 @@ var config = {
         TALK_COMMENT_ADD: 'add_talk_comment',
 
         // attach uploadUrl
-        ATTACH_UPLOADURL: '/task/m/v1/attachment/getFSTokensOnCreate',
+        ATTACH_UPLOADURL: 'attachment/get_fs_tokens_on_create',
         // attach resumeUrl
-        ATTACH_RESUMEURL: '/task/m/v1/attachment/getFSTokensOnContinue',
+        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue',
 
         SEARCH: 'search'
     }

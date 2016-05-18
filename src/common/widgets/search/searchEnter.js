@@ -5,7 +5,7 @@
  *
  */
 
-require('./searchPage.scss');
+require('./searchEnter.scss');
 require('dep/touch');
 var ls = require('common/localstorage');
 
@@ -36,7 +36,8 @@ function Search(page, options, fn) {
 
     $.extend(this.opts, options, {
         wrap: '#search-wrap',
-        content: '.search-content'
+        content: '.search-content',
+        mainTmpl: './searchEnter.tpl'
     });
 
     var opts = this.opts;
@@ -87,7 +88,7 @@ Search.prototype.loadHtml = function () {
     var me = this;
     var opts = me.opts;
 
-    var tmpl = require('./searchPage.tpl');
+    var tmpl = require(opts.mainTmpl);
     if (opts.isSearchPage) {
         me.page.render(opts.selector,
         {
@@ -144,7 +145,7 @@ Search.prototype.redirectSearch = function () {
     var href = location.href;
     ls.addData('history', href);
     /* eslint-disable */
-    CPNavigationBar.redirect('/search/search.html?key=' + encodeURI(this.dom.$input.val()), '搜索');
+    CPNavigationBar.redirect('/search/search.html?key=' + encodeURIComponent(this.dom.$input.val()), '搜索');
     /* eslint-enable */
 };
 
