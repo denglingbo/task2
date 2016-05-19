@@ -20,8 +20,8 @@ https.createServer(options,function(req,res){
         // 解决跨域
         'Access-Control-Allow-Origin': 'https://task2.test1.com:8014',
         // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
-        'Access-Control-Allow-Credentials': true
-        // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass'
         // 'Access-Control-Request-Method': 'GET, POST'
     });
 

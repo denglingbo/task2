@@ -95,7 +95,7 @@ page.bindEvents = function () {
 
         if (jids && jids.toString().length > 0) {
             /* eslint-disable */
-            CPNavigationBar.redirect('/users/list.html?jids=' + jids);
+            CPNavigationBar.redirect('/users-list.html?jids=' + jids);
             /* eslint-enable */
         }
     });

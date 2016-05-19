@@ -145,7 +145,7 @@ Search.prototype.redirectSearch = function () {
     var href = location.href;
     ls.addData('history', href);
     /* eslint-disable */
-    CPNavigationBar.redirect('/search/search.html?key=' + encodeURIComponent(this.dom.$input.val()), '搜索');
+    CPNavigationBar.redirect('/search-search.html?key=' + encodeURIComponent(this.dom.$input.val()), '搜索');
     /* eslint-enable */
 };
 

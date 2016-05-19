@@ -57,7 +57,7 @@ page.bindEvents = function () {
             var taskId = pageData.task_id;
             var affairId = result.data || pageData.affair_id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/affair/detail.html?id=' + affairId + '&task_id=' + taskId);
+            CPNavigationBar.redirect('/affair-detail.html?id=' + affairId + '&task_id=' + taskId);
             /* eslint-ensable */
         });
     });

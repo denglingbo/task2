@@ -101,7 +101,7 @@ Webpacker.prototype.file = function (filePath) {
     }
 
     return {
-        path: this.fixFolder(folderName, '/') + fileName + '.html',
+        path: this.fixFolder(folderName, '-') + fileName + '.html',
         name: this.fixFolder(folderName, '-') + fileName
     };
 };
@@ -146,7 +146,7 @@ Webpacker.prototype.getPager = function () {
 
         // 这里为了避免文件名重复，所以会在前面添加上文件夹名字
         var page = me.file(filePath);
-        console.log(page);
+        
         var conf = {};
 
         if (page.name in jsFiles) {
@@ -165,7 +165,7 @@ Webpacker.prototype.getPager = function () {
             htmlPlugins.push(
                 new HtmlWebpackPlugin(conf)
             );
-            
+            console.log(conf);
             jsEntries[page.name] = jsFiles[page.name];
 
             allChunks.push(page.name);

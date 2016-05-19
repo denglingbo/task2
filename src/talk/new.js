@@ -63,7 +63,7 @@ page.bindEvents = function () {
             var taskId = pageData.task_id;
             var talkId = result.data || pageData.id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/talk/detail.html?id=' + talkId + '&task_id=' + taskId);
+            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId + '&task_id=' + taskId);
             /* eslint-enable */
         });
     });
@@ -72,7 +72,7 @@ page.bindEvents = function () {
     // 选择人员跳转页面
     $('#attends').click(function () {
         var oldVal = pageData['user_ids'];
-        CPNavigationBar.redirect('/selector/selector.html?paramId=' + selectKey, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, '选人', false, function (data) {
             if (!data) {
                 return;
             }

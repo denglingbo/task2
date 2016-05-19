@@ -182,7 +182,7 @@ page.bindEvents = function () {
         promise
             .done(function (result) {
                 if (result.meta.code === 200) {
-                    CPNavigationBar.redirect('/task/detail.html?task_id=' + taskId);
+                    CPNavigationBar.redirect('/task-detail.html?task_id=' + taskId);
                 }
             })
             .fail(function (result) {

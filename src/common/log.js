@@ -5,10 +5,19 @@
  * 日志
  */
 
+/* eslint-disable */
 var config = require('../config');
 var util = require('./util');
 
 window.onerror = function (err, url, lineno) {
+
+/* im tester */
+var idx = url.lastIndexOf("/");  
+if(idx > -1) {  
+    url = url.substring(idx+1);  
+}  
+alert("ERROR in " + url + " (line #" + lineno + "): " + err);
+/* im tester */
 
     // 如果发生错误，则把错误信息打到日志里面
     /* eslint-disable */

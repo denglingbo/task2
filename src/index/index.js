@@ -58,13 +58,13 @@ page.bindEvents = function () {
 
     $('#menu li').on('click', function () {
         /* eslint-disable */
-        CPNavigationBar.redirect('/task/list.html');
+        CPNavigationBar.redirect('/task-list.html');
         /* eslint-enable */
     });
 
     $('#add-newtask').on('click', function () {
         /* eslint-disable */
-        CPNavigationBar.redirect('/task/new.html');
+        CPNavigationBar.redirect('/task-new.html');
         /* eslint-enable */
     });
 

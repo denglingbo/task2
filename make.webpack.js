@@ -82,7 +82,7 @@ module.exports = function () {
         filename: config.debug ? '[name].js' : 'common/js/[name].min.js',
 
         // 调试目录 或者 CDN 目录 
-        publicPath: config.debug ? '/' : '/',
+        publicPath: config.debug ? '/' : './',
 
         // chunkFilename: config.debug ? '[chunkhash:8].chunk.js' : 'common/js/[chunkhash:8].chunk.min.js'
         chunkFilename: config.debug ? 'chunk.js' : 'common/js/chunk.min.js'

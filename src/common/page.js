@@ -22,8 +22,8 @@ if (!window.pageLog) {
 }
 
 var timeId = null;
-// 3s 后设备为就绪，则认为失败
-var timeout = 3000;
+// 5s 后设备为就绪，则认为失败
+var timeout = 5000;
 
 /**
  * 不储存空数据
@@ -346,12 +346,8 @@ window.addEventListener('offline', function () {
 Page.prototype.getRequestConfig = function (api, data, opts) {
 
     var r = {
-        url: config.API.host + config.API.prefix + api,
-        // ajaxSettings.data
-        data: {}
+        url: config.API.host + config.API.prefix + api
     };
-
-    data = data || {};
 
     // 默认情况都需要带给 网关 的参数
     var defParams = storage.getData(config.const.TASK_PARAMS);
@@ -449,7 +445,6 @@ Page.prototype.ajax = function (api, data, options) {
 
     var ajaxSettings = {
         url: reqConfig.url,
-        data: reqConfig.data,
         type: opts.type,
         dataType: opts.dataType,
         timeout: 5000,
@@ -459,6 +454,10 @@ Page.prototype.ajax = function (api, data, options) {
         },
         contentType: 'application/json; charset=utf-8'
     };
+
+    if (reqConfig.data) {
+        ajaxSettings.data = reqConfig.data;
+    }
 
     if (config.debug) {
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
@@ -475,14 +474,7 @@ Page.prototype.ajax = function (api, data, options) {
         }
     }
 
-    /* eslint-disable */
-    console.info(ajaxSettings);
-    /* eslint-enable */
-
-    var promise = $.ajax(ajaxSettings);
-
-    // 请求完成
-    promise.done(function (result, status, xhr) {
+    ajaxSettings.success = function (result) {
 
         // 将语言包数据添加到 this.data
         if (result && result.data) {
@@ -499,12 +491,43 @@ Page.prototype.ajax = function (api, data, options) {
         else {
             dfd.resolve(result);
         }
-    });
+    };
 
-    // 请求失败
-    promise.fail(function (xhr, errorType, error) {
-        dfd.reject(xhr, errorType, error);
-    });
+    ajaxSettings.error = function () {
+        dfd.reject();
+    };
+
+    /* eslint-disable */
+    console.info(ajaxSettings);
+    /* eslint-enable */
+
+    // 这里实际会经过 mbreq.js 重写
+    $.ajax(ajaxSettings);
+
+    // 请求完成
+    // promise.done(function (result, status, xhr) {
+
+    //     // 将语言包数据添加到 this.data
+    //     if (result && result.data) {
+    //         result.data.lang = me.lang;
+    //     }
+
+    //     // Just debug test
+    //     // 模拟网络延迟
+    //     if (config.debug) {
+    //         setTimeout(function () {
+    //             dfd.resolve(result);
+    //         }, 40);
+    //     }
+    //     else {
+    //         dfd.resolve(result);
+    //     }
+    // });
+
+    // // 请求失败
+    // promise.fail(function (xhr, errorType, error) {
+    //     dfd.reject(xhr, errorType, error);
+    // });
 
     return dfd;
 };

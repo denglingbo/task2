@@ -67,7 +67,7 @@ page.bindEvents = function () {
         promise.done(function (result) {
             var taskId = result.data || pageData.id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/task/detail.html?task_id=' + taskId);
+            CPNavigationBar.redirect('/task-detail.html?task_id=' + taskId);
             /* eslint-enable */
         });
     });
@@ -75,7 +75,7 @@ page.bindEvents = function () {
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         var oldVal = pageData['end_time'];
-        CPNavigationBar.redirect('/task/doneTime.html?endTime=' + pageData['end_time'], '完成时间', false, function (data) {
+        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['end_time'], '完成时间', false, function (data) {
             if (!data) {
                 return;
             }
@@ -103,7 +103,7 @@ page.bindEvents = function () {
             id = '#attends';
         } 
         oldVal = pageData[itemKey];
-        CPNavigationBar.redirect('/selector/selector.html?paramId=' + key, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key, '选人', false, function (data) {
             if (!data) {
                 return;
             }

@@ -6,129 +6,147 @@
  * 重写 Ajax 请求
  */
 
+/* eslint-disable */
 (function (window, document) {
 
-    var MobiClient = (function () {
+    var AndroidClient = function (client) {
 
-        var Callbackable = function () {
-            if (!(this instanceof Callbackable)) {
-                return new Callbackable();
-            }
-            return this;
-        };
+        if (!(this instanceof AndroidClient)) {
+            return new AndroidClient(client);
+        }
 
-        var AndroidClient = function (client) {
+        // console.log(' init androidclient =' + client);
+        this.client = client;
+        // console.log(' init androidclient finish =' + this.client);
+        return this;
+    };
 
-            if (!(this instanceof AndroidClient)) {
-                return new AndroidClient(client);
-            }
+    var OtherClient = function () {
 
-            // console.log(' init androidclient =' + client);
-            this.client = client;
-            // console.log(' init androidclient finish =' + this.client);
-            return this;
-        };
+        if (!(this instanceof OtherClient)) {
+            return new OtherClient();
+        }
 
-        var OtherClient = function () {
+        return this;
+    };
 
-            if (!(this instanceof OtherClient)) {
-                return new OtherClient();
-            }
 
-            return this;
-        };
+    var Callbackable = function () {
+        if (!(this instanceof Callbackable)) {
+            return new Callbackable();
+        }
+        return this;
+    };
 
-        Callbackable.prototype = {
+    Callbackable.prototype = {
 
-            callbackSerial: 0,
+        callbackSerial: 0,
 
-            callbacks: {},
+        callbacks: {},
 
-            callback: function (callbackId, data) {
-                try {
-                    this.callbacks[callbackId] && this.callbacks[callbackId](data);
-                    delete this.callbacks[callbackId];
-                }
-                catch (e) {}
-            },
-
-            registCallback: function (cb) {
-                if (cb && typeof cb === 'function') {
-                    var callbackId = 'TYClient_' + ++this.callbackSerial;
-                    this.callbacks[callbackId] = cb;
-                    return callbackId;
-                }
-                return null;
-            },
-
-            errorCallback: function (cb) {
-                if (cb && typeof cb === 'function') {
-                    var callbackId = 'TYClient_' + ++this.callbackSerial;
-                    this.callbacks[callbackId] = cb;
-                    return callbackId;
-                }
-                return null;
-            }
-        };
-
-        AndroidClient.prototype.alert = function (message) {
-            this.client.alert(message);
-        };
-
-        /* eslint-disable */
-        AndroidClient.prototype = Callbackable();
-        /* eslint-enable */
-
-        AndroidClient.prototype.postMsg = function (method, url, data, cb, errorcb, heads) {
-
-            var param = {
-                method: method,
-                url: url,
-                data: data,
-                success: this.registCallback(cb) || '',
-                error: this.errorCallback(errorcb) || '',
-                heads: heads
-            };
-
+        callback: function (callbackId, data) {
             try {
-                this.client.post(JSON.stringify(param));
+                this.callbacks[callbackId] && this.callbacks[callbackId](data);
+                delete this.callbacks[callbackId];
             }
-            catch (error) {
-                this.client.post(method, url, data, this.registCallback(cb) || '', this.errorCallback(errorcb) || '');
+            catch (e) {}
+        },
+
+        registCallback: function (cb) {
+            if (cb && typeof cb === 'function') {
+                var callbackId = 'TYClient_' + ++this.callbackSerial;
+                this.callbacks[callbackId] = cb;
+                return callbackId;
             }
+            return null;
+        },
+
+        errorCallback: function (cb) {
+            if (cb && typeof cb === 'function') {
+                var callbackId = 'TYClient_' + ++this.callbackSerial;
+                this.callbacks[callbackId] = cb;
+                return callbackId;
+            }
+            return null;
+        }
+    };
+
+    AndroidClient.prototype.alert = function (message) {
+        this.client.alert(message);
+    };
+
+    AndroidClient.prototype = Callbackable();
+
+    AndroidClient.prototype.postMsg = function (method, url, data, cb, errorcb, heads) {
+
+        var param = {
+            method: method,
+            url: url,
+            data: data,
+            success: this.registCallback(cb) || '',
+            error: this.errorCallback(errorcb) || '',
+            heads: heads
         };
 
-        var MobiClient = function () {
-            if (!(this instanceof MobiClient)) {
-                return new MobiClient();
-            }
-
-            // console.log(' init MobiClient');
-            return this;
-        };
-
-        /* eslint-disable */
-        if (window.AndroidNativeClient) {
-            // console.log(' window.AndroidNativeClient)=' + window.AndroidNativeClient);
-            MobiClient.prototype = AndroidClient(window.AndroidNativeClient);
-            // console.log(' MobiClient.prototype ' + MobiClient);
+        try {alert(JSON.stringify(param))
+            return this.client.post(JSON.stringify(param));
         }
-        else{
-            MobiClient.prototype = OtherClient();
+        catch (error) {
+            return this.client.post(
+                method,
+                url,
+                data,
+                this.registCallback(cb) || '',
+                this.errorCallback(errorcb) || ''
+            );
+        }
+    };
+
+    var MobiClient = function () {
+        if (!(this instanceof MobiClient)) {
+            return new MobiClient();
         }
 
-        return MobiClient();
-        /* eslint-enable */
-    })();
+        // console.log(' init MobiClient');
+        return this;
+    };
+
+    if (window.AndroidNativeClient) {
+        // console.log(' window.AndroidNativeClient)=' + window.AndroidNativeClient);
+        MobiClient.prototype = AndroidClient(window.AndroidNativeClient);
+        // console.log(' MobiClient.prototype ' + MobiClient);
+    }
+    else {
+        MobiClient.prototype = OtherClient();
+    }
+
+    // 提供手机端 请求
+    var Client = MobiClient();
+    // 上面的代码都由 linglong 大侠实现
 
     // yangll 对 Ajax 做了一次重写
     var $ajax = $.ajax;
+    var loc = window.location;
+
+    // var getPort = function () {
+    //     var port = loc.port ? (':' + loc.port) : '';
+
+    //     if (port === '') {
+    //         if (loc.protocol.toLowerCase === 'http') {
+    //             port = ':80';
+    //         }
+    //         else {
+    //             port = ':443';
+    //         }
+    //     }
+
+    //     return port;
+    // };
 
     $.ajax = function (options) {
         // console.log('ajax ' + JSON.stringify(options));
 
         if (window.AndroidNativeClient) {
-            var loc = window.location;
             var settings = $.extend({}, options || {});
 
             for (var key in $.ajaxSettings) {
@@ -136,21 +154,9 @@
                     settings[key] = $.ajaxSettings[key];
                 }
             }
-
-            var port = loc.port ? (':' + loc.port) : '';
-
-            if (port === '') {
-                if (loc.protocol.toLowerCase === 'http') {
-                    port = ':80';
-                }
-                else {
-                    port = ':443';
-                }
-            }
             // console.log(' port:' + loc.port);
             // options.url = loc.protocol + '//' + loc.host + port + options.url;
-
-            options.url = loc.protocol + '//' + loc.host + options.url;
+            // options.url = loc.protocol + '//' + loc.host + options.url;
 
             if (options.type === 'GET' && settings.data !== undefined) {
                 options.url += settings.data;
@@ -165,7 +171,7 @@
                 heads = '';
             }
             // console.log('settings.headers:'+heads);
-            return MobiClient.postMsg(
+            return Client.postMsg(
                 options.type,
                 options.url,
                 settings.data,

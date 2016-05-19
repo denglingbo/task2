@@ -59,15 +59,15 @@
                 {{/audit_right}}
 
                 {{#add_event_right}}
-                <li data-page="/affair/new.html?task_id={{ task_id }}">{{ lang.newAffair }}</li>
+                <li data-page="/affair-new.html?task_id={{ task_id }}">{{ lang.newAffair }}</li>
                 {{/add_event_right}}
 
                 {{#add_talk_right}}
-                <li data-page="/talk/new.html?task_id={{ task_id }}">{{ lang.startTalk }}</li>
+                <li data-page="/talk-new.html?task_id={{ task_id }}">{{ lang.startTalk }}</li>
                 {{/add_talk_right}}
 
                 {{#apply_right}}
-                <li data-page="/form/submit.html?type=0&master={{ isMaster }}&task_id={{ task_id }}">{{ lang.taskDone }}</li>
+                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&task_id={{ task_id }}">{{ lang.taskDone }}</li>
                 {{/apply_right}}
             </ul>
         </div>
@@ -80,7 +80,7 @@
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#list}}
-    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}/detail.html?id={{ target_id }}&task_id={{ task_id }}" >
+    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ target_id }}&task_id={{ task_id }}" >
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
         </div>
