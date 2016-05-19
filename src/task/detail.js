@@ -204,7 +204,10 @@ page.follow = function (target) {
     var type = map[status];
 
     /* eslint-disable */
-    var promise = page.post(config.API.TASK_FOLLOW + '?task_id=' + me.data.id + '&level=' + status);
+    var promise = page.post(config.API.TASK_FOLLOW, {
+        task_id: me.data.id,
+        level: status
+    });
     /* eslint-enable */
 
     promise

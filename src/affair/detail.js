@@ -12,9 +12,7 @@ require('common/ui/virtualInput/virtualInput.scss');
 var config = require('../config');
 var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail');
-// var phoneMid = require('../common/phoneMid.js');
-var Page = require('common/page');
-var virtualInput = require('common/ui/virtualInput/virtualInput');
+var VirtualInput = require('common/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
 
@@ -23,6 +21,8 @@ var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var widgetCommentList = require('common/widgets/comment/list');
+
+var Page = require('common/page');
 
 var page = new Page({
     pageName: 'affair-detail'
@@ -39,7 +39,7 @@ page.enter = function () {
         }
     });
 
-    virtualInput('.goalui-fixedinput');
+    this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
     me.ticker = new Ticker('.tick', {
         async: true
@@ -76,14 +76,15 @@ page.bindEvents = function () {
         }
     };
 
-    this.ticker.on('click', function (isCurTicked) {
+    this.ticker.on('tick', function (isCurTicked) {
         var myTicker = this;
         // 0: 取消
         // 1: 完成
         var changeStatus = isCurTicked ? 0 : 1;
+        var api = changeStatus === 1 ? config.API.AFFAIR_DONE : config.API.AFFAIR_RESUME;
 
         /* eslint-disable */
-        var promise = page.post(config.API.AFFAIR_DONE, {
+        var promise = page.post(api, {
             task_id: me.data.task_id,
             affair_id: me.data.id
         });

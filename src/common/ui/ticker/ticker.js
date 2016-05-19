@@ -71,7 +71,9 @@ $.extend(Ticker.prototype, {
         var me = this;
         var isCurTicked = false;
 
-        this.$elem.on('click', function () {
+        this.$elem.on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
 
             if (!me.opts.async) {
                 me.changeStatus();
@@ -82,7 +84,7 @@ $.extend(Ticker.prototype, {
             }
 
             // 点击的时候是否为勾选状态
-            me.fire('click', isCurTicked);
+            me.fire('tick', isCurTicked);
         });
     },
 

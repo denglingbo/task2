@@ -14,7 +14,7 @@ var Loader = require('common/ui/loader');
  * @param {Object} options, 配置
  */
 var fn = function (page, options) {
-
+    var me = this;
     this.opts = {
         dataKey: 'obj_list',
         wrapper: '#comments-main',
@@ -51,7 +51,14 @@ var fn = function (page, options) {
         // 渲染组件
         this.render(data);
 
+        me.$listNull = me.$main.find('.list-null');
+
         /* eslint-disable */
+        if (data.obj_list && data.obj_list.length <= 0) {
+            me.$listNull.removeClass('hide');
+            return;
+        }
+
         getUserAndPhoto(data.obj_list);
         /* eslint-enable */
 
@@ -88,25 +95,24 @@ $.extend(fn.prototype, {
      * @param {string} id, user id
      */
     removeData: function (target) {
-
+        var me = this;
         var $target = $(target);
         var id = $target.data('id');
-        var uid = $target.data('uid');
-        var $item = $('#user-' + uid);
+        // var uid = $target.data('uid');
 
         var promise = this.page.post(this.opts.API.delete, {
             id: id
         });
 
         promise
-            .done(function (data) {
+            .done(function (result) {
 
-                if (!data) {
+                if (!result) {
                     return;
                 }
 
-                if (data.meta.code === 200) {
-                    $item.addClass('hide');
+                if (result.meta.code === 200) {
+                    $('#item-' + id).addClass('hide').remove();
                 }
                 else {
 
@@ -114,6 +120,17 @@ $.extend(fn.prototype, {
             })
             .fail(function (err) {
                 
+            })
+            // 判断是否一条数据都没有了
+            .always(function () {
+                var len = me.$main.find('dd').not('.list-null').length;
+
+                if (len <= 0) {
+                    me.$listNull.removeClass('hide');
+                }
+                else {
+                    me.$listNull.addClass('hide');
+                }
             });
     },
 
@@ -121,14 +138,15 @@ $.extend(fn.prototype, {
      * 添加评论
      */
     addComment: function () {
+        var me = this;
         var $content = $('.editable');
         var text = $content.text();
         var $null = $('.list-null');
 
-        var promise = this.page.post(this.opts.API.add, {
+        var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
             id: 0,
-            module_id: this.data.id,
+            module_id: me.data.id,
             content: text,
             message: {
                 'sent_eim': true,
@@ -139,17 +157,25 @@ $.extend(fn.prototype, {
             attachements: []
         });
 
-
-
         promise
-            .done(function (data) {
+            .done(function (result) {
 
-                if (!data) {
+                if (!result) {
                     return;
                 }
 
                 // 添加成功
-                if (data.meta.code === 200) {
+                if (result.meta.code === 200) {
+                    me.page.render($('.comments dd').eq(0), result.data, {
+                        tmpl: tmplMsg,
+                        type: 'before'
+                    });
+
+                    getUserAndPhoto([result.data]);
+
+                    me.page.virtualInput.reset();
+
+                    me.$listNull.addClass('hide');
                 }
                 else {
 
@@ -178,7 +204,6 @@ function getUserAndPhoto(arr) {
     });
 
     users.getUserAndPhoto(jids)
-
         .done(function (data) {
             if (data && data.length > 0) {
                 render(data);
@@ -197,7 +222,7 @@ function render(data) {
 
     data.forEach(function (item) {
 
-        var $item = $('#user-' + users.takeJid(item.jid));
+        var $item = $('.user-' + users.takeJid(item.jid));
 
         if ($item.length) {
             $item.find('.user-photo').html('<img src="' + item.base64 + '" />');

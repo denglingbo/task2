@@ -1,0 +1,10 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "name": "test",
+        "obj_list": []
+    }
+}

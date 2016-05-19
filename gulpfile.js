@@ -11,8 +11,9 @@
 
 var path = require('path');
 var gulp = require('gulp');
-var mock = require('./tool/webpack-lib/mock');
+// var mock = require('./tool/webpack-lib/mock');
 var server = require('./tool/webpack-lib/server');
+var mockServer = require('./tool/webpack-lib/deo-mock-server');
 
 // Webapck utils
 var Webpacker = require('./tool/webpack-lib/index');
@@ -46,6 +47,8 @@ var config = {
 
 var root = path.join(__dirname, '/');
 
+mockServer('./mock');
+
 /**
  * 开发环境
  */
@@ -55,10 +58,10 @@ gulp.task('dev', function () {
 
     var webpacker = new Webpacker(config, root);
     
-    webpacker.mockStart({
-        mockDir: './mock',
-        https: config.https
-    });
+    // webpacker.mockStart({
+    //     mockDir: './mock',
+    //     https: config.https
+    // });
 
     webpacker.devStart();
 });
@@ -72,10 +75,10 @@ gulp.task('test', function () {
 
     var webpacker = new Webpacker(config, root);
     
-    webpacker.mockStart({
-        mockDir: './mock',
-        https: config.https
-    });
+    // webpacker.mockStart({
+    //     mockDir: './mock',
+    //     https: config.https
+    // });
 
     webpacker.testStart();
 });

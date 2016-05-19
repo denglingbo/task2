@@ -89,11 +89,11 @@ detail.getEventTalkList = function (arr) {
     var list = [];
 
     arr.forEach(function (item) {
-        if (item.type === 1) {
+        if (item.type === 2) {
             item.typeRaw = lang.talk;
             item.pageType = 'talk';
         }
-        if (item.type === 2) {
+        if (item.type === 3) {
             item.typeRaw = lang.affair;
             item.pageType = 'affair';
         }

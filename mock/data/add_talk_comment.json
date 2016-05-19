@@ -1,0 +1,11 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "id": 555,
+        "user_id": 222,
+        "content": "nidaye"
+    }
+}

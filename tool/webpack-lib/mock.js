@@ -13,7 +13,8 @@ var mockConfig = {
     port: 8015,
     path: '/',
     mockDir: null,
-    https: false
+    https: false,
+    fallback: true
 };
 
 module.exports = function (options) {

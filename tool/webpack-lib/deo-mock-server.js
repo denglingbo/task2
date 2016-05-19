@@ -3,29 +3,32 @@
 var https = require('https');
 var fs = require('fs');
 
+var fn = function (dir) {
+
 var options = {
-    key: fs.readFileSync('./ssl/keys/server-key.pem'),
+    key: fs.readFileSync(__dirname + '/ssl/server.key'),
     // ca: [fs.readFileSync('./keys/ca-cert.pem')],
-    cert: fs.readFileSync('./ssl/keys/server-cert.pem')
+    cert: fs.readFileSync(__dirname + '/ssl/server.crt')
 };
 
 https.createServer(options,function(req,res){
 
-    console.log(req.url);
+    var url = req.url.replace(/(\?.+)/, '');
 
     res.writeHead(200, {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         // 解决跨域
         'Access-Control-Allow-Origin': 'https://task2.test1.com:8014',
         // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass'
+        'Access-Control-Allow-Credentials': true
+        // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass',
+        // 'Access-Control-Request-Method': 'GET, POST'
     });
 
-    var expr = /^\/(.+)\?/.exec(req.url);
+    var expr = /\/data\/(.+)/.exec(url);
     var file = null;
     if (expr && expr.length > 1) {
-        file = './mock/data/' + expr[1] + '.json';
+        file = dir + '/data/' + expr[1] + '.json';
         console.log(file);
         var buffer = fs.readFileSync(file);
         res.end(JSON.stringify(JSON.parse(buffer)));
@@ -44,3 +47,7 @@ https.createServer(options,function(req,res){
     
 
 }).listen(8015,'127.0.0.1');
+
+};
+
+module.exports = fn;

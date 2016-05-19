@@ -1,4 +1,4 @@
-<dd id="user-{{ user_id }}" data-uid="{{ user_id }}" data-id="{{ id }}">
+<dd id="item-{{ id }}" class="user-{{ user_id }}" data-uid="{{ user_id }}" data-id="{{ id }}">
     <div class="column-left user-photo">
         <!-- <img src="base64" /> -->
     </div>

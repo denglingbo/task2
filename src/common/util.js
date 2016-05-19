@@ -599,4 +599,26 @@ util.isNetwork = function () {
     }
 };
 
+/**
+ * 用于 mock 添加 cookie
+ *
+ * @param {string} name, cookie 名
+ * @param {string} value, name 对应的 value
+ * @param {number} seconds, 有效时间
+ * @param {string} path, 储存根位置
+ */
+// function setCookie(name, value, seconds, path) {
+//     seconds = seconds || 0;
+//     path = path || '/';
+//     var expires = '';
+
+//     if (seconds !== 0) {
+//         var date = new Date();
+//         date.setTime(date.getTime() + (seconds * 1000));
+//         expires = '; expires=' + date.toGMTString();
+//     }
+
+//     document.cookie = name + '=' + escape(value) + expires + '; path=' + path;
+// }
+
 module.exports = util;

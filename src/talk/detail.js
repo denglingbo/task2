@@ -17,7 +17,7 @@ var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail.js');
 var users = require('common/middleware/user/users.js');
 var Page = require('common/page');
-var virtualInput = require('common/ui/virtualInput/virtualInput');
+var VirtualInput = require('common/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
 
@@ -59,7 +59,7 @@ page.enter = function () {
         }
     });
 
-    virtualInput('.goalui-fixedinput');
+    this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
     this.ticker = new Ticker('.tick', {
         async: true
@@ -113,14 +113,15 @@ page.bindEvents = function () {
         }
     };
 
-    this.ticker.on('click', function (isCurTicked) {
+    this.ticker.on('tick', function (isCurTicked) {
         var myTicker = this;
         // 0: 取消
-        // 1: 完成
+        // 1: 
         var changeStatus = isCurTicked ? 0 : 1;
+        var api = changeStatus === 1 ? config.API.TALK_DONE : config.API.TALK_RESUME;
 
         /* eslint-disable */
-        var promise = page.post(config.API.TALK_DONE, {
+        var promise = page.post(api, {
             task_id: me.data.task_id,
             talk_id: me.data.id
         });

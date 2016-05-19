@@ -3,90 +3,102 @@
  * @author deo
  *
  * 虚拟输入框
- *
+ * 将被废弃，暂用
  */
-(function (window, document) {
+/* eslint-disable */
+var virtualInput = function (selector, options) {
+    var me = this;
 
-    var virtualInput = function (selector) {
+    this.opts = {
+        maxNum: 50
+    };
 
-        var $wrap = $(selector);
-        var $shadow = $('#goalui-fixedinput-shadow');
-        var $placeholder = $wrap.find('.placeholder');
-        var $button = $wrap.find('.button');
-        var $send = $wrap.find('.send');
-        var $limit = $wrap.find('.limit');
+    $.extend(this.opts, options);
 
-        var maxNum = 50;
+    this.$wrap = $(selector);
+    this.$shadow = $('#goalui-fixedinput-shadow');
+    this.$placeholder = this.$wrap.find('.placeholder');
+    this.$button = this.$wrap.find('.button');
+    this.$send = this.$wrap.find('.send');
+    this.$limit = this.$wrap.find('.limit');
+    this.editor = '.editable';
 
-        var editor = '.editable';
+    this.bindEvents();
+};
 
-        // 展示发送按钮
-        var sendStatus = function (target) {
+virtualInput.prototype = {
 
-            var text = $.trim($(target).text());
+    // 展示发送按钮
+    sendStatus: function (target) {
 
-            if (text.length) {
-                $button.addClass('hide');
-                $send.removeClass('hide');
-            }
-            else {
-                $button.addClass('hide');
-                $send.removeClass('hide');
-            }
-        };
+        var text = $.trim($(target).text());
 
-        $wrap
+        if (text.length) {
+            this.$button.addClass('hide');
+            this.$send.removeClass('hide');
+        }
+        else {
+            this.$button.addClass('hide');
+            this.$send.removeClass('hide');
+        }
+    },
+
+    reset: function () {
+        var me = this;
+        $(me.editor).html('');
+        me.$placeholder.removeClass('hide');
+        me.$shadow.addClass('hide');
+        me.$button.removeClass('hide');
+        me.$send.addClass('hide');
+        me.$limit.addClass('hide');
+        me.$send.removeClass('unable');
+        me.$wrap.blur();
+    },
+
+    bindEvents: function () {
+        var me = this;
+
+        me.$wrap
             // 弹出输入框
-            .on('click', editor, function (event) {
+            .on('click', me.editor, function (event) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                $shadow.removeClass('hide');
-                $placeholder.addClass('hide');
+                me.$shadow.removeClass('hide');
+                me.$placeholder.addClass('hide');
 
-                sendStatus(this);
+                me.sendStatus(this);
             })
             // 输入
-            .on('input', editor, function () {
+            .on('input', me.editor, function () {
                 var text = $.trim($(this).text());
-                sendStatus(this);
+                me.sendStatus(this);
 
-                if (text.length > maxNum) {
-                    var limitNum = maxNum - text.length;
-                    $limit.html(limitNum).removeClass('hide');
-                    $send.addClass('unable');
+                if (text.length > me.opts.maxNum) {
+                    var limitNum = me.opts.maxNum - text.length;
+                    me.$limit.html(limitNum).removeClass('hide');
+                    me.$send.addClass('unable');
                 }
                 else {
-                    $limit.html('').addClass('hide');
-                    $send.removeClass('unable');
+                    me.$limit.html('').addClass('hide');
+                    me.$send.removeClass('unable');
                 }
             })
             // 关闭
-            .on('blur', editor, function () {
+            .on('blur', me.editor, function () {
                 if (!$.trim($(this).text())) {
-                    $placeholder.removeClass('hide');
+                    me.$placeholder.removeClass('hide');
                 }
             });
 
         // 点击遮罩关闭键盘
-        $shadow.on('click', function () {
-            $shadow.addClass('hide');
-            $button.removeClass('hide');
-            $send.addClass('hide');
-            $wrap.blur();
-        });
-    };
-
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = virtualInput;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(function () {
-            return virtualInput;
+        me.$shadow.on('click', function () {
+            me.$shadow.addClass('hide');
+            me.$button.removeClass('hide');
+            me.$send.addClass('hide');
+            me.$wrap.blur();
         });
     }
-    else {
-        window.virtualInput = virtualInput;
-    }
+};
 
-})(window, document);
+module.exports = virtualInput;

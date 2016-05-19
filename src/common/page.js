@@ -223,7 +223,8 @@ Page.prototype.failed = function (errObj) {
     if (err.code !== 1) {
         /* eslint-disable */
         log.send({
-            'da_src': 'err: ' + err.msg + ' url: ' + window.location.href + ' pageLog: ' + util.qs.stringify(window.pageLog),
+            'da_src': 'err: ' + err.msg + ' url: ' + window.location.href
+                + ' pageLog: ' + util.qs.stringify(window.pageLog),
             'da_act': 'error'
         });
         /* eslint-enable */
@@ -325,61 +326,6 @@ Page.prototype.render = function (selector, data, options) {
     return str;
 };
 
-/**
- * 用于 mock 添加 cookie
- *
- * @param {string} name, cookie 名
- * @param {string} value, name 对应的 value
- * @param {number} seconds, 有效时间
- * @param {string} path, 储存根位置
- */
-// function setCookie(name, value, seconds, path) {
-//     seconds = seconds || 0;
-//     path = path || '/';
-//     var expires = '';
-
-//     if (seconds !== 0) {
-//         var date = new Date();
-//         date.setTime(date.getTime() + (seconds * 1000));
-//         expires = '; expires=' + date.toGMTString();
-//     }
-
-//     document.cookie = name + '=' + escape(value) + expires + '; path=' + path;
-// }
-
-/**
- * 获取请求参数并可以根据需求改变参数
- *
- * @param {Object} data, 数据
- * @return {string}
- *
- */
-var getRequestData = function () {
-
-    // if (!$.isPlainObject(data)) {
-    //     return {};
-    // }
-
-    var arr = [];
-    var r = {};
-
-    r = storage.getData(config.const.TASK_PARAMS);
-
-    // setCookie('JINSESSIONID', config.mock.token);
-    // setCookie('uid', r.uid);
-    // setCookie('cid', r.cid);
-
-    // $.extend(r, data);
-
-    for (var key in r) {
-        if (r.hasOwnProperty(key)) {
-            arr.push(key + '=' + r[key]);
-        }
-    }
-
-    return arr.join('&');
-};
-
 /*
 window.addEventListener('online', function () {
     console.log('online');
@@ -389,10 +335,74 @@ window.addEventListener('offline', function () {
 });
 */
 
+/**
+ * 获取请求参数并可以根据需求改变参数
+ *
+ * @param {string} api, 数据
+ * @param {Object} data, 数据
+ * @param {Object} opts, ajaxSettings
+ * @return {Object} 请求配置对象
+ */
+Page.prototype.getRequestConfig = function (api, data, opts) {
+
+    var r = {
+        url: config.API.host + config.API.prefix + api,
+        // ajaxSettings.data
+        data: {}
+    };
+
+    data = data || {};
+
+    // 默认情况都需要带给 网关 的参数
+    var defParams = storage.getData(config.const.TASK_PARAMS);
+    var reqData = defParams;
+    // url 上的参数
+    var urlData = [];
+
+    // get 请求下，所有的 params 拼接到 url 上
+    if (/get/i.test(opts.type)) {
+        reqData = $.extend(defParams, data);
+    }
+    else {
+        r.data = JSON.stringify(data);
+    }
+
+    // 拼接参数
+    for (var p in reqData) {
+        if (reqData.hasOwnProperty(p)) {
+            urlData.push(p + '=' + reqData[p]);
+        }
+    }
+
+    if (urlData.length > 0) {
+        r.url = r.url + '?' + urlData.join('&');
+    }
+
+    return r;
+};
+
+/**
+ * GET 请求入口，调用 ajax
+ *
+ * @param {number} api api号
+ * @param {Object} data 请求数据
+ * @param {Object} options 选项
+ *      @param {string} options.url 请求的host
+ * @return {Deferred}
+ */
 Page.prototype.get = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'GET'}));
 };
 
+/**
+ * POST 请求入口，调用 ajax
+ *
+ * @param {number} api api号
+ * @param {Object} data 请求数据
+ * @param {Object} options 选项
+ *      @param {string} options.url 请求的host
+ * @return {Deferred}
+ */
 Page.prototype.post = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'POST'}));
 };
@@ -418,6 +428,8 @@ Page.prototype.ajax = function (api, data, options) {
 
     $.extend(opts, options);
 
+    // 没有网络的状态
+    // 根据配置判断如何展示错误信息
     if (!isNetwork) {
         var err = {
             code: 1,
@@ -432,15 +444,20 @@ Page.prototype.ajax = function (api, data, options) {
         return dfd;
     }
 
-    var host = config.API.host + config.API.prefix + api;
-
-    host = host + '?' + getRequestData();
+    // 获取请求配置
+    var reqConfig = me.getRequestConfig(api, data, opts);
 
     var ajaxSettings = {
+        url: reqConfig.url,
+        data: reqConfig.data,
         type: opts.type,
-        url: host,
-        data: data,
-        dataType: opts.dataType
+        dataType: opts.dataType,
+        timeout: 5000,
+        headers: {
+            'campo-proxy-request': true,
+            'x-spdy-bypass': true
+        },
+        contentType: 'application/json; charset=utf-8'
     };
 
     if (config.debug) {
@@ -451,11 +468,16 @@ Page.prototype.ajax = function (api, data, options) {
             };
         }
 
-        if (ajaxSettings.type === 'POST') {
-            ajaxSettings.contentType = 'application/json';
-            ajaxSettings.data = JSON.stringify(ajaxSettings.data);
+        delete ajaxSettings.headers;
+
+        if (!/post/i.test(ajaxSettings.type)) {
+            delete ajaxSettings.contentType;
         }
     }
+
+    /* eslint-disable */
+    console.info(ajaxSettings);
+    /* eslint-enable */
 
     var promise = $.ajax(ajaxSettings);
 

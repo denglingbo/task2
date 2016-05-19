@@ -35,6 +35,7 @@ var config = {
         // 事件详情
         AFFAIR_DETAIL_URL: 'get_affair_detail',
         AFFAIR_DONE: 'finish_affair',
+        AFFAIR_RESUME: 'recovery_affair',
         AFFAIR_COMMENT_DELETE: 'delete_affair_comment',
         AFFAIR_COMMENT_ADD: 'add_affair_comment',
         // 加载更多事件和讨论
@@ -54,6 +55,7 @@ var config = {
         // 讨论新建
         TALK_NEW_URL: 'create_talk',
         TALK_DONE: 'close_talk',
+        TALK_RESUME: 'resume_talk',
         TALK_COMMENT_DELETE: 'delete_talk_comment',
         TALK_COMMENT_ADD: 'add_talk_comment',
         // 讨论评论列表
