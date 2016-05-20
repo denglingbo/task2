@@ -134,6 +134,7 @@ page.allready = function () {
 
     // 查询用户信息失败
     if (dfdPub === null) {
+        me.failUser();
         return;
     }
 
