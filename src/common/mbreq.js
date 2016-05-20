@@ -121,11 +121,12 @@
     }
 
     // 提供手机端 请求
-    var Client = MobiClient();
+    window.MobiClient = MobiClient();
     // 上面的代码都由 linglong 大侠实现
 
     // yangll 对 Ajax 做了一次重写
     var $ajax = $.ajax;
+    
     var loc = window.location;
 
     // var getPort = function () {
@@ -171,7 +172,7 @@
                 heads = '';
             }
             // console.log('settings.headers:'+heads);
-            return Client.postMsg(
+            return window.MobiClient.postMsg(
                 options.type,
                 options.url,
                 settings.data,
