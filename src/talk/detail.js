@@ -22,7 +22,7 @@ var VirtualInput = require('common/ui/virtualInput/virtualInput');
 var Ticker = require('common/ui/ticker/ticker');
 
 require('common/widgets/emptyPage/netErr.scss');
-var tmplError = require('common/widgets/emptyPage/netErr');
+// var tmplError = require('common/widgets/emptyPage/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
@@ -40,11 +40,11 @@ var page = new Page({
 });
 
 page.error = function () {
-    this.render('#detail-main', this.data, {
-        partials: {
-            title: tmplError
-        }
-    });
+    // this.render('#detail-main', this.data, {
+    //     partials: {
+    //         title: tmplError
+    //     }
+    // });
 };
 
 page.enter = function () {
@@ -67,19 +67,37 @@ page.enter = function () {
 
     this.bindEvents();
 
-    /* eslint-disable */
-    this.attach = AttachWrapper.initDetailAttach({
-        attachData: me.data.summary_attachs, 
-        container: '.attach-container', 
-        wrapper: '.attach'
-    });
-    /* eslint-enable */
-
     if (me.isFailed) {
         return;
     }
 
     me.initCommentList();
+};
+
+/**
+ * 等待 设备 && 数据
+ */
+page.allready = function () {
+    var me = this;
+    var data = me.data;
+
+    me.attach = AttachWrapper.initDetailAttach({
+        attachData: data.summary_attachs,
+        container: '.attach-container',
+        wrapper: '.attach'
+    });
+
+    var dfdPub = users.getUserInfo(data.user_ids);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        return;
+    }
+
+    dfdPub
+        .done(function (pubData) {
+            me.renderUser(pubData.contacts);
+        });
 };
 
 page.bindEvents = function () {
@@ -226,19 +244,6 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 me.data = data;
-
-                var dfdPub = users.getUserInfo(data.user_ids);
-
-                // 查询用户信息失败
-                if (dfdPub === null) {
-                    me.data.userInfoFail = true;
-                }
-                else {
-                    dfdPub
-                        .done(function (pubData) {
-                            me.renderUser(pubData.contacts);
-                        });
-                }
 
                 dfd.resolve(data);
             }

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
-    <link rel="stylesheet" href="/dep/ui/mobiscroll/css/mobiscroll-2.17.0.css">
+    <link rel="stylesheet" href="./dep/ui/mobiscroll/css/mobiscroll-2.17.0.css">
 </head>
 <body>
     <div class="main">
@@ -18,27 +18,6 @@
     <script id="edit-container-tmpl" type="x-tmpl-mustache">
         {{> editMain}}
         {{#view}}
-            <div class="edit-option">
-                {{#persons}}
-                    <div id="{{id}}" class="edit-item">
-                        <span class='title'>{{title}}</span>
-                        <div class="item-content">
-                            <span class="value"></span>
-                        </div>
-                        <i class="arrow-right"></i>
-                    </div>
-                {{/persons}}
-                
-                {{#options}}
-                <div id="{{id}}" class="edit-item">
-                    <span class='title'>{{title}}</span>
-                    <div class="item-content">
-                        <span class="value">{{value}}</span>
-                    </div>
-                    <i class="arrow-right"></i>
-                </div>
-                {{/options}}
-            </div>
         {{/view}}
         {{> alertBox}}
     </script>

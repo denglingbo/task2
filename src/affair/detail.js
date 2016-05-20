@@ -47,15 +47,21 @@ page.enter = function () {
 
     me.bindEvents();
 
-    /* eslint-disable */
+    me.initCommentList();
+};
+
+/**
+ * 等待 设备 && 数据
+ */
+page.allready = function () {
+    var me = this;
+    var data = me.data;
+
     me.attach = AttachWrapper.initDetailAttach({
-        attachData: me.data.attachs, 
-        container: '.attach-container', 
+        attachData: data.summary_attachs,
+        container: '.attach-container',
         wrapper: '.attach'
     });
-    /* eslint-enable */
-
-    me.initCommentList();
 };
 
 page.bindEvents = function () {

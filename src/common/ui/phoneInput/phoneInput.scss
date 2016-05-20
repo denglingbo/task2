@@ -10,13 +10,14 @@
     height: 160px;
     padding: 10px 0;
     background: #fff;
+    overflow: hidden;
 
     &-main {
         height: 100%;
         padding: 0 10px;
         -webkit-user-select: text;
         user-select: text;
-        overflow: scroll;
+        overflow: auto;
         -webkit-overflow-scrolling: touch;
     }
 

@@ -77,6 +77,9 @@ page.enter = function () {
     me.bindEvents();
 };
 
+/**
+ * 等待 设备
+ */
 page.deviceready = function () {
     var me = this;
 
@@ -111,7 +114,9 @@ page.deviceready = function () {
     /* eslint-enable */
 };
 
-/* 等待 设备 && 数据 */
+/**
+ * 等待 设备 && 数据
+ */
 page.allready = function () {
     var me = this;
     var data = me.data;

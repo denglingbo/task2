@@ -173,21 +173,31 @@ Page.prototype.start = function () {
                     localcache.save(me.opts.pageName, me.data);
                 }
 
+                if (!me.data && me.lang) {
+                    me.data = {
+                        lang: me.lang
+                    };
+                }
+
                 // 页面逻辑
                 me.enter();
 
                 me.done();
 
                 me.devicereadyEnter();
+
+                dfd.resolve();
             })
             .fail(function () {
                 // Do something
-                // me.failed();
+                // me.error();
+                dfd.reject();
             });
     })
     .fail(function () {
         // Do something
         me.failed();
+        dfd.reject();
     });
 
     me._data = getParams();
