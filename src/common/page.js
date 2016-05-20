@@ -221,6 +221,8 @@ Page.prototype.deviceListener = function () {
     // -------------------------------------
     window.pageLog.devicereadyStart = +new Date();
     document.addEventListener('deviceready', function () {
+        window.isDeviceready = true;
+        window.pageLog.devicereadyEnd = +new Date();
         me.devicereadyEnter();
     }, false);
 };
@@ -244,8 +246,6 @@ Page.prototype.domContentListener = function () {
  * 设备准备完成的入口
  */
 Page.prototype.devicereadyEnter = function () {
-    window.isDeviceready = true;
-    window.pageLog.devicereadyEnd = +new Date();
 
     // 虽然 deviceready 肯定比 enter 慢，但是为了避免意外，还是等待判断一下 是否 done
     if (this.isDone) {
