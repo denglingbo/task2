@@ -99,15 +99,6 @@ module.exports = function () {
         // 添加一个内置的 loaders 
         loaders: [
             {
-                // 图片加载器
-                // Reference: https://github.com/webpack/url
-                test: /\.(jpe?g|png|gif)$/i,
-                loaders: [
-                    'url-loader?limit=1&name=' + imgPath + '[name].[ext]'
-                    // 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
-                ]
-            },
-            {
                 // 模板 加载器
                 // Reference: https://github.com/webpack/html-loader
                 test: /\.tpl$/,
@@ -127,6 +118,15 @@ module.exports = function () {
                 loader: this.getCssLoader('sass')
                 // include: [path.resolve(__dirname, config.srcDir + 'static/css')],  //把要处理的目录包括进来
                 // exclude: []  //排除不处理的目录
+            },
+            {
+                // 图片加载器
+                // Reference: https://github.com/webpack/url
+                test: /\.(jpe?g|png|gif)$/i,
+                loaders: [
+                    'url-loader?limit=1&name=' + imgPath + '[name].[ext]'
+                    // 'url-loader?limit=1&name=' + imgPath + '[hash:8].[name].[ext]'
+                ]
             }
         ]
     };
