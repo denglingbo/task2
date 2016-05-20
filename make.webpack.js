@@ -37,11 +37,12 @@ module.exports = function () {
         {
             from: './dep/',
             to: './dep/'
-        },
-        {
-            from: './src/common/img/',
-            to: './common/img/'
         }
+        // ,
+        // {
+        //     from: './src/common/img/',
+        //     to: './img/'
+        // }
     ];
 
     // 非生产环境，需要使用 mock cordova.js 
@@ -79,17 +80,17 @@ module.exports = function () {
 
         // 输出文件
         // filename: config.debug ? '[name].js' : 'common/js/[name].[hash].min.js',
-        filename: config.debug ? '[name].js' : 'common/js/[name].min.js',
+        filename: config.debug ? '[name].js' : 'js/[name].min.js',
 
         // 调试目录 或者 CDN 目录 
-        publicPath: config.debug ? '/' : './',
+        publicPath: config.debug ? './' : './',
 
         // chunkFilename: config.debug ? '[chunkhash:8].chunk.js' : 'common/js/[chunkhash:8].chunk.min.js'
-        chunkFilename: config.debug ? 'chunk.js' : 'common/js/chunk.min.js'
+        chunkFilename: config.debug ? 'chunk.js' : 'js/chunk.min.js'
     };
 
     // 图片 path
-    var imgPath = config.debug ? '' : 'common/img/';
+    var imgPath = config.debug ? '' : 'img/';
 
     // module 加载器
     webpackConfig.module = {
@@ -151,14 +152,14 @@ module.exports = function () {
     // * 最为重要的部分，其中包含页面入口配置
     webpackConfig.plugins = webpackConfig.plugins.concat(this.htmlPlugins);
 
-    if (!config.debug) {
+    // if (!config.debug) {
         // 提取样式
         // Reference: https://github.com/webpack/extract-text-webpack-plugin
         // 'common/css/[contenthash:8].[name].min.css'
         webpackConfig.plugins.push(
-            new ExtractTextPlugin('common/css/[name].min.css')
+            new ExtractTextPlugin('css/[name].min.css')
         );
-    }
+    // }
 
     console.log(webpackConfig);
 

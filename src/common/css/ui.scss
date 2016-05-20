@@ -17,7 +17,7 @@ $add-attach-width: rem(18px);
     display: inline-block;
     width: $add-attach-width;
     height: $add-attach-width;
-    background-image: url('#{$rootImg}/button_import_add-accessory.png');
+    background-image: url('../img/button_import_add-accessory.png');
     background-repeat: no-repeat;
     background-size: $add-attach-width;
 }
@@ -35,7 +35,7 @@ $add-attach-width: rem(18px);
     right:rem(20px);
     width: $add-attach-width;
     height: $add-attach-width;
-    background-image: url('#{$rootImg}/button_top_search_close.png');
+    background-image: url('../img/button_top_search_close.png');
     background-repeat: no-repeat;
     background-size: $add-attach-width;
 }
@@ -52,7 +52,7 @@ $arrow-height-size: rem(14px);
     padding: 0;
     width: $arrow-width-size;
     height: $arrow-height-size;
-    background-image: url('#{$rootImg}/icon_list_to-right-arrow.png');
+    background-image: url('../img/icon_list_to-right-arrow.png');
     background-repeat: no-repeat;
     background-size: $arrow-width-size $arrow-height-size;
 }
@@ -69,7 +69,7 @@ $hook-height-size: rem(12px);
     padding: 0;
     width: $hook-width-size;
     height: $hook-height-size;
-    background-image: url('#{$rootImg}/icon_tab_sure.png');
+    background-image: url('../img/icon_tab_sure.png');
     background-repeat: no-repeat;
     background-size: $hook-width-size $hook-height-size;
 }
@@ -90,11 +90,11 @@ $circle-size: rem(45px);
 }
 
 .circle-right {
-    background-image: url('#{$rootImg}/popup_right.png');
+    background-image: url('../img/popup_right.png');
 }
 
 .circle-err {
-    background-image: url('#{$rootImg}/popup_error.png');
+    background-image: url('../img/popup_error.png');
 }
 
 /**
@@ -107,7 +107,7 @@ $search-size: rem(14px);
     padding: 0;
     width: $search-size;
     height: $search-size;
-    background-image: url('#{$rootImg}/icon_top_search.png');
+    background-image: url('../img/icon_top_search.png');
     background-repeat: no-repeat;
     background-size: $search-size;
 }
@@ -122,7 +122,7 @@ $search-big-size: rem(73px);
     padding: 0;
     width: $search-big-size;
     height: $search-big-size;
-    background-image: url('#{$rootImg}/icon_middle_empty_serch.png');
+    background-image: url('../img/icon_middle_empty_serch.png');
     background-repeat: no-repeat;
     background-size: $search-big-size;
 }
@@ -139,7 +139,7 @@ $net-err-height-size: rem(69px);
     padding: 0;
     width: $net-err-width-size;
     height: $net-err-height-size;
-    background-image: url('#{$rootImg}/icon_middle_empty_no-network.png');
+    background-image: url('../img/icon_middle_empty_no-network.png');
     background-repeat: no-repeat;
     background-size: $net-err-width-size $net-err-height-size;
 }
@@ -156,7 +156,7 @@ $flag-height-size: rem(71px);
     padding: 0;
     width: $flag-width-size;
     height: $flag-height-size;
-    background-image: url('#{$rootImg}/icon_middle_empty_task.png');
+    background-image: url('../img/icon_middle_empty_task.png');
     background-repeat: no-repeat;
     background-size: $flag-width-size $flag-height-size;
 }
@@ -170,7 +170,7 @@ $star-size: rem(16px);
     display: inline-block;
     width: $star-size;
     height: $star-size;
-    background: url('#{$rootImg}/star.png') no-repeat ($star-size * -1) 0;
+    background: url('../img/star.png') no-repeat ($star-size * -1) 0;
     background-size: $star-size * 2;
 
     &.follow {

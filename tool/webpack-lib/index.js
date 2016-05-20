@@ -240,11 +240,18 @@ Webpacker.prototype.getCssLoader = function (name) {
 
     if (this.config.debug) {
         // 开发阶段，css直接内嵌
-        cssLoader = 'style-loader!css-loader' + xCss + '!autoprefixer-loader';
+        // cssLoader = 'style-loader!css-loader' + xCss + '!autoprefixer-loader';
+        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader', {
+            // 关键，这个会被添加到 生成后的 css 的 image url 的最前面
+            publicPath: '../'
+        });
     }
     else {
         // 编译阶段，css 分离出来单独引入
-        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader');
+        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader', {
+            // 关键，这个会被添加到 生成后的 css 的 image url 的最前面
+            publicPath: '../'
+        });
     }
 
     return cssLoader;
