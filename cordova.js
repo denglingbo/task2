@@ -9,6 +9,13 @@ setTimeout(function () {
     document.dispatchEvent(evt);
 }, 200);
 
+setTimeout(function () {
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('DOMContentLoaded', true, true);
+    document.dispatchEvent(evt);
+}, 0);
+
+
 
 var CPNavigationBar = {
     redirect: function (url, data) {

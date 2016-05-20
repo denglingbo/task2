@@ -13,7 +13,7 @@ var config = {
 
         prefix: '/task/m/v1/',
 
-        HOME_URL: 'index',
+        HOME_URL: 'get_home_remind',
 
         // 列表页，未完成
         LIST_URL: 1001,

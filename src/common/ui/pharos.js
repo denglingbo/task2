@@ -12,7 +12,7 @@
  * }
  * eg1: <dom loader="{#list.name:director}{num}{/list.name}"
  *      -> 匹配到 name = director 则进入判断条件
- * eg2: <dom loader="{lang.num}"
+ * eg2: <dom loader="{lang.a}", <dom loader="{#lang}{a}{/lang}"
  * eg3: <dom loader="{num}"
  */
 
@@ -162,18 +162,30 @@ Pharos.prototype = {
         if (obj.start) {
             var startArr = obj.start.split('.');
             var dataKey = startArr[0];
-            var itemArr = startArr[1].split(':');
-            var itemKey = itemArr[0];
-            var itemValue = itemArr[1];
+            var myData = me.data[dataKey];
 
-            var dataArr = me.data[dataKey];
+            // 数据为数组类型
+            if ($.isArray(myData) && startArr.length === 2) {
 
-            dataArr.forEach(function (data) {
-                if (data[itemKey] === itemValue) {
+                var itemArr = startArr[1].split(':');
+                var itemKey = itemArr[0];
+                var itemValue = itemArr[1];
 
-                    r = me.getHtmlData(data, obj.params);
+                myData.forEach(function (data) {
+
+                    if (data[itemKey] === itemValue) {
+                        r = me.getHtmlData(data, obj.params);
+                    }
+                });
+            }
+            // 数据为对象类型
+            else {
+                for (var k in myData) {
+                    if (myData.hasOwnProperty(k)) {
+                        r = me.getHtmlData(myData, obj.params);
+                    }
                 }
-            });
+            }
         }
         // value enter
         else {

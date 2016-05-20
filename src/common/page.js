@@ -21,10 +21,6 @@ if (!window.pageLog) {
     window.isDeviceready = false;
 }
 
-var timeId = null;
-// 5s 后设备为就绪，则认为失败
-var timeout = 5000;
-
 /**
  * 不储存空数据
  *
@@ -113,6 +109,10 @@ function Page(opts) {
     this.isFailed = false;
 
     this.opts = opts;
+
+    this.DOMContentListener();
+    this.deviceListener();
+    
 }
 
 /**
@@ -122,6 +122,20 @@ function Page(opts) {
 Page.prototype.enter = function () {};
 
 /**
+ * 设备就绪，回调 deviceready
+ *
+ */
+Page.prototype.deviceready = function () {};
+
+/**
+ * DOMContentLoaded 就绪，回调 domloaded
+ * 在 css js loaded 之前
+ *
+ */
+Page.prototype.domloaded = function () {};
+
+
+/**
  * 开始执行任务
  *
  * @return {Deferred}
@@ -129,8 +143,6 @@ Page.prototype.enter = function () {};
 Page.prototype.start = function () {
     var me = this;
     var dfd = new $.Deferred();
-
-    clearTimeout(timeId);
 
     // 增加编译模板的任务
     if (!me.isDone) {
@@ -171,25 +183,34 @@ Page.prototype.start = function () {
         // Do something
         me.failed();
     });
+    
+    me._data = getParams();
+    dfd.resolve();
+
+    return dfd;
+};
+
+var timeId = null;
+// 5s 后设备为就绪，则认为失败
+var timeout = 5000;
+/**
+ * 设备就绪
+ */
+Page.prototype.deviceListener = function () {
+    var me = this;
+    clearTimeout(timeId);
 
     var readyFn = function () {
         clearTimeout(timeId);
-        window.pageLog.devicereadyEnd = +new Date();
         window.isDeviceready = true;
-        me._data = getParams();
-        dfd.resolve();
+        window.pageLog.devicereadyEnd = +new Date();
+        me.deviceready();
+        // dfd.resolve();
     };
 
     timeId = setTimeout(function () {
         document.removeEventListener('deviceready', readyFn);
-
-        var err = {
-            code: 2,
-            msg: 'deviceready timeout'
-        };
-
-        me.failed(err);
-        dfd.reject(err);
+        me.failed({code: 2, msg: 'deviceready timeout'});
     }, timeout);
 
     // -------------------------------------
@@ -198,8 +219,23 @@ Page.prototype.start = function () {
     // -------------------------------------
     window.pageLog.devicereadyStart = +new Date();
     document.addEventListener('deviceready', readyFn, false);
+};
 
-    return dfd;
+/**
+ * DOMContentLoaded 就绪
+ */
+Page.prototype.DOMContentListener = function () {
+    var me = this;
+
+    var readyFn = function () {
+        me.domloaded();
+    };
+
+    // -------------------------------------
+    // 这里不适用于所有环境，此处为 cordova 服务
+    // 等待 DOMContentLoaded 完成
+    // -------------------------------------
+    document.addEventListener('DOMContentLoaded', readyFn, false);
 };
 
 /**

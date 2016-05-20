@@ -1,0 +1,21 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "my_duty": 0,
+        "my_assign": 0,
+        "my_attend": 1,
+
+        "list": [{
+            "name": "partake",
+            "num": 123
+        }],
+
+        "obj": {
+            "a": 21,
+            "b": 3
+        }
+    }
+}

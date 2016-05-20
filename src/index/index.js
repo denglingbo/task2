@@ -16,6 +16,7 @@ var page = new Page({
 });
 
 page.enter = function () {
+    alert('enter');
 
     this.render('#main', {
         lang: this.lang
