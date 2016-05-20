@@ -71,9 +71,7 @@ var config = {
         // attach uploadUrl
         ATTACH_UPLOADURL: 'attachment/get_fs_tokens_on_create',
         // attach resumeUrl
-        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue',
-
-        SEARCH: 'search'
+        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue'
     }
 };
 

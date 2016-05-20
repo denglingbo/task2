@@ -67,9 +67,9 @@ function setResultKey(data) {
  */
 page.renderList = function () {
     var me = this;
-    var listData = setResultKey(me.data);
+    var listData = setResultKey(me.data.obj_list);
     me.render('.search-content', listData, {
-        tmpl: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& .}}</a></li>{{/.}}'
+        tmpl: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& title}}</a></li>{{/.}}'
     });
 };
 
@@ -94,7 +94,7 @@ page.renderNull = function () {
  */
 page.renderOutput = function () {
     var me = this;
-    var dataIsNull = !me.data.length;
+    var dataIsNull = !me.data.obj_list.length;
 
     if (dataIsNull) {
         me.renderNull();
@@ -111,13 +111,12 @@ page.renderOutput = function () {
  */
 page.loadList = function (key) {
     var me = this;
-
-    var promise = me.get(config.API.SEARCH, {key: key});
+    var promise = me.get(config.API.SEARCH, {});
 
     promise
         .done(function (result) {
             if (result.meta.code === 200) {
-                me.data = result.data.list;
+                me.data = result.data;
                 me.renderOutput();
             }
             else {

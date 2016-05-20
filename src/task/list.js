@@ -50,7 +50,8 @@ page.enter = function () {
     this.bindEvents();
 
     new Search(this, {
-        selector: '#search'
+        selector: '#search',
+        api: config.API.LIST_URL
     });
 };
 
