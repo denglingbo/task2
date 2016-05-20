@@ -88,7 +88,7 @@
             heads: heads
         };
 
-        try {alert(JSON.stringify(param))
+        try {// alert(JSON.stringify(param))
             return this.client.post(JSON.stringify(param));
         }
         catch (error) {

@@ -110,9 +110,8 @@ function Page(opts) {
 
     this.opts = opts;
 
-    this.DOMContentListener();
+    this.domContentListener();
     this.deviceListener();
-    
 }
 
 /**
@@ -128,11 +127,16 @@ Page.prototype.enter = function () {};
 Page.prototype.deviceready = function () {};
 
 /**
- * DOMContentLoaded 就绪，回调 domloaded
- * 在 css js loaded 之前
+ * DOMContentLoaded 就绪，在 css js loaded 之前，回调 domloaded
  *
  */
 Page.prototype.domloaded = function () {};
+
+/**
+ * 设备就绪 同时 页面数据准备就绪，回调 domloaded
+ *
+ */
+Page.prototype.allready = function () {};
 
 
 /**
@@ -173,6 +177,8 @@ Page.prototype.start = function () {
                 me.enter();
 
                 me.done();
+
+                me.devicereadyEnter();
             })
             .fail(function () {
                 // Do something
@@ -183,59 +189,80 @@ Page.prototype.start = function () {
         // Do something
         me.failed();
     });
-    
+
     me._data = getParams();
     dfd.resolve();
 
     return dfd;
 };
 
-var timeId = null;
+// var timeId = null;
 // 5s 后设备为就绪，则认为失败
-var timeout = 5000;
+// var timeout = 5000;
+// 设备就绪同时等待数据返回
+
 /**
  * 设备就绪
  */
 Page.prototype.deviceListener = function () {
     var me = this;
-    clearTimeout(timeId);
 
-    var readyFn = function () {
-        clearTimeout(timeId);
-        window.isDeviceready = true;
-        window.pageLog.devicereadyEnd = +new Date();
-        me.deviceready();
-        // dfd.resolve();
-    };
+    // clearTimeout(timeId);
 
-    timeId = setTimeout(function () {
-        document.removeEventListener('deviceready', readyFn);
-        me.failed({code: 2, msg: 'deviceready timeout'});
-    }, timeout);
+    // timeId = setTimeout(function () {
+    //     document.removeEventListener('deviceready', readyFn);
+    //     me.failed({code: 2, msg: 'deviceready timeout'});
+    //     dfd.reject();
+    // }, timeout);
 
     // -------------------------------------
     // 这里不适用于所有环境，此处为 cordova 服务
     // 等待 deviceready 完成
     // -------------------------------------
     window.pageLog.devicereadyStart = +new Date();
-    document.addEventListener('deviceready', readyFn, false);
+    document.addEventListener('deviceready', function () {
+        me.devicereadyEnter();
+    }, false);
 };
 
 /**
  * DOMContentLoaded 就绪
  */
-Page.prototype.DOMContentListener = function () {
+Page.prototype.domContentListener = function () {
     var me = this;
-
-    var readyFn = function () {
-        me.domloaded();
-    };
 
     // -------------------------------------
     // 这里不适用于所有环境，此处为 cordova 服务
     // 等待 DOMContentLoaded 完成
     // -------------------------------------
-    document.addEventListener('DOMContentLoaded', readyFn, false);
+    document.addEventListener('DOMContentLoaded', function () {
+        me.domloaded();
+    }, false);
+};
+
+/**
+ * 设备准备完成的入口
+ */
+Page.prototype.devicereadyEnter = function () {
+    window.isDeviceready = true;
+    window.pageLog.devicereadyEnd = +new Date();
+
+    // 虽然 deviceready 肯定比 enter 慢，但是为了避免意外，还是等待判断一下 是否 done
+    if (this.isDone) {
+        this.deviceready();
+
+        // 检查是否全部准备就绪
+        this.deviceAndDataListener();
+    }
+};
+
+/**
+ * 等待 设备 & 数据 准备完成
+ */
+Page.prototype.deviceAndDataListener = function () {
+    if (window.isDeviceready && this.data) {
+        this.allready();
+    }
 };
 
 /**

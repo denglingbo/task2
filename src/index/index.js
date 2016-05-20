@@ -16,7 +16,6 @@ var page = new Page({
 });
 
 page.enter = function () {
-    alert('enter');
 
     this.render('#main', {
         lang: this.lang
@@ -25,7 +24,9 @@ page.enter = function () {
     this.initHomeNum();
 
     this.setMenuHeight();
+};
 
+page.deviceready = function () {
     this.bindEvents();
 };
 

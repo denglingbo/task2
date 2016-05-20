@@ -22,7 +22,7 @@ var Pagination = require('common/ui/pagination/pagination');
 */
 
 require('common/widgets/emptyPage/netErr.scss');
-var tmplError = require('common/widgets/emptyPage/netErr');
+// var tmplError = require('common/widgets/emptyPage/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
@@ -33,9 +33,9 @@ var page = new Page({
 var requestPageNum = 10;
 
 page.error = function () {
-    this.render('#detail-main', this.data, {
-        tmpl: tmplError
-    });
+    // this.render('#detail-main', this.data, {
+    //     tmpl: tmplError
+    // });
 };
 
 page.enter = function () {
@@ -75,14 +75,75 @@ page.enter = function () {
     });
 
     me.bindEvents();
+};
+
+page.deviceready = function () {
+    var me = this;
 
     /* eslint-disable */
+    // 查看更多人员
+    me.$main.on('click', '.partner-more', function () {
+        var jids = $(this).data('jids');
+
+        if (jids && jids.toString().length > 0) {
+            CPNavigationBar.redirect('/users-list.html?jids=' + jids);
+        }
+    });
+
+    // 跳转到事件或讨论页面
+    me.$main.on('click', '.affair-talk-item', function () {
+        // affair or talk
+        var pageTo = $(this).data('page');
+
+        if (pageTo && pageTo.length > 0) {
+            CPNavigationBar.redirect(pageTo);
+        }
+    });
+
+    // 页面底部跳转
+    me.$fixbar.find('li').on('click', function () {
+        var pageTo = $(this).data('page');
+
+        if (pageTo && pageTo.length > 0) {
+            CPNavigationBar.redirect(pageTo);
+        }
+    });
+    /* eslint-enable */
+};
+
+/* 等待 设备 && 数据 */
+page.allready = function () {
+    var me = this;
+    var data = me.data;
+
     me.attach = AttachWrapper.initDetailAttach({
-        attachData: me.data.summary_attachs,
+        attachData: data.summary_attachs,
         container: '.attach-container',
         wrapper: '.attach'
     });
-    /* eslint-enable */
+
+    // 下面为获取人员信息的配置
+    var obj = {
+        creator: data.create_user,
+        principal: data.principal_user,
+        partner: data.attend_ids
+    };
+
+    var jids = users.makeArray(obj);
+    var dfdPub = users.getUserInfo(jids, data.cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        return;
+    }
+
+    dfdPub
+        .done(function (pubData) {
+            me.renderUser(obj, pubData.contacts);
+        })
+        .fail(function () {
+            me.failUser();
+        });
 };
 
 page.bindEvents = function () {
@@ -95,41 +156,6 @@ page.bindEvents = function () {
     $('.star').on('click', function () {
         me.follow(this);
     });
-
-    // 查看更多人员
-    me.$main.on('click', '.partner-more', function () {
-        var jids = $(this).data('jids');
-
-        if (jids && jids.toString().length > 0) {
-            /* eslint-disable */
-            CPNavigationBar.redirect('/users-list.html?jids=' + jids);
-            /* eslint-enable */
-        }
-    });
-
-    // 跳转到事件或讨论页面
-    me.$main.on('click', '.affair-talk-item', function () {
-        // affair or talk
-        var pageTo = $(this).data('page');
-
-        if (pageTo && pageTo.length > 0) {
-            /* eslint-disable */
-            CPNavigationBar.redirect(pageTo);
-            /* eslint-enable */
-        }
-    });
-
-    // 页面底部跳转
-    me.$fixbar.find('li').on('click', function () {
-        var pageTo = $(this).data('page');
-
-        if (pageTo && pageTo.length > 0) {
-            /* eslint-disable */
-            CPNavigationBar.redirect(pageTo);
-            /* eslint-enable */
-        }
-    });
-
 
     // 第一次的时候把 page 相关的参数配置好
     // me.scrollMore.on('complete', function (data) {
@@ -224,6 +250,14 @@ page.follow = function (target) {
         });
 };
 
+/**
+ * 数组使用某字段改为对象
+ *
+ * @param {Array} arr, 数组
+ * @param {string} key, 某键
+ * @return {Object}
+ *
+ */
 page.arr2Object = function (arr, key) {
     var obj = {};
 
@@ -358,32 +392,6 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(data);
             }
             else {
-
-                // 下面为获取人员信息的配置
-                var obj = {
-                    creator: data.create_user,
-                    principal: data.principal_user,
-                    partner: data.attend_ids
-                };
-
-                var jids = users.makeArray(obj);
-
-                var dfdPub = users.getUserInfo(jids, data.cid);
-
-                // 查询用户信息失败
-                if (dfdPub === null) {
-                    me.data.userInfoFail = true;
-                }
-                else {
-                    dfdPub
-                        .done(function (pubData) {
-                            me.renderUser(obj, pubData.contacts);
-                        })
-                        .fail(function () {
-                            me.failUser();
-                        });
-                }
-
                 me.data = data;
                 dfd.resolve(data);
             }
