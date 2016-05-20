@@ -25,3 +25,16 @@
 .componentAttachItem {
     @include border-1px(top, #e1e4e6);
 }
+
+.phone-input-placeholder {
+    left: rem(15px);
+    top: rem(15px);
+    font-size: rem(16px);
+}
+.phone-input {
+    .phone-input-main {
+        padding-top: rem(5px);
+        padding-left: rem(15px);
+        font-size: rem(16px);
+    }
+}

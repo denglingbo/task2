@@ -45,7 +45,7 @@ page.enter = function () {
     me.bindEvents();
 };
 
-page.deviceready = function () {
+page.allready = function () {
     var me = this;
 
     if (doing) {

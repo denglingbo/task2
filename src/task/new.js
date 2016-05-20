@@ -50,7 +50,7 @@ page.enter = function () {
     me.bindEvents();
 };
 
-page.deviceready = function () {
+page.allready = function () {
     var me = this;
 
     if (doing) {
@@ -80,7 +80,6 @@ page.deviceready = function () {
                 });
         }
     }
-    
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachements);
@@ -98,6 +97,7 @@ page.deviceready = function () {
             /* eslint-enable */
         });
     });
+
     /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
@@ -150,6 +150,7 @@ page.deviceready = function () {
     });
     /* eslint-enable */
 };
+
 /**
  * 绑定事件
  *

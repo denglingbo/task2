@@ -44,36 +44,7 @@ var searchPage = {
 };
 
 page.enter = function () {
-    var me = this;
 
-    new Search(me, {
-        isSearchPage: true,
-        selector: '#search'
-    },
-    function () {
-        var that = this;
-        var page = util.params('page');
-
-        me.api = page ? searchPage[page]() : '';
-        key = util.params('key');
-        key = key ? decodeURIComponent(key) : '';
-        that.dom.$input.val(key);
-        that.stateChange();
-        me.loadList(key);
-
-        that.bindEvents(function () {
-
-            $(document).on('keyup', function (e) {
-                if (e.keyCode === 13) {
-                    key = that.getKey();
-                    me.loadList(key);
-                }
-            });
-        });
-
-    });
-
-    me.bindEvents();
 };
 
 /**
@@ -178,8 +149,35 @@ page.loadList = function (value) {
         });
 };
 
-page.bindEvents = function () {
+page.deviceready  = function () {
     var me = this;
+
+    new Search(me, {
+        isSearchPage: true,
+        selector: '#search'
+    },
+    function () {
+        var that = this;
+        var page = util.params('page');
+
+        me.api = page ? searchPage[page]() : '';
+        key = util.params('key');
+        key = key ? decodeURIComponent(key) : '';
+        that.dom.$input.val(key);
+        that.stateChange();
+        me.loadList(key);
+
+        that.bindEvents(function () {
+
+            $(document).on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    key = that.getKey();
+                    me.loadList(key);
+                }
+            });
+        });
+    });
+
     $('#search').on('click', 'li', function (e) {
         var id = $(this).attr('data-id');
         var parentId = $(this).attr('data-taskId');

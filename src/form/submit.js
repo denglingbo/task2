@@ -169,11 +169,9 @@ page.enter = function () {
             limit: limits
         });
     });
-
-    this.bindEvents();
 };
 
-page.bindEvents = function () {
+page.deviceready = function () {
     var me = this;
     
     $('#submit').on('click', function () {
