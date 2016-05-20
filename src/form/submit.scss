@@ -39,3 +39,34 @@
         font-size: rem(16px);
     }
 }
+
+.alert-length-limit, .alert-submit-after {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: $white;
+    font-size: rem(16px);
+    border-radius: rem(4px);
+}
+
+.alert-length-limit {
+    height: rem(90px);
+    line-height: rem(90px);
+    width: rem(210px);
+    text-align: center;
+}
+
+.alert-submit-after {
+    width: rem(170px);
+    height: rem(110px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    i {
+        margin-bottom: rem(12px);
+        margin-top: rem(17px);
+    }
+}

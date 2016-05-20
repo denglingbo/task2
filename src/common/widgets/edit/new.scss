@@ -44,8 +44,6 @@
 .input {
     border: none;
     background-color: $white;
-    
-    height: 100%;
     outline: none;
     font-size: rem(18px);
     resize: none;
@@ -67,8 +65,7 @@
     background-color: $white;
     overflow: hidden;
     .content-wrap, .title-wrap {
-        overflow: scroll;
-        height: 100%;
+        overflow: auto;
     }
 }
 
@@ -81,6 +78,7 @@
     }
     
     .title-wrap {
+        height: rem(50px);
 
         .phone-input {
 
@@ -103,6 +101,10 @@
         padding: rem(15px) 0;
         @include border-1px(bottom, #e3e4e5);
         font-size: rem(16px);
+    }
+    
+    .content-wrap {
+        height: rem(90px);
     }
 
     .edit-attach {

@@ -17,6 +17,12 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var page = new Page({
     pageName: 'form-submit'
 });
+
+// 验证参数
+var valid = {
+    isEdited: false
+};
+
 /* eslint-disable */
 // 提交的数据
 var upData = {
@@ -119,6 +125,7 @@ page.getData = function (type) {
 };
 
 page.enter = function () {
+    var me = this;
 
     // 页面类型
     var pageType = this.pageType = util.params('type');
@@ -129,22 +136,20 @@ page.enter = function () {
     // 获取当前页面配置
     var curPage = pages[pageType];
 
-    var childTpl = '';
+    var attachTpl = '';
     if (+pageType === 0) {
-        childTpl = '<div class="edit-attach">'
-                 +     '<div id="addAttach" class="edit-add-attach">'
-                 +          '<i class="add-attach"></i>'
-                 +          '<span>添加附件</span>'
-                 +     '</div>'
-                 +     '<div id="attachList" class="attach-list"></div>'
-                 + '</div>';
+        attachTpl = require('common/middleware/attach/attach.tpl')
     }
+    var alertBox = require('common/widgets/edit/alert.tpl');
     // 如果没有问题就渲染对应模板
     if (curPage) {
         this.render('#main', {
             list: curPage(isMaster)
         }, {
-            partials: {attach: childTpl}
+            partials: {
+                attach: attachTpl,
+                alertBox: alertBox
+            }
         });
     }
 
@@ -159,22 +164,50 @@ page.enter = function () {
         this.attach = AttachWrapper.initAttach(attachOptions);
     }
 
+    me.phoneInput = [];
     $('.phone-input').each(function (i) {
         var limits = 50;
         if (!+pageType && i) {
             limits = 500;
         }
-        new PhoneInput({
+        me.phoneInput.push(new PhoneInput({
             handler: this,
             limit: limits
-        });
+        }));
     });
 };
 
+function validEdited(page) {
+    page.phoneInput.forEach(function (item) {
+        var f = item.isEdited();
+        valid.isEdited = f ? f : valid.isEdited;
+    });
+}
+
+function cancelValidate() {
+
+    if(valid.isEdited) {
+        var cancelButton = {
+            title: '取消',
+            callback: function () {
+
+            }
+        };
+
+        var OKButton = {
+            title: '确认',
+            callback: function () {
+
+            }
+        };
+        CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
+    }
+};
 page.deviceready = function () {
     var me = this;
     
     $('#submit').on('click', function () {
+
         var dataArg = me.getData(+me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
         var taskId = util.params('task_id');
@@ -188,6 +221,11 @@ page.deviceready = function () {
 
             });
     });
+
+    $('#cancel').on('click', function () {
+        validEdited(me);
+        cancelValidate();
+    })
 };
 
 $(function () {

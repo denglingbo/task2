@@ -16,6 +16,7 @@ editCom.valid = {
     content: true,
     isAttachesReady: true
 };
+
 /**
  * bind 文本框获得焦点事件
  *
