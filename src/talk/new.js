@@ -14,7 +14,7 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
-
+var doing = +util.params('talk_id');
 var page = new Page({
     pageName: 'talk-new'
 });
@@ -47,30 +47,32 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
-    util.getDataFromObj(pageData, me.data);
 
-    // 下面为获取人员信息的配置
-    var obj = {
-        /* eslint-disable */
-        partner: pageData['user_ids']
-        /* eslint-enable */
-    };
-    var cid = ls.getData('TASK_PARAMS').cid;
-    var jids = users.makeArray(obj);
-    var dfdPub = users.getUserInfo(jids, cid);
+    if (doing) {
+        util.getDataFromObj(pageData, me.data);
+        // 下面为获取人员信息的配置
+        var obj = {
+            /* eslint-disable */
+            partner: pageData['user_ids']
+            /* eslint-enable */
+        };
+        var cid = ls.getData('TASK_PARAMS').cid;
+        var jids = users.makeArray(obj);
+        var dfdPub = users.getUserInfo(jids, cid);
 
-    // 查询用户信息失败
-    if (dfdPub === null) {
-        me.userInfoFail = true;
-    }
-    else {
-        dfdPub
-            .done(function (pubData) {
-                me.renderUser(pubData.contacts);
-            })
-            .fail(function () {
-                me.failUser();
-            });
+        // 查询用户信息失败
+        if (dfdPub === null) {
+            me.userInfoFail = true;
+        }
+        else {
+            dfdPub
+                .done(function (pubData) {
+                    me.renderUser(pubData.contacts);
+                })
+                .fail(function () {
+                    me.failUser();
+                });
+        }
     }
 
     // 初始化附件组件
@@ -226,7 +228,7 @@ page.renderUser = function (dataArr) {
  *
  */
 /* eslint-disable */
-var doing = +util.params('talk_id');
+
 
 
 if (doing) {

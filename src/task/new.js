@@ -52,31 +52,35 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
-    // 渲染人员信息
-    util.getDataFromObj(pageData, me.data);
 
-    // 下面为获取人员信息的配置
-    var obj = {
-        principal: pageData['principal_user'],
-        partner: pageData['attend_ids']
-    };
-    var cid = ls.getData('TASK_PARAMS')['cid'];
-    var jids = users.makeArray(obj);
-    var dfdPub = users.getUserInfo(jids, cid);
+    if (doing) {
+        // 渲染人员信息
+        util.getDataFromObj(pageData, me.data);
 
-    // 查询用户信息失败
-    if (dfdPub === null) {
-        me.userInfoFail = true;
+        // 下面为获取人员信息的配置
+        var obj = {
+            principal: pageData['principal_user'],
+            partner: pageData['attend_ids']
+        };
+        var cid = ls.getData('TASK_PARAMS')['cid'];
+        var jids = users.makeArray(obj);
+        var dfdPub = users.getUserInfo(jids, cid);
+
+        // 查询用户信息失败
+        if (dfdPub === null) {
+            me.userInfoFail = true;
+        }
+        else {
+            dfdPub
+                .done(function (pubData) {
+                    me.renderUser(obj, pubData.contacts);
+                })
+                .fail(function () {
+                    me.failUser();
+                });
+        }
     }
-    else {
-        dfdPub
-            .done(function (pubData) {
-                me.renderUser(obj, pubData.contacts);
-            })
-            .fail(function () {
-                me.failUser();
-            });
-    }
+    
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachements);

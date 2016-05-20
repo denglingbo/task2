@@ -179,6 +179,7 @@ page.bindEvents = function () {
     $('#submit').on('click', function () {
         var dataArg = me.getData(+me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
+        var taskId = util.params('task_id');
         promise
             .done(function (result) {
                 if (result.meta.code === 200) {
