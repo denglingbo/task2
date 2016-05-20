@@ -14,7 +14,10 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
+
+// 判断是否是编辑页面
 var doing = +util.params('talk_id');
+
 var page = new Page({
     pageName: 'talk-new'
 });
@@ -231,27 +234,34 @@ page.renderUser = function (dataArr) {
 
 
 
-if (doing) {
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var url = config.API.TALK_DETAIL_URL;
-        var promise = me.get(url, {
-            talk_id: +util.params('talk_id')
-        });
+page.addParallelTask(function (dfd) {
+    var me = this;
 
-        promise
-            .done(function (result) {
-                if (result.meta.code !== 200) {
-                    dfd.reject(result);
-                }
-                else {
-                    // $.extend(pageData, result.data);
-                    dfd.resolve();
-                }
-            });
-        return dfd;
-    });
+
+if (!doing) {
+    dfd.resolve();
+    return dfd;
 }
+
+    var url = config.API.TALK_DETAIL_URL;
+    var promise = me.get(url, {
+        talk_id: +util.params('talk_id')
+    });
+
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                // $.extend(pageData, result.data);
+                dfd.resolve();
+            }
+        });
+    return dfd;
+});
+
+
 /* eslint-enable */
 $(function () {
     page.start();

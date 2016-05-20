@@ -14,6 +14,9 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 // var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
+// 判断是否是编辑页面
+var doing = +util.params('task_id');
+
 var page = new Page({
     pageName: 'task-new'
 });
@@ -360,7 +363,6 @@ page.renderUser = function (originArr, dataArr) {
  *
  */
 /* eslint-disable */
-var doing = +util.params('task_id');
 
 if (doing) {
     page.addParallelTask(function (dfd) {

@@ -260,7 +260,7 @@ Page.prototype.devicereadyEnter = function () {
  * 等待 设备 & 数据 准备完成
  */
 Page.prototype.deviceAndDataListener = function () {
-    if (window.isDeviceready && this.data) {
+    if (window.isDeviceready && this.isDone) {
         this.allready();
     }
 };

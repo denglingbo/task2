@@ -13,6 +13,9 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 // var CPNavigationBar = require('dep/campo-navigationbar/campo-navigationbar');
 
+// 判断是否是编辑页面
+var doing = +util.params('affair_id');
+
 var page = new Page({
     pageName: 'affair-new'
 });
@@ -65,7 +68,6 @@ page.allready = function () {
  *
  */
 page.bindEvents = function () {
-    var me = this;
 
     editCom.bindGetFocus();
 };
@@ -164,8 +166,6 @@ page.initPlugin = function () {
  *
  */
 /* eslint-disable */
-var doing = +util.params('affair_id');
-
 
 if (doing) {
     page.addParallelTask(function (dfd) {
