@@ -158,7 +158,7 @@ page.enter = function () {
         };
         this.attach = AttachWrapper.initAttach(attachOptions);
     }
-    // 这里两个输入框的 limit 相同，所以都用一样的配置
+
     $('.phone-input').each(function (i) {
         var limits = 50;
         if (!+pageType && i) {

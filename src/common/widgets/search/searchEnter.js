@@ -25,7 +25,8 @@ function Search(page, options, fn) {
     this.opts = {
         isSearchPage: false,
         selector: '',
-        inject: 'body'
+        inject: 'body',
+        api: ''
     };
 
     if (!page) {
@@ -142,10 +143,11 @@ Search.prototype.loadHtml = function () {
  *
  */
 Search.prototype.redirectSearch = function () {
+    var opts = this.opts;
     var href = location.href;
     ls.addData('history', href);
     /* eslint-disable */
-    CPNavigationBar.redirect('/search-search.html?key=' + encodeURIComponent(this.dom.$input.val()), '搜索');
+    CPNavigationBar.redirect('/search-search.html?key=' + encodeURIComponent(this.dom.$input.val()) + '&page=' + opts.api, '搜索');
     /* eslint-enable */
 };
 
