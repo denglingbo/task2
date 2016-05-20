@@ -54,13 +54,8 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
-    var me = this;
     $('.done-early').on('click', function () {
         setCurr('done-early');
-    });
-
-    $('#submit').on('click', function () {
-        me.returnValue(true);
     });
 };
 
@@ -96,6 +91,13 @@ page.initValue = function () {
         $('.done-time-value').text(util.formatTime(info.endTime));
         setCurr('custom-time');
     }
+};
+
+page.deviceready = function () {
+    var me = this;
+    $('#submit').on('click', function () {
+        me.returnValue(true);
+    });
 };
 
 page.returnValue = function (hasVal) {

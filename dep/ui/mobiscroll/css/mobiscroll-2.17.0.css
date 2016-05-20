@@ -2070,7 +2070,7 @@
     width: 20px;
     height: 20px;
     margin-top: -10px;
-    background: url(../img/icon_list_choice.png) 0 0 no-repeat;
+    /*background: url(../img/icon_list_choice.png) 0 0 no-repeat;*/
     background-size: 20px 20px;
 }
 .mbsc-android-holo .dw-msel:before {
@@ -2082,7 +2082,7 @@
     height: 20px;
     margin-top: -10px;
     line-height: .875em;
-    background: url(../img/icon_list_choice_pre.png) 0 0 no-repeat;
+    /*background: url(../img/icon_list_choice_pre.png) 0 0 no-repeat;*/
     background-size: 20px 20px;
 }
 /* Group select */
