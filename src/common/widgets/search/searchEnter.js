@@ -8,6 +8,7 @@
 require('./searchEnter.scss');
 require('dep/touch');
 var ls = require('common/localstorage');
+var util = require('common/util');
 
 /**
  * Search
@@ -17,6 +18,7 @@ var ls = require('common/localstorage');
  *      param {boolean} isSearchPage 搜索页面为true
  *      param {string} selector, 需要初始化搜索框的容器;
  *      param {string} inject, 搜索页的插入地方
+ *      param {string} page, task|talk|affair
  * @param {Function} fn, 搜索页的执行逻辑
  * @constructor
  */
@@ -26,7 +28,7 @@ function Search(page, options, fn) {
         isSearchPage: false,
         selector: '',
         inject: 'body',
-        api: ''
+        page: ''
     };
 
     if (!page) {
@@ -146,8 +148,12 @@ Search.prototype.redirectSearch = function () {
     var opts = this.opts;
     var href = location.href;
     ls.addData('history', href);
+    var taskId = util.params('task_id');
+    var query = taskId ? '&task_id=' + query : '';
     /* eslint-disable */
-    CPNavigationBar.redirect('/search-search.html?key=' + encodeURIComponent(this.dom.$input.val()) + '&page=' + opts.api, '搜索');
+    CPNavigationBar.redirect('/search-search.html?key=' 
+        + encodeURIComponent(this.dom.$input.val()) 
+        + '&page=' + opts.page + query, '搜索');
     /* eslint-enable */
 };
 

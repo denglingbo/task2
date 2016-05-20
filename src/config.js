@@ -71,7 +71,14 @@ var config = {
         // attach uploadUrl
         ATTACH_UPLOADURL: 'attachment/get_fs_tokens_on_create',
         // attach resumeUrl
-        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue'
+        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue',
+
+
+        // 列表
+        // 任务列表
+        GET_TASK_LIST: 'get_task_list',
+        GET_TALK_LIST: 'get_talk_list',
+        GET_AFFAIR_LIST: 'get_affair_list'
     }
 };
 

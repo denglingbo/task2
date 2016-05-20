@@ -15,6 +15,34 @@ var page = new Page({
     pageName: 'search-search'
 });
 
+var key = '';
+
+var searchPage = {
+    task: function () {
+        return {
+            detailUrl: './task-detail.html',
+            list: config.API.GET_TASK_LIST,
+            page: 'task'
+        };
+    },
+    talk: function () {
+        return {
+            detailUrl: './talk-detail.html',
+            list: config.API.GET_TALK_LIST,
+            page: 'talk',
+            taskId: util.params('task_id')
+        };
+    },
+    affair: function () {
+        return {
+            detailUrl: './affair-detail.html',
+            list: config.API.GET_AFFAIR_LIST,
+            page: 'affair',
+            taskId: util.params('task_id')
+        };
+    }
+};
+
 page.enter = function () {
     var me = this;
 
@@ -24,7 +52,10 @@ page.enter = function () {
     },
     function () {
         var that = this;
-        var key = util.params('key');
+        var page = util.params('page');
+
+        me.api = page ? searchPage[page]() : '';
+        key = util.params('key');
         key = key ? decodeURIComponent(key) : '';
         that.dom.$input.val(key);
         that.stateChange();
@@ -33,7 +64,6 @@ page.enter = function () {
         that.bindEvents(function () {
 
             $(document).on('keyup', function (e) {
-                var key = '';
                 if (e.keyCode === 13) {
                     key = that.getKey();
                     me.loadList(key);
@@ -42,23 +72,22 @@ page.enter = function () {
         });
 
     });
+
+    me.bindEvents();
 };
 
 /**
  * 匹配搜索结果中的关键字, 为关键字添加红色的className
  *
  * @param {Object} data, 待处理的搜索数据
- * @return {Object}, 处理了的搜索数据
  */
 function setResultKey(data) {
-    var key = $('#search-input').val();
-    var reg = new RegExp(key, 'g');
+    var value = key;
+    var reg = new RegExp(value);
 
-    var listData = data.map(function (item) {
-        item = item + '';
-        return item.replace(reg, '<span class="input-key">' + key + '</span>');
+    data.obj_list.forEach(function (item) {
+        item.title = item.title.replace(reg, '<span class="input-key">' + value + '</span>');
     });
-    return listData;
 }
 
 /**
@@ -67,9 +96,11 @@ function setResultKey(data) {
  */
 page.renderList = function () {
     var me = this;
-    var listData = setResultKey(me.data.obj_list);
-    me.render('.search-content', listData, {
-        tmpl: '{{#.}}<li class="item"><a href="javascript:void(0);">{{& title}}</a></li>{{/.}}'
+    setResultKey(me.data);
+    me.render('.search-content', me.data.obj_list, {
+        tmpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{task_id}}">'
+            + '<a href="javascript:void(0);">{{& title}}</a>'
+            + '</li>{{/.}}'
     });
 };
 
@@ -107,11 +138,25 @@ page.renderOutput = function () {
 /**
  * 发送请求, 获取搜索结果
  *
- * @param {string} key, 搜索关键字
+ * @param {string} value, 搜索关键字
  */
-page.loadList = function (key) {
+page.loadList = function (value) {
+    if (value === '') {
+        return;
+    }
+
     var me = this;
-    var promise = me.get(config.API.SEARCH, {});
+    var data = {
+        title: value,
+        /* eslint-disable */
+        curr_page: 1,
+        /* eslint-enable */
+        number: 15
+    };
+    /* eslint-disable */
+    me.api.taskId && (data.task_id = me.api.taskId);
+    /* eslint-enable */
+    var promise = me.get(me.api.list, data);
 
     promise
         .done(function (result) {
@@ -131,6 +176,30 @@ page.loadList = function (key) {
                 $('.search-tip').removeClass('hide');
             }
         });
+};
+
+page.bindEvents = function () {
+    var me = this;
+    $('#search').on('click', 'li', function (e) {
+        var id = $(this).attr('data-id');
+        var parentId = $(this).attr('data-taskId');
+        var query;
+        switch (me.api.page) {
+            case 'task':
+                query = '?task_id=' + id;
+                break;
+            case 'talk':
+                query = '?task_id=' + parentId + '&id=' + id;
+                break;
+            case 'affair':
+                query = '?task_id=' + parentId + '&id=' + id;
+                break;
+        }
+        /* eslint-disable */
+        CPNavigationBar.redirect(me.api.detailUrl + query);
+        /* eslint-enable */
+
+    });
 };
 
 $(function () {

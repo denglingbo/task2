@@ -39,15 +39,12 @@ page.enter = function () {
     me.bindEvents();
 };
 
-/**
- * 绑定事件
- *
- */
-page.bindEvents = function () {
+page.deviceready = function () {
     var me = this;
+    // 初始化附件组件
+    me.attach = editCom.initEditAttach(pageData.attachs);
 
-    editCom.bindGetFocus();
-
+    // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         pageData.attachs = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
@@ -61,6 +58,16 @@ page.bindEvents = function () {
             /* eslint-ensable */
         });
     });
+};
+
+/**
+ * 绑定事件
+ *
+ */
+page.bindEvents = function () {
+    var me = this;
+
+    editCom.bindGetFocus();
 };
 
 /**
@@ -133,9 +140,6 @@ page.initPlugin = function () {
             }
         });
     });
-
-    // 初始化附件组件
-    me.attach = editCom.initEditAttach(pageData.attachs);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({

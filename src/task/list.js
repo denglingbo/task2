@@ -51,7 +51,7 @@ page.enter = function () {
 
     new Search(this, {
         selector: '#search',
-        api: config.API.LIST_URL
+        page: 'task'
     });
 };
 

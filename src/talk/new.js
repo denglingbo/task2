@@ -45,15 +45,38 @@ page.enter = function () {
     me.bindEvents();
 };
 
-/**
- * 绑定事件
- *
- */
-page.bindEvents = function () {
+page.deviceready = function () {
     var me = this;
-    var valid = me.valid;
-    editCom.bindGetFocus();
+    util.getDataFromObj(pageData, me.data);
 
+    // 下面为获取人员信息的配置
+    var obj = {
+        /* eslint-disable */
+        partner: pageData['user_ids']
+        /* eslint-enable */
+    };
+    var cid = ls.getData('TASK_PARAMS').cid;
+    var jids = users.makeArray(obj);
+    var dfdPub = users.getUserInfo(jids, cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        me.userInfoFail = true;
+    }
+    else {
+        dfdPub
+            .done(function (pubData) {
+                me.renderUser(pubData.contacts);
+            })
+            .fail(function () {
+                me.failUser();
+            });
+    }
+
+    // 初始化附件组件
+    me.attach = editCom.initEditAttach(pageData.attachs);
+
+    // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         pageData.attachs = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
@@ -89,6 +112,14 @@ page.bindEvents = function () {
 };
 
 /**
+ * 绑定事件
+ *
+ */
+page.bindEvents = function () {
+    editCom.bindGetFocus();
+};
+
+/**
  * 加载页面
  *
  */
@@ -119,9 +150,6 @@ page.initPlugin = function () {
     var me = this;
     // 初始化紧急程度
     editCom.initImportanceLevel('#urgencyBlock', pageData);
-
-    // 初始化附件组件
-    me.attach = editCom.initEditAttach(pageData.attachs);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -216,30 +244,6 @@ if (doing) {
                 }
                 else {
                     // $.extend(pageData, result.data);
-                    util.getDataFromObj(pageData, result.data);
-
-                    // 下面为获取人员信息的配置
-                    var obj = {
-                        partner: pageData['user_ids']
-                    };
-                    var cid = ls.getData('TASK_PARAMS')['cid'];
-                    var jids = users.makeArray(obj);
-                    var dfdPub = users.getUserInfo(jids, cid);
-
-                    // 查询用户信息失败
-                    if (dfdPub === null) {
-                        me.userInfoFail = true;
-                    }
-                    else {
-                        dfdPub
-                            .done(function (pubData) {
-                                me.renderUser(pubData.contacts);
-                            })
-                            .fail(function () {
-                                me.failUser();
-                            });
-                    }
-
                     dfd.resolve();
                 }
             });
