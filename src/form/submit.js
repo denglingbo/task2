@@ -5,7 +5,6 @@
  * 提交公用页面
  * 撤销，拒绝，...
  */
-
 require('./submit.scss');
 
 var config = require('config');

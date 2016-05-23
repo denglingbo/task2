@@ -90,6 +90,7 @@ module.exports = function () {
     };
 
     // 图片 path
+    // img 为 输出后的 图片的 文件夹
     var imgPath = config.debug ? '' : 'img/';
 
     // module 加载器
@@ -157,7 +158,7 @@ module.exports = function () {
         // Reference: https://github.com/webpack/extract-text-webpack-plugin
         // 'common/css/[contenthash:8].[name].min.css'
         webpackConfig.plugins.push(
-            new ExtractTextPlugin('css/[name].min.css')
+            new ExtractTextPlugin('css/[name].min.css', {allChunks: true})
         );
     // }
 
