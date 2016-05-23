@@ -312,14 +312,13 @@ editCom.initMobiscroll = function (method, selector, data) {
  */
 editCom.initEditAttach = function (data) {
     var me = this;
-    var attachObj = attachWrapper.initDetailAttach({
-        attachData: data,
+    var attachObj = attachWrapper.initAttach({
         container: '#attachList',
         addBtn: '#addAttach',
         callback: function () {
             me.valid.isEdit = true;
         }
-    });
+    }, data);
     return attachObj;
 };
 
@@ -381,9 +380,10 @@ editCom.personIsChange = function (oldValue, newValue) {
 editCom.loadPage = function (page, data) {
     var template = require('common/widgets/edit/new');
     var alertTpl = require('common/widgets/edit/alert');
+    var attach = require('common/middleware/attach/attach.tpl');
 
     page.render('#edit-container', data, {
-        partials: {editMain: template, alertBox: alertTpl}
+        partials: {editMain: template, alertBox: alertTpl, attach: attach}
     });
 };
 

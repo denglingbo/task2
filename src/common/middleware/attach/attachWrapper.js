@@ -11,7 +11,7 @@ window.Mustache = Mustache;
 require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
-var util = require('common/util');
+// var util = require('common/util');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -26,7 +26,7 @@ var clientMsg = (function () {
         client: data.client,
         lang: data.lang,
         puse: data.puse,
-        appver: data.appver || '111.1.1'
+        appver: data.appver
     };
 })();
 
@@ -86,10 +86,12 @@ attach.initAttach = function (options, attachData) {
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
-    var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
+    // var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
+    var renderString = attachObj.getRenderString();
 
     $(options.dom.containerDOM).append(renderString.attach);
-    Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
+    // Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
+    attachObj.initEvent();
     /* eslint-enable */
     return attachObj;
 };
@@ -106,7 +108,7 @@ attach.initAttach = function (options, attachData) {
  * @return {Object}, 附件对象
  */
 attach.initDetailAttach = function (options) {
-    var me = this;
+    // var me = this;
     if (!options.addBtn && (!options.attachData || options.attachData.length < 1)) {
         if (options.wrapper) {
             $(options.wrapper).addClass('hide');
@@ -118,6 +120,7 @@ attach.initDetailAttach = function (options) {
     }
     // 初始化附件组件
     var attachOptions = {
+        originAttaches: (options.attachData || []),
         dom: {
             // 附件容器DOM元素
             containerDOM: options.container,
@@ -126,9 +129,18 @@ attach.initDetailAttach = function (options) {
         operateType: options.addBtn ? 'upload' : 'download',
         callback: options.callback
     };
-
-    var attachObj = me.initAttach(attachOptions, util.transKey(options.attachData));
+    attachOptions = $.extend(
+        attachOption,
+        methodOption[options.operateType],
+        options
+    );
+    /* eslint-disable */
+    var attachObj = new Attach(attachOptions);
+    var renderString = Attach.getRenderString({attach: options.attachData}, attachOptions.clientMsg.appver);
+    $(attachOptions.containerDOM).append(renderString.attach);
+    Attach.initEvent(attachOptions.containerDOM, attachOptions.clientMsg.lang);
     return attachObj;
+    /* eslint-enable */
 };
 
 module.exports = attach;

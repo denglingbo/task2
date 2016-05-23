@@ -10,4 +10,5 @@
            <div id="edit-content" class="input" contenteditable="plaintext-only" data-placeholder="{{placeholderContent}}">{{& content}}</div> 
         </div>
     </div>
+    {{> attach}}
 </div>

@@ -106,22 +106,6 @@
     .content-wrap {
         height: rem(90px);
     }
-
-    .edit-attach {
-
-        .edit-add-attach {
-            min-height: rem(50px);
-            line-height: rem(48px);
-            color: #797c80;
-            font-size: rem(14px);
-            display: flex;
-            align-items: center;
-            
-            >i {
-                margin-right: rem(6px);
-            }
-        }
-    }
 }
 
 .edit-option {
@@ -219,5 +203,21 @@
     .dwhl {
         padding-left: rem(22px);
         padding-right: rem(22px);
+    }
+}
+
+.edit-attach {
+
+    .edit-add-attach {
+        min-height: rem(50px);
+        line-height: rem(48px);
+        color: #797c80;
+        font-size: rem(14px);
+        display: flex;
+        align-items: center;
+        
+        >i {
+            margin-right: rem(6px);
+        }
     }
 }
