@@ -202,9 +202,9 @@ Webpacker.prototype.getCommonPlugins = function () {
     // 生产环境 打包
     if (!this.config.debug) {
 
-        plugins.push(
-            new webpack.optimize.UglifyJsPlugin()
-        );
+        // plugins.push(
+        //     new webpack.optimize.UglifyJsPlugin()
+        // );
 
         // 没有报错才发布文件
         plugins.push(

@@ -158,7 +158,7 @@ module.exports = function () {
         // Reference: https://github.com/webpack/extract-text-webpack-plugin
         // 'common/css/[contenthash:8].[name].min.css'
         webpackConfig.plugins.push(
-            new ExtractTextPlugin('css/[name].min.css', {allChunks: true})
+            new ExtractTextPlugin('css/[name].min.css')
         );
     // }
 
