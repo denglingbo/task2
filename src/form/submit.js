@@ -16,6 +16,7 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var page = new Page({
     pageName: 'form-submit'
 });
+var lang = page.lang;
 
 // 验证参数
 var valid = {
@@ -39,13 +40,13 @@ var pages = {
     '0': function (isMaster) {
         var arr = [{
             name: 'summary',
-            holder: '请输入任务总结(选填)'
+            holder: lang.taskSummaryPlaceholder
         }];
 
         if (isMaster === 0) {
             arr.unshift({
                 name: 'applyReason',
-                holder: '请输入申请理由(选填)'
+                holder: lang.applyReasonPlaceholder
             });
         }
 
@@ -56,7 +57,7 @@ var pages = {
     '1': function () {
         return [{
             name: 'cancel',
-            holder: '请输入撤销理由'
+            holder: lang.cancelReasonPlaceholder
         }];
     },
 
@@ -64,7 +65,7 @@ var pages = {
     '2': function () {
         return [{
             name: 'oppose',
-            holder: '请输入拒绝理由'
+            holder: lang.opposeReasonPlaceholder
         }];
     },
 
@@ -72,7 +73,7 @@ var pages = {
     '3': function () {
         return [{
             name: 'agree',
-            holder: '请输入同意理由'
+            holder: lang.agreeReasonPlaceholder
         }];
     }
 };
@@ -154,11 +155,8 @@ page.enter = function () {
 
     if (+pageType === 0) {
         var attachOptions = {
-            dom: {
-                containerDOM: '#attachList',
-                addBtnDOM: '#addAttach'
-            },
-            operateType: 'upload'
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
         };
         this.attach = AttachWrapper.initAttach(attachOptions);
     }
@@ -187,19 +185,19 @@ function cancelValidate() {
 
     if(valid.isEdited) {
         var cancelButton = {
-            title: '取消',
+            title: lang.cancel,
             callback: function () {
 
             }
         };
 
         var OKButton = {
-            title: '确认',
+            title: lang.confirm,
             callback: function () {
 
             }
         };
-        CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
+        CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
     }
 };
 page.deviceready = function () {

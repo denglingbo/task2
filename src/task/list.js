@@ -42,8 +42,10 @@ var pages = [
 var pageCache = {};
 
 page.enter = function () {
-
+    var me = this;
     // new Sticky({target: selector, top: 0});
+    me.render('#main', me.data);
+    me.render('#fixbar', me.data);
 
     this.initSlider();
 
@@ -102,7 +104,6 @@ page.initSlider = function () {
  */
 page.loadPage = function (info, data) {
     var me = this;
-
     require.ensure(['./list/item'], function () {
 
         var template = require('./list/item');

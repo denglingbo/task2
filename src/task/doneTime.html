@@ -8,21 +8,24 @@
 </head>
 <body>
 	<div class="main">
-		<div class="done-container">
-			<div class="option-group">
-				<div class="done-early option">
-					<i class="hook"></i>
-					<span>尽快完成</span>
-				</div>
-				<div class="custom-time option">
-					<i class="hook hide"></i>
-					<span class="title">自定义</span>
-					<span class="done-time-value"></span>
-				</div>
-			</div>
-			<button id="submit">submit</button>
+		<div id="done-container" class="done-container">
+			
 		</div>
 	</div>
+	<script id="done-container-tmpl" type="x-tmpl-mustache">
+		<div class="option-group">
+			<div class="done-early option">
+				<i class="hook"></i>
+				<span>{{lang.earlyComplete}}</span>
+			</div>
+			<div class="custom-time option">
+				<i class="hook hide"></i>
+				<span class="title">{{lang.custom}}</span>
+				<span class="done-time-value"></span>
+			</div>
+		</div>
+		<button id="submit">submit</button>
+	</script>
     <script type="text/javascript" src="./cordova.js"></script>
 </body>
 </html>

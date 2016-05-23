@@ -51,14 +51,15 @@ page.enter = function () {
     var me = this;
     this.$main = $('.main');
 
-    this.data.describeTitle = '讨论描述';
+    this.data.describeTitle = me.lang.talkDescribeTitle;
+
     this.render('#detail-main', this.data, {
         partials: {
             title: tmplTitle,
             describe: tmplDescribe
         }
     });
-
+    me.render('#goalui-fixedinput', {lang: me.data.lang});
     this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
     this.ticker = new Ticker('.tick', {
@@ -188,7 +189,7 @@ page.renderUser = function (arr) {
         dataRaw.partnerJids = partnerJids.join(',');
     }
 
-    this.render('#partner', dataRaw);
+    this.render('#partner', $.extend({lang: this.lang}, dataRaw));
 };
 
 /**

@@ -12,7 +12,7 @@
     <script id="main-tmpl" type="x-tmpl-mustache">
     <div id="menu" class="menu">
         <ul>
-            <li class="director">
+            <li class="director" data-log='{"da_src":"indexMyDuty"}'>
                 <div>
                     <p>
                         <b>{{ lang.director }}</b>
@@ -20,7 +20,7 @@
                     </p>
                 </div>
             </li>
-            <li class="dispatch">
+            <li class="dispatch" data-log='{"da_src":"indexMyAssign"}'>
                 <div>
                     <p>
                         <b>{{ lang.dispatch }}</b>
@@ -28,7 +28,7 @@
                     </p>
                 </div>
             </li>
-            <li class="partake">
+            <li class="partake" data-log='{"da_src":"indexMyAttend"}'>
                 <div>
                     <p>
                         <b>{{ lang.partake }}</b>
@@ -39,7 +39,7 @@
         </ul>
     </div>
 
-    <div id="add-newtask" class="add-task">
+    <div id="add-newtask" class="add-task" data-log='{"da_src":"indexNewTask"}'>
         <div class="button-layout">
             <div class="button"></div>
             <div class="text">{{ lang.newTask }}</div>

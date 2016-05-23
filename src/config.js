@@ -95,7 +95,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '0c4f5301-02bb-4d4e-89fc-acb0fda5c351'
+    token: '8d970615-81e9-43e5-a3d2-ee1025a5c33a-231514'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -113,8 +113,8 @@ if (config.debug) {
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
-    // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.prefix = '/data/';
+    config.API.host = document.location.protocol + '//task2.test1.com:8015';
+    config.API.prefix = '/data/';
 }
 
 module.exports = config;

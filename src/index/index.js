@@ -28,6 +28,16 @@ page.enter = function () {
 
 page.deviceready = function () {
     this.bindEvents();
+    var lang = this.lang;
+    /* eslint-disable */
+    CPNavigationBar.setLeftButton({
+        title: lang.back,
+        iconPath: '',
+        callback: function () {
+            CPNavigationBar.returnPreviousPage();
+        }
+    });
+    /* eslint-enable */
 };
 
 page.initHomeNum = function () {

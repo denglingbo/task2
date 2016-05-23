@@ -77,7 +77,6 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
-    attachData = attachData || {};
     var attachOptions = {
         originAttaches: (attachData || []),
         dom: {

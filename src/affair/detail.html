@@ -25,19 +25,22 @@
 
     <!-- 底部输入框 -->
     <div id="goalui-fixedinput-shadow" class="hide"></div>
-    <div class="goalui-fixedinput">
+
+    <div id="goalui-fixedinput" class="goalui-fixedinput"></div>
+
+    <script id="goalui-fixedinput-tmpl" type="x-tmpl-mustache">
         <div class="input-out">
             <div class="editable-out">
                 <div class="editable" contenteditable="plaintext-only"></div>
             </div>
-            <p class="placeholder">写评论</p>
+            <p class="placeholder">{{ lang.writeComment }}</p>
         </div>
         <div class="limit"></div>
         <div class="button-wrap">
             <span class="button"></span>
-            <span class="send hide">发送</span>
+            <span class="send hide" data-log='{"da_src":"affairDetailSubmitComment"}'>{{ lang.send }}</span>
         </div>
-    </div>
+    </script>
 
     <script type="text/javascript" src="/cordova.js"></script>
 </body>

@@ -23,16 +23,16 @@
         <dl id="partner" class="layout-list partner">
             <!-- Call pub data -->
             {{#userInfoFail}}
-            <dt class="sub-title">没有获取到人员信息</dt>
+            <dt class="sub-title">{{ lang.noGetPersonInfo }}</dt>
             {{/userInfoFail}}
             {{^userInfoFail}}
-            <dt class="sub-title">数据加载中</dt>
+            <dt class="sub-title">{{ lang.dataLoading }}</dt>
             {{/userInfoFail}}
         </dl>
 
         <!-- 附件 -->
         <div class="layout-list attach">
-            <div class="sub-title">附件</div>
+            <div class="sub-title">{{ lang.attach }}</div>
             <div class='attach-container'></div>
         </div>
         </script>
@@ -42,10 +42,10 @@
 
     <!-- 团队成员 -->
     <script id="partner-tmpl" type="x-tmpl-mustache">
-    <dt class="sub-title">团队成员</dt>
+    <dt class="sub-title">{{ lang.partner }}</dt>
     {{#partnerLength}}
     <dd class="partner-more" data-jids="{{partnerJids}}">
-        <div class="column-left">参与人: </div>
+        <div class="column-left">{{lang.attends}}: </div>
         <div class="column-middle">
             <div class="column-inner">
                 {{partnerRaw}}
@@ -54,7 +54,7 @@
         <div class="column-right">
             <div class="column-more">
                 {{#partnerLength}}
-                <em>{{ partnerLength }}人</em>
+                <em>{{ partnerLength }}{{lang.man}}</em>
                 <em class="arrow"><i></i></em>
                 {{/partnerLength}}
             </div>
@@ -62,23 +62,23 @@
     </dd>
     {{/partnerLength}}
     </script>
-
+    
     <!-- 底部输入框 -->
     <div id="goalui-fixedinput-shadow" class="hide"></div>
-    <div class="goalui-fixedinput">
+    <div id="goalui-fixedinput" class="goalui-fixedinput"></div>
+    <script id="goalui-fixedinput-tmpl" type="x-tmpl-mustache">
         <div class="input-out">
             <div class="editable-out">
                 <div class="editable" contenteditable="plaintext-only"></div>
             </div>
-            <p class="placeholder">写评论</p>
+            <p class="placeholder">{{ lang.writeComment }}</p>
         </div>
         <div class="limit"></div>
         <div class="button-wrap">
             <span class="button"></span>
-            <span class="send hide">发送</span>
+            <span class="send hide">{{ lang.send }}</span>
         </div>
-    </div>
-
+    </script>
     <script type="text/javascript" src="./cordova.js"></script>
 </body>
 
