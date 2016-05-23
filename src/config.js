@@ -11,7 +11,7 @@ var config = {
         // 用于发送异步请求
         host: document.location.protocol + '//web.test1.com',
 
-        prefix: '/task/m/v1/',
+        prefix: '/mgw/task/v1/',
 
         HOME_URL: 'get_home_remind',
 

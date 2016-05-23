@@ -10,7 +10,6 @@ var connect = require('gulp-connect');
  * webpack dev server 配置
  */
 var getServerConfig = function (me) {
-
     return {
         // dev 模式 静态入口文件访问位置
         contentBase: '',
@@ -68,6 +67,7 @@ var servers = {
         return connect.server({
             root: this.webpackConfig.output.path,
             port: this.config.port,
+            https: this.config.https,
             livereload: true
         });
     },

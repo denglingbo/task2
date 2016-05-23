@@ -34,10 +34,10 @@ module.exports = function () {
     webpackConfig.entry = this.jsEntries;
 
     var copyPlugins = [
-        {
-            from: './dep/',
-            to: './dep/'
-        }
+        // {
+        //     from: './dep/ui/',
+        //     to: './dep/ui/'
+        // }
         // ,
         // {
         //     from: './src/common/img/',
@@ -133,6 +133,8 @@ module.exports = function () {
         ]
     };
 
+    // var ignoreFiles = new webpack.IgnorePlugin(/\/mobiscroll-2.17.0.js$/);
+
     // 插件集合
     webpackConfig.plugins = [
 
@@ -158,7 +160,9 @@ module.exports = function () {
         // Reference: https://github.com/webpack/extract-text-webpack-plugin
         // 'common/css/[contenthash:8].[name].min.css'
         webpackConfig.plugins.push(
-            new ExtractTextPlugin('css/[name].min.css')
+            new ExtractTextPlugin('css/[name].min.css', {
+                allChunks: true
+            })
         );
     // }
 
