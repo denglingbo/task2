@@ -11,6 +11,7 @@ window.Mustache = Mustache;
 require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
+var lang = require('common/lang').getData();
 // var util = require('common/util');
 
 var clientMsg = (function () {
@@ -77,19 +78,29 @@ var attach = {};
  */
 attach.initAttach = function (options, attachData) {
     attachData = attachData || {};
-    var attachOptions = $.extend(
-        {originAttaches: attachData},
+    var attachOptions = {
+        originAttaches: (attachData || []),
+        dom: {
+            // 附件容器DOM元素
+            containerDOM: options.container,
+            addBtnDom: options.addBtn
+        },
+        operateType: options.addBtn ? 'upload' : 'download',
+        callback: options.callback
+    };
+    $.extend(
+        attachOptions,
         attachOption,
-        methodOption[options.operateType],
-        options
+        methodOption[attachOptions.operateType]
     );
+
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
     // var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
     var renderString = attachObj.getRenderString();
 
-    $(options.dom.containerDOM).append(renderString.attach);
+    $(attachOptions.dom.containerDOM).append(renderString.attach);
     // Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
     attachObj.initEvent();
     /* eslint-enable */
@@ -114,13 +125,12 @@ attach.initDetailAttach = function (options) {
             $(options.wrapper).addClass('hide');
         }
         else {
-            $(options.container).html('<div class="no-attach">无附件</div>');
+            $(options.container).html('<div class="no-attach">' + lang.noAttach + '</div>');
         }
         return;
     }
     // 初始化附件组件
     var attachOptions = {
-        originAttaches: (options.attachData || []),
         dom: {
             // 附件容器DOM元素
             containerDOM: options.container,
@@ -129,16 +139,16 @@ attach.initDetailAttach = function (options) {
         operateType: options.addBtn ? 'upload' : 'download',
         callback: options.callback
     };
-    attachOptions = $.extend(
+    $.extend(
+        attachOptions,
         attachOption,
-        methodOption[options.operateType],
-        options
+        methodOption[attachOptions.operateType]
     );
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
     var renderString = Attach.getRenderString({attach: options.attachData}, attachOptions.clientMsg.appver);
-    $(attachOptions.containerDOM).append(renderString.attach);
-    Attach.initEvent(attachOptions.containerDOM, attachOptions.clientMsg.lang);
+    $(attachOptions.dom.containerDOM).append(renderString.attach);
+    Attach.initEvent(attachOptions.dom.containerDOM, attachOptions.clientMsg.lang);
     return attachObj;
     /* eslint-enable */
 };

@@ -23,6 +23,7 @@ var doing = +util.params('talk_id');
 var page = new Page({
     pageName: 'talk-new'
 });
+var lang = page.lang;
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -102,7 +103,7 @@ page.allready = function () {
     // 选择人员跳转页面
     $('#attends').click(function () {
         var oldVal = pageData['user_ids'];
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
             if (!data) {
                 return;
             }
@@ -136,18 +137,18 @@ page.loadPage = function () {
         view: [
             {
                 id: 'urgencyBlock',
-                title: '紧要程度',
+                title: lang.urgentLevel,
                 /* eslint-disable */
                 value: editCom.initImportValue(pageData['importance_level'])
                 /* eslint-enable */
             },
             {
                 id: 'attends',
-                title: '参与人'
+                title: lang.attends
             }
         ],
-        placeholderTitle: '请输入讨论标题(必填)',
-        placeholderContent: '请输入讨论描述(选填)'
+        placeholderTitle: lang.newTalkPlaceholderTitle,
+        placeholderContent: lang.newTalkPlaceholderContent
     });
 
     editCom.loadPage(me, data);
@@ -200,7 +201,7 @@ page.initValue = function () {
  *
  */
 page.failUser = function () {
-    $('#attends .value').html('数据加载失败, 刷新重试');
+    $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
 };
 
 /**

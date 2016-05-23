@@ -6,6 +6,8 @@
  */
 
 require('./doneTime.scss');
+require('dep/ui/mobiscroll/css/mobiscroll-2.17.0.css');
+require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
@@ -14,7 +16,7 @@ var editCom = require('common/widgets/edit/editCommon');
 var page = new Page({
     pageName: 'task-doneTime'
 });
-
+var lang = page.lang;
 
 var info = {
     endTime: 0
@@ -62,15 +64,16 @@ page.bindEvents = function () {
 page.initPlugin = function (initTime) {
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
     editCom.initMobiscroll('datetime', '.custom-time', {
-        headerText: '<span class="dw-tab-data dw-tab-selected">日期</span><span class="dw-tab-time">时间</span>',
+        headerText: '<span class="dw-tab-data dw-tab-selected">'
+            + lang.date + '</span><span class="dw-tab-time">' + lang.time + '</span>',
         minDate: new Date(date.y - 50, 0, 1),
         maxDate: new Date(date.y + 50, 11, 31, 23, 59, 59),
         defaultValue: defaultTime,
-        yearSuffix: '年',
-        monthSuffix: '月',
-        daySuffix: '日',
-        hourSuffix: '时',
-        minuteSuffix: '分',
+        yearSuffix: lang.year,
+        monthSuffix: lang.month,
+        daySuffix: lang.day,
+        hourSuffix: lang.hour,
+        minuteSuffix: lang.monutes,
         onSelect: function (text, inst) {
             // 完整毫秒数
             info.endTime = new Date(inst.getVal()).getTime();

@@ -57,6 +57,7 @@ page.enter = function () {
 
 page.allready = function () {
     var me = this;
+    var lang = me.lang;
 
     if (doing) {
         // 渲染人员信息
@@ -107,7 +108,7 @@ page.allready = function () {
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         var oldVal = pageData['end_time'];
-        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['end_time'], '完成时间', false, function (data) {
+        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['end_time'], lang.completeTime, false, function (data) {
             if (!data) {
                 return;
             }
@@ -135,7 +136,7 @@ page.allready = function () {
             id = '#attends';
         } 
         oldVal = pageData[itemKey];
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key, '选人', false, function (data) {
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key, lang.choosePerson, false, function (data) {
             if (!data) {
                 return;
             }
@@ -172,17 +173,18 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
+    var lang = me.lang;
     var data = $.extend({}, pageData, {
         view: [
             {
                 persons: [
                     {
                         id: 'principal',
-                        title: '负责人'
+                        title: lang.principal
                     },
                     {
                         id: 'attends',
-                        title: '参与人'
+                        title: lang.attends
                     }
                 ]
             },
@@ -190,14 +192,14 @@ page.loadPage = function () {
                 options: [
                     {
                         id: 'doneTime',
-                        title: '完成时间',
+                        title: lang.completeTime,
                         /* eslint-disable */
                         value: editCom.initDoneTime(pageData['end_time'])
                         /* eslint-enable */
                     },
                     {
                         id: 'urgencyBlock',
-                        title: '紧要程度',
+                        title: lang.urgentLevel,
                         /* eslint-disable */
                         value: editCom.initImportValue(pageData['importance_level'])
                         /* eslint-enable */
@@ -205,8 +207,8 @@ page.loadPage = function () {
                 ]
             }
         ],
-        placeholderTitle: '请输入任务标题(必填)',
-        placeholderContent: '请输入任务描述(选填)'
+        placeholderTitle: lang.newTaskPlaceholderTitle,
+        placeholderContent: lang.newTaskPlaceholderContent
     });
 
     editCom.loadPage(me, data);
@@ -316,7 +318,8 @@ page.findOwner = function (srcObject, itemObject, appendObject) {
  *
  */
 page.failUser = function () {
-    $('#attends .value').html('数据加载失败, 刷新重试');
+    var me = this;
+    $('#attends .value').html(me.lang.dataLoadFailPleaseReLoad);
 };
 
 /**

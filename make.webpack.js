@@ -66,7 +66,9 @@ module.exports = function () {
         alias: {
             zepto: dep + 'zepto',
             dep: dep,
-            common: common
+            common: common,
+
+            mob: dep + 'ui/mobiscroll/js/mobiscroll-2.17.0.js'
         },
 
         extensions: ['', '.js', '.tpl', '.html']

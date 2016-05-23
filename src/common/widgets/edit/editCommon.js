@@ -8,6 +8,7 @@ var util = require('common/util');
 var attachWrapper = require('common/middleware/attach/attachWrapper');
 var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
+var lang = require('common/lang').getData();
 
 var editCom = {};
 editCom.valid = {
@@ -76,7 +77,7 @@ editCom.validAlert = function (alertSentence) {
  *
  */
 editCom.submitAlert = function (isOk) {
-    var alertSentence = ['提交任务失败', '提交任务完成'];
+    var alertSentence = [lang.putTaskFailed, lang.putTaskCompleted];
     var me = this;
     var $alertDom = $('#alert-submit-after');
 
@@ -107,19 +108,19 @@ editCom.cancelValidate = function () {
 
     if(this.valid.isEdit) {
         var cancelButton = {
-            title: '取消',
+            title: lang.cancel,
             callback: function () {
 
             }
         };
 
         var OKButton = {
-            title: '确认',
+            title: lang.confirm,
             callback: function () {
 
             }
         };
-        CPUtils.showAlertView('', '确认放弃当前添加的内容', cancelButton, OKButton);
+        CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
     }
 };
 
@@ -138,19 +139,19 @@ editCom.submitValid = function (submitFn) {
     else {
         if (!validObj.title) {
             if(!$('#edit-title').text()) {
-                arr.push('标题不能为空');
+                arr.push(lang.titleCannotNull);
             }
             else {
-                arr.push('标题不能超过50字');
+                arr.push(lang.titleCannotMore50);
             }
         }
 
         if (!validObj.content) {
-            arr.push('输入内容不能超过5千字');
+            arr.push(lang.contentCannotMore5000);
         }
 
         if (!validObj.isAttachesReady) {
-            arr.push('附件尚未传输完毕');
+            arr.push(lang.attachNoReady);
         }
     }
     this.validAlert(arr);
@@ -243,19 +244,19 @@ editCom.initImportanceLevel = function (selector, data) {
     var validObj = this.valid;
     var importData = [
         {
-            text: '重要且紧急',
+            text: lang.urgentAndImportant,
             value: 4
         },
         {
-            text: '普通',
+            text: lang.general,
             value: 1
         },
         {
-            text: '重要',
+            text: lang.important,
             value: 2
         },
         {
-            text: '紧急',
+            text: lang.urgent,
             value: 3
         }
     ];
@@ -265,7 +266,7 @@ editCom.initImportanceLevel = function (selector, data) {
     });
     /* eslint-enable */
     var data = {
-        headerText: '紧急程度',
+        headerText: lang.urgentLevel,
         showInput: false,
         showMe: true,
         rows: 3,
@@ -329,7 +330,7 @@ editCom.initEditAttach = function (data) {
  * @return {string} 返回初始化的时间字符串
  */
 editCom.initDoneTime = function (time) {
-    return time ? util.formatTime(time) : '尽快完成';
+    return time ? util.formatTime(time) : lang.earlyComplete;
 };
 
 /**
@@ -339,20 +340,9 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    var importanceLevel = ['普通', '重要', '紧急', '重要且紧急'];
+    var importanceLevel = [lang.general, lang.important, lang.urgent, lang.urgentAndImportant];
     return importanceLevel[level - 1];
 };
-
-/**
- * 初始化事件页面的时间类型
- *
- * @param {number} labelId 事件类型id
- * @return {string} 根据事件类型转换的事件类型字符串
- */
-editCom.initAffairType = function (labelId) {
-    var types = ['待办', '求助', '汇报', '计划', '日志', '记录', '消息', '其他'];
-    return types[labelId - 1506];
-}
 
 /**
  * 选择人员是否改变

@@ -21,6 +21,7 @@ var doing = +util.params('affair_id');
 var page = new Page({
     pageName: 'affair-new'
 });
+var lang = page.lang;
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -84,18 +85,18 @@ page.loadPage = function () {
         view: [
             {
                 id: 'urgencyBlock',
-                title: '紧要程度',
+                title: lang.urgentLevel,
                 /* eslint-disable */
                 value: editCom.initImportValue(pageData['importance_level'])
                 /* eslint-enable */
             },
             {
                 id: 'affairType',
-                title: '事件类型'
+                title: lang.affairType
             }
         ],
-        placeholderTitle: '请输入事件标题(必填)',
-        placeholderContent: '请输入事件描述(选填)'
+        placeholderTitle: lang.newAffairPlaceholderTitle,
+        placeholderContent: lang.newAffairPlaceholderContent
     });
 
     editCom.loadPage(me, data);
@@ -128,7 +129,7 @@ page.initPlugin = function () {
         $('#affairType .value').text(currName);
         /* eslint-enable */
         editCom.initMobiscroll('select', '#affairType', {
-            headerText: '事件类型',
+            headerText: lang.affairType,
             showInput: false,
             showMe: true,
             rows: 3,
