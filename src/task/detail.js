@@ -326,7 +326,7 @@ page.findOwner = function (srcObject, arr) {
  *
  */
 page.failUser = function () {
-    $('#partner').html('<div class="sub-title">数据加载失败, 刷新重试</div>');
+    $('#partner').html('<div class="sub-title">' + this.lang.dataLoadFailPleaseReLoad + '</div>');
 };
 
 /**
