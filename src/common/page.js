@@ -340,7 +340,7 @@ Page.prototype.error = function () {};
 Page.prototype.done = function () {
     this.isDone = true;
 
-    log.init(this.opts && this.opts.pageName);
+    log.init();
 };
 
 /**
@@ -548,9 +548,9 @@ Page.prototype.ajax = function (api, data, options) {
 
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
         if (!/^\/data/.test(config.API.prefix)) {
-            // ajaxSettings.xhrFields = {
-            //     withCredentials: true
-            // };
+            ajaxSettings.xhrFields = {
+                withCredentials: true
+            };
 
             // ajaxSettings.crossDomain = true;
         }
@@ -558,12 +558,12 @@ Page.prototype.ajax = function (api, data, options) {
         delete ajaxSettings.headers;
 
         if (!/post/i.test(ajaxSettings.type)) {
-            delete ajaxSettings.contentType;
+            // delete ajaxSettings.contentType;
         }
 
-        // ajaxSettings.headers = {
-        //     'set-cookie': config.mock.token
-        // };
+        ajaxSettings.headers = {
+            'set-cookie': config.mock.token
+        };
     }
 
     ajaxSettings.success = function (result) {
