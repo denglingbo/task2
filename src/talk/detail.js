@@ -80,6 +80,7 @@ page.enter = function () {
  */
 page.allready = function () {
     var me = this;
+    var lang = me.lang;
     var data = me.data;
 
     me.attach = AttachWrapper.initDetailAttach({

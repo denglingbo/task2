@@ -382,10 +382,6 @@ if (doing) {
                     dfd.reject(result);
                 }
                 else {
-                    // $.extend(pageData, result.data);
-
-                    
-
                     dfd.resolve();
                 }
             });

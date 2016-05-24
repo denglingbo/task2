@@ -58,6 +58,8 @@ page.enter = function () {
 };
 
 page.deviceready = function () {
+    var me = this;
+    var lang = me.lang;
     /* eslint-disable */
     CPNavigationBar.setRightButton('xxx', [{
         title: '+',
