@@ -203,8 +203,28 @@ function cancelValidate() {
 page.deviceready = function () {
     var me = this;
     
-    $('#submit').on('click', function () {
+    // $('#submit').on('click', function () {
 
+    //     var dataArg = me.getData(+me.pageType);
+    //     var promise = me.post(dataArg.api, dataArg.data);
+    //     var taskId = util.params('task_id');
+    //     promise
+    //         .done(function (result) {
+    //             if (result.meta.code === 200) {
+    //                 CPNavigationBar.redirect('/task-detail.html?task_id=' + taskId);
+    //             }
+    //         })
+    //         .fail(function (result) {
+
+    //         });
+    // });
+
+    // $('#cancel').on('click', function () {
+    //     validEdited(me);
+    //     cancelValidate();
+    // });
+
+    function submit() {
         var dataArg = me.getData(+me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
         var taskId = util.params('task_id');
@@ -217,12 +237,25 @@ page.deviceready = function () {
             .fail(function (result) {
 
             });
-    });
+    }
 
-    $('#cancel').on('click', function () {
+    /* eslint-disable */
+    CPNavigationBar.setRightButton('xxx', [{
+        title: lang.submit,
+        iconPath: '',
+        callback: submit
+    }]);
+    function goBack() {
         validEdited(me);
         cancelValidate();
-    })
+    }
+    CPNavigationBar.setLeftButton({
+        title : lang.cancel,
+        iconPath : '',
+        callback : goBack
+    });
+    CPNavigationBar.setGoBackHandler(goBack,true);
+    /* eslint-enable */
 };
 
 $(function () {

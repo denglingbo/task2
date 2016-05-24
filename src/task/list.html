@@ -11,7 +11,7 @@
         
     </div>
     <script id="main-tmpl" type="x-tmpl-mustache">
-        <div id="search" data-log='{"da_src":"taskListSearch"}'></div>
+        <div id="search" data-log='{"actionTag":"taskListSearch"}'></div>
         <div class="slider-container">
             <div class="slider-outer">
 
@@ -47,8 +47,8 @@
     <script id="fixbar-tmpl" type="x-tmpl-mustache">
         <ul class="tab-page">
             <li data-name="doing">{{ lang.undoneText }}</li>
-            <li data-name="done" data-log='{"da_src":"taskListDone"}'>{{ lang.doneText }}</li>
-            <li data-name="cancel" data-log='{"da_src":"taskListCancel"}'>{{ lang.cancelText }}</li>
+            <li data-name="done" data-log='{"actionTag":"taskListDone"}'>{{ lang.doneText }}</li>
+            <li data-name="cancel" data-log='{"actionTag":"taskListCancel"}'>{{ lang.cancelText }}</li>
         </ul>
     </script>
     <script type="text/javascript" src="./cordova.js"></script>

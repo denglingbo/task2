@@ -10,7 +10,6 @@ require('./index.scss');
 var config = require('../config');
 var Page = require('common/page');
 var Pharos = require('common/ui/pharos');
-// var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
 var page = new Page({
     pageName: 'index-index'
