@@ -137,10 +137,10 @@ Page.prototype.deviceready = function () {};
 Page.prototype.domloaded = function () {};
 
 /**
- * 设备就绪 同时 页面数据准备就绪，回调 domloaded
+ * 设备就绪 同时 页面数据准备就绪，回调 allready
  *
  */
-Page.prototype.allready = function () {};
+// Page.prototype.allready = function () {};
 
 
 /**
@@ -267,18 +267,18 @@ Page.prototype.devicereadyEnter = function () {
         this.deviceready();
 
         // 检查是否全部准备就绪
-        this.deviceAndDataListener();
+        // this.deviceAndDataListener();
     }
 };
 
 /**
  * 等待 设备 & 数据 准备完成
  */
-Page.prototype.deviceAndDataListener = function () {
-    if (window.isDeviceready && this.isDone) {
-        this.allready();
-    }
-};
+// Page.prototype.deviceAndDataListener = function () {
+//     if (window.isDeviceready && this.isDone) {
+//         this.allready();
+//     }
+// };
 
 /**
  * Failed
