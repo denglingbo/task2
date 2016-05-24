@@ -25,10 +25,10 @@ var statusMap = {
 
 // 紧要程度
 var importanceMap = {
-    1: '紧急',
-    2: '尽快完成',
-    3: '提早完成',
-    4: '普通'
+    1: lang.impLevel1,
+    2: lang.impLevel2,
+    3: lang.impLevel3,
+    4: lang.impLevel4
 };
 
 detail.statusMap = statusMap;

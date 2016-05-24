@@ -48,7 +48,6 @@ page.initHomeNum = function () {
 
     promise
         .done(function (result) {
-
             if (result && result.meta.code === 200) {
                 new Pharos('#menu', result.data);
             }

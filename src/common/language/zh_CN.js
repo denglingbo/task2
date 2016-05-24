@@ -94,7 +94,10 @@ module.exports = {
     'dataLoading': '数据加载中',
     'affairAndTalk': '事件与讨论',
     'getMore': '获取更多',
-
+    'impLevel1': '重要且紧急',
+    'impLevel2': '重要',
+    'impLevel3': '紧急',
+    'impLevel4': '普通',
     'back': '返回',
     'submit': '提交'
 };
