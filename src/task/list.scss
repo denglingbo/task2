@@ -2,6 +2,7 @@
 @charset "utf-8";
 
 @import "../common/css/global.scss";
+@import "../common/css/ui.scss";
 
 .list-item {
     margin: 10px 10px 0 10px;
@@ -9,15 +10,22 @@
     background: $white;
     position: relative;
 
-    .like {
-        width: 6px;
-        height: 6px;
-        background: $black;
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        margin-top: -5px;
-        border-radius: 100%;
+    &-title {
+        @include border-1px(bottom);
+
+        padding: rem(5px) 0 rem(10px) 0;
+    }
+
+    &-content {
+        position: relative;
+
+        > div {
+            margin-top: rem(10px);
+
+            &.time {
+                margin-top: rem(15px);
+            }
+        }
     }
 }
 

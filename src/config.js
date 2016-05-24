@@ -95,7 +95,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '14ea0300-a11f-4a56-85e1-8a4fe38f40bd-231555'
+    token: 'd3f25a5d-3154-4bae-8df6-c8a69885f649-241640'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -112,8 +112,6 @@ config.debug = true;
 
 if (config.debug) {
     var loc = window.location;
-    // 联调地址
-    // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
 

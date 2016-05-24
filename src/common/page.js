@@ -543,18 +543,16 @@ Page.prototype.ajax = function (api, data, options) {
                 withCredentials: true
             };
 
-            // ajaxSettings.crossDomain = true;
+            ajaxSettings.headers = {
+                'set-cookie': config.mock.token
+            };
         }
 
         delete ajaxSettings.headers;
 
         if (!/post/i.test(ajaxSettings.type)) {
-            // delete ajaxSettings.contentType;
+            delete ajaxSettings.contentType;
         }
-
-        ajaxSettings.headers = {
-            'set-cookie': config.mock.token
-        };
 
         // if (config.debug) {
             // console.log(cookies.get('JINSESSIONID'));
@@ -583,8 +581,8 @@ Page.prototype.ajax = function (api, data, options) {
         }
     };
 
-    ajaxSettings.error = function () {
-        dfd.reject();
+    ajaxSettings.error = function (err) {
+        dfd.reject(err);
     };
 
     /* eslint-disable */

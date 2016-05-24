@@ -8,11 +8,15 @@
 require('./list.scss');
 
 var config = require('../config');
+var util = require('common/util');
 var Page = require('common/page');
 // var Sticky = require('../common/ui/sticky');
 var PageSlider = require('common/ui/pageSlider');
 var InitScroll = require('./list/initScroll');
 var Search = require('common/widgets/search/searchEnter');
+
+var raw = require('common/widgets/raw');
+
 var page = new Page();
 
 var pages = [
@@ -20,6 +24,7 @@ var pages = [
         name: 'doing',
         selector: '#list-wrapper-doing',
         index: 0,
+        api: config.API.GET_TASK_LIST,
         current: true
     },
     {
@@ -147,7 +152,7 @@ page.loadPage = function (info, data) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise = page.get(config.API.LIST_URL, {});
+    var promise = page.get(config.API.GET_TASK_LIST, {});
 
     promise
         .done(function (result) {
@@ -155,7 +160,21 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                me.data = result.data;
+                var data = result.data;
+
+                // 时间展示
+                data.updateDateRaw = function () {
+                    return util.formatDateToNow(this.op_time);
+                };
+                data.statusRaw = function() {
+                    return raw.status(this.status);
+                };
+                data.importanceRaw = function () {
+                    raw.importance(this.importance_level);
+                };
+
+                me.data = data;
+
                 dfd.resolve();
             }
         });
