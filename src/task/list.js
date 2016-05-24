@@ -115,7 +115,7 @@ page.loadPage = function (info, data) {
 
         // 为了 IScroll 一定能被绑定正确，需要添加一个 timeout
         setTimeout(function () {
-            new InitScroll(me, info);
+            new InitScroll(me, info, 86);
         }, 0);
     });
 };

@@ -8,29 +8,31 @@
 // var config = require('../../config');
 var IScroll = require('dep/iscroll');
 
-var lang = {
-
-    loader: {
-        'doing': '加载中',
-        'done': '加载完成',
-        'default': '加载更多'
-    }
-};
+var lang = {};
 
 /**
  * 初始化滚动
  *
  * @param {Object} page, new Page()
  * @param {Object} slidePage, 滚动 slidePage页 的配置
- *
+ * @param {number} offset, 偏移量
  */
-function InitScroll(page, slidePage) {
+function InitScroll(page, slidePage, offset) {
+
+    lang = {
+        'doing': page.lang.loading,
+        'done': page.lang.dataDone,
+        'default': page.lang.getMore
+    };
+
     if (!slidePage || !slidePage.name) {
         return;
     }
 
     var me = this;
     var selector = slidePage.selector;
+
+    me.offset = offset || 0;
 
     me.destroyScroll();
 
@@ -84,7 +86,7 @@ InitScroll.prototype = {
     refreshBar: function (scroll) {
         if (scroll.maxScrollY - scroll.y > 50) {
             this._refresh = true;
-            this.$loader.html(lang.loader.doing);
+            this.$loader.html(lang.doing);
         }
         else {
             this._refresh = false;
@@ -121,8 +123,7 @@ InitScroll.prototype = {
         else {
             this.$elem.find('.scroll-loader').removeClass('hide');
 
-            // 44 为底部 fixed tab 的高度
-            objHeight = this.$elem.height() + 44;
+            objHeight = this.$elem.height() + this.offset;
         }
 
         this.$elem.find('.scroll-inner').css({
@@ -157,7 +158,7 @@ InitScroll.prototype = {
             // Ajax New Data
             // $loader.addClass('hide');
             if (me._refresh) {
-                me.$loader.html(lang.loader.default);
+                me.$loader.html(lang.default);
             }
             // console.log(config.API.LIST_MORE_URL)
             // if (!me._load) {

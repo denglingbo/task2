@@ -90,6 +90,7 @@ module.exports = {
     'affairDescribeTitle': '事件描述',
     'noGetPersonInfo': '没有获取到人员信息',
     'loading': '加载中',
+    'dataDone': '加载完成',
     'dataLoading': '数据加载中',
     'affairAndTalk': '事件与讨论',
     'getMore': '获取更多',
