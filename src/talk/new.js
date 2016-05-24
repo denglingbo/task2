@@ -250,7 +250,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(pageData, me.data);
+                util.getDataFromObj(pageData, result.data);
                 dfd.resolve();
             }
         });

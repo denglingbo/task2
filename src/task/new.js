@@ -106,7 +106,7 @@ page.deviceready = function () {
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         var oldVal = pageData['end_time'];
-        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['end_time'], lang.completeTime, false, function (data) {
+        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['end_time'], lang.doneTime, false, function (data) {
             if (!data) {
                 return;
             }
@@ -385,7 +385,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(pageData, me.data);
+                util.getDataFromObj(pageData, result.data);
                 dfd.resolve();
             }
         });

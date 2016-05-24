@@ -13,7 +13,7 @@ require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
 var lang = require('common/lang').getData();
-// var util = require('common/util');
+var util = require('common/util');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -78,6 +78,7 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
+    attachData = util.transKey(attachData);
     var attachOptions = {
         originAttaches: (attachData || []),
         dom: {
@@ -128,6 +129,7 @@ attach.initDetailAttach = function (options) {
         }
         return;
     }
+    options.attachData = options.attachData ? util.transKey(options.attachData) : [];
     // 初始化附件组件
     var attachOptions = {
         dom: {
