@@ -294,6 +294,7 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
         @extend .ticked;
 
         .tick-inner {
+            -webkit-transform-origin: 5.5px 4px;
             transition: transform $ticked-step-dur * 2 $cubic $c2s-dur;
         }
         

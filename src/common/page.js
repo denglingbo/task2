@@ -13,6 +13,9 @@ var log = require('./log');
 
 var localcache = require('./localcache');
 
+/* test cookie */
+// var cookies = require('dep/cookies');
+
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
 
@@ -447,6 +450,13 @@ Page.prototype.getRequestConfig = function (api, data, opts) {
         r.url = r.url + '?' + urlData.join('&');
     }
 
+    // if (config.debug) {
+        // console.log(cookies.get('JINSESSIONID'));
+        // cookies.set('JINSESSIONID', config.mock.token);
+        // cookies.set('uid', reqData.uid);
+        // cookies.set('cid', reqData.cid);
+    // }
+
     return r;
 };
 
@@ -533,11 +543,14 @@ Page.prototype.ajax = function (api, data, options) {
     }
 
     if (config.debug) {
+
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
         if (!/^\/data/.test(config.API.prefix)) {
-            ajaxSettings.xhrFields = {
-                withCredentials: true
-            };
+            // ajaxSettings.xhrFields = {
+            //     withCredentials: true
+            // };
+
+            // ajaxSettings.crossDomain = true;
         }
 
         delete ajaxSettings.headers;
@@ -545,6 +558,10 @@ Page.prototype.ajax = function (api, data, options) {
         if (!/post/i.test(ajaxSettings.type)) {
             delete ajaxSettings.contentType;
         }
+
+        // ajaxSettings.headers = {
+        //     'set-cookie': config.mock.token
+        // };
     }
 
     ajaxSettings.success = function (result) {

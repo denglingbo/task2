@@ -5,7 +5,7 @@
  */
 var config = {
 
-    debug: true,
+    debug: false,
 
     API: {
         // 用于发送异步请求
@@ -95,7 +95,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '0c4f5301-02bb-4d4e-89fc-acb0fda5c351'
+    token: '14ea0300-a11f-4a56-85e1-8a4fe38f40bd-231555'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -108,13 +108,17 @@ config.mock = {
 // debug 模式
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
+config.debug = true;
+
 if (config.debug) {
+    var loc = window.location;
     // 联调地址
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.prefix = '/data/';
+    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    config.API.prefix = '/data/';
 }
 
 module.exports = config;

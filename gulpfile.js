@@ -20,6 +20,19 @@ var Webpacker = require('./tool/webpack-lib/index');
 
 var connect = require('gulp-connect');
 
+var os = require('os');
+var ip;
+var getIfs = function () {
+    return os.networkInterfaces().en0 || os.networkInterfaces().eth0;
+};
+var ifsArr = getIfs();
+for (var i = 0; i < ifsArr.length; i++ ) {
+    var ifs = ifsArr[i];
+    if (/ipv4/i.test(ifs.family)) {
+        ip = ifs.address;
+    }
+}
+
 /**
  * webpack config
  */
@@ -27,27 +40,30 @@ var config = {
 
     debug: true,
 
-    host: '127.0.0.1',
+    // host: '127.0.0.1',
+    host: ip,
 
     port: 8014,
 
     publicPath: '/',
 
-    https: true,
+    https: true
+};
 
-    // mock
-    mock: {
+// mock
+config.mock = {
 
-        port: 8015,
+    host: config.host,
+    port: 8015,
 
-        proxyPrefix: null,
-        proxyPath: null
-    }
+    // proxyPrefix: null,
+    // allowOrigin: 'https://task2.test1.com:8014'
+    allowOrigin: 'https://' + config.host + ':' + config.port
 };
 
 var root = path.join(__dirname, '/');
 
-mockServer('./mock');
+mockServer('./mock', config.mock);
 
 /**
  * 开发环境

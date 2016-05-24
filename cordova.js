@@ -19,7 +19,9 @@ setTimeout(function () {
 
 var CPNavigationBar = {
     redirect: function (url, data) {
-        window.location.href = url;
+        setTimeout(function () {
+            window.location.href = url;
+        }, 10);
     },
 
     setRightButton: function (rightBtnIconPath, rightBtnArr) {

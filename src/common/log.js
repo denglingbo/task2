@@ -3,6 +3,7 @@
  * @author deo
  *
  * 日志
+ * <dom data-log='{"da_src":"KeyName"}'
  */
 
 /* eslint-disable */
@@ -22,7 +23,7 @@ alert("ERROR in " + url + " (line #" + lineno + "): " + err);
     // 如果发生错误，则把错误信息打到日志里面
     /* eslint-disable */
     send({
-        'da_src': 'err: ' + err + ' url: ' + url + ' lineno: ' + lineno,
+        'actionTag': 'err: ' + err + ' url: ' + url + ' lineno: ' + lineno,
         'da_act': 'error'
     });
     /* eslint-enable */
@@ -35,15 +36,20 @@ var pro = document.location.protocol;
  *
  * @type {String}
  */
+// <img src="http://192.168.10.152:8080/agent/log/logsend?topic=topic1&msg=qqq" />
 var LOG_URL = config.debug
-    ? pro + '//task2.test1.com:8014/common/img/error.png'
+    ? pro + '//192.168.10.152:8445/agent/log/logsend'
     : pro + '//xx.gif';
 
 /**
  * 默认参数
  */
 var defaultOpts = {
-    uid: util.getParam('uid')
+    uid: util.getParam('uid'),
+    cid: util.getParam('cid'),
+    client: util.getParam('client'),
+    puse: util.getParam('puse'),
+    productTag: 'task'
 };
 
 // 存储发送队列
@@ -79,14 +85,15 @@ function consume() {
             // console.info('LOGGER: ', params.da_act, params.da_src, params.referer);
             console.log(params);
             /* eslint-enable */
-            return;
+            // return;
         }
 
-        var q = util.qs.stringify(params);
+        // var q = util.qs.stringify(params);
+        var q = JSON.stringify(params);
 
         var t = Date.now() + '' + Math.ceil(Math.random() * 10000);
 
-        var url = LOG_URL + '?t=' + t  + '&' + q;
+        var url = LOG_URL + '?t=' + t  + '&msg=' + q + '&topic=topic1';
 
         var img = new Image();
         var key = 'img' + Date.now() + Math.ceil(Math.random() * 100);
@@ -94,6 +101,7 @@ function consume() {
         img.onload = img.onerror = function () {
             delete window[key];
         };
+
         img.src = url;
     }
 
@@ -225,12 +233,12 @@ function getXpath(target) {
  * @param  {Object} opts 日志参数对象
  * @param {boolean} appendPageId 是否补上页面id，这个在手动发pv的时候可能会用上
  */
-function sendPv(opts, appendPageId) {
-    /* eslint-disable */
-    opts = $.extend({'da_act': 'ready'}, opts || {});
-    /* eslint-enable */
-    send(opts);
-}
+// function sendPv(opts, appendPageId) {
+//     /* eslint-disable */
+//     opts = $.extend({'act': 'ready'}, opts || {});
+//     /* eslint-enable */
+//     send(opts);
+// }
 
 /**
  * 初始化参数，传入页面的名称
@@ -240,11 +248,11 @@ function sendPv(opts, appendPageId) {
 function init(pageName) {
 
     /* eslint-disable fecs-camelcase */
-    defaultOpts.da_src = pageName || '';
+    // defaultOpts.actionTag = pageName || '';
     /* eslint-enable fecs-camelcase */
 
     // 发送PV日志, 如果不设置pageName则不主动发pv日志
-    pageName && sendPv();
+    // pageName && sendPv();
 
     // 绑定事件到含有 data-log的节点
     $(document.body).on('click', '[data-log]', function (e) {
@@ -256,7 +264,7 @@ function init(pageName) {
 
 module.exports = {
     init: init,
-    send: send,
-    sendPv: sendPv
+    send: send
+    // sendPv: sendPv
     // addDefaultParams: addDefaultParams
 };

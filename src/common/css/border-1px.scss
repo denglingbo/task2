@@ -36,12 +36,17 @@
             bottom: -33.33%;
             left: 0;
             border: 0 solid $border-color;
-            transform-origin: 0 0;
             pointer-events: none; // 解决挡住点击事件的问题
-            transform: scale(.75);
             width: 133.33%;
             box-sizing: border-box;
-        
+            transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            transform: scale(.75);
+            -moz-transform: scale(.75);
+            -webkit-transform: scale(.75);
+            -o-transform: scale(.75);
         }
 
         &::after {
@@ -64,11 +69,17 @@
             bottom: -100%;
             left: 0;
             border: 0 solid $border-color;
-            transform-origin: 0 0;
             pointer-events: none; // 解决挡住点击事件的问题
-            transform: scale(.5);
             width: 200%;
             box-sizing: border-box;
+            transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            transform: scale(.5);
+            -moz-transform: scale(.5);
+            -webkit-transform: scale(.5);
+            -o-transform: scale(.5);
         }
         
         &::after {

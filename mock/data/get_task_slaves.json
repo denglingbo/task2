@@ -10,7 +10,7 @@
         "obj_list": [
             {
                 "target_id": 69412,
-                "type": 1,
+                "type": 3,
                 "importance_level": 4,
                 "status": 4,
                 "task_id": 69598,
@@ -20,7 +20,7 @@
             },
             {
                 "target_id": 69411,
-                "type": 1,
+                "type": 3,
                 "importance_level": 4,
                 "status": 4,
                 "task_id": 69598,
@@ -60,7 +60,7 @@
             },
             {
                 "target_id": 69401,
-                "type": 1,
+                "type": 3,
                 "importance_level": 4,
                 "status": 4,
                 "task_id": 69598,
@@ -70,7 +70,7 @@
             },
             {
                 "target_id": 69400,
-                "type": 1,
+                "type": 3,
                 "importance_level": 4,
                 "status": 4,
                 "task_id": 69598,
@@ -80,7 +80,7 @@
             },
             {
                 "target_id": 69399,
-                "type": 1,
+                "type": 3,
                 "importance_level": 3,
                 "status": 4,
                 "task_id": 69598,
