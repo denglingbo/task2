@@ -242,10 +242,8 @@ function getXpath(target) {
 
 /**
  * 初始化参数，传入页面的名称
- *
- * @param  {string} pageName 必填，来源标识，即页面标识
  */
-function init(pageName) {
+function init() {
 
     /* eslint-disable fecs-camelcase */
     // defaultOpts.actionTag = pageName || '';
