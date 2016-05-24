@@ -50,7 +50,7 @@ page.enter = function () {
     me.bindEvents();
 };
 
-page.allready = function () {
+page.deviceready = function () {
     var me = this;
 
     if (doing) {

@@ -44,7 +44,7 @@ page.enter = function () {
     me.bindEvents();
 };
 
-page.allready = function () {
+page.deviceready = function () {
     var me = this;
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachs);

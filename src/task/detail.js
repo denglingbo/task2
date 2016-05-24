@@ -133,7 +133,7 @@ page.deviceready = function () {
 /**
  * 等待 设备 && 数据
  */
-page.allready = function () {
+page.deviceready = function () {
     var me = this;
     var data = me.data;
 
