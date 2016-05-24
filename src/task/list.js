@@ -77,7 +77,7 @@ page.initSlider = function () {
             me.loadPage(info, me.data);
         },
 
-        onSlideBefore: function (info) {
+        onSlide: function (info) {
 
             if (info && info.name && !pageCache[info.name]) {
 

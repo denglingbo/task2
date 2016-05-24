@@ -28,13 +28,14 @@ var PageSlider = function (options) {
         // tabs
         'tabs': null,
         // 滑动 num 值，开始切换并加载新页面
-        'slideNum': 80,
+        'slideNum': 50,
         // 要切换的页面 配置 {Array}
         'pages': [],
 
         'class': {},
 
         'onInit': function () {},
+        'onSlide': function () {},
         'onSlideBefore': function () {}
     };
 
@@ -139,6 +140,9 @@ PageSlider.prototype = {
         this.slide = new Slide('.slider-container');
 
         this.$items.on('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+
             // me.switch.call(me, event.target);
             var $tab = $(event.target);
             var index = $tab.index();
@@ -160,7 +164,8 @@ PageSlider.prototype = {
 
         this.slide.on('slideEndX', function (pos) {
             var item = me.find();
-            me.gotoPage(item, pos);
+            var to = me.gotoPage(item, pos);
+            me.run(to);
         });
     },
 
@@ -169,7 +174,7 @@ PageSlider.prototype = {
      *
      * @param {Object} item, item 对象信息
      * @param {Object} pos, 位置信息
-     *
+     * @return {nubmer}
      */
     gotoPage: function (item, pos) {
         var len = this.opts.pages.length - 1;
@@ -198,7 +203,7 @@ PageSlider.prototype = {
             to = len;
         }
 
-        this.run(to);
+        return to;
     },
 
     /**
@@ -211,7 +216,7 @@ PageSlider.prototype = {
         var item = this.findByIndex(to);
         var step = to * 100 * -1;
 
-        this.opts.onSlideBefore.call(this, item);
+        this.opts.onSlide.call(this, item);
 
         // this.$outer.css({
         //     'transform': 'translate3d(' + step + '%, 0px, 0px)'

@@ -85,7 +85,7 @@ function consume() {
             // console.info('LOGGER: ', params.da_act, params.da_src, params.referer);
             console.log(params);
             /* eslint-enable */
-            // return;
+            return;
         }
 
         // var q = util.qs.stringify(params);

@@ -6,7 +6,7 @@
  */
 
 require('./searchEnter.scss');
-require('dep/touch');
+// require('dep/touch');
 var ls = require('common/localstorage');
 var util = require('common/util');
 
@@ -389,7 +389,7 @@ Search.prototype.bindEvents = function (callback) {
     var opts = me.opts;
     var dom = me.dom;
     if (!opts.isSearchPage) {
-        dom.$searchIn.on('tap', function () {
+        dom.$searchIn.on('click', function () {
             me.toggleWrap(true);
             dom.$input.focus();
         });
@@ -401,7 +401,7 @@ Search.prototype.bindEvents = function (callback) {
         });
     }
 
-    dom.$wrap.on('tap', function (e) {
+    dom.$wrap.on('click', function (e) {
         var target = e.target;
         if (target === dom.$clear[0]) {
             me.clearInput();

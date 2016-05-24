@@ -10,6 +10,7 @@ var util = require('./util');
 var storage = require('./localstorage');
 var lang = require('./lang');
 var log = require('./log');
+// var fastclick = require('dep/fastclick');
 
 var localcache = require('./localcache');
 
@@ -171,6 +172,8 @@ Page.prototype.start = function () {
         me.execute()
             .done(function () {
 
+                // fastclick.attach(document.body);
+
                 // 根据储存策略保存 local data 数据
                 if (localcache.isCache(me.opts.pageName)) {
                     localcache.save(me.opts.pageName, me.data);
@@ -259,9 +262,8 @@ Page.prototype.domContentListener = function () {
  * 设备准备完成的入口
  */
 Page.prototype.devicereadyEnter = function () {
-
     // 虽然 deviceready 肯定比 enter 慢，但是为了避免意外，还是等待判断一下 是否 done
-    if (this.isDone) {
+    if (this.isDone && window.isDeviceready) {
         this.deviceready();
 
         // 检查是否全部准备就绪

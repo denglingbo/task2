@@ -24,10 +24,12 @@ page.enter = function () {
     this.initHomeNum();
 
     this.setMenuHeight();
+
+    this.bindEvents();
 };
 
 page.deviceready = function () {
-    this.bindEvents();
+
     var lang = this.lang;
     /* eslint-disable */
     CPNavigationBar.setLeftButton({
@@ -57,7 +59,7 @@ page.setMenuHeight = function () {
 
     var winHeight = $(window).height();
 
-    var topHeight = winHeight * .7;
+    var topHeight = winHeight * .68;
     var bottomHeight = winHeight - topHeight;
 
     $('.add-task').height(bottomHeight);
@@ -68,7 +70,7 @@ page.setMenuHeight = function () {
 page.bindEvents = function () {
     var me = this;
 
-    $('#menu li').on('click', function () {
+    $('#menu li').on('click', function (event) {
         /* eslint-disable */
         CPNavigationBar.redirect('/task-list.html');
         /* eslint-enable */
