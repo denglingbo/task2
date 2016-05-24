@@ -41,6 +41,8 @@ $search-key-color: #e51717;
         @extend .search-box;
         @include border-1px(bottom, #e0e0e0);
         position: relative;
+        z-index: 9860;
+
         
         .search-input-wrap {
             position: relative;
@@ -93,6 +95,7 @@ $search-key-color: #e51717;
 
     .search-mask {
         z-index: 9820;
+        top: 0;
         background-color: rgba(0, 0, 0, .5);
     }
 

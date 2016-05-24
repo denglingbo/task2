@@ -48,13 +48,6 @@
     font-size: rem(18px);
     resize: none;
     padding-right: rem(55px);
-
-    &:focus {
-
-        & + .phone-input-placeholder {
-            text-indent: 0.1rem;
-        }
-    }
 }
 
 .edit-title-wrap,
@@ -85,10 +78,6 @@
             &-placeholder {
                 left: rem(17px);
             }
-
-            &-limit {
-                bottom: rem(-12px);
-            }
         }
     }
 }
@@ -101,6 +90,7 @@
         padding: rem(15px) 0;
         @include border-1px(bottom, #e3e4e5);
         font-size: rem(16px);
+        position: relative;
     }
     
     .content-wrap {
@@ -121,6 +111,7 @@
         padding-right: rem(15px);
         display: flex;
         align-items: center;
+        position: relative;
 
         &:first-child {
             @include border-1px(bottom, #e3e4e5);
@@ -139,7 +130,7 @@
                 display: block;
                 color: $black;
                 font-size: 16px;
-                margin-right: rem(10px);
+                margin-right: rem(12px);
                 margin-left: rem(10px);
                 @include ellipsis(1);
                 text-align: right;

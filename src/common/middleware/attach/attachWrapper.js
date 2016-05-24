@@ -92,14 +92,13 @@ attach.initAttach = function (options, attachData) {
         attachOption,
         methodOption[attachOptions.operateType]
     );
-
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
     // var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
     var renderString = attachObj.getRenderString();
 
-    $(attachOptions.dom.containerDOM).append(renderString.attach);
+    $(attachOptions.dom.containerDOM).append(renderString);
     // Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
     attachObj.initEvent();
     /* eslint-enable */

@@ -23,7 +23,8 @@ var connect = require('gulp-connect');
 var os = require('os');
 var ip;
 var getIfs = function () {
-    return os.networkInterfaces().en0 || os.networkInterfaces().eth0;
+    var osnet = os.networkInterfaces();
+    return (osnet.en0 || osnet.eth0) || osnet['以太网'];
 };
 var ifsArr = getIfs();
 for (var i = 0; i < ifsArr.length; i++ ) {

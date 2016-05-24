@@ -57,6 +57,25 @@ page.enter = function () {
     });
 };
 
+page.deviceready = function () {
+    /* eslint-disable */
+    CPNavigationBar.setRightButton('xxx', [{
+        title: '+',
+        iconPath: '',
+        callback: function() {
+            
+        }
+    }]);
+    CPNavigationBar.setLeftButton({
+        title : lang.back,
+        iconPath : '',
+        callback : function () {
+            CPNavigationBar.returnPreviousPage();
+        }
+    });
+    /* eslint-enable */
+};
+
 page.bindEvents = function () {
 
 };

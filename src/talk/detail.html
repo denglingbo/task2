@@ -44,7 +44,7 @@
     <script id="partner-tmpl" type="x-tmpl-mustache">
     <dt class="sub-title">{{ lang.partner }}</dt>
     {{#partnerLength}}
-    <dd class="partner-more" data-jids="{{partnerJids}}">
+    <dd class="partner-more" data-jids="{{partnerJids}}" data-log='{"actionTag":"talkDetailpartnerDetail"}'>
         <div class="column-left">{{lang.attends}}: </div>
         <div class="column-middle">
             <div class="column-inner">
@@ -76,7 +76,7 @@
         <div class="limit"></div>
         <div class="button-wrap">
             <span class="button"></span>
-            <span class="send hide">{{ lang.send }}</span>
+            <span class="send hide" data-log='{"actionTag":"talkDetailSubmitComment"}'>{{ lang.send }}</span>
         </div>
     </script>
     <script type="text/javascript" src="./cordova.js"></script>

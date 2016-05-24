@@ -11,7 +11,6 @@ require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
-// var CPNavigationBar = require('dep/ui/campo-navigationbar/campo-navigationbar');
 
 var page = new Page({
     pageName: 'task-doneTime'
@@ -106,6 +105,16 @@ page.deviceready = function () {
     $('#submit').on('click', function () {
         me.returnValue(true);
     });
+
+    /* eslint-disable */
+    CPNavigationBar.setLeftButton({
+        title: lang.back,
+        iconPath: '',
+        callback: function () {
+            CPNavigationBar.returnPreviousPage();
+        }
+    });
+    /* eslint-enable */
 };
 
 page.returnValue = function (hasVal) {

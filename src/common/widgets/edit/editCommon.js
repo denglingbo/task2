@@ -183,17 +183,17 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
-    $('#submit').on('click', function () {
-        me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-        console.log(validObj);
-        me.submitValid(submitFn);
-    });
+    // $('#submit').on('click', function () {
+    //     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+    //     console.log(validObj);
+    //     me.submitValid(submitFn);
+    // });
 
-    $('#cancel').on('click', function () {
-        validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
-        me.cancelValidate();
-    });
-
+    // $('#cancel').on('click', function () {
+    //     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
+    //     me.cancelValidate();
+    // });
+    /* eslint-disable */
     CPNavigationBar.setRightButton('xxx', [{
         title: lang.submit,
         iconPath: '',
@@ -202,14 +202,17 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             me.submitValid(submitFn);
         }
     }]);
+    function goBack() {
+        validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
+        me.cancelValidate();
+    }
     CPNavigationBar.setLeftButton({
         title : lang.cancel,
         iconPath : '',
-        callback : function () {
-            validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
-            me.cancelValidate();
-        }
+        callback : goBack
     });
+    CPNavigationBar.setGoBackHandler(goBack,true);
+    /* eslint-enable */
 };
 
 /**

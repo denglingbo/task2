@@ -108,7 +108,7 @@ config.mock = {
 // debug 模式
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
-config.debug = true;
+// config.debug = true;
 
 if (config.debug) {
     var loc = window.location;
@@ -116,6 +116,7 @@ if (config.debug) {
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
+
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
     config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
     config.API.prefix = '/data/';

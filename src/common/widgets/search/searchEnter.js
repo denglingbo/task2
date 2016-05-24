@@ -150,7 +150,7 @@ Search.prototype.redirectSearch = function () {
     ls.addData('history', href);
     var taskId = util.params('task_id');
     /* eslint-disable */
-    var query = taskId ? '&task_id=' + query : '';
+    var query = taskId ? '&task_id=' + taskId : '';
     CPNavigationBar.redirect('/search-search.html?key=' 
         + encodeURIComponent(this.dom.$input.val()) 
         + '&page=' + opts.page + query, opts.search);
