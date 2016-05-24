@@ -110,7 +110,7 @@ page.deviceready = function () {
     /* eslint-disable */
     CPNavigationBar.setLeftButton({
         title: lang.back,
-        iconPath: 'common/widgets/img/icon_list_to-left-arrow.png',
+        iconPath: '',
         callback: function () {
             CPNavigationBar.returnPreviousPage();
         }

@@ -12,7 +12,12 @@
 	    "attend_ids": [],
 	    "notice": 0,
 	    "principal_user": 0,
-	    "attachements": [],
+	    "attachements": [{
+            "deleted" : false,
+            "dfs_path" : "00012AE75593C73341F7927F567E0C49AD6D",
+            "file_name" : "ca.crt",
+            "size" : 1391
+        }],
 	    "message": {
 	        "sent_eim": true,
 	        "sent_emai": false,

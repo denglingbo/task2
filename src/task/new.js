@@ -58,7 +58,7 @@ page.deviceready = function () {
 
     if (doing) {
         // 渲染人员信息
-        util.getDataFromObj(pageData, me.data);
+        
 
         // 下面为获取人员信息的配置
         var obj = {
@@ -86,6 +86,7 @@ page.deviceready = function () {
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachements);
+    
 
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
@@ -366,26 +367,31 @@ page.renderUser = function (originArr, dataArr) {
  */
 /* eslint-disable */
 
-if (doing) {
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var url = config.API.TASK_DETAIL_URL;
-        var promise = me.get(url, {
-            task_id: +util.params('task_id')
-        });
 
-        promise
-            .done(function (result) {
-                if (result.meta.code !== 200) {
-                    dfd.reject(result);
-                }
-                else {
-                    dfd.resolve();
-                }
-            });
+page.addParallelTask(function (dfd) {
+    var me = this;
+    if (!doing) {
+        dfd.resolve();
         return dfd;
+    }
+    var url = config.API.TASK_EDIT_URL;
+    var promise = me.get(url, {
+        task_id: +util.params('task_id')
     });
-}
+
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                util.getDataFromObj(pageData, me.data);
+                dfd.resolve();
+            }
+        });
+    return dfd;
+});
+
 
 $(function () {
     page.start();

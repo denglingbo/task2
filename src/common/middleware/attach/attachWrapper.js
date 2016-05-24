@@ -5,6 +5,7 @@
  *
  */
 require('dep/ui/attaches/css/attaches.css');
+require('dep/touch');
 var Mustache = require('dep/mustache');
 // attaches 需要使用
 window.Mustache = Mustache;
@@ -82,7 +83,7 @@ attach.initAttach = function (options, attachData) {
         dom: {
             // 附件容器DOM元素
             containerDOM: options.container,
-            addBtnDom: options.addBtn
+            addBtnDOM: options.addBtn
         },
         operateType: options.addBtn ? 'upload' : 'download',
         callback: options.callback

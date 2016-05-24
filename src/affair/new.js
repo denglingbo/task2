@@ -167,28 +167,32 @@ page.initPlugin = function () {
  */
 /* eslint-disable */
 
-if (doing) {
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var url = config.API.AFFAIR_DETAIL_URL;
-        var promise = me.get(url, {
-            affair_id: +util.params('affair_id')
-        });
 
-        promise
-            .done(function (result) {
-                if (result.meta.code !== 200) {
-                    dfd.reject(result);
-                }
-                else {
-                    // $.extend(pageData, result.data);
-                    util.getDataFromObj(pageData, result.data);
-                    dfd.resolve();
-                }
-            });
+page.addParallelTask(function (dfd) {
+    var me = this;
+    if (!doing) {
+        dfd.resolve();
         return dfd;
+    }
+
+    var url = config.API.AFFAIR_EDIT_URL;
+    var promise = me.get(url, {
+        affair_id: +util.params('affair_id')
     });
-}
+
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                util.getDataFromObj(pageData, result.data);
+                dfd.resolve();
+            }
+        });
+    return dfd;
+});
+
 /* eslint-enable */
 $(function () {
     page.start();

@@ -52,7 +52,6 @@ page.deviceready = function () {
     var me = this;
 
     if (doing) {
-        util.getDataFromObj(pageData, me.data);
         // 下面为获取人员信息的配置
         var obj = {
             /* eslint-disable */
@@ -236,14 +235,11 @@ page.renderUser = function (dataArr) {
 
 page.addParallelTask(function (dfd) {
     var me = this;
-
-
-if (!doing) {
-    dfd.resolve();
-    return dfd;
-}
-
-    var url = config.API.TALK_DETAIL_URL;
+    if (!doing) {
+        dfd.resolve();
+        return dfd;
+    }
+    var url = config.API.TALK_EDIT_URL;
     var promise = me.get(url, {
         talk_id: +util.params('talk_id')
     });
@@ -254,7 +250,7 @@ if (!doing) {
                 dfd.reject(result);
             }
             else {
-                // $.extend(pageData, result.data);
+                util.getDataFromObj(pageData, me.data);
                 dfd.resolve();
             }
         });
