@@ -35,6 +35,7 @@
 .edit-container {
     font-size: 16px;
     box-sizing: border-box;
+    overflow: hidden;
 
     * {
         box-sizing: border-box;
@@ -48,13 +49,6 @@
     font-size: rem(18px);
     resize: none;
     padding-right: rem(55px);
-
-    &:focus {
-
-        & + .phone-input-placeholder {
-            text-indent: 0.1rem;
-        }
-    }
 }
 
 .edit-title-wrap,
@@ -84,10 +78,6 @@
 
             &-placeholder {
                 left: rem(17px);
-            }
-
-            &-limit {
-                bottom: rem(-12px);
             }
         }
     }
@@ -139,7 +129,7 @@
                 display: block;
                 color: $black;
                 font-size: 16px;
-                margin-right: rem(10px);
+                margin-right: rem(12px);
                 margin-left: rem(10px);
                 @include ellipsis(1);
                 text-align: right;

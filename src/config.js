@@ -116,6 +116,7 @@ if (config.debug) {
     // config.API.host = document.location.protocol + '//web.test1.com';
 
     // 直接走 mock server
+
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
     config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
     config.API.prefix = '/data/';
