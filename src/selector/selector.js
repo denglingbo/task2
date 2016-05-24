@@ -12,10 +12,8 @@ window.Mustache = Mustache;
 require('dep/ui/selector/js/static/mbreq');
 require('dep/ui/selector/js/selector');
 
-var Page = require('../common/page');
-var page = new Page({
-    pageName: 'selector-selector'
-});
+var Page = require('common/page');
+var page = new Page();
 
 page.enter = function () {
 

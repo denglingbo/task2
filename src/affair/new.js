@@ -17,9 +17,7 @@ var util = require('common/util');
 // 判断是否是编辑页面
 var doing = +util.params('affair_id');
 
-var page = new Page({
-    pageName: 'affair-new'
-});
+var page = new Page();
 var lang = page.lang;
 /* eslint-disable */
 var pageData = {

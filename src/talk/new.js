@@ -19,9 +19,7 @@ var ls = require('common/localstorage');
 // 判断是否是编辑页面
 var doing = +util.params('talk_id');
 
-var page = new Page({
-    pageName: 'talk-new'
-});
+var page = new Page();
 var lang = page.lang;
 /* eslint-disable */
 var pageData = {

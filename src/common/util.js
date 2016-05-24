@@ -518,9 +518,16 @@ util.formatTime = function (ms) {
     var y = time.getFullYear();
     var M = time.getMonth() + 1;
     var d = time.getDate();
+    var h = time.getHours();
+    var m = time.getMinutes();
+    var s = time.getSeconds();
+
     M = M < 10 ? '0' + M : M;
     d = d < 10 ? '0' + d : d;
-    return y + '年' + M + '月' + d + '日';
+    h = h < 10 ? '0' + h : h;
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    return y + '年' + M + '月' + d + '日 ' + h + ':' + m + ':' + s;
 };
 
 /**

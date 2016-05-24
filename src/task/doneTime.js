@@ -12,9 +12,7 @@ var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
 
-var page = new Page({
-    pageName: 'task-doneTime'
-});
+var page = new Page();
 var lang = page.lang;
 
 var info = {
@@ -60,12 +58,16 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
+    var me = this;
     $('.done-early').on('click', function () {
         setCurr('done-early');
+        info.endTime = 0;
+        me.returnValue();
     });
 };
 
 page.initPlugin = function (initTime) {
+    var me = this;
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
     editCom.initMobiscroll('datetime', '.custom-time', {
         headerText: '<span class="dw-tab-data dw-tab-selected">'
@@ -84,6 +86,7 @@ page.initPlugin = function (initTime) {
             // 此处 添加你自己的代码
             $('.done-time-value').text(util.formatTime(info.endTime));
             setCurr('custom-time');
+            me.returnValue();
         }
     });
 };
@@ -103,14 +106,11 @@ page.initValue = function () {
 page.deviceready = function () {
     var me = this;
     var lang = me.lang;
-    $('#submit').on('click', function () {
-        me.returnValue(true);
-    });
 
     /* eslint-disable */
     CPNavigationBar.setLeftButton({
         title: lang.back,
-        iconPath: '',
+        iconPath: 'common/widgets/img/icon_list_to-left-arrow.png',
         callback: function () {
             CPNavigationBar.returnPreviousPage();
         }
@@ -118,11 +118,9 @@ page.deviceready = function () {
     /* eslint-enable */
 };
 
-page.returnValue = function (hasVal) {
+page.returnValue = function () {
     /* eslint-disable */
-    if (hasVal) {
-        CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
-    }
+    CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
     CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
 };

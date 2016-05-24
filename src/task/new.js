@@ -18,9 +18,7 @@ var ls = require('common/localstorage');
 // 判断是否是编辑页面
 var doing = +util.params('task_id');
 
-var page = new Page({
-    pageName: 'task-new'
-});
+var page = new Page();
 
 // new: 默认值
 // edit: $.extend(pageData, page.data);

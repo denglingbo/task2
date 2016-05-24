@@ -122,6 +122,9 @@ editCom.cancelValidate = function () {
         };
         CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
     }
+    else {
+        CPNavigationBar.returnPreviousPage();
+    }
 };
 
 /**
@@ -211,7 +214,7 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         iconPath : '',
         callback : goBack
     });
-    CPNavigationBar.setGoBackHandler(goBack,true);
+    // CPNavigationBar.setGoBackHandler(goBack,true);
     /* eslint-enable */
 };
 

@@ -26,9 +26,7 @@ require('common/widgets/emptyPage/netErr.scss');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
-var page = new Page({
-    pageName: 'task-detail'
-});
+var page = new Page();
 
 var requestPageNum = 10;
 

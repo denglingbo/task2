@@ -11,9 +11,7 @@ var util = require('common/util');
 var Page = require('common/page');
 var Search = require('common/widgets/search/searchEnter');
 
-var page = new Page({
-    pageName: 'search-search'
-});
+var page = new Page();
 
 var key = '';
 

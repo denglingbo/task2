@@ -35,9 +35,7 @@ localcache.init(pageName, function () {
     return util.getParam('id');
 });
 
-var page = new Page({
-    pageName: pageName
-});
+var page = new Page();
 
 page.error = function () {
     // this.render('#detail-main', this.data, {
