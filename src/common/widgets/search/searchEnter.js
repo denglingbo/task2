@@ -44,7 +44,7 @@ function Search(page, options, fn) {
     });
 
     var opts = this.opts;
-
+    opts.lang = this.page.lang;
     // 页面上展示的搜索框
     opts.searchInHtml = '<div class="search-in"><i class="icon-search"></i>{{lang.search}}</div>';
 
@@ -149,11 +149,11 @@ Search.prototype.redirectSearch = function () {
     var href = location.href;
     ls.addData('history', href);
     var taskId = util.params('task_id');
-    var query = taskId ? '&task_id=' + query : '';
     /* eslint-disable */
+    var query = taskId ? '&task_id=' + query : '';
     CPNavigationBar.redirect('/search-search.html?key=' 
         + encodeURIComponent(this.dom.$input.val()) 
-        + '&page=' + opts.page + query, '搜索');
+        + '&page=' + opts.page + query, opts.search);
     /* eslint-enable */
 };
 

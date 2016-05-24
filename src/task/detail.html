@@ -21,12 +21,12 @@
             <dt class="sub-title">{{ lang.partner }}</dt>
             <!-- Call pub data -->
             {{#userInfoFail}}
-            <dd>没有获取到人员信息</dd>
+            <dd>{{ lang.noGetPersonInfo }}</dd>
             {{/userInfoFail}}
             {{^userInfoFail}}
             <div class="loading-status">
                 <span class="loading"></span>
-                <span class="loading-text">加载中</span>
+                <span class="loading-text">{{ lang.loading }}</span>
             </div>
             {{/userInfoFail}}
         </dl>
@@ -34,7 +34,7 @@
         <!-- 事件 & 讨论 -->
         <div class="layout-list affair-talk-wrapper hide">
             <dl id="affair-talk" class="affair-talk">
-                <dt class="sub-title">事件与讨论</dt>
+                <dt class="sub-title">{{ lang.affairAndTalk }}</dt>
                 <!-- 另一个异步请求获取数据 -->
             </dl>
 
@@ -45,7 +45,7 @@
 
         <!-- 附件 -->
         <div class="layout-list attach">
-            <div class="sub-title">附件</div>
+            <div class="sub-title">{{lang.attach}}</div>
             <div class="attach-container"></div>
         </div>
 
@@ -59,15 +59,15 @@
                 {{/audit_right}}
 
                 {{#add_event_right}}
-                <li data-page="/affair-new.html?task_id={{ task_id }}">{{ lang.newAffair }}</li>
+                <li data-page="/affair-new.html?task_id={{ task_id }}" data-log='{"da_src":"taskDetailNewAffair"}'>{{ lang.newAffair }}</li>
                 {{/add_event_right}}
 
                 {{#add_talk_right}}
-                <li data-page="/talk-new.html?task_id={{ task_id }}">{{ lang.startTalk }}</li>
+                <li data-page="/talk-new.html?task_id={{ task_id }}" data-log='{"da_src":"taskDetailNewTalk"}'>{{ lang.startTalk }}</li>
                 {{/add_talk_right}}
 
                 {{#apply_right}}
-                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&task_id={{ task_id }}">{{ lang.taskDone }}</li>
+                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&task_id={{ task_id }}" data-log='{"da_src":"taskDetailCompleteTask"}'>{{ lang.taskDone }}</li>
                 {{/apply_right}}
             </ul>
         </div>
@@ -80,7 +80,7 @@
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#list}}
-    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ target_id }}&task_id={{ task_id }}" >
+    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ target_id }}&task_id={{ task_id }}" data-log='{"da_src":"taskDetailEnter{{ pageType }}"}'>
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
         </div>
@@ -101,7 +101,7 @@
     <dt class="sub-title">{{ lang.partner }}</dt>
     {{#creator}}
     <dd>
-        <div class="column-left">创建人: </div>
+        <div class="column-left">{{ lang.creator }}: </div>
         <div class="column-middle">
             <div class="column-inner">
                 {{ creator }}
@@ -112,7 +112,7 @@
 
     {{#principal}}
     <dd>
-        <div class="column-left">负责人: </div>
+        <div class="column-left">{{ lang.principal }}: </div>
         <div class="column-middle">
             <div class="column-inner">
                 {{ principal }}
@@ -122,8 +122,8 @@
     {{/principal}}
 
     {{#partnerLength}}
-    <dd class="partner-more" data-jids="{{partnerJids}}">
-        <div class="column-left">参与人: </div>
+    <dd class="partner-more" data-jids="{{partnerJids}}" data-log='{"da_src":"taskDetailReadAttendsDetail"}'>
+        <div class="column-left">{{ lang.attends }}: </div>
         <div class="column-middle">
             <div class="column-inner">
                 {{partnerRaw}}
@@ -132,7 +132,7 @@
         <div class="column-right">
             <div class="column-more">
                 {{#partnerLength}}
-                <em>{{ partnerLength }}人</em>
+                <em>{{ partnerLength }}{{ lang.man }}</em>
                 <em class="arrow"><i></i></em>
                 {{/partnerLength}}
             </div>

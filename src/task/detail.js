@@ -48,7 +48,6 @@ page.enter = function () {
     /* eslint-disable */
     me.data.rights['task_id'] = me.data.id;
     /* eslint-enable */
-
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,

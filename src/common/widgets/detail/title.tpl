@@ -14,7 +14,7 @@
 
     <div class="detail-title-right">
         {{#isTaskPage}}
-        <p class="star"><em></em></p>
+        <p class="star" data-log='{"da_src":"taskDetailFollow"}'><em></em></p>
         {{/isTaskPage}}
         <p class="detail-title-state {{^isTaskPage}}detail-title-state-fixed{{/isTaskPage}} state-doing">{{ statusText }}</p>
     </div>

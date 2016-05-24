@@ -117,7 +117,7 @@ editCom.cancelValidate = function () {
         var OKButton = {
             title: lang.confirm,
             callback: function () {
-
+                CPNavigationBar.returnPreviousPage();
             }
         };
         CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
@@ -192,6 +192,23 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
     $('#cancel').on('click', function () {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
         me.cancelValidate();
+    });
+
+    CPNavigationBar.setRightButton('xxx', [{
+        title: lang.submit,
+        iconPath: '',
+        callback: function() {
+            me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+            me.submitValid(submitFn);
+        }
+    }]);
+    CPNavigationBar.setLeftButton({
+        title : lang.cancel,
+        iconPath : '',
+        callback : function () {
+            validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
+            me.cancelValidate();
+        }
     });
 };
 

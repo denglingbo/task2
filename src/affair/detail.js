@@ -31,13 +31,15 @@ var page = new Page({
 page.enter = function () {
     var me = this;
 
-    me.data.describeTitle = '事件描述';
+    me.data.describeTitle = me.lang.affairDescribeTitle;
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
             describe: tmplDescribe
         }
     });
+
+    me.render('#goalui-fixedinput', {lang: me.data.lang});
 
     this.virtualInput = new VirtualInput('.goalui-fixedinput');
 

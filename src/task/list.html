@@ -7,8 +7,11 @@
     <title>Hello Coder</title>
 </head>
 <body>
-    <div class="main">
-        <div id="search"></div>
+    <div id="main" class="main">
+        
+    </div>
+    <script id="main-tmpl" type="x-tmpl-mustache">
+        <div id="search" data-log='{"da_src":"taskListSearch"}'></div>
         <div class="slider-container">
             <div class="slider-outer">
 
@@ -16,7 +19,7 @@
                 <div class="slider-page" id="list-wrapper-doing" data-name="doing">
                     <div class="scroll-inner">
                         <div class="list-wrapper-content"><!-- Content --></div>
-                        <div class="scroll-loader hide">获取更多 doing</div>
+                        <div class="scroll-loader hide">{{ lang.getMore }} doing</div>
                     </div>
                 </div>
 
@@ -24,7 +27,7 @@
                 <div class="slider-page" id="list-wrapper-done" data-name="done">
                     <div class="scroll-inner">
                         <div class="list-wrapper-content">done</div>
-                        <div class="scroll-loader hide">获取更多 done</div>
+                        <div class="scroll-loader hide">{{ lang.getMore }} done</div>
                     </div>
                 </div>
 
@@ -32,23 +35,22 @@
                 <div class="slider-page" id="list-wrapper-cancel" data-name="cancel">
                     <div class="scroll-inner">
                         <div class="list-wrapper-content">cancel</div>
-                        <div class="scroll-loader hide">获取更多 cancel</div>
+                        <div class="scroll-loader hide">{{ lang.getMore }} cancel</div>
                     </div>
                 </div>
 
             </div>
         </div>
-
-    </div>
+    </script>
     
-    <div class="fixbar">
+    <div id="fixbar" class="fixbar"></div>
+    <script id="fixbar-tmpl" type="x-tmpl-mustache">
         <ul class="tab-page">
-            <li data-name="doing">未完成</li>
-            <li data-name="done">已完成</li>
-            <li data-name="cancel">已撤销</li>
+            <li data-name="doing">{{ lang.undoneText }}</li>
+            <li data-name="done" data-log='{"da_src":"taskListDone"}'>{{ lang.doneText }}</li>
+            <li data-name="cancel" data-log='{"da_src":"taskListCancel"}'>{{ lang.cancelText }}</li>
         </ul>
-    </div>
-        
+    </script>
     <script type="text/javascript" src="./cordova.js"></script>
 </body>
 </html>

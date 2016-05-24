@@ -192,7 +192,7 @@ page.loadPage = function () {
                 options: [
                     {
                         id: 'doneTime',
-                        title: lang.completeTime,
+                        title: lang.doneTime,
                         /* eslint-disable */
                         value: editCom.initDoneTime(pageData['end_time'])
                         /* eslint-enable */

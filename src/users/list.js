@@ -19,6 +19,19 @@ page.enter = function () {
     this.render('#users-list', this.data);
 };
 
+page.deviceready = function () {
+    var lang = this.lang;
+    /* eslint-disable */
+    CPNavigationBar.setLeftButton({
+        title: lang.back,
+        iconPath: '',
+        callback: function () {
+            CPNavigationBar.returnPreviousPage();
+        }
+    });
+    /* eslint-enable */
+};
+
 /**
  * 这里虽然莫有请求页面接口，但是还是按常规请求来处理
  *

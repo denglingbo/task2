@@ -46,10 +46,15 @@ function setCurr(currClass) {
 }
 
 page.enter = function () {
-    this.initValue();
-    this.bindEvents();
-    this.initPlugin();
+    var me = this;
+    me.render('#done-container', {lang: me.lang});
+
+    me.initValue();
+    me.bindEvents();
+    me.initPlugin();
 };
+
+
 
 /**
  * 绑定事件
