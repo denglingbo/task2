@@ -11,9 +11,7 @@ var storage = require('./localstorage');
 var lang = require('./lang');
 var log = require('./log');
 // var fastclick = require('dep/fastclick');
-
-var localcache = require('./localcache');
-
+// var localcache = require('./localcache');
 /* test cookie */
 // var cookies = require('dep/cookies');
 
@@ -175,9 +173,9 @@ Page.prototype.start = function () {
                 // fastclick.attach(document.body);
 
                 // 根据储存策略保存 local data 数据
-                if (localcache.isCache(me.opts.pageName)) {
-                    localcache.save(me.opts.pageName, me.data);
-                }
+                // if (localcache.isCache(me.opts.pageName)) {
+                //     localcache.save(me.opts.pageName, me.data);
+                // }
 
                 if (!me.data && me.lang) {
                     me.data = {
@@ -309,24 +307,24 @@ Page.prototype.failed = function (errObj) {
     }
 
     // 根据储存策略保存 local data 数据
-    if (localcache.isCache(me.opts.pageName)) {
+    // if (localcache.isCache(me.opts.pageName)) {
 
-        var localData = localcache.getByLocal(me.opts.pageName);
+    //     var localData = localcache.getByLocal(me.opts.pageName);
 
-        me.data = localData;
+    //     me.data = localData;
 
-        // 页面逻辑
-        me.enter();
-    }
-    // 没有离线数据
-    else {
-        me.data = {
-            lang: this.lang
-        };
+    //     // 页面逻辑
+    //     me.enter();
+    // }
+    // // 没有离线数据
+    // else {
+    me.data = {
+        lang: this.lang
+    };
 
-        // 页面失败逻辑
-        me.error();
-    }
+    // 页面失败逻辑
+    me.error();
+    // }
 };
 
 /**
@@ -452,13 +450,6 @@ Page.prototype.getRequestConfig = function (api, data, opts) {
         r.url = r.url + '?' + urlData.join('&');
     }
 
-    // if (config.debug) {
-        // console.log(cookies.get('JINSESSIONID'));
-        // cookies.set('JINSESSIONID', config.mock.token);
-        // cookies.set('uid', reqData.uid);
-        // cookies.set('cid', reqData.cid);
-    // }
-
     return r;
 };
 
@@ -564,6 +555,13 @@ Page.prototype.ajax = function (api, data, options) {
         ajaxSettings.headers = {
             'set-cookie': config.mock.token
         };
+
+        // if (config.debug) {
+            // console.log(cookies.get('JINSESSIONID'));
+            // cookies.set('JINSESSIONID', config.mock.token);
+            // cookies.set('uid', reqData.uid);
+            // cookies.set('cid', reqData.cid);
+        // }
     }
 
     ajaxSettings.success = function (result) {

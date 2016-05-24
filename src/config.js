@@ -118,8 +118,8 @@ if (config.debug) {
     // 直接走 mock server
 
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
-    // config.API.prefix = '/data/';
+    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    config.API.prefix = '/data/';
 }
 /* eslint-enable */
 
