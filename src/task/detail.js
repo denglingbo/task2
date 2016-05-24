@@ -81,7 +81,7 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-
+    var lang = me.lang;
     /* eslint-disable */
     // 查看更多人员
     me.$main.on('click', '.partner-more', function () {

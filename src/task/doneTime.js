@@ -102,6 +102,7 @@ page.initValue = function () {
 
 page.deviceready = function () {
     var me = this;
+    var lang = me.lang;
     $('#submit').on('click', function () {
         me.returnValue(true);
     });

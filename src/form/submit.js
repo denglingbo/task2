@@ -202,7 +202,7 @@ function cancelValidate() {
 };
 page.deviceready = function () {
     var me = this;
-    
+    var lang = me.lang;
     // $('#submit').on('click', function () {
 
     //     var dataArg = me.getData(+me.pageType);
