@@ -56,7 +56,8 @@ page.enter = function () {
 
     new Search(this, {
         selector: '#search',
-        page: 'task'
+        pageType: 'task',
+        url: config.API.GET_TASK_LIST
     });
 };
 
@@ -166,7 +167,7 @@ page.addParallelTask(function (dfd) {
                 data.updateDateRaw = function () {
                     return util.formatDateToNow(this.op_time);
                 };
-                data.statusRaw = function() {
+                data.statusRaw = function () {
                     return raw.status(this.status);
                 };
                 data.importanceRaw = function () {

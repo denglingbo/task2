@@ -11,9 +11,7 @@
     {{^isSearchPage}}
     <div class="search-mask"></div>
     {{/isSearchPage}}
-    {{#isSearchPage}}
-    <div class="search-page">
+    <div class="search-page hide">
         <ul class="search-content"></ul>
     </div>
-    {{/isSearchPage}}
 </div>

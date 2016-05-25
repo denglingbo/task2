@@ -1,5 +1,5 @@
 /**
- * @file searchPlugin.js
+ * @file searchEnter.js
  * @author hefeng
  * 搜索组件
  *
@@ -7,7 +7,7 @@
 
 require('./searchEnter.scss');
 // require('dep/touch');
-var ls = require('common/localstorage');
+// var ls = require('common/localstorage');
 var util = require('common/util');
 
 /**
@@ -15,20 +15,28 @@ var util = require('common/util');
  *
  * @param {Object} page 页面对象
  * @param {Object} options, 配置参数
+ *      param {string} url config.api.xxx,
+ *      param {number} taskId 任务id,
+ *      param {string} pageType, task|talk|affair
  *      param {boolean} isSearchPage 搜索页面为true
  *      param {string} selector, 需要初始化搜索框的容器;
  *      param {string} inject, 搜索页的插入地方
- *      param {string} page, task|talk|affair
+ *      param {string} itemTpl, 搜索项模板
  * @param {Function} fn, 搜索页的执行逻辑
  * @constructor
  */
-function Search(page, options, fn) {
+function Search(page, options) {
 
     this.opts = {
+        url: '',
+        taskId: util.params('task_id') || '',
+        pageType: '',
         isSearchPage: false,
         selector: '',
         inject: 'body',
-        page: ''
+        itemTpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{task_id}}">'
+                    + '<a href="javascript:void(0);">{{& title}}</a>'
+                    + '</li>{{/.}}'
     };
 
     if (!page) {
@@ -39,6 +47,7 @@ function Search(page, options, fn) {
 
     $.extend(this.opts, options, {
         wrap: '#search-wrap',
+        contentPage: '.search-page',
         content: '.search-content',
         mainTmpl: './searchEnter.tpl'
     });
@@ -47,18 +56,12 @@ function Search(page, options, fn) {
     opts.lang = this.page.lang;
     // 页面上展示的搜索框
     opts.searchInHtml = '<div class="search-in"><i class="icon-search"></i>{{lang.search}}</div>';
-
+    opts.searchNull = '<li class="no-output"><i class="icon-search-big"></i>{{lang.noMatchResults}}</li>';
     this.loadHtml();
 
     $.extend(this.dom, this.getDom());
 
-    if (opts.isSearchPage && fn) {
-        fn.call(this, null);
-        // this.initSearchPage();
-    }
-    else {
-        this.bindEvents();
-    }
+    this.bindEvents();
 }
 
 /**
@@ -79,7 +82,8 @@ Search.prototype.getDom = function () {
         $tip: $wrap.find('.search-tip'),
         $clear: $wrap.find('.clear'),
         $mask: $wrap.find('.search-mask'),
-        $content: $wrap.find('.search-content')
+        $content: $wrap.find('.search-content'),
+        $page: $wrap.find('.search-page')
     };
 };
 
@@ -95,7 +99,7 @@ Search.prototype.loadHtml = function () {
     if (opts.isSearchPage) {
         me.page.render(opts.selector,
         {
-            lang: me.page.lang,
+            lang: opts.lang,
             isSearchPage: opts.isSearchPage
         },
         {
@@ -107,7 +111,7 @@ Search.prototype.loadHtml = function () {
 
         me.page.render(opts.selector,
         {
-            lang: me.page.lang
+            lang: opts.lang
         },
         {
             tmpl: opts.searchInHtml
@@ -115,7 +119,7 @@ Search.prototype.loadHtml = function () {
 
         me.page.render(opts.inject,
         {
-            lang: me.page.lang,
+            lang: opts.lang,
             isSearchPage: opts.isSearchPage
         },
         {
@@ -146,14 +150,14 @@ Search.prototype.loadHtml = function () {
  */
 Search.prototype.redirectSearch = function () {
     var opts = this.opts;
-    var href = location.href;
-    ls.addData('history', href);
+    // var href = location.href;
+    // ls.addData('history', href);
     var taskId = util.params('task_id');
     /* eslint-disable */
     var query = taskId ? '&task_id=' + taskId : '';
     CPNavigationBar.redirect('/search-search.html?key=' 
         + encodeURIComponent(this.dom.$input.val()) 
-        + '&page=' + opts.page + query, opts.search);
+        + '&pageType=' + opts.pageType + query, opts.search);
     /* eslint-enable */
 };
 
@@ -163,7 +167,8 @@ Search.prototype.redirectSearch = function () {
  */
 Search.prototype.redirectHistory = function () {
     /* eslint-disable */
-    CPNavigationBar.redirect(ls.getData('history'));
+    // CPNavigationBar.redirect(ls.getData('history'));
+    CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
 };
 
@@ -174,6 +179,15 @@ Search.prototype.redirectHistory = function () {
  */
 Search.prototype.getKey = function () {
     return this.dom.$input.val();
+};
+
+/**
+ * 填充输入的关键字
+ *
+ * @param {string} key, 关键字
+ */
+Search.prototype.setKey = function (key) {
+    this.dom.$input.val(key);
 };
 
 /**
@@ -237,6 +251,15 @@ Search.prototype.toggleWrap = function (show) {
 };
 
 /**
+ * 切换显示内容区域的显示与隐藏
+ *
+ * @param {boolean} show, 是否显示
+ */
+Search.prototype.togglePage = function (show) {
+    this.toggle(this.dom.$page, show);
+};
+
+/**
  * 清空搜索框并清空搜索结果和隐藏展示区域
  *
  */
@@ -247,104 +270,120 @@ Search.prototype.clearInput = function () {
 /**
  * 判断返回的搜索结果是否为空
  *
+ * @param {Object} data, 搜索数据
  * @return {boolean}, 搜索结果是否为空
  */
-// Search.prototype.dataIsNull = function () {
-//     return !(this.data && this.data.length);
-// };
+Search.prototype.dataIsNull = function (data) {
+    return !(data.obj_list && data.obj_list.length);
+};
 
 /**
  * 发送请求, 获取搜索结果
  *
  */
-// Search.prototype.loadList = function () {
-//     var me = this;
-//     var key = me.dom.$input.val();
+Search.prototype.loadList = function () {
+    var me = this;
+    var opts = me.opts;
+    var key = me.dom.$input.val();
+    if (key === '') {
+        return;
+    }
+    var data = {
+        title: key,
+        /* eslint-disable */
+        curr_page: 1,
+        /* eslint-enable */
+        number: 15
+    };
+    var taskId = opts.taskId;
+    /* eslint-disable */
+    taskId && (data.task_id = taskId);
+    /* eslint-enable */
+    var promise = me.page.get(me.opts.url, data);
 
-//     var promise = me.page.get(me.opts.url, {key: key});
-
-//     promise
-//         .done(function (result) {
-//             if (result.meta.code === 200) {
-//                 me.data = result.data[me.opts.dataKey];
-//                 me.renderOutput();
-//             }
-//             else {
-//                 me.renderNull();
-//             }
-//         })
-//         .fail(function (result) {
-//             me.renderNull();
-//         })
-//         .always(function () {
-//             if (me.isNull()) {
-//                 me.isNullHandler();
-//             }
-//         });
-// };
+    promise
+        .done(function (result) {
+            if (result.meta.code === 200) {
+                me.data = result.data;
+                me.renderOutput(me.data);
+            }
+            else {
+                me.renderNull();
+            }
+        })
+        .fail(function (result) {
+            me.renderNull();
+        })
+        .always(function () {
+            if (me.isNull()) {
+                me.isNullHandler();
+            }
+        });
+};
 
 /**
  * 搜索结果为空时的处理函数, 渲染为空的展示页
  *
  */
-// Search.prototype.renderNull = function () {
-//     var me = this;
-//     me.page.render(me.opts.content,
-//     {
-//         lang: me.page.lang
-//     },
-//     {
-//         tmpl: me.opts.searchNull
-//     });
-// };
+Search.prototype.renderNull = function () {
+    var me = this;
+    var opts = me.opts;
+    me.page.render(me.opts.content,
+    {
+        lang: opts.lang
+    },
+    {
+        tmpl: opts.searchNull
+    });
+};
 
 /**
  * 搜索结果不为空的处理函数, 渲染搜索结果列表
  *
+ * @param {Object} data, 搜索数据
  */
-// Search.prototype.renderList = function () {
-//     var me = this;
-//     var opts = me.opts;
-//     me.setResultKey();
+Search.prototype.renderList = function (data) {
+    var me = this;
+    var opts = me.opts;
+    me.setResultKey(data);
 
-//     var selector = opts.wrap + ' ' + opts.content;
-//     me.page.render(selector, me.data, {
-//         tmpl: opts.itemTpl
-//     });
-// };
+    var selector = opts.wrap + ' ' + opts.content;
+    me.page.render(selector, data.obj_list, {
+        tmpl: opts.itemTpl
+    });
+};
 
 /**
  * 根据搜索结果来调用渲染页面的处理函数
  *
+ * @param {Object} data, 搜索数据
  */
-// Search.prototype.renderOutput = function () {
-//     var me = this;
-//     var dataIsNull = me.dataIsNull();
+Search.prototype.renderOutput = function (data) {
+    var me = this;
+    var dataIsNull = me.dataIsNull(data);
 
-//     if (dataIsNull) {
-//         me.renderNull();
-//     }
-//     else {
-//         me.renderList();
-//     }
-// };
+    if (dataIsNull) {
+        me.renderNull();
+    }
+    else {
+        me.renderList(data);
+    }
+};
 
 /**
  * 匹配搜索结果中的关键字, 为关键字添加红色的className
  *
+ * @param {Object} data, 搜索数据
  */
-// Search.prototype.setResultKey = function () {
-//     var me = this;
-//     var data = me.data;
-//     var opts = me.opts;
-//     var key = me.getKey();
-//     var reg = new RegExp(key, 'g');
+Search.prototype.setResultKey = function (data) {
+    var me = this;
+    var key = me.getKey();
+    var reg = new RegExp(key);
 
-//     me.data = data.map(function (item) {
-//         item = item + '';
-//         return item.replace(reg, '<span class="' + opts.keyClassName + '">' + key + '</span>');
-//     });
-// };
+    data.obj_list.forEach(function (item) {
+        item.title = item.title.replace(reg, '<span class="input-key">' + key + '</span>');
+    });
+};
 
 /**
  * 状态改变的处理函数
@@ -368,6 +407,7 @@ Search.prototype.stateChange = function () {
 Search.prototype.isNullHandler = function () {
     var me = this;
     me.toggleTip(true);
+    me.togglePage(false);
 };
 
 /**
@@ -377,6 +417,7 @@ Search.prototype.isNullHandler = function () {
 Search.prototype.isNotNullHandler = function () {
     var me = this;
     me.toggleTip(false);
+    me.togglePage(true);
 };
 
 /**
@@ -384,7 +425,7 @@ Search.prototype.isNotNullHandler = function () {
  *
  * @param {Function} callback, 搜索页面的回调函数
  */
-Search.prototype.bindEvents = function (callback) {
+Search.prototype.bindEvents = function () {
     var me = this;
     var opts = me.opts;
     var dom = me.dom;
@@ -430,18 +471,38 @@ Search.prototype.bindEvents = function (callback) {
     {
         input: function () {
             me.stateChange();
+            me.loadList();
         },
-        blur: function () {
-            me.toggleClear(false);
-        },
+        // blur: function () {
+        //     me.toggleClear(false);
+        // },
         focus: function () {
             me.toggleClear(true);
         }
     });
 
-    if (callback) {
-        callback();
-    }
+    $(opts.wrap + ' .search-content').on('click', 'li', function (e) {
+        var id = $(this).attr('data-id');
+        var parentId = $(this).attr('data-taskId');
+        var url;
+        switch (opts.pageType) {
+            case 'task':
+                url = '/task-detail.html?task_id=' + id;
+                break;
+            case 'talk':
+                url = '/talk-detail.html?task_id=' + parentId + '&id=' + id;
+                break;
+            case 'affair':
+                url = '/affair-detail.html?task_id=' + parentId + '&id=' + id;
+                break;
+        }
+        /* eslint-disable */
+        if (CPNavigationBar) {
+            CPNavigationBar.redirect(url);
+        }
+        /* eslint-enable */
+
+    });
 };
 
 module.exports = Search;
