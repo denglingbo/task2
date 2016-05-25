@@ -168,7 +168,7 @@ editCom.submitValid = function (submitFn) {
  * @param {Object} attach, 附件对象
  */
 editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
-    var validObj = this.valid;console.log(validObj);
+    var validObj = this.valid;
     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     validObj.content = !!phoneInputContent.isAllowSubmit();
     validObj.title = !!(phoneInputTitle.isAllowSubmit() && $('#edit-title').text());
@@ -188,7 +188,6 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
     var validObj = me.valid;
     // $('#submit').on('click', function () {
     //     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-    //     console.log(validObj);
     //     me.submitValid(submitFn);
     // });
 
@@ -340,7 +339,9 @@ editCom.initEditAttach = function (data) {
         container: '#attachList',
         addBtn: '#addAttach',
         callback: function () {
-            me.valid.isEdit = true;
+            if (attachObj.getModifyAttaches().length > 0) {
+                me.valid.isEdit = true;
+            }
         }
     }, data);
     return attachObj;
@@ -372,7 +373,6 @@ editCom.initImportValue = function (level) {
  *
  * @param {Array|number} oldValue, 修改之前的数据
  * @param {Array|number} newValue, 修改之后的数据
- * @param {Object} validObj, 提交验证信息
  */
 editCom.personIsChange = function (oldValue, newValue) {
     var validObj = this.valid;
@@ -410,11 +410,11 @@ editCom.transJid = function (id) {
     var cid = localStorage.getData('TASK_PARAMS')['cid'];
     var jid = [];
     if (!$.isArray(id)) {
-        return [users.makeJid(id, cid)];
+        return [{jid: users.makeJid(id, cid)}];
     }
     else {
         id.forEach(function (itemId) {
-            jid.push(users.makeJid(itemId, cid));
+            jid.push({jid: users.makeJid(itemId, cid)});
         });
 
         return jid;
@@ -433,7 +433,7 @@ editCom.getClientMsg = function () {
         client: data.client,
         lang: data.lang,
         puse: data.puse,
-        appver: data.appver || '111.1.1'
+        appver: data.appver
     };
 };
 
@@ -445,16 +445,54 @@ editCom.getClientMsg = function () {
  */
 editCom.setChoosePersonLoc = function (key, value) {
     var me = this;
+    console.log(value.contacts);
     var selectValue = {
         clientMsg: me.getClientMsg(),
         selector: {
-            // 选择人
-            contact: 2
+            //选择人
+            contact: 3,
+            //选择部门
+            dept: 0,
+            //选择职务
+            title: 0
         },
-        // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
-        dataSource: 1
+        //选择组件类型：1.单选 2.复选
+        selectType: value.selectType,
+        //指定的过滤数据
+        filter: {
+            //指定不显示的数据
+            disabled: {
+                contacts: [],
+                depts: [],
+                titles: []
+            },
+            //指定显示的数据
+            enabled: {
+                depts: [],
+                titles: []
+            },
+            //已选择的数据
+            checked: {
+                //数组
+                contacts: value.contacts,
+                depts: [],
+                titles: []
+            }
+        },
+        //数据源：1.通过原生插件获取 2.从移动网关服务器获取
+        dataSource: 1,
+        //从移动网关获取数据的请求信息
+        requestInfo: {
+            //请求方式
+            type: "get",
+            //请求发送的数据
+            data: "",
+            //请求的url
+            url: "",
+            headers: {}
+        }
     };
-    localStorage.addData(key, $.extend(selectValue, value));
+    localStorage.addData(key, JSON.stringify(selectValue));
 };
 
 module.exports = editCom;

@@ -478,6 +478,18 @@ var Selector = {
 	    }
 	    try{
 	        var value = localStorage.getItem(key);
+            var splitReg = new RegExp('^(\<#lsvalid#\>)(.*)(\<\/#lsvalid#\>)$');
+            var match = null;
+            if (match = value.match(splitReg)) {
+                value = match[2];
+
+                try {
+                    value = JSON.parse(value);
+                }
+                catch (ex) {
+                    value = null;
+                }
+            }
 	        value = typeof value === 'object' ? value : JSON.parse(value);
 	        callback(value);
 	        //清除本地存储的数据
@@ -1599,7 +1611,7 @@ var Selector = {
 };
 
 //deviceready函数
-function deviceReadyFunc(){
+function deviceReadyFunc() {
 	//localStorage读取参数
 	Selector.getItem(Global.paramId,function(data){
 		Global.paramValue = data;
@@ -1789,11 +1801,11 @@ function deviceReadyFunc(){
 	});
 }
 
-$(function(){
-	//deviceready事件 
-	document.addEventListener("deviceready", deviceReadyFunc, false);	
-});
+// $(function(){
+// 	//deviceready事件 
+// 	document.addEventListener("deviceready", deviceReadyFunc, false);	
+// });
 
-
+module.exports = deviceReadyFunc;
 
 

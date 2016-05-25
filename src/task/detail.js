@@ -153,7 +153,7 @@ page.deviceready = function () {
 
     dfdPub
         .done(function (pubData) {
-            me.renderUser(obj, pubData.contacts);
+            // me.renderUser(obj, pubData.contacts);
         })
         .fail(function () {
             me.failUser();

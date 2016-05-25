@@ -43,7 +43,6 @@ var selectKey = 'talkAttandSelectKey';
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.initValue();
     me.initPlugin();
     me.bindEvents();
 };
@@ -98,6 +97,14 @@ page.deviceready = function () {
     /* eslint-disable */
     // 选择人员跳转页面
     $('#attends').click(function () {
+        var val = {
+            selectType: 2,
+            /* eslint-disable */
+            contacts: editCom.transJid(pageData['attend_ids'])
+            /* eslint-enable */
+        };
+        editCom.setChoosePersonLoc(selectKey, val);
+
         var oldVal = pageData['user_ids'];
         CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
             if (!data) {
@@ -109,7 +116,7 @@ page.deviceready = function () {
                 pageData['user_ids'].push(+users.takeJid(value.jid));
             });
             $('#attends .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, pageData['user_ids'], valid);
+            editCom.personIsChange(oldVal, pageData['user_ids']);
         });
     });
     /* eslint-enable */
@@ -170,27 +177,6 @@ page.initPlugin = function () {
         'limit': 5000,
         'delete': true
     });
-};
-
-page.initValue = function () {
-    // TODO 修改存储数据
-    var val = {
-        selectType: 2,
-        filter: {
-            disabled: {
-                contacts: []
-            },
-            // 已选择的数据
-            checked: {
-                // 数组
-                /* eslint-disable */
-                contacts: editCom.transJid(pageData['attend_ids'])
-                /* eslint-enable */
-            }
-        }
-    };
-
-    editCom.setChoosePersonLoc(selectKey, val);
 };
 
 /**

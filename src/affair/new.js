@@ -104,7 +104,6 @@ page.loadPage = function () {
 page.initPlugin = function () {
     var me = this;
     var lang = me.lang;
-    var valid = me.valid;
     // 初始化紧急程度
     editCom.initImportanceLevel('#urgencyBlock', pageData);
 
@@ -140,7 +139,7 @@ page.initPlugin = function () {
                 pageData['label_id'] = +inst.getVal();
                 $('#affairType .value').text(text);
 
-                valid.isEdit = oldVal !== pageData['label_id'] ? true : valid.isEdit;
+                editCom.valid.isEdit = oldVal !== pageData['label_id'] ? true : editCom.valid.isEdit;
                 /* eslint-enable */
             }
         });

@@ -527,7 +527,7 @@ util.formatTime = function (ms) {
     h = h < 10 ? '0' + h : h;
     m = m < 10 ? '0' + m : m;
     s = s < 10 ? '0' + s : s;
-    return y + '年' + M + '月' + d + '日 ' + h + ':' + m + ':' + s;
+    return y + '年' + M + '月' + d + '日 ' + h + ':' + m;
 };
 
 /**

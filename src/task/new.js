@@ -47,7 +47,6 @@ var attendSelectKey = 'taskAttandSelectKey';
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.initValue();
     me.initPlugin();
     me.bindEvents();
 };
@@ -113,12 +112,29 @@ page.deviceready = function () {
             data = JSON.parse(data);
             pageData['end_time'] = data.endTime;
             $('#doneTime .value').text(editCom.initDoneTime(pageData['end_time']));
-            valid.isEdit = oldVal !== pageData['end_time'] ? true : valid.isEdit;
+            editCom.valid.isEdit = oldVal !== pageData['end_time'] ? true : editCom.valid.isEdit;
         });
     });
 
     // 选择人员跳转页面
     $('#principal, #attends').on('click', function (e) {
+        var pVal = {
+            selectType: 1,
+            /* eslint-disable */
+            contacts: editCom.transJid(pageData['principal_user'])
+            /* eslint-enable */
+        };
+
+        var aVal = {
+            selectType: 2,
+            /* eslint-disable */
+            contacts: editCom.transJid(pageData['attend_ids'])
+            /* eslint-enable */
+        };
+
+        editCom.setChoosePersonLoc(principalSelectKey, pVal);
+        editCom.setChoosePersonLoc(attendSelectKey, aVal);
+
         var key = '';
         var itemKey = '';
         var id = '';
@@ -149,7 +165,7 @@ page.deviceready = function () {
                 pageData[itemKey] = +users.takeJid(contacts[0].jid);
             }
             $(id + ' .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, pageData[itemKey], valid);
+            editCom.personIsChange(oldVal, pageData[itemKey]);
         });
     });
     /* eslint-enable */
@@ -161,7 +177,6 @@ page.deviceready = function () {
  */
 page.bindEvents = function () {
     var me = this;
-    var valid = me.valid;
     editCom.bindGetFocus();
 };
 
@@ -231,45 +246,6 @@ page.initPlugin = function () {
         'limit': 5000,
         'delete': true
     });
-};
-
-page.initValue = function () {
-    var me = this;
-    // TODO 修改存储数据
-    var pVal = {
-        selectType: 1,
-        filter: {
-            disabled: {
-                contacts: []
-            },
-            // 已选择的数据
-            checked: {
-                // 数组
-                /* eslint-disable */
-                contacts: editCom.transJid(pageData['principal_user'])
-                /* eslint-enable */
-            }
-        }
-    };
-
-    var aVal = {
-        selectType: 2,
-        filter: {
-            disabled: {
-                contacts: []
-            },
-            // 已选择的数据
-            checked: {
-                // 数组
-                /* eslint-disable */
-                contacts: editCom.transJid(pageData['attend_ids'])
-                /* eslint-enable */
-            }
-        }
-    };
-
-    editCom.setChoosePersonLoc(principalSelectKey, pVal);
-    editCom.setChoosePersonLoc(attendSelectKey, aVal);
 };
 
 // 来自于deo, 获取人员信息
