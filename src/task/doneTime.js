@@ -58,16 +58,13 @@ page.enter = function () {
  *
  */
 page.bindEvents = function () {
-    var me = this;
     $('.done-early').on('click', function () {
         setCurr('done-early');
         info.endTime = 0;
-        me.returnValue();
     });
 };
 
 page.initPlugin = function (initTime) {
-    var me = this;
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
     editCom.initMobiscroll('datetime', '.custom-time', {
         headerText: '<span class="dw-tab-data dw-tab-selected">'
@@ -86,7 +83,6 @@ page.initPlugin = function (initTime) {
             // 此处 添加你自己的代码
             $('.done-time-value').text(util.formatTime(info.endTime));
             setCurr('custom-time');
-            me.returnValue();
         }
     });
 };
@@ -112,7 +108,7 @@ page.deviceready = function () {
         title: lang.back,
         iconPath: '',
         callback: function () {
-            CPNavigationBar.returnPreviousPage();
+            me.returnValue();
         }
     });
     /* eslint-enable */
