@@ -20,7 +20,7 @@ var ls = require('common/localstorage');
 var doing = +util.params('talk_id');
 
 var page = new Page();
-var lang = page.lang;
+
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -50,7 +50,7 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
-
+    var lang = me.lang;
     if (doing) {
         // 下面为获取人员信息的配置
         var obj = {
@@ -129,6 +129,7 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
+    var lang = me.lang;
     var data = $.extend({}, pageData, {
         view: [
             {
@@ -197,6 +198,8 @@ page.initValue = function () {
  *
  */
 page.failUser = function () {
+    var me = this;
+    var lang = me.lang;
     $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
 };
 

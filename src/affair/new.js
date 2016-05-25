@@ -18,7 +18,7 @@ var util = require('common/util');
 var doing = +util.params('affair_id');
 
 var page = new Page();
-var lang = page.lang;
+
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -44,6 +44,7 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
+
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachs);
 
@@ -78,6 +79,7 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
+    var lang = me.lang;
     var data = $.extend({}, pageData, {
         view: [
             {
@@ -101,6 +103,7 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
+    var lang = me.lang;
     var valid = me.valid;
     // 初始化紧急程度
     editCom.initImportanceLevel('#urgencyBlock', pageData);

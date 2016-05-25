@@ -41,8 +41,8 @@ var config = {
 
     debug: true,
 
-    // host: '127.0.0.1',
-    host: ip,
+    host: '127.0.0.1',
+    // host: ip,
 
     port: 8014,
 
@@ -58,8 +58,8 @@ config.mock = {
     port: 8015,
 
     // proxyPrefix: null,
-    // allowOrigin: 'https://task2.test1.com:8014'
-    allowOrigin: 'https://' + config.host + ':' + config.port
+    allowOrigin: 'https://task2.test1.com:8014'
+    // allowOrigin: 'https://' + config.host + ':' + config.port
 };
 
 var root = path.join(__dirname, '/');
