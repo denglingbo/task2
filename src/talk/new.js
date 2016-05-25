@@ -83,7 +83,6 @@ page.deviceready = function () {
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         pageData.attachs = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
-        // editCom.submit(me, url);
         var promise = editCom.submit(page, pageData, url);
         promise.done(function (result) {
             var taskId = pageData.task_id;
@@ -218,10 +217,6 @@ page.renderUser = function (dataArr) {
  * @param {deferred} dfd, deferred
  *
  */
-/* eslint-disable */
-
-
-
 page.addParallelTask(function (dfd) {
     var me = this;
     if (!doing) {
@@ -230,7 +225,9 @@ page.addParallelTask(function (dfd) {
     }
     var url = config.API.TALK_EDIT_URL;
     var promise = me.get(url, {
+        /* eslint-disable */
         talk_id: +util.params('talk_id')
+        /* eslint-enable */
     });
 
     promise
@@ -246,8 +243,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-
-/* eslint-enable */
 $(function () {
     page.start();
 });

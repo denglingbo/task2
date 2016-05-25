@@ -445,7 +445,6 @@ editCom.getClientMsg = function () {
  */
 editCom.setChoosePersonLoc = function (key, value) {
     var me = this;
-    console.log(value.contacts);
     var selectValue = {
         clientMsg: me.getClientMsg(),
         selector: {

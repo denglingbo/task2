@@ -508,7 +508,7 @@ util.arrClone = function (arr) {
 };
 
 /**
- * 把ms转换为 yyyy年MM月dd日的格式
+ * 把ms转换为 yyyy年MM月dd日 hh:mm的格式
  *
  * @param {number} ms 时间毫秒
  * @return {string} 返回的时间字符串
