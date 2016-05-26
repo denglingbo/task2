@@ -353,6 +353,7 @@
 
 	  	// 获取前端支持的类型
 	  	CPAttachment.getAttachmentType(function(data){
+
 	    	supportType =  data.rel.supportType;
 	    	// 遍历用户提供的附件类型参数
 	    	for(var i = 0, len = typeOption.length; i < len; i++){
@@ -1128,7 +1129,7 @@
 		// 取出附件容器
 		this.container = (options.dom && options.dom.containerDOM) || '';
 		this.addBtn = (options.dom && options.dom.addBtnDOM) || '';
-				
+
 		this.url = options.url || {uploadUrl: { url: '', mothod: 'POST'}, resumeUrl: {url: '', mothod: 'POST'}};
 
 		this.clientMsg = options.clientMsg;

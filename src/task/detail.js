@@ -26,9 +26,7 @@ require('common/widgets/emptyPage/netErr.scss');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
-var page = new Page({
-    pageName: 'task-detail'
-});
+var page = new Page();
 
 var requestPageNum = 10;
 
@@ -82,6 +80,8 @@ page.enter = function () {
 page.deviceready = function () {
     var me = this;
     var lang = me.lang;
+    var data = me.data;
+
     /* eslint-disable */
     // 查看更多人员
     me.$main.on('click', '.partner-more', function () {
@@ -128,14 +128,6 @@ page.deviceready = function () {
         }
     });
     /* eslint-enable */
-};
-
-/**
- * 等待 设备 && 数据
- */
-page.deviceready = function () {
-    var me = this;
-    var data = me.data;
 
     me.attach = AttachWrapper.initDetailAttach({
         attachData: data.summary_attachs,
@@ -161,7 +153,7 @@ page.deviceready = function () {
 
     dfdPub
         .done(function (pubData) {
-            me.renderUser(obj, pubData.contacts);
+            // me.renderUser(obj, pubData.contacts);
         })
         .fail(function () {
             me.failUser();

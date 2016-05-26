@@ -12,9 +12,7 @@ var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
 
-var page = new Page({
-    pageName: 'task-doneTime'
-});
+var page = new Page();
 var lang = page.lang;
 
 var info = {
@@ -62,6 +60,7 @@ page.enter = function () {
 page.bindEvents = function () {
     $('.done-early').on('click', function () {
         setCurr('done-early');
+        info.endTime = 0;
     });
 };
 
@@ -103,26 +102,21 @@ page.initValue = function () {
 page.deviceready = function () {
     var me = this;
     var lang = me.lang;
-    $('#submit').on('click', function () {
-        me.returnValue(true);
-    });
 
     /* eslint-disable */
     CPNavigationBar.setLeftButton({
         title: lang.back,
         iconPath: '',
         callback: function () {
-            CPNavigationBar.returnPreviousPage();
+            me.returnValue();
         }
     });
     /* eslint-enable */
 };
 
-page.returnValue = function (hasVal) {
+page.returnValue = function () {
     /* eslint-disable */
-    if (hasVal) {
-        CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
-    }
+    CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
     CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
 };

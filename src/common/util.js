@@ -522,7 +522,7 @@ util.arrClone = function (arr) {
 };
 
 /**
- * 把ms转换为 yyyy年MM月dd日的格式
+ * 把ms转换为 yyyy年MM月dd日 hh:mm的格式
  *
  * @param {number} ms 时间毫秒
  * @return {string} 返回的时间字符串
@@ -532,9 +532,16 @@ util.formatTime = function (ms) {
     var y = time.getFullYear();
     var M = time.getMonth() + 1;
     var d = time.getDate();
+    var h = time.getHours();
+    var m = time.getMinutes();
+    var s = time.getSeconds();
+
     M = M < 10 ? '0' + M : M;
     d = d < 10 ? '0' + d : d;
-    return y + '年' + M + '月' + d + '日';
+    h = h < 10 ? '0' + h : h;
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    return y + '年' + M + '月' + d + '日 ' + h + ':' + m;
 };
 
 /**

@@ -17,10 +17,8 @@ var util = require('common/util');
 // 判断是否是编辑页面
 var doing = +util.params('affair_id');
 
-var page = new Page({
-    pageName: 'affair-new'
-});
-var lang = page.lang;
+var page = new Page();
+
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -46,6 +44,7 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
+
     // 初始化附件组件
     me.attach = editCom.initEditAttach(pageData.attachs);
 
@@ -80,6 +79,7 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
+    var lang = me.lang;
     var data = $.extend({}, pageData, {
         view: [
             {
@@ -103,7 +103,7 @@ page.loadPage = function () {
 
 page.initPlugin = function () {
     var me = this;
-    var valid = me.valid;
+    var lang = me.lang;
     // 初始化紧急程度
     editCom.initImportanceLevel('#urgencyBlock', pageData);
 
@@ -139,7 +139,7 @@ page.initPlugin = function () {
                 pageData['label_id'] = +inst.getVal();
                 $('#affairType .value').text(text);
 
-                valid.isEdit = oldVal !== pageData['label_id'] ? true : valid.isEdit;
+                editCom.valid.isEdit = oldVal !== pageData['label_id'] ? true : editCom.valid.isEdit;
                 /* eslint-enable */
             }
         });
@@ -169,28 +169,32 @@ page.initPlugin = function () {
  */
 /* eslint-disable */
 
-if (doing) {
-    page.addParallelTask(function (dfd) {
-        var me = this;
-        var url = config.API.AFFAIR_DETAIL_URL;
-        var promise = me.get(url, {
-            affair_id: +util.params('affair_id')
-        });
 
-        promise
-            .done(function (result) {
-                if (result.meta.code !== 200) {
-                    dfd.reject(result);
-                }
-                else {
-                    // $.extend(pageData, result.data);
-                    util.getDataFromObj(pageData, result.data);
-                    dfd.resolve();
-                }
-            });
+page.addParallelTask(function (dfd) {
+    var me = this;
+    if (!doing) {
+        dfd.resolve();
         return dfd;
+    }
+
+    var url = config.API.AFFAIR_EDIT_URL;
+    var promise = me.get(url, {
+        affair_id: +util.params('affair_id')
     });
-}
+
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                util.getDataFromObj(pageData, result.data);
+                dfd.resolve();
+            }
+        });
+    return dfd;
+});
+
 /* eslint-enable */
 $(function () {
     page.start();

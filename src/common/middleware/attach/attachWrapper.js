@@ -5,6 +5,7 @@
  *
  */
 require('dep/ui/attaches/css/attaches.css');
+require('dep/touch');
 var Mustache = require('dep/mustache');
 // attaches 需要使用
 window.Mustache = Mustache;
@@ -12,7 +13,7 @@ require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
 var lang = require('common/lang').getData();
-// var util = require('common/util');
+var util = require('common/util');
 
 var clientMsg = (function () {
     var data = localstorage.getData('TASK_PARAMS');
@@ -77,12 +78,13 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
+    attachData = util.transKey(attachData);
     var attachOptions = {
         originAttaches: (attachData || []),
         dom: {
             // 附件容器DOM元素
             containerDOM: options.container,
-            addBtnDom: options.addBtn
+            addBtnDOM: options.addBtn
         },
         operateType: options.addBtn ? 'upload' : 'download',
         callback: options.callback
@@ -127,6 +129,7 @@ attach.initDetailAttach = function (options) {
         }
         return;
     }
+    options.attachData = options.attachData ? util.transKey(options.attachData) : [];
     // 初始化附件组件
     var attachOptions = {
         dom: {

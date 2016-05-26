@@ -24,9 +24,7 @@ var widgetCommentList = require('common/widgets/comment/list');
 
 var Page = require('common/page');
 
-var page = new Page({
-    pageName: 'affair-detail'
-});
+var page = new Page();
 
 page.enter = function () {
     var me = this;

@@ -19,10 +19,8 @@ var ls = require('common/localstorage');
 // 判断是否是编辑页面
 var doing = +util.params('talk_id');
 
-var page = new Page({
-    pageName: 'talk-new'
-});
-var lang = page.lang;
+var page = new Page();
+
 /* eslint-disable */
 var pageData = {
     id: 0,
@@ -45,16 +43,14 @@ var selectKey = 'talkAttandSelectKey';
 page.enter = function () {
     var me = this;
     me.loadPage();
-    me.initValue();
     me.initPlugin();
     me.bindEvents();
 };
 
 page.deviceready = function () {
     var me = this;
-
+    var lang = me.lang;
     if (doing) {
-        util.getDataFromObj(pageData, me.data);
         // 下面为获取人员信息的配置
         var obj = {
             /* eslint-disable */
@@ -87,7 +83,6 @@ page.deviceready = function () {
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         pageData.attachs = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
-        // editCom.submit(me, url);
         var promise = editCom.submit(page, pageData, url);
         promise.done(function (result) {
             var taskId = pageData.task_id;
@@ -101,6 +96,14 @@ page.deviceready = function () {
     /* eslint-disable */
     // 选择人员跳转页面
     $('#attends').click(function () {
+        var val = {
+            selectType: 2,
+            /* eslint-disable */
+            contacts: editCom.transJid(pageData['attend_ids'])
+            /* eslint-enable */
+        };
+        editCom.setChoosePersonLoc(selectKey, val);
+
         var oldVal = pageData['user_ids'];
         CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
             if (!data) {
@@ -112,7 +115,7 @@ page.deviceready = function () {
                 pageData['user_ids'].push(+users.takeJid(value.jid));
             });
             $('#attends .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, pageData['user_ids'], valid);
+            editCom.personIsChange(oldVal, pageData['user_ids']);
         });
     });
     /* eslint-enable */
@@ -132,6 +135,7 @@ page.bindEvents = function () {
  */
 page.loadPage = function () {
     var me = this;
+    var lang = me.lang;
     var data = $.extend({}, pageData, {
         view: [
             {
@@ -174,32 +178,13 @@ page.initPlugin = function () {
     });
 };
 
-page.initValue = function () {
-    // TODO 修改存储数据
-    var val = {
-        selectType: 2,
-        filter: {
-            disabled: {
-                contacts: []
-            },
-            // 已选择的数据
-            checked: {
-                // 数组
-                /* eslint-disable */
-                contacts: editCom.transJid(pageData['attend_ids'])
-                /* eslint-enable */
-            }
-        }
-    };
-
-    editCom.setChoosePersonLoc(selectKey, val);
-};
-
 /**
  * 成员获取失败
  *
  */
 page.failUser = function () {
+    var me = this;
+    var lang = me.lang;
     $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
 };
 
@@ -232,22 +217,17 @@ page.renderUser = function (dataArr) {
  * @param {deferred} dfd, deferred
  *
  */
-/* eslint-disable */
-
-
-
 page.addParallelTask(function (dfd) {
     var me = this;
-
-
-if (!doing) {
-    dfd.resolve();
-    return dfd;
-}
-
-    var url = config.API.TALK_DETAIL_URL;
+    if (!doing) {
+        dfd.resolve();
+        return dfd;
+    }
+    var url = config.API.TALK_EDIT_URL;
     var promise = me.get(url, {
+        /* eslint-disable */
         talk_id: +util.params('talk_id')
+        /* eslint-enable */
     });
 
     promise
@@ -256,15 +236,13 @@ if (!doing) {
                 dfd.reject(result);
             }
             else {
-                // $.extend(pageData, result.data);
+                util.getDataFromObj(pageData, result.data);
                 dfd.resolve();
             }
         });
     return dfd;
 });
 
-
-/* eslint-enable */
 $(function () {
     page.start();
 });

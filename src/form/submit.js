@@ -13,9 +13,7 @@ var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
-var page = new Page({
-    pageName: 'form-submit'
-});
+var page = new Page();
 var lang = page.lang;
 
 // 验证参数

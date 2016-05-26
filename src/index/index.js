@@ -11,9 +11,7 @@ var config = require('../config');
 var Page = require('common/page');
 var Pharos = require('common/ui/pharos');
 
-var page = new Page({
-    pageName: 'index-index'
-});
+var page = new Page();
 
 page.enter = function () {
 
