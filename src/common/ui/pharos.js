@@ -32,6 +32,14 @@ var Pharos = function (selector, data) {
 
 Pharos.prototype = {
 
+    /**
+     * 正则
+     */
+    expr: {
+        check: /({[\w|:|#|\.]+})/g,
+        isSample: /^{(.+)}$/
+    },
+
     length: 0,
 
     queue: {},
@@ -66,10 +74,25 @@ Pharos.prototype = {
             this.queue[guid] = {};
         }
 
+        var isSample = this.expr.isSample.test(loader);
+        var tpl = loader;
+        var start = null;
+        var end = null;
+
+        if (!isSample) {
+            var startIdx = tpl.indexOf('{');
+            var endIdx = tpl.lastIndexOf('}') + 1;
+            start = tpl.substring(0, startIdx);
+            end = tpl.substring(endIdx, tpl.length);
+            tpl = tpl.substring(startIdx, endIdx);
+        }
+
         this.queue[guid] = {
             guid: guid,
             target: target,
-            tpl: loader
+            tpl: tpl,
+            start: start,
+            end: end
         };
 
         this.length ++;
@@ -96,12 +119,14 @@ Pharos.prototype = {
             if (me.queue.hasOwnProperty(guid)) {
 
                 var q = me.get(guid);
-                var html = me.exec(q);
+                var htmlstr = me.exec(q);
 
-                if (html && html.length > 0) {
+                if (htmlstr && htmlstr.length > 0) {
+
+                    htmlstr = (q.start ? q.start : '') + htmlstr.join('') + (q.end ? q.end : '');
 
                     $(q.target)
-                        .html(html.join(''))
+                        .html(htmlstr)
                         .removeClass('hide');
                 }
             }
@@ -210,13 +235,6 @@ Pharos.prototype = {
         }
 
         return r;
-    },
-
-    /**
-     * 正则
-     */
-    expr: {
-        check: /({[\w|:|#|\.]+})/g
     },
 
     /**

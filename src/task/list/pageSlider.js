@@ -6,8 +6,8 @@
  * @param {Ojbect} options,
  *
  */
-var Slide = require('./slide');
-var util = require('../util');
+var Slide = require('common/ui/slide');
+var util = require('common/util');
 
 /**
  * 滑屏切换页面
@@ -33,6 +33,8 @@ var PageSlider = function (options) {
         'pages': [],
 
         'class': {},
+
+        'slide': false,
 
         'onInit': function () {},
         'onSlide': function () {},
@@ -74,13 +76,8 @@ PageSlider.prototype = {
         });
 
         this.$pages.each(function (i) {
-
-            var num = i * 100;
-            $(this).css({
-                width: me.winWidth
-            });
-
-            this.style[util.prefixStyle('transform')] = 'translate3d(' + num + '%, 0px, 0px)';
+            $(this).width(me.winWidth);
+            this.style[util.prefixStyle('transform')] = 'translate3d(' + i * 100 + '%, 0px, 0px)';
         });
 
         this.bindEvents();
@@ -135,38 +132,39 @@ PageSlider.prototype = {
     bindEvents: function () {
         var me = this;
 
-        // Hey my go
-        // slide 包用来界定用户的滑动行为
-        this.slide = new Slide('.slider-container');
-
         this.$items.on('click', function (event) {
             event.stopPropagation();
             event.preventDefault();
 
-            // me.switch.call(me, event.target);
             var $tab = $(event.target);
             var index = $tab.index();
 
             me.run(index);
         });
 
-        this.slide.on('slideX', function (pos) {
-            me.$outer.removeClass('slide-fast');
-        });
+        // Hey my go
+        // slide 包用来界定用户的滑动行为
+        if (this.opts.slide) {
+            this.slide = new Slide('.slider-container');
 
-        this.slide.on('slideMoveX', function (pos) {
-            // 正数表示往右，负数表示往左
-            me.step = (pos.diffX / me.winWidth) * 100;
-            var step = me.step + me.defaultX;
+            this.slide.on('slideX', function (pos) {
+                me.$outer.removeClass('slide-fast');
+            });
 
-            me.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
-        });
+            this.slide.on('slideMoveX', function (pos) {
+                // 正数表示往右，负数表示往左
+                me.step = (pos.diffX / me.winWidth) * 100;
+                var step = me.step + me.defaultX;
 
-        this.slide.on('slideEndX', function (pos) {
-            var item = me.find();
-            var to = me.gotoPage(item, pos);
-            me.run(to);
-        });
+                me.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
+            });
+
+            this.slide.on('slideEndX', function (pos) {
+                var item = me.find();
+                var to = me.gotoPage(item, pos);
+                me.run(to);
+            });
+        }
     },
 
     /**

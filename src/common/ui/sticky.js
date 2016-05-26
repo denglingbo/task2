@@ -5,7 +5,7 @@
 
 define(function (require) {
 
-    var util = require('../../common/util');
+    var util = require('common/util');
 
     var isSupportSticky = util.featureTest('position', 'sticky');
 
@@ -97,6 +97,7 @@ define(function (require) {
             if (!this.isFixed) {
                 this.$target.css(this.newCss);
                 this.isFixed = true;
+                this.$target.addClass('sticky-element');
             }
         },
 
@@ -104,6 +105,7 @@ define(function (require) {
             if (this.isFixed) {
                 this.$target.css(this.oldCss);
                 this.isFixed = false;
+                this.$target.removeClass('sticky-element');
             }
         }
     };

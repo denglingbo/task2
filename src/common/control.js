@@ -197,13 +197,14 @@ Control.prototype.init = function () {};
  * @param {Object} data 渲染所需数据
  * @return {string}
  */
-Control.prototype.render = function (data) {
+Control.prototype.render = function (data, type) {
     var me = this;
 
     var selector = $(this.opts.wrapper);
     var options = {
         tmpl: this.opts.tpl,
-        partials: this.opts.partials
+        partials: this.opts.partials,
+        type: type || 'html'
     };
 
     view.render(selector, data, options);

@@ -4,39 +4,11 @@
 @import "../common/css/global.scss";
 @import "../common/css/ui.scss";
 
-.list-item {
-    margin: 10px 10px 0 10px;
-    padding: 10px;
-    background: $white;
+#search {
+    height: rem(43px);
     position: relative;
-
-    &-title {
-        @include border-1px(bottom);
-
-        padding: rem(5px) 0 rem(10px) 0;
-    }
-
-    &-content {
-        position: relative;
-
-        > div {
-            margin-top: rem(10px);
-
-            &.time {
-                margin-top: rem(15px);
-            }
-        }
-    }
-}
-
-// 加载更多
-.scroll-loader {
-    // position: absolute;
-    width: 100%;
-    text-align: center;
-    height: rem(20px);
-    line-height: rem(20px);
-    padding: rem(5px) 0;
+    z-index: 98;
+    background: $white;
 }
 
 .slider-scroll {
@@ -44,13 +16,20 @@
     width: 100%;
 }
 
+.fixbar {
+    @include fixbar(3);
+    position: fixed;
+    z-index: 100;
+}
+
 .slider-container {
     position: relative;
     overflow: hidden;
-    z-index: 1;
+    z-index: 99;
 
     .slider-outer {
         position: relative;
+        margin-top: -1px;
 
         .slider-page {
             position: absolute;
@@ -62,15 +41,43 @@
             .scroll-inner {
                 width: 100%;
                 height: 100%;
-
-                .list-wrapper-content {}
             }
         }
     }
 }
 
-.fixbar {
-    @include fixbar(3);
+.list-item {
+    margin: 10px 10px 0 10px;
+    padding: 10px;
+    background: $white;
+    position: relative;
+
+    &-title {
+        @include border-1px(bottom);
+        padding: rem(5px) rem(10px) rem(10px) rem(10px);
+        height: rem(15px);
+        line-height: rem(15px);
+
+        &-text {
+            display: inline-block;
+            @include ellipsis();
+        }
+
+        .list-item-status {
+            float: right;
+        }
+    }
+
+    &-content {
+        position: relative;
+        padding: 0 rem(10px);
+
+        > div {
+            margin-top: rem(8px);
+
+            &.time {}
+        }
+    }
 }
 
 /* 差速滑动组合 */

@@ -537,6 +537,9 @@ Page.prototype.ajax = function (api, data, options) {
 
     if (config.debug) {
 
+        // 上面的2个 电脑端联调不能传递
+        delete ajaxSettings.headers;
+
         // debug & 由 node 转发的时候 和后端联调跨域的情况下需要加如下配置
         if (!/^\/data/.test(config.API.prefix)) {
             ajaxSettings.xhrFields = {
@@ -547,8 +550,6 @@ Page.prototype.ajax = function (api, data, options) {
                 'set-cookie': config.mock.token
             };
         }
-
-        delete ajaxSettings.headers;
 
         if (!/post/i.test(ajaxSettings.type)) {
             delete ajaxSettings.contentType;

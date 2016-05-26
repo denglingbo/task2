@@ -225,7 +225,43 @@ $loading-size: 20px;
     }
 }
 
+.status {
+    color: $blue;
+}
 .time {
-    font-size: rem(12px);
+    font-size: rem(11px);
     color: $light-gray;
+}
+
+
+.tab {
+    display: box;
+    box-pack: center;
+    box-align: center;
+    height: rem(35px);
+    background: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    overflow: hidden;
+    @include border-1px(bottom);
+
+    ul {
+        position: absolute;
+        height: rem(35px);
+
+        li {
+            font-size: rem(14px);
+            display: inline-flex;
+            height: rem(15px);
+            line-height: rem(15px);
+            padding: rem(10px) rem(20px);
+            color: $black;
+
+            &.selected {
+                color: $blue;
+            }
+        }
+    }
 }

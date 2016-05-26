@@ -95,7 +95,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: 'd3f25a5d-3154-4bae-8df6-c8a69885f649-241640'
+    token: '5adf2bc2-65f3-4557-bc4f-7ee23fc39f06-241833'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -108,6 +108,7 @@ config.mock = {
 // debug 模式
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
+
 config.debug = true;
 
 if (config.debug) {

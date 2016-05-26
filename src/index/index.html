@@ -12,27 +12,27 @@
     <script id="main-tmpl" type="x-tmpl-mustache">
     <div id="menu" class="menu">
         <ul>
-            <li class="director" data-log='{"actionTag":"indexMyDuty"}'>
+            <li class="director" data-rid="2" data-log='{"actionTag":"indexMyDuty"}'>
                 <div>
                     <p>
                         <b>{{ lang.director }}</b>
-                        <span loader="{my_duty}" class="hide">(<em></em>)</span>
+                        <span loader="(<em>{my_duty}</em>)" class="hide"></span>
                     </p>
                 </div>
             </li>
-            <li class="dispatch" data-log='{"actionTag":"indexMyAssign"}'>
+            <li class="dispatch" data-rid="1" data-log='{"actionTag":"indexMyAssign"}'>
                 <div>
                     <p>
                         <b>{{ lang.dispatch }}</b>
-                        <span loader="{my_assign}" class="hide">(<em></em>)</span>
+                        <span loader="(<em>{my_assign}</em>)" class="hide">(<em></em>)</span>
                     </p>
                 </div>
             </li>
-            <li class="partake" data-log='{"actionTag":"indexMyAttend"}'>
+            <li class="partake" data-rid="3" data-log='{"actionTag":"indexMyAttend"}'>
                 <div>
                     <p>
                         <b>{{ lang.partake }}</b>
-                        <span loader="{my_attend}" class="hide">(<em></em>)</span>
+                        <span loader="(<em>{my_attend}</em>)" class="hide">(<em></em>)</span>
                     </p>
                 </div>
             </li>

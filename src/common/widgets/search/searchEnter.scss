@@ -4,13 +4,14 @@
 $search-tip-color: #aaafb3;
 $search-page-color: #f2f4f5;
 $search-key-color: #e51717;
+
 .search-box {
     height: rem(43px);
-    @include border-1px(top, #e7e7e7);
     background-color: $white;
     padding: 0 rem(10px);
     display: flex;
     align-items: center;
+    @include border-1px(top, #e7e7e7);
 
     .search-in {
         height: rem(29px);
@@ -34,15 +35,17 @@ $search-key-color: #e51717;
     top: 0;
     left: 0;
     z-index: 9800;
-    height: 100%;
+    /*height: 100%;*/
     width: 100%;
 
     .search-inner {
         @extend .search-box;
-        @include border-1px(bottom, #e0e0e0);
         position: relative;
         z-index: 9860;
 
+        &.border {
+            @include border-1px(bottom, #e0e0e0);
+        }
         
         .search-input-wrap {
             position: relative;

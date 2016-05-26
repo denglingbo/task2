@@ -1,9 +1,9 @@
 /* eslint-disable */
-var Control = require('common/control');
+// var Control = require('common/control');
 
 var Loader = function (options) {
 
-    Control.call(this, options);
+    // Control.call(this, options);
 
     this.opts = {
         // 默认第几页
@@ -13,8 +13,11 @@ var Loader = function (options) {
 
         // 要进行比较的字段，如果 null， 则对整个 object 进行比较
         // 'list'
-        dataKey: null
-    }
+        dataKey: null,
+
+        // 是否进行相同数据比较
+        changedCompare: false
+    };
 
     $.extend(this.opts, options);
 
@@ -23,7 +26,7 @@ var Loader = function (options) {
     this.page = this.opts.page;
 };
 
-$.extend(Loader.prototype, Control.prototype);
+// $.extend(Loader.prototype, Control.prototype);
 
 $.extend(Loader.prototype, {
 
@@ -31,6 +34,7 @@ $.extend(Loader.prototype, {
     _compare: null,
 
     reqStart: 0,
+
     reqEnd: 0,
 
     /**
@@ -39,7 +43,7 @@ $.extend(Loader.prototype, {
      * @param {Object|...} data, 用于比较的数据
      */
     isDataChanged: function (data) {
-        if (this._compare === null) {
+        if (this._compare === null || !this.opts.changedCompare) {
             return true;
         }
 

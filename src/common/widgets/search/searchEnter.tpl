@@ -1,5 +1,5 @@
 <div id="search-wrap" class="search-wrap{{^isSearchPage}} hide{{/isSearchPage}}">
-    <div class="search-inner">
+    <div class="search-inner border">
         <div class="search-in search-input-wrap">
             <input id="search-input" class="search-input" type="text">
             <i class="icon-search"></i>

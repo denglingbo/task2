@@ -8,49 +8,80 @@
 </head>
 <body>
     <div id="main" class="main">
-        
-    </div>
-    <script id="main-tmpl" type="x-tmpl-mustache">
-        <div id="search" data-log='{"actionTag":"taskListSearch"}'></div>
+
+        <!-- search -->
+        <div id="search" data-log='{"actionTag":"taskListSearch"}'>
+            <div id="search-wrap" class="search-wrap">
+                <div class="search-inner">
+                    <div class="search-in search-input-wrap">
+                        <input id="search-input" class="search-input" type="text" readonly="">
+                        <i class="icon-search"></i>
+                        <span class="search-tip" data-lang="search"></span>
+                        <i class="close-x clear hide"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="slider-container">
+
             <div class="slider-outer">
 
                 <!-- 未完成 -->
                 <div class="slider-page" id="list-wrapper-doing" data-name="doing">
-                    <div class="scroll-inner">
-                        <div class="list-wrapper-content"><!-- Content --></div>
-                        <div class="scroll-loader hide">{{ lang.getMore }} doing</div>
+
+                    <div class="tab">
+                        <ul>
+                            <li class="selected">全部</li>
+                            <li>进行中</li>
+                            <li>待接受</li>
+                            <li>审核中</li>
+                            <li>已拒绝</li>
+                            <li>待分派</li>
+                        </ul>
                     </div>
+
+                    <div class="scroll-outter">
+                        <div class="scroll-inner">
+                            <div class="list-wrapper-content"><!-- Content --></div>
+                            <div class="load-more"></div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- 已完成 -->
                 <div class="slider-page" id="list-wrapper-done" data-name="done">
-                    <div class="scroll-inner">
-                        <div class="list-wrapper-content">done</div>
-                        <div class="scroll-loader hide">{{ lang.getMore }} done</div>
+                    <div class="scroll-outter">
+                        <div class="scroll-inner">
+                            <div class="list-wrapper-content">done</div>
+                            <div class="load-more"></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 已撤销 -->
                 <div class="slider-page" id="list-wrapper-cancel" data-name="cancel">
-                    <div class="scroll-inner">
-                        <div class="list-wrapper-content">cancel</div>
-                        <div class="scroll-loader hide">{{ lang.getMore }} cancel</div>
+                    <div class="scroll-outter">
+                        <div class="scroll-inner">
+                            <div class="list-wrapper-content">cancel</div>
+                            <div class="load-more"></div>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
-    </script>
+    </div>
     
-    <div id="fixbar" class="fixbar"></div>
-    <script id="fixbar-tmpl" type="x-tmpl-mustache">
+    <div id="fixbar" class="fixbar">
         <ul class="tab-page">
-            <li data-name="doing">{{ lang.undoneText }}</li>
-            <li data-name="done" data-log='{"actionTag":"taskListDone"}'>{{ lang.doneText }}</li>
-            <li data-name="cancel" data-log='{"actionTag":"taskListCancel"}'>{{ lang.cancelText }}</li>
+            <li data-name="doing" data-lang="undoneText" data-log='{"actionTag":"taskListDoing"}'></li>
+            <li data-name="done" data-lang="doneText" data-log='{"actionTag":"taskListDone"}'></li>
+            <li data-name="cancel" data-lang="cancelText" data-log='{"actionTag":"taskListCancel"}'></li>
         </ul>
-    </script>
+    </div>
+
     <script type="text/javascript" src="./cordova.js"></script>
 </body>
 </html>

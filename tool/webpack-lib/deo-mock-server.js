@@ -18,7 +18,7 @@ var fn = function (dir, config) {
         res.writeHead(200, {
             'Content-Type': 'application/json; charset=utf-8',
             // 解决跨域
-            'Access-Control-Allow-Origin': config.allowOrigin,
+            'Access-Control-Allow-Origin': req.headers.origin,
             // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
             'Access-Control-Allow-Credentials': true,
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass'

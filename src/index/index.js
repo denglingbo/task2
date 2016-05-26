@@ -70,9 +70,14 @@ page.bindEvents = function () {
     var me = this;
 
     $('#menu li').on('click', function (event) {
-        /* eslint-disable */
-        CPNavigationBar.redirect('/task-list.html');
-        /* eslint-enable */
+
+        var rid = $(this).data('rid');
+
+        if (rid) {
+            /* eslint-disable */
+            CPNavigationBar.redirect('/task-list.html?rid=' + rid);
+            /* eslint-enable */
+        }
     });
 
     $('#add-newtask').on('click', function () {

@@ -155,6 +155,20 @@ util.getParam = function (key) {
 };
 
 /**
+ * encode HTML
+ *
+ * @param {string} html html
+ * @return {string}
+ */
+util.encodeHTML = function (html) {
+    return String(html)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+};
+
+/**
  * decode HTML
  *
  * @param {string} source source

@@ -10,7 +10,7 @@ require('./detail.scss');
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
 var users = require('common/middleware/user/users');
-var ScrollMore = require('common/ui/scrollMore/scrollMore');
+var Getmore = require('common/ui/getmore/getmore');
 var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
@@ -56,7 +56,7 @@ page.enter = function () {
     });
 
     // 初始化一个点击加载组件
-    me.scrollMore = new ScrollMore({
+    me.getmore = new Getmore({
         wrapper: '.affair-talk-wrapper',
         promise: function () {
             /* eslint-disable */
@@ -180,7 +180,7 @@ page.bindEvents = function () {
     });
 
     // 第一次的时候把 page 相关的参数配置好
-    // me.scrollMore.on('complete', function (data) {
+    // me.getmore.on('complete', function (data) {
     //     me.pagination = new Pagination({
     //         elems: '#affair-talk dd',
     //         // data-pagenum，数据来源
@@ -194,7 +194,7 @@ page.bindEvents = function () {
     //     });
     // });
 
-    me.scrollMore.on(['complete', 'loadmore'], function (data) {
+    me.getmore.on(['complete', 'loadmore'], function (data) {
         var loader = this;
 
         // Mustache.js 的逗比之处

@@ -99,5 +99,6 @@ module.exports = {
     'impLevel3': '紧急',
     'impLevel4': '普通',
     'back': '返回',
-    'submit': '提交'
+    'submit': '提交',
+    'updateDate': '更新时间'
 };
