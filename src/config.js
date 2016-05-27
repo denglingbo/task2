@@ -68,19 +68,20 @@ var config = {
         // 讨论评论列表
         TALK_COMMENT_LIST: 'get_talk_comment_list',
 
-        // attach uploadUrl
-        ATTACH_UPLOADURL: 'attachment/get_fs_tokens_on_create',
-        // attach resumeUrl
-        ATTACH_RESUMEURL: 'attachment/get_fs_tokens_on_continue',
-
-
-        // 列表
-        // 任务列表
+            // 任务列表
         GET_TASK_LIST: 'get_task_list',
         GET_TALK_LIST: 'get_talk_list',
         GET_AFFAIR_LIST: 'get_affair_list'
     }
 };
+
+/**
+ * [重要] 目前上传等和以前组件相关的因为没有自动拼装 ajax url, 所以这里要写完整
+ */
+// attach uploadUrl
+config.API.ATTACH_UPLOADURL = config.API.prefix + 'attachment/get_fs_tokens_on_create';
+// attach resumeUrl
+config.API.ATTACH_RESUMEURL = config.API.prefix + 'attachment/get_fs_tokens_on_continue';
 
 /**
  * 静态参数
@@ -109,7 +110,7 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 
-config.debug = true;
+// config.debug = true;
 
 if (config.debug) {
     var loc = window.location;
