@@ -16,7 +16,6 @@ var pages = {
     // 未完成
     opened: {
         index: 0,
-        api: 'asdf',
         params: {
             status: 0
         }
