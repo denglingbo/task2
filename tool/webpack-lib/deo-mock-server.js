@@ -1,3 +1,10 @@
+/**
+ * @file deo-mock-server.js
+ * @author deo
+ *
+ * mock server
+ */
+
 /* eslint-disable */
 
 var https = require('https');
@@ -7,17 +14,16 @@ var fn = function (dir, config) {
 
     var options = {
         key: fs.readFileSync(__dirname + '/ssl/server.key'),
-        // ca: [fs.readFileSync('./keys/ca-cert.pem')],
         cert: fs.readFileSync(__dirname + '/ssl/server.crt')
     };
 
-    https.createServer(options,function(req,res){
+    var server = https.createServer(options, function (req, res) {
 
         var url = req.url.replace(/(\?.+)/, '');
 
         res.writeHead(200, {
             'Content-Type': 'application/json; charset=utf-8',
-            // 解决跨域
+            // 解决跨域, 允许任意 origin
             'Access-Control-Allow-Origin': req.headers.origin,
             // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
             'Access-Control-Allow-Credentials': true,
@@ -27,8 +33,10 @@ var fn = function (dir, config) {
 
         var expr = /\/data\/(.+)/.exec(url);
         var file = null;
+
         if (expr && expr.length > 1) {
             file = dir + '/data/' + expr[1] + '.json';
+
             console.log(file);
 
             try {
@@ -47,12 +55,9 @@ var fn = function (dir, config) {
                 }
             }));
         }
+    });
 
-        // var buffer = fs.readFileSync('./mock/data' + url + '.json');
-        // res.end(JSON.stringify(JSON.parse(buffer)));
-        
-
-    }).listen(config.port, config.host);
+    server.listen(config.port, config.host);
 
 };
 
