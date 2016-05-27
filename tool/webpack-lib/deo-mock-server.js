@@ -45,14 +45,21 @@ var fn = function (dir, config) {
             }
             catch (ex) {
 
+                // 耍你1秒钟
+                setTimeout(function () {
+                    res.end(JSON.stringify({
+                        status: 1,
+                        error: ex,
+                        msg: 'No file'
+                    }));
+                }, 1000)
             }
         }
         else {
             res.end(JSON.stringify({
                 status: 0,
-                data: {
-                    key: 'Hello world'
-                }
+                msg: 'Bye',
+                error: 'Bye'
             }));
         }
     });
