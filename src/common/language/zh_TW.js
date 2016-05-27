@@ -93,7 +93,6 @@ module.exports = {
     'dataLoading': '數據加載中',
     'affairAndTalk': '事件與討論',
     'getMore': '獲取更多',
-
     'back': '返回',
     'submit': '提交'
 };

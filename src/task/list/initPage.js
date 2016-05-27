@@ -28,6 +28,15 @@ function dealData(data) {
     data.importanceRaw = function () {
         return raw.importance(this.importance_level);
     };
+    data.endTimeRaw = function () {
+        return util.dateformat(this.end_time);
+    };
+    data.isRemindUpdate = function () {
+        return this.remind == 2;
+    };
+    data.isRemindNew = function () {
+        return this.remind == 1;
+    };
     /* eslint-enable */
 }
 
@@ -54,7 +63,9 @@ function Init(options) {
 
         // getmore 需要使用
         dataKey: 'obj_list',
-        tpl: null
+        tpl: null,
+
+        onComplete: function () {}
     };
 
     $.extend(me.opts, options);
@@ -74,7 +85,12 @@ function Init(options) {
     me.load = false;
 
     // 是否进行刷新
-    me.refresh = false;
+    me._moring = false;
+
+    // 重载动作
+    me._reloading = false;
+    // 是否允许重新加载
+    me._reloadAllow = false;
 
     me.init();
 }
@@ -88,14 +104,12 @@ Init.prototype = {
         me.getmore = new Getmore(
             $.extend(me.opts, {
                 wrapper: me.$main,
-                handler: me.$wrapper.find('.load-more')
+                reloadHandler: me.$wrapper.find('.data-reload'),
+                moreHandler: me.$wrapper.find('.data-more')
             })
         );
 
-        me.getmore.on('complete', function (data) {
-            dealData(data);
-            this.render(data);
-            me.setBasic();
+        me.getMoreData(function () {
             me.initScroll();
         });
     },
@@ -135,7 +149,9 @@ Init.prototype = {
 
             // 初始化 scroll
             me.scroll = new IScroll(me.$wrapper[0], {
-                probeType: 2,
+
+                // 为了较为准确的加载数据，这里需要设置为 3
+                probeType: 3,
                 scrollX: false,
                 scrollY: true,
                 scrollbars: false,
@@ -160,42 +176,101 @@ Init.prototype = {
 
         // 监听滚动
         me.scroll.on('scroll', function () {
-            me.checkRefresh(this);
+            me.checkReload(this);
+            me.checkMore(this);
         });
 
         // 监听滚动结束
         me.scroll.on('scrollEnd', function () {
-            // Ajax New Data
-            if (me.refresh) {
-                me.getMoreData();
+
+            // 允许重新刷新
+            if (me._reloadAllow === true) {
+                me.getReloadData();
             }
         });
     },
 
-    getMoreData: function () {
+    getReloadData: function (callback) {
         var me = this;
 
-        me.getmore.req(function (data) {
+        me.getmore.requestReload()
+            .done(function (data) {
+
+                dealData(data);
+                me.getmore.render(data);
+                me.setBasic();
+                me.scroll.refresh();
+            })
+            .fail(function () {
+
+            })
+            .always(function () {
+                // 设置加载更多的标记
+                // me._reloading = false;
+
+                callback && callback();
+
+                me._reloading = false;
+                me._reloadAllow = false;
+            });
+    },
+
+    getMoreData: function (callback) {
+        var me = this;
+
+        me.getmore.requestMore(function (data) {
+
+            if (!data) {
+                return;
+            }
+
+            // 设置加载更多的标记
+            me._moring = false;
+
             dealData(data);
             this.render(data, 'append');
             me.setBasic();
 
-            // 刷新滚 iscroll
-            me.scroll.refresh();
+            callback && callback();
         });
     },
 
     /**
-     * 检查是否需要刷新
+     * 检查是否需要重新加载数据
      *
      * @param {Element} scroll, new Scroll() 返回的scroll 实例
      */
-    checkRefresh: function (scroll) {
-        if (scroll.maxScrollY - scroll.y > 50) {
-            this.refresh = true;
+    checkReload: function (scroll) {
+        var me = this;
+
+        if (scroll.y > 0 && me._reloading === false && me._reloadAllow === false) {
+            me.getmore.statusChange('reload', 'default');
         }
-        else {
-            this.refresh = false;
+
+        if (scroll.y > 60 && me._reloading === false) {
+            me.getmore.statusChange('reload', 'holder');
+
+            // 允许重载
+            me._reloadAllow = true;
+        }
+    },
+
+    /**
+     * 检查是否需要加载更多
+     *
+     * @param {Element} scroll, new Scroll() 返回的scroll 实例
+     */
+    checkMore: function (scroll) {
+        var me = this;
+
+        if (scroll.maxScrollY - scroll.y > 60 && !me._moring) {
+
+            me.getMoreData(function () {
+                // 刷新滚 iscroll
+                me.scroll.refresh();
+            });
+
+            me._moring = true;
         }
     },
 

@@ -225,6 +225,7 @@ $loading-size: 20px;
     }
 }
 
+/*  */
 .status {
     color: $blue;
 }
@@ -233,13 +234,31 @@ $loading-size: 20px;
     color: $light-gray;
 }
 
+/* ICONS */
+.icons {
+    position: absolute;
+    left: 0;
+    top: 0;
 
+    &-point {
+        width: 6px;
+        height: 6px;
+        background: $drak-red;
+        border-radius: 100%;
+    }
+
+    &-new {
+        @include icon-new();
+    }
+}
+
+/* TAB */
 .tab {
     display: box;
     box-pack: center;
     box-align: center;
     height: rem(35px);
-    background: #fff;
+    background: $white;
     position: fixed;
     left: 0;
     top: 0;
@@ -250,6 +269,7 @@ $loading-size: 20px;
     ul {
         position: absolute;
         height: rem(35px);
+        background: $white;
 
         li {
             font-size: rem(14px);
@@ -261,6 +281,8 @@ $loading-size: 20px;
 
             &.selected {
                 color: $blue;
+
+                @include border-1px(bottom, $blue, 2px);
             }
         }
     }

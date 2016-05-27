@@ -129,6 +129,9 @@ attach.initDetailAttach = function (options) {
         }
         return;
     }
+
+    $(options.wrapper).removeClass('hide');
+
     options.attachData = options.attachData ? util.transKey(options.attachData) : [];
     // 初始化附件组件
     var attachOptions = {

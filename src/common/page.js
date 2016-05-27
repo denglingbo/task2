@@ -113,6 +113,8 @@ function Page(opts) {
     this.opts = opts;
 
     this.domContentListener();
+
+    // 监听设备就绪
     this.deviceListener();
 }
 
@@ -166,16 +168,10 @@ Page.prototype.start = function () {
     }
 
     dfd.done(function () {
+
         // 执行任务
         me.execute()
             .done(function () {
-
-                // fastclick.attach(document.body);
-
-                // 根据储存策略保存 local data 数据
-                // if (localcache.isCache(me.opts.pageName)) {
-                //     localcache.save(me.opts.pageName, me.data);
-                // }
 
                 if (!me.data && me.lang) {
                     me.data = {
@@ -269,15 +265,6 @@ Page.prototype.devicereadyEnter = function () {
 };
 
 /**
- * 等待 设备 & 数据 准备完成
- */
-// Page.prototype.deviceAndDataListener = function () {
-//     if (window.isDeviceready && this.isDone) {
-//         this.allready();
-//     }
-// };
-
-/**
  * Failed
  *
  * @param {Object} errObj, 错误信息
@@ -305,25 +292,12 @@ Page.prototype.failed = function (errObj) {
         /* eslint-enable */
     }
 
-    // 根据储存策略保存 local data 数据
-    // if (localcache.isCache(me.opts.pageName)) {
-
-    //     var localData = localcache.getByLocal(me.opts.pageName);
-
-    //     me.data = localData;
-
-    //     // 页面逻辑
-    //     me.enter();
-    // }
-    // // 没有离线数据
-    // else {
     me.data = {
         lang: this.lang
     };
 
     // 页面失败逻辑
     me.error();
-    // }
 };
 
 /**
@@ -401,15 +375,6 @@ Page.prototype.render = function (selector, data, options) {
     return str;
 };
 
-/*
-window.addEventListener('online', function () {
-    console.log('online');
-});
-window.addEventListener('offline', function () {
-    console.log('offline');
-});
-*/
-
 /**
  * 获取请求参数并可以根据需求改变参数
  *
@@ -461,7 +426,7 @@ Page.prototype.getRequestConfig = function (api, data, opts) {
  *      @param {string} options.url 请求的host
  * @return {Deferred}
  */
-Page.prototype.get = function (api, data, options) {
+Page.get = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'GET'}));
 };
 
@@ -474,7 +439,7 @@ Page.prototype.get = function (api, data, options) {
  *      @param {string} options.url 请求的host
  * @return {Deferred}
  */
-Page.prototype.post = function (api, data, options) {
+Page.post = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'POST'}));
 };
 
@@ -487,7 +452,7 @@ Page.prototype.post = function (api, data, options) {
  *      @param {string} options.url 请求的host
  * @return {Deferred}
  */
-Page.prototype.ajax = function (api, data, options) {
+Page.ajax = function (api, data, options) {
     var me = this;
     var dfd = new $.Deferred();
     var isNetwork = util.isNetwork();
@@ -592,32 +557,11 @@ Page.prototype.ajax = function (api, data, options) {
     // 这里实际会经过 mbreq.js 重写
     $.ajax(ajaxSettings);
 
-    // 请求完成
-    // promise.done(function (result, status, xhr) {
-
-    //     // 将语言包数据添加到 this.data
-    //     if (result && result.data) {
-    //         result.data.lang = me.lang;
-    //     }
-
-    //     // Just debug test
-    //     // 模拟网络延迟
-    //     if (config.debug) {
-    //         setTimeout(function () {
-    //             dfd.resolve(result);
-    //         }, 40);
-    //     }
-    //     else {
-    //         dfd.resolve(result);
-    //     }
-    // });
-
-    // // 请求失败
-    // promise.fail(function (xhr, errorType, error) {
-    //     dfd.reject(xhr, errorType, error);
-    // });
-
     return dfd;
 };
+
+Page.prototype.ajax = Page.ajax;
+Page.prototype.post = Page.post;
+Page.prototype.get = Page.get;
 
 module.exports = Page;

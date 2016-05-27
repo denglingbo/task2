@@ -15,9 +15,10 @@
                 <div class="search-inner">
                     <div class="search-in search-input-wrap">
                         <input id="search-input" class="search-input" type="text" readonly="">
-                        <i class="icon-search"></i>
-                        <span class="search-tip" data-lang="search"></span>
-                        <i class="close-x clear hide"></i>
+                        <div class="search-placeholder">
+                            <i class="icon-search"></i>
+                            <span class="search-tip" data-lang="search"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -25,47 +26,57 @@
 
         <div class="slider-container">
 
+            <!-- 该 div 用于左右切换页面 -->
             <div class="slider-outer">
 
-                <!-- 未完成 -->
-                <div class="slider-page" id="list-wrapper-doing" data-name="doing">
+                <div class="slider-page">
 
-                    <div class="tab">
+                    <div class="tab page-loader">
                         <ul>
-                            <li class="selected">全部</li>
-                            <li>进行中</li>
-                            <li>待接受</li>
-                            <li>审核中</li>
-                            <li>已拒绝</li>
-                            <li>待分派</li>
+                            <li class="selected" data-name="opened" data-lang="all">全部</li>
+                            <li data-name="doing" data-lang="doingText">进行中</li>
+                            <li data-name="received" data-lang="receivedText">待接收</li>
+                            <li data-name="review" data-lang="reviewText">审核中</li>
+                            <li data-name="refuse" data-lang="refuseText">已拒绝</li>
+                            <li data-name="assignment" data-lang="assignmentText">待分派</li>
                         </ul>
                     </div>
 
-                    <div class="scroll-outter">
-                        <div class="scroll-inner">
-                            <div class="list-wrapper-content"><!-- Content --></div>
-                            <div class="load-more"></div>
-                        </div>
-                    </div>
+                    <!-- 放置未完成相关的不需要切换效果的 -->
+                    <div id="opened-main" class="list-wrapper-outter"></div>
+                    <script id="opened-main-tmpl" type="x-tmpl-mustache">
+                    {{#list}}
+                    {{> page}}
+                    {{/list}}
+                    </script>
 
                 </div>
 
                 <!-- 已完成 -->
-                <div class="slider-page" id="list-wrapper-done" data-name="done">
+                <div class="slider-page" id="list-wrapper-done">
                     <div class="scroll-outter">
                         <div class="scroll-inner">
-                            <div class="list-wrapper-content">done</div>
-                            <div class="load-more"></div>
+                            <!-- 用于重新加载数据 -->
+                            <div class="data-reload"></div>
+                            <!-- 数据存放容器 -->
+                            <div class="list-wrapper-content"></div>
+                            <!-- 用于加载更多数据 -->
+                            <div class="data-more"></div>
                         </div>
                     </div>
                 </div>
 
+
                 <!-- 已撤销 -->
-                <div class="slider-page" id="list-wrapper-cancel" data-name="cancel">
+                <div class="slider-page" id="list-wrapper-cancel">
                     <div class="scroll-outter">
                         <div class="scroll-inner">
-                            <div class="list-wrapper-content">cancel</div>
-                            <div class="load-more"></div>
+                            <!-- 用于重新加载数据 -->
+                            <div class="data-reload"></div>
+                            <!-- 数据存放容器 -->
+                            <div class="list-wrapper-content"></div>
+                            <!-- 用于加载更多数据 -->
+                            <div class="data-more"></div>
                         </div>
                     </div>
                 </div>
@@ -75,10 +86,19 @@
     </div>
     
     <div id="fixbar" class="fixbar">
-        <ul class="tab-page">
-            <li data-name="doing" data-lang="undoneText" data-log='{"actionTag":"taskListDoing"}'></li>
-            <li data-name="done" data-lang="doneText" data-log='{"actionTag":"taskListDone"}'></li>
-            <li data-name="cancel" data-lang="cancelText" data-log='{"actionTag":"taskListCancel"}'></li>
+        <ul class="page-loader">
+            <li class="page-opened selected" data-name="opened" data-filter="true" data-log='{"actionTag":"taskListOpened"}'>
+                <div class="fixbar-img"></div>
+                <div class="fixbar-text" data-lang="undoneText"></div>
+            </li>
+            <li class="page-done" data-name="done" data-log='{"actionTag":"taskListDone"}'>
+                <div class="fixbar-img"></div>
+                <div class="fixbar-text" data-lang="doneText"></div>
+            </li>
+            <li class="page-cancel" data-name="cancel" data-log='{"actionTag":"taskListCancel"}'>
+                <div class="fixbar-img"></div>
+                <div class="fixbar-text" data-lang="cancelText"></div>
+            </li>
         </ul>
     </div>
 

@@ -9,9 +9,9 @@
 /**
  * @param {$type} 哪个位置有边框
  * @param {$border-color} 边框颜色
- *
+ * @param {$size} 边线尺寸
  */
-@mixin border-1px($type, $border-color: #DEDFE0) {
+@mixin border-1px($type, $border-color: #DEDFE0, $size: 1px) {
 
     $border-width: border-#{$type}-width;
 
@@ -20,7 +20,7 @@
     }
 
     border: 0 solid $border-color;
-    #{$border-width}: 1px;
+    #{$border-width}: $size;
 
     @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
 
@@ -50,13 +50,12 @@
         }
 
         &::after {
-            #{$border-width}: 1px;
+            #{$border-width}: $size;
         }
     }
 
     @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
 
-        // .border {
         position: relative;
         border: none !important;
 
@@ -83,7 +82,7 @@
         }
         
         &::after {
-            #{$border-width}: 1px;
+            #{$border-width}: $size;
         }
     }
 }

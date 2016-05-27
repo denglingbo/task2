@@ -19,44 +19,53 @@ var InitPage = require('./list/initPage');
 // 初始化多页切换
 var PageSlider = require('./list/pageSlider');
 
-// var Search = require('common/widgets/search/searchEnter');
+var pageTpl = require('./list/page');
 
 var IScroll = require('dep/iscroll');
 
-// role id, 1: 我派发的，2: 我负责的，3:我参与的
+/**
+ * role id
+ * 1: 我派发的
+ * 2: 我负责的
+ * 3: 我参与的
+ */
 var rid = util.getParam('rid');
 
 var page = new Page();
 
-var pages = [
-    {
-        name: 'doing',
-        selector: '#list-wrapper-doing',
-        index: 0,
-        api: config.API.GET_TASK_LIST,
-        current: true
-    },
-    {
-        name: 'done',
-        selector: '#list-wrapper-done',
-        api: config.API.GET_TASK_LIST,
-        index: 1
-    },
-    {
-        name: 'cancel',
-        selector: '#list-wrapper-cancel',
-        api: config.API.GET_TASK_LIST,
-        index: 2
-    }
-];
 
-// 所有 tab 页面的对象
+/**
+ * 缓存请求的 tab 页面数据
+ */
 var pageCache = {};
+
+var pages = require('./list/config');
+
+// 提前渲染模版
+var data = {
+    list: [
+        {name: 'opened'},
+        {name: 'doing'},
+        {name: 'received'},
+        {name: 'review'},
+        {name: 'refuse'},
+        {name: 'assignment'}
+    ]
+};
+
+page.render('#opened-main', data, {
+    partials: {
+        page: pageTpl
+    }
+});
 
 page.enter = function () {
     // var me = this;
 
-    this.initPage();
+    // new Sticky({target: '#search', top: 0});
+
+    // 3个底部切换内容的 page 页
+    this.initPageSlider();
 
     // 设置滚动的元素的高宽
     $('.slider-container').css({
@@ -64,20 +73,10 @@ page.enter = function () {
         height: $(window).height()
     });
 
-    // new Sticky({target: '#search', top: 0});
-
-    // 3个底部切换内容的 page 页
-    // this.initPage();
-
     // 初始化顶部的 tab
     this.initTab();
 
     this.bindEvents();
-
-    // new Search(this, {
-    //     selector: '#search',
-    //     page: 'task'
-    // });
 };
 
 page.deviceready = function () {
@@ -104,6 +103,7 @@ page.deviceready = function () {
 };
 
 page.bindEvents = function () {
+
     /* eslint-disable */
     $('#main').on('click', '.list-item', function () {
         var id = $(this).data('id');
@@ -113,10 +113,28 @@ page.bindEvents = function () {
         }
     });
 
-    $('#search-input').on('click', function () {
+    $('.search-in').on('click', function () {
         CPNavigationBar.redirect('/search-search.html');
     });
     /* eslint-enable */
+};
+
+/**
+ * 初始化配置 滑动切换页面 函数
+ *
+ */
+page.initPageSlider = function () {
+    var me = this;
+
+    new PageSlider({
+        outer: '.slider-outer',
+        tabs: '.page-loader li',
+        pages: pages,
+
+        onSlide: function (info, $click) {
+            me.loadPage(info, $click);
+        }
+    });
 };
 
 /**
@@ -153,59 +171,60 @@ page.initTab = function () {
 };
 
 /**
- * 初始化配置 滑动切换页面 函数
- *
- */
-page.initPage = function () {
-    var me = this;
-
-    new PageSlider({
-        outer: '.slider-outer',
-        tabs: '.tab-page li',
-        pages: pages,
-
-        onSlide: function (info) {
-            me.loadPage(info);
-
-            // if (info.name === 'done' || info.name === 'cancel') {
-            //     $('.search-inner').addClass('border');
-            // }
-            // else {
-            //     $('.search-inner').removeClass('border');
-            // }
-        }
-    });
-};
-
-/**
  * 加载页面
  *
  * @param {Object} info, 当前展示的页面配置
- * @param {Object} data, 当前要渲染的模板数据
+ * @param {Element} $click, 点击的 tab
  */
-page.loadPage = function (info) {
-    // var me = this;
-    // var dfd = new $.Deferred();
+page.loadPage = function (info, $click) {
 
     if (!info || !info.name) {
         return;
     }
 
+    var $wrapper = $(info.selector);
+    var isFilter = false;
+
+    if ($click && $click.length && $click.data('filter')) {
+        isFilter = true;
+    }
+
+    // 如果是点击加载数据，同时点击项有 data-filter 则不进行 z-index 的设置
+    // 第一个展示页，没有传递 点击项，所以也会自动设置 z-index
+    if (isFilter === false) {
+        $wrapper.css({
+            'z-index': 2
+        });
+
+        $wrapper.siblings().css({
+            'z-index': 1
+        });
+    }
+
+    // search bar 添加 border
+    if (/done|cancel/.test(info.name)) {
+        $('.search-inner').addClass('border');
+    }
+    else {
+        $('.search-inner').removeClass('border');
+    }
+
+    // 有数据了，则不再 ajax 请求
     if (pageCache[info.name]) {
         return;
     }
 
-    var $wrapper = $(info.selector);
-    var $tab = $wrapper.find('.tab');
-    var $loader = $wrapper.find('.load-more');
+    var $tab = $('.tab');
+    var $loader = $wrapper.find('.data-more');
     var $search = $('#search');
-    var $fixbar = $('.tab-page');
+    var $fixbar = $('#fixbar');
 
     // 10: margin
-    var offset = 5
+    var offset = 6
                 + $search.height()
                 + $fixbar.height()
-                + ($tab.length ? $tab.height() : 0)
+                // 0 or undefined 才需要 这个高度, 未完成 的相关页都需要
+                + (!info.index ? $tab.height() : 0)
                 + ($loader.length ? $loader.height() : 0);
 
     /* eslint-disable */
@@ -213,16 +232,24 @@ page.loadPage = function (info) {
 
         var template = require('./list/item');
 
+        var api = info.api || config.API.GET_TASK_LIST;
+
         new InitPage({
             wrapper: $wrapper.find('.scroll-outter'),
             main: '.list-wrapper-content',
+
+            // ajax request
             promise: function () {
-                return page.get(config.API.GET_TASK_LIST, {
+
+                var params = $.extend({
                     role: rid,
                     curr_page: this.page,
                     number: 10
-                });
+                }, info.params || {});
+
+                return page.get(api, params);
             },
+
             tpl: template,
             offset: offset,
             lang: page.lang
@@ -242,7 +269,10 @@ page.loadPage = function (info) {
  *
  */
 page.addParallelTask(function (dfd) {
-    this.loadPage(pages[0]);
+
+    // 第一个不放在 enter 中进行请求数据
+    this.loadPage(pages.opened);
+
     dfd.resolve();
 });
 

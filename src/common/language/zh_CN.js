@@ -8,6 +8,7 @@
 /* eslint-disable */
 
 module.exports = {
+    'all': '全部',
     'director': '我负责的',
     'dispatch': '我派发的',
     'partake': '我参与的',
@@ -100,5 +101,7 @@ module.exports = {
     'impLevel4': '普通',
     'back': '返回',
     'submit': '提交',
-    'updateDate': '更新时间'
+
+    'updateDate': '更新时间',
+    'iconNew': '新'
 };

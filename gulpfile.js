@@ -64,6 +64,7 @@ config.mock = {
 
 var root = path.join(__dirname, '/');
 
+// 启动 mock 服务
 mockServer('./mock', config.mock);
 
 /**

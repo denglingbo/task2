@@ -24,7 +24,7 @@
                 "attaches": null,
                 "notice": 0,
                 "attention": 0,
-                "remind": 0
+                "remind": 1
             },
             {
                 "id": 69668,
@@ -41,7 +41,7 @@
                 "attaches": null,
                 "notice": 0,
                 "attention": 0,
-                "remind": 0
+                "remind": 2
             },
             {
                 "id": 69667,

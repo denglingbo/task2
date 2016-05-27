@@ -9,11 +9,75 @@
 @import "border-1px";
 
 /**
+ * 求平方根
+ *
+ */
+@function sqrt ($r) {
+    $x0: 1;
+    $x1: $x0;
+
+    @for $i from 1 through 10 {
+        $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+        $x0: $x1;
+    }
+
+    @return $x1;
+}
+
+/**
+ * 获取等腰直角三角形斜边长度
+ *
+ * @param {$hypo} 直角边长度
+ */
+@function getOpposite ($hypo) {
+    @return sqrt($hypo * $hypo * 2);
+}
+
+/**
  * $px 转换 px
  *
  */
 @function rem ($px) {
     @return $px / $browser-default-font-size * 1rem;
+}
+
+/**
+ * icon 左上角的 icon 图标
+ *
+ * @param {$size} nubmer
+ */
+@mixin icon-new ($size: 30) {
+
+    position: absolute;
+    width: $size + px;
+    height: $size + px;
+    overflow: hidden;
+    border-radius: 2px;
+
+    em {
+        position: absolute;
+        z-index: 1;
+        font-size: rem(10px);
+        color: $white;
+        left: 3px;
+        top: 3px;
+    }
+
+    &:after {
+        display: block;
+        content: ' ';
+        position: absolute;
+        z-index: 0;
+        left: 0;
+        top: 0;
+        background: $drak-red;
+        transform-origin: 0 0;
+        transform: rotate(45deg);
+        
+        width: getOpposite($size) + px;
+        height: getOpposite($size) + px;
+        top: getOpposite(getOpposite($size)) * -0.5 + px;
+    }
 }
 
 /**
@@ -278,6 +342,8 @@
  *
  */
 @mixin fixbar($num, $color: #fff) {
+    width: 100%;
+    height: rem(46px);
 
     ul {
         @include border-1px(top);
@@ -300,15 +366,24 @@
             text-align: center;
             height: rem(24px);
             line-height: rem(24px);
-            padding: rem(10px) 0;
+            padding: rem(11px) 0;
             color: $gray;
-
-            &:not(:first-child) {
-                @include border-1px(left);
-            }
 
             &.selected {
                 color: $blue;
+            }
+        }
+    }
+
+    // 带左侧边线
+    &.border {
+
+        ul {
+            li {
+
+                &:not(:first-child) {
+                    @include border-1px(left);
+                }
             }
         }
     }

@@ -153,7 +153,12 @@ page.deviceready = function () {
 
     dfdPub
         .done(function (pubData) {
-            // me.renderUser(obj, pubData.contacts);
+            if (pubData && pubData.contacts) {
+                me.renderUser(obj, pubData.contacts);
+            }
+            else {
+                me.failUser();
+            }
         })
         .fail(function () {
             me.failUser();

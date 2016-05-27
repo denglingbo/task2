@@ -73,26 +73,24 @@ $cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
     @return sqrt($hypo * $hypo * 2);
 }
 
+/**
+ * 获取箭头变方形的动画配置
+ *
+ * @param {$delay} 等待时间
+ */
+@function getUnTickStep ($delay: 0) {
+    @return transform $ticked-step-dur ease-out $ticked-step-dur * $delay;
+}
 
 
-    /**
-     * 获取箭头变方形的动画配置
-     *
-     * @param {$delay} 等待时间
-     */
-    @function getUnTickStep ($delay: 0) {
-        @return transform $ticked-step-dur ease-out $ticked-step-dur * $delay;
-    }
-
-
-    /**
-     * 获取方形变箭头的四条边线移动动画配置
-     *
-     * @param {$delay} 等待时间
-     */
-    @function getTickedStep ($delay: 0) {
-        @return transform $ticked-step-dur $cubic $c2s-dur + $ticked-step-dur * $delay;
-    }
+/**
+ * 获取方形变箭头的四条边线移动动画配置
+ *
+ * @param {$delay} 等待时间
+ */
+@function getTickedStep ($delay: 0) {
+    @return transform $ticked-step-dur $cubic $c2s-dur + $ticked-step-dur * $delay;
+}
 
 /**
  * Combooooooooooooooooooooooooo

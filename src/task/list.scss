@@ -9,27 +9,44 @@
     position: relative;
     z-index: 98;
     background: $white;
+
+    .search-placeholder {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -1px;
+        width: 100%;
+        text-align: center;
+        display: box;
+        box-pack: center;
+        box-align: center;
+
+        .icon-search, .search-tip {
+            position: static;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
 }
 
+/*
 .slider-scroll {
     position: relative;
     width: 100%;
 }
+*/
 
-.fixbar {
-    @include fixbar(3);
-    position: fixed;
-    z-index: 100;
-}
-
+/* 内容主容器 */
 .slider-container {
     position: relative;
     overflow: hidden;
     z-index: 99;
+    background: $body-bg;
 
     .slider-outer {
         position: relative;
-        margin-top: -1px;
+        margin-top: 0;
+        height: 100%;
 
         .slider-page {
             position: absolute;
@@ -37,20 +54,40 @@
             top: 0;
             left: 0;
             width: 100%;
+            height: 100%;
+            overflow: auto;
 
             .scroll-inner {
                 width: 100%;
                 height: 100%;
             }
         }
+
+        .list-wrapper-outter {
+            position: relative;
+            height: 100%;
+
+            .list-wrapper-inner {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                background: $body-bg;
+            }
+        }
     }
 }
 
+/* 列表项 */
 .list-item {
     margin: 10px 10px 0 10px;
     padding: 10px;
     background: $white;
     position: relative;
+
+    .icons-point {
+        left: 10px;
+        top: 18px;
+    }
 
     &-title {
         @include border-1px(bottom);
@@ -76,6 +113,74 @@
             margin-top: rem(8px);
 
             &.time {}
+        }
+    }
+}
+
+/* 底部按钮条 */
+.fixbar {
+    @include fixbar(3);
+    position: fixed;
+    z-index: 100;
+
+    ul {
+
+        li {
+            height: rem(45px);
+            padding: rem(1px) 0 0 0;
+
+            div {
+                margin: 0;
+            }
+
+            .fixbar-img {
+                width: 100%;
+                height: rem(28px);
+
+                background-repeat: no-repeat;
+                background-position: 50% 0;
+                background-size: 28px;
+            }
+
+            .fixbar-text {
+                font-size: rem(10px);
+                height: rem(12px);
+                line-height: rem(12px);
+            }
+
+            &.page-opened {
+                .fixbar-img {
+                    background-image: url('../img/button_section_unfinished.png');
+                }
+
+                &.selected {
+                    .fixbar-img {
+                        background-image: url('../img/button_section_unfinished_push.png');
+                    }
+                }
+            }
+            &.page-done {
+                .fixbar-img {
+                    background-image: url('../img/button_section_accomplish.png');
+                }
+
+                &.selected {
+                    .fixbar-img {
+                        background-image: url('../img/button_section_accomplish_push.png');
+                    }
+                }
+            }
+            &.page-cancel {
+                .fixbar-img {
+                    background-image: url('../img/button_section_backout.png');
+                }
+
+                &.selected {
+                    .fixbar-img {
+                        background-image: url('../img/button_section_backout_push.png');
+                    }
+                }
+            }
         }
     }
 }

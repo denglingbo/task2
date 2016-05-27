@@ -95,7 +95,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '5adf2bc2-65f3-4557-bc4f-7ee23fc39f06-241833'
+    token: '246ed448-e2de-46a3-86c5-d34cf4cf0f9c-261858'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
