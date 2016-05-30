@@ -149,9 +149,13 @@ util.getParam = function (key) {
         return null;
     }
 
-    var data = storage.getData(config.const.TASK_PARAMS);
+    if (this.params(key)) {
+        return this.params(key);
+    }
 
-    return this.params(key) || (data && data[key]);
+    var ls = storage.getData(config.const.TASK_PARAMS);
+
+    return (ls && ls[key]) || null;
 };
 
 /**
@@ -375,7 +379,7 @@ util.dateformat = function (date, needTime) {
  * @return {Date} new date
  */
 util.now = function () {
-    return new Date().getTime();
+    return this.fixTimeZone(new Date()).getTime();
 };
 
 /**

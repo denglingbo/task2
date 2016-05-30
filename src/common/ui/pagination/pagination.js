@@ -6,7 +6,8 @@
  *
  * require pagination.scss
  *
- * 如果不使用默认的 view (.pagination-tips), 需要自己添加 view 的样式，同时需要 对 js 自动添加的 .pagination-show 添加对应样式
+ * 如果不使用默认的 view (.pagination-tips), 需要自己添加 view 的样式
+ * 同时需要 对 js 自动添加的 .pagination-show 添加对应样式
  *
  EG 1:
     JS:
@@ -47,6 +48,9 @@ EG 2:
         this.finder = {};
 
         this.opts = {
+            // 如果有该值，分页提示容器会被添加到该容器下
+            wrapper: null,
+
             // 判断的基准点
             // 0: 屏幕顶部，1: 屏幕底部
             screen: 0,
@@ -62,12 +66,14 @@ EG 2:
             total: 0,
             // 可视区域偏移量
             offset: 0,
+
             // view 模版输出
             // @param {new Pagination} this, function 中返回的第一个参数是 pagination
             // @param {Object} match, 匹配到的当前的进入临界位置的配置
             template: function (match) {
                 return $(match.target).data(this.opts.finder) + '/' + this.totalPage;
             },
+
             // 提示元素
             // {Function}, function () { return ''; }
             // {selector|Element}, '.class', '#id', div, $()
@@ -87,67 +93,80 @@ EG 2:
         // 容器，最后一个元素的底部到顶的距离
         this.boxBottom = 0;
 
-        // 容器高度，第一个元素top - 最后一个元素底部高度
-        this.boxHeight = 0;
-
         // 总页数
         this.totalPage = Math.ceil(this.opts.total / this.opts.pageNum);
 
         this.$win = $(window);
+        this.$wrapper = $(this.opts.wrapper);
 
         this.init();
     };
 
     Pagination.prototype = {
 
+        // 用于匹配的对象的配置
+        finder: {},
+
         init: function () {
             var me = this;
 
             // 默认会添加的 dom
             if ($.isFunction(this.opts.view)) {
-                $('body').append(this.opts.view());
-                me.$view = $('.pagination-tips');
+                var $outter = me.opts.wrapper || $('body');
+                var $view = me.opts.view();
+
+                if (!$outter.find('pagination-tips').length) {
+                    $outter.append($view);
+                    me.$view = $outter.find('.pagination-tips');
+                }
             }
             // 直接在指定的已经存在位置展示
             else {
                 me.$view = $(this.opts.view);
             }
 
+            var $elems = this.$wrapper.find(this.opts.elems);
+
+            $elems.parent().css('position', 'relative');
+
             me.bindEvents();
         },
 
         bindEvents: function () {
-            var me = this;
-
-            me.$win.on('scroll', function () {
-                me.viewStatus();
-            });
+            $(document).on('scroll', $.proxy(this.process, this));
+            $(window).one('scroll', $.proxy(this.process, this));
         },
 
         /**
-         * viewStatus
+         * process 这里接收外面传递的 scroll top
+         * 因使用了 scroll.js 无法通过 bindEvents 监听到 scroll
+         *
+         * @param {number} scrollTop, 可选 该值不传递则使用 window scrolltop
          */
-        viewStatus: function () {
+        process: function (scrollTop) {
+
             // 实际可视区域的临界点 y 坐标
-            var top = this.$win.scrollTop() + this.opts.offset;
+            var top = (scrollTop || this.$win.scrollTop()) + this.opts.offset;
 
             if (this.opts.screen === 1) {
-                top = top + this.$win.height();
+                top = top + this.$win.height() * -1;
             }
 
             var match = this.matcher(top);
 
             // matched
-            if (match !== null && this.curTop !== match.top) {
+            if (match !== null) {
                 var str = this.opts.template.call(this, match);
 
-                this.$view.html(str);
+                this.$view
+                    .html(str)
+                    .css('margin-left', this.$view.width() * -.5);
 
                 this.curTop = match.top;
             }
 
             // 展示分页提示容器
-            if (top > this.boxTop && top < this.boxBottom && match !== null) {
+            if (Math.abs(top) >= this.boxTop && top < this.boxBottom && match !== null) {
                 this.$view.addClass('pagination-show');
             }
             // 隐藏分页提示容器
@@ -162,14 +181,13 @@ EG 2:
          * 保存最后一个元素，top 超过这个也不显示 view 提示
          */
         complete: function () {
-            var finder = {};
             var len;
 
-            var $elems = $(this.opts.elems);
+            var $elems = this.$wrapper.find(this.opts.elems);
 
             // 如果有 pageNum 和 total，则只获取每个临界点的第一个元素
             if (this.opts.pageNum && this.opts.total) {
-                len = $elems.length / this.opts.pageNum;
+                len = Math.ceil($elems.length / this.opts.pageNum);
             }
             else {
                 len = $elems.length;
@@ -187,20 +205,17 @@ EG 2:
                 }
 
                 if (target) {
-                    var top = $(target).position().top;
-                    finder[top] = target;
+                    var top = Math.abs(Math.floor($(target).position().top));
+                    this.finder[top] = target;
                 }
             }
 
             var last = $elems.last();
 
-            this.boxTop = $elems.first().position().top;
-            this.boxBottom = last.position().top + last.height();
-            this.boxHeight = this.boxBottom - this.boxTop;
+            this.boxTop = Math.abs($elems.first().position().top);
+            this.boxBottom = Math.abs(last.position().top + last.height() + this.opts.offset);
 
-            this.finder = finder;
-
-            this.viewStatus();
+            this.process();
         },
 
         /**
@@ -220,11 +235,11 @@ EG 2:
 
             for (var name in this.finder) {
                 if (this.finder.hasOwnProperty(name)) {
-                    var top = name;
+                    var top = Math.abs(name);
 
                     // * 取最大的一个
                     // * 达到临界点
-                    if (top < curTop && top > temp) {
+                    if (top < Math.abs(curTop) && top >= temp) {
                         obj = {
                             top: top,
                             target: this.finder[top],

@@ -17,6 +17,11 @@ var middleware = {};
  */
 middleware.uid = function () {
     var data = storage.getData(config.const.TASK_PARAMS);
+
+    if (!data) {
+        return null;
+    }
+
     var uid = util.params('uid') || data.uid;
 
     return parseInt(uid, 10);
@@ -32,6 +37,10 @@ middleware.uid = function () {
 middleware.companyId = function (cid) {
     // localstorage
     var data = storage.getData(config.const.TASK_PARAMS);
+
+    if (!data) {
+        return null;
+    }
 
     // 1. 后端传递的 cid
     if (cid !== undefined && cid !== null) {

@@ -1,4 +1,6 @@
-
+.hide {
+    display: none;
+}
 
 // 加载更多
 .data-more {
@@ -6,6 +8,7 @@
     height: 20px;
     line-height: 20px;
     padding: 10px 0;
+    color: #a0a0a0;
 
     width: 100%;
     text-align: center;
@@ -13,10 +16,13 @@
 }
 
 .data-reload {
+    position: absolute;
+    height: 30px;
+    margin-top: -40px;
     width: 100%;
     text-align: center;
     font-size: 12px;
-    position: relative;
+    color: #a0a0a0;
 
     > div {
         height: 20px;
@@ -26,6 +32,9 @@
         text-align: center;
         font-size: 12px;
     }
+}
 
-    &-tips {}
+.data-reload-place {
+    position: relative;
+    margin-top: 0;
 }

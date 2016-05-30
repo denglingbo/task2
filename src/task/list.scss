@@ -29,12 +29,10 @@
     }
 }
 
-/*
-.slider-scroll {
-    position: relative;
-    width: 100%;
+.pagination-show {
+    transform: translate3d(0, -96px, 0) !important;
+    transition: transform .4s ease-out;
 }
-*/
 
 /* 内容主容器 */
 .slider-container {
@@ -60,6 +58,7 @@
             .scroll-inner {
                 width: 100%;
                 height: 100%;
+                background: $body-bg;
             }
         }
 
@@ -86,7 +85,7 @@
 
     .icons-point {
         left: 10px;
-        top: 18px;
+        top: 20px;
     }
 
     &-title {

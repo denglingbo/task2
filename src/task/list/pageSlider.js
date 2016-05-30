@@ -30,7 +30,7 @@ var PageSlider = function (options) {
         // 滑动 num 值，开始切换并加载新页面
         'slideNum': 50,
         // 要切换的页面 配置 {Array}
-        'pages': [],
+        'pages': {},
 
         'class': {},
 

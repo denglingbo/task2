@@ -11,6 +11,11 @@ var raw = require('common/widgets/raw');
 
 var Getmore = require('common/ui/getmore/getmore');
 
+// 页码提示
+require('common/ui/pagination/pagination.scss');
+var Pagination = require('common/ui/pagination/pagination');
+
+
 /**
  * 批量处理数据
  *
@@ -23,13 +28,13 @@ function dealData(data) {
         return util.formatDateToNow(this.op_time);
     };
     data.statusRaw = function() {
-        return raw.status(this.status);
+        return raw.status(this.status, this.end_time);
     };
     data.importanceRaw = function () {
         return raw.importance(this.importance_level);
     };
     data.endTimeRaw = function () {
-        return util.dateformat(this.end_time);
+        return raw.dateToDone(this.end_time);
     };
     data.isRemindUpdate = function () {
         return this.remind == 2;
@@ -89,8 +94,11 @@ function Init(options) {
 
     // 重载动作
     me._reloading = false;
+    // 是否进入重载范围
+    me._reloadRange = false;
     // 是否允许重新加载
     me._reloadAllow = false;
+    me._reloadFailed = false;
 
     me.init();
 }
@@ -109,8 +117,23 @@ Init.prototype = {
             })
         );
 
-        me.getMoreData(function () {
+        me.getMoreData(function (data) {
             me.initScroll();
+
+            // 初始化一个分页提示控件
+            me.pagination = new Pagination({
+                wrapper: me.$wrapper,
+                // 每个数据容器
+                elems: '.list-item',
+                // data-pagenum，数据来源
+                finder: 'pagenum',
+                pageNum: data.number,
+                // 可视偏移量
+                offset: -60,
+                total: data.total,
+                // 在屏幕下方作为展示的基准点
+                screen: 1
+            });
         });
     },
 
@@ -178,40 +201,71 @@ Init.prototype = {
         me.scroll.on('scroll', function () {
             me.checkReload(this);
             me.checkMore(this);
+
+            me.pagination.process(this.y);
+        });
+
+        me.scroll.on('scrollStart', function () {
+
+            // 允许重新刷新，设置滚动到指定位置，scrollEnd 必须要再进行一次设置
+            me._reloadAllow = false;
+            me._reloadFailed = false;
         });
 
         // 监听滚动结束
         me.scroll.on('scrollEnd', function () {
+            // 允许重新刷新，设置滚动到指定位置，scrollEnd 必须要再进行一次设置
+            if (me._reloadFailed) {
+                me.scroll.scrollTo(0, 30);
+            }
+        });
 
-            // 允许重新刷新
-            if (me._reloadAllow === true) {
+        // 监听一下 进入 重载界定 到 touchend 的鼠标 touch 时长
+        $(document).on('touchend', function () {
+            me.reloadEndTime = +new Date();
+
+            // 准备进行数据重载
+            if (me._reloadRange === true) {
+                me._reloadAllow = true;
+                me.getmore.statusChange('reload', 'process');
                 me.getReloadData();
             }
         });
+    },
+
+    reset: function () {
+
+        // 重置参数
+        this._reloading = false;
+        this._reloadRange = false;
+        this._moring = false;
     },
 
     getReloadData: function (callback) {
         var me = this;
 
         me.getmore.requestReload()
-            .done(function (data) {
+            .done(function (data, unchanged) {
 
+                // 最新数据没有变化，不进行后面的 dom 操作
+                if (unchanged) {
+                    return;
+                }
+
+                // 用于分页提示
+                data.pagenum = this.page;
                 dealData(data);
                 me.getmore.render(data);
                 me.setBasic();
                 me.scroll.refresh();
+                me.reset();
             })
             .fail(function () {
-
+                me._reloadFailed = true;
+                me.reset();
             })
             .always(function () {
-                // 设置加载更多的标记
-                // me._reloading = false;
-
                 callback && callback();
-
-                me._reloading = false;
-                me._reloadAllow = false;
             });
     },
 
@@ -226,14 +280,21 @@ Init.prototype = {
 
             // 设置加载更多的标记
             me._moring = false;
-
+            // 用于分页提示
+            data.pagenum = this.page;
             dealData(data);
             this.render(data, 'append');
             me.setBasic();
 
-            callback && callback();
+            callback && callback(data);
+
+            // 请求新数据之后，重新查找分页提示的 dom
+            me.pagination.complete();
         });
     },
+
+    reloadStartTime: 0,
+    reloadEndTime: 0,
 
     /**
      * 检查是否需要重新加载数据
@@ -243,15 +304,34 @@ Init.prototype = {
     checkReload: function (scroll) {
         var me = this;
 
-        if (scroll.y > 0 && me._reloading === false && me._reloadAllow === false) {
+        // 如果已经允许重载，则不再进行状态设置
+        if (me._reloadAllow) {
+            scroll.scrollTo(0, 30);
+        }
+        if (me._reloadFailed) {
+            me.scroll.scrollTo(0, 30);
+        }
+
+        if (me._reloadFailed || me._reloadAllow) {
+            return;
+        }
+
+        if (scroll.y > 0 && me._reloading === false && me._reloadRange === false) {
             me.getmore.statusChange('reload', 'default');
         }
 
-        if (scroll.y > 60 && me._reloading === false) {
+        // 到达临界点
+        if (scroll.y >= 80 && me._reloading === false) {
             me.getmore.statusChange('reload', 'holder');
 
+            me.reloadStartTime = +new Date();
+
             // 允许重载
-            me._reloadAllow = true;
+            me._reloadRange = true;
+        }
+        // 脱离重载临界值
+        else {
+            me._reloadRange = false;
         }
     },
 
@@ -263,7 +343,7 @@ Init.prototype = {
     checkMore: function (scroll) {
         var me = this;
 
-        if (scroll.maxScrollY - scroll.y > 60 && !me._moring) {
+        if (scroll.maxScrollY - scroll.y > 60 && me._moring === false) {
 
             me.getMoreData(function () {
                 // 刷新滚 iscroll

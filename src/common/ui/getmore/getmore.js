@@ -8,8 +8,11 @@
 
 require('./getmore.scss');
 
-var Loader = require('common/ui/loader');
+var md5 = require('dep/md5');
 var Control = require('common/control');
+
+// 重载完成时候的占位 class，临时保持加载状态一直可见
+var placeholder = 'data-reload-place';
 
 /**
  * 获取重载的 dom 节点
@@ -26,9 +29,10 @@ var getReloadTemplate = function (classObject) {
     }
 
     return '<div class="data-reload-tips ' + c.default + ' hide">下拉刷新</div>'
-        + '<div class="' + c.process + ' hide">加载中</div>'
         + '<div class="' + c.holder + ' hide">释放刷新</div>'
+        + '<div class="' + c.process + ' hide">加载中</div>'
         + '<div class="' + c.fail + ' hide">数据加载失败，请重试</div>'
+        + '<div class="' + c.unchanged + ' hide">已经是最新数据</div>'
         + '<div class="' + c.done + ' hide">加载完成</div>';
 };
 
@@ -69,11 +73,12 @@ var _SELECTOR = {
     },
 
     reload: {
-        default: '.reload-default',
-        process: '.reload-process',
-        holder: '.reload-holder',
-        done: '.reload-done',
-        fail: '.reload-fail'
+        default: '.data-reload-default',
+        process: '.data-reload-process',
+        holder: '.data-reload-holder',
+        done: '.data-reload-done',
+        fail: '.data-reload-fail',
+        unchanged: '.data-reload-unchanged'
     }
 };
         
@@ -146,14 +151,14 @@ var Getmore = function (options) {
     // 加载更多
     me.$moreHandler = $(me.opts.moreHandler);
 
+    // 储存第一次的数据，用于重载的数据比较，如果数据一致，则不再进行 render
+    me._compare = null;
+
     // 界定是否加载完毕所有数据
     me._total = null;
 
     // 已经加载的数据长度
     me._length = 0;
-
-    // 初始化一个分页 loader
-    // me.loader = new Loader(me.opts);
 
     me.init();
 };
@@ -181,44 +186,59 @@ $.extend(Getmore.prototype, {
         me.createMoreHtml();
 
         me.createReloadHtml();
-        
+
         me.statusChange('more', 'default');
 
         me.bindEvents();
     },
 
     /**
+     * 对数据进行 md5
+     *
+     * @param {Object|...} data, 数据
+     * @return {string} md5 string
+     */
+    md5Data: function (data) {
+
+        // Object 需要 stringify
+        if ($.isPlainObject(data)) {
+            return md5(JSON.stringify(data));
+        }
+
+        return md5(data);
+    },
+
+    /**
+     * 储存 md5 数据
+     *
+     * @param {Object|...} data, 数据
+     */
+    storeMD5Data: function (data) {
+        this._compare = {
+            md5: this.md5Data(data),
+            data: data
+        };
+    },
+
+    /**
      * 是否数据有变化
      *
      * @param {Object|...} data, 用于比较的数据
+     * @return {boolean} 数据是否有变化
      */
-    isDataChanged: function (data) {
-        if (this._compare === null || !this.opts.changedCompare) {
+    dataUnChanged: function (data) {
+        
+        var md5Data = this.md5Data(data);
+
+        if (!this._compare) {
             return true;
         }
 
-        var data1;
-        var data2;
-
-        if (this.opts.dataKey === null) {
-            data1 = this._compare;
-            data2 = data;
-        }
-        else {
-            data1 = this._compare[this.opts.dataKey];
-            data2 = data[this.opts.dataKey];
-        }
-
-        // 如果有某个字段有问题，也返回 true
-        if (data1 === undefined || data2 === undefined) {
+        if (md5Data === this._compare.md5) {
             return true;
         }
 
-        if (data1.toString() === data2.toString()) {
-            return false;
-        }
-
-        return true;
+        return false;
     },
 
     /**
@@ -273,8 +293,8 @@ $.extend(Getmore.prototype, {
         me.reqStart = +new Date();
 
         me.promise()
-
             .done(function (result) {
+
                 if (result.meta && result.meta.code !== 200) {
                     callback && callback.call(me, false);
                     return;
@@ -282,17 +302,14 @@ $.extend(Getmore.prototype, {
 
                 var data = result.data;
 
-                var isChanged = me.isDataChanged(data);
-
-                // 保存一个比较用的数据
-                me._compare = data;
-
-                callback && callback.call(me, data, isChanged);
-
-                // 如果数据有变化，则 page + 1
-                if (isChanged) {
-                    me.page ++;
+                // First data
+                if (me._compare === null) {
+                    me.storeMD5Data(data);
                 }
+
+                callback && callback.call(me, data);
+
+                me.page ++;
             })
             .fail(function (err) {
                 callback && callback.call(me, false);
@@ -353,16 +370,36 @@ $.extend(Getmore.prototype, {
         // 开始请求
         me.statusChange('reload', 'process');
 
+        var curpage = me.page;
+
+        // 重置 page
         me.page = 1;
 
         me.send(function (data) {
 
             if (data) {
-                me.statusChange('reload', 'done');
+
+                var unChanged = me.dataUnChanged(data);
+
+                // 最新数据没有变化，不进行后面的操作
+                if (unChanged) {
+                    me.statusChange('reload', 'unchanged');
+                    dfd.resolve.call(me, data, unChanged);
+                    return;
+                }
+
+                // 每次重载之后，都需要保存 md5 数据
+                me.storeMD5Data(data);
+
+                // 设置length
+                me._length = me.opts.pageNum;
+
+                me.statusChange('reload', 'done', 0, 200);
                 me.$wrapper.html('');
-                dfd.resolve(data);
+                dfd.resolve.call(me, data);
             }
             else {
+                me.page = curpage;
                 me.statusChange('reload', 'fail');
                 dfd.reject(null);
             }
@@ -423,13 +460,24 @@ $.extend(Getmore.prototype, {
     },
 
     /**
+     * 状态条的控制
+     *
+     * @param {Element} $cur, 当前状态元素
+     */
+    displayer: function ($cur) {
+        $cur.removeClass('hide');
+        $cur.siblings().addClass('hide');
+    },
+
+    /**
      * 加载条状态
      *
      * @param {string} bar 要操作的控件 more or reload
      * @param {string} status 要展示的状态
-     * @param {number} delay 延迟执行时间
+     * @param {number} delay 状态条延迟执行时间
+     * @param {number} outterDelay 外层容器隐藏 延迟
      */
-    statusChange: function (bar, status, delay) {
+    statusChange: function (bar, status, delay, outterDelay) {
         var me = this;
 
         clearTimeout(me.statusTimerId);
@@ -441,39 +489,53 @@ $.extend(Getmore.prototype, {
         }
 
         // 设置父级元素
-        var $elem = me.$moreHandler;
-
-        if (bar === 'reload') {
-            $elem = me.$reloadHandler;
-
-            if (status === 'done') {
-                clearTimeout(timerId);
-                timerId = setTimeout(function () {
-                    $elem.addClass('hide');
-                }, 100);
-            }
-
-            if (status === 'default') {
-                $elem.removeClass('hide');
-            }
+        var $bar = me.$moreHandler;
+        if (/reload/.test(bar)) {
+            $bar = me.$reloadHandler;
         }
 
-        var $cur = $elem.find(barObj[status]) || null;
+        var $cur = $bar.find(barObj[status]) || null;
 
         if (!$cur || !$cur.length) {
             return;
         }
 
-        if (delay === undefined) {
-            $cur.removeClass('hide');
-            $cur.siblings().addClass('hide');
+        if (!delay) {
+            me.displayer($cur);
         }
         else {
             me.statusTimerId = setTimeout(function () {
-                $cur.removeClass('hide');
-                $cur.siblings().addClass('hide');
+                me.displayer($cur);
             }, delay);
         }
+
+        // 重载的情况下需要特殊处理
+        if (/reload/.test(bar)) {
+
+            if (/default/.test(status)) {
+                $bar.removeClass('hide');
+                $bar.removeClass(placeholder);
+            }
+
+            if (/done/.test(status)) {
+                // clearTimeout(timerId);
+                // me.displayer($cur);
+            }
+
+            if (/fail/.test(status)) {
+                // $bar.addClass(placeholder);
+
+                // 控制外层容器
+                // 失败
+                // timerId = setTimeout(function () {
+                    // $bar.addClass(placeholder);
+                // }, outterDelay);
+            }
+        }
+    },
+
+    reloadStatus: function () {
+
     }
 });
 

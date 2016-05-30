@@ -271,9 +271,11 @@ page.loadPage = function (info, $click) {
 page.addParallelTask(function (dfd) {
 
     // 第一个不放在 enter 中进行请求数据
-    this.loadPage(pages.opened);
+    page.loadPage(pages.opened);
 
     dfd.resolve();
+
+    return dfd;
 });
 
 $(function () {

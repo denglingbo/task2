@@ -1,5 +1,5 @@
 {{#obj_list}}
-<div class="list-item" data-id={{ id }} data-log='{"actionTag":"taskListEnterDetail"}'>
+<div class="list-item" data-id={{ id }} data-pagenum="{{ pagenum }}" data-log='{"actionTag":"taskListEnterDetail"}'>
 
     {{#isRemindUpdate}}
     <div class="icons icons-point"></div>

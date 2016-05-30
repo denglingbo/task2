@@ -25,6 +25,7 @@ module.exports = {
     'assignmentText': '指派中',
     'reviewText': '审核中',
     'refuseText': '已拒绝',
+    'delayText': '已延期',
     'talk': '讨论',
     'affair': '事件',
     'agree': '同意',
@@ -103,5 +104,10 @@ module.exports = {
     'submit': '提交',
 
     'updateDate': '更新时间',
-    'iconNew': '新'
+    'iconNew': '新',
+    'currentWeekText': '本周',
+    'nextWeekText': '下周',
+    'beforeText': '之前完成',
+    'todayText': '今天',
+    'mornText': '明天'
 };

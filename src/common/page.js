@@ -31,6 +31,11 @@ if (!window.pageLog) {
  */
 var checkParamNull = function (key) {
     var ls = storage.getData(config.const.TASK_PARAMS);
+
+    if (!ls) {
+        return '';
+    }
+
     var param = $.trim(util.params(key));
     var lsData = ls && ls[key] ? ls[key] : '';
 
@@ -397,7 +402,7 @@ Page.prototype.getRequestConfig = function (api, data, opts) {
 
     // get 请求下，所有的 params 拼接到 url 上
     if (/get/i.test(opts.type)) {
-        reqData = $.extend(defParams, data);
+        reqData = $.extend(defParams || {}, data);
     }
     else {
         r.data = JSON.stringify(data);

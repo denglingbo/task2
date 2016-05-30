@@ -14,8 +14,8 @@
 
     <div class="detail-title-right">
         {{#isTaskPage}}
-        <p class="star" data-log='{"actionTag":"taskDetailFollow"}'><em></em></p>
+        <p class="star {{#attention}}follow{{/attention}}" data-log='{"actionTag":"taskDetailFollow"}'><em></em></p>
         {{/isTaskPage}}
-        <p class="detail-title-state {{^isTaskPage}}detail-title-state-fixed{{/isTaskPage}} state-doing">{{ statusText }}</p>
+        <p class="detail-title-state {{^isTaskPage}}detail-title-state-fixed{{/isTaskPage}}">{{ statusText }}</p>
     </div>
 </div>
