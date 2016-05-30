@@ -7,8 +7,9 @@
  *
  */
 var users = require('common/middleware/user/users');
-var util = require('common/util');
+// var util = require('common/util');
 var lang = require('common/lang').getData();
+var raw = require('common/widgets/raw');
 
 var detail = {};
 
@@ -49,27 +50,36 @@ detail.dealPageData = function (result) {
     var data = result.data;
 
     // 时间展示
-    data.updateDateRaw = util.formatDateToNow(data.op_time);
+    data.updateDateRaw = function () {
+        return raw.formatDateToNow(this.opTime);
+    };
 
-    // data.content = util.formatRichText(data.content);
+    data.statusRaw = function () {
 
-    data.statusText = (function () {
-        return statusMap[data.status] || '';
-    })();
+        var status = this.status;
 
-    data.importanceRaw = importanceMap[data.importance_level];
+        if (this.suspend) {
+            status = 7;
+        }
+
+        return raw.status(status, this.endTime);
+    };
+
+    data.importanceRaw = function () {
+        return raw.importance(this.importanceLevel);
+    };
 
     data.isMaster = 0;
 
     // 负责人到完成任务页面有备注信息填写
     // 判断这个用户点击完成任务过去的页面的展示权限
-    if (users.uid() === data.principal_user) {
+    if (users.uid() === data.principalUser) {
         data.isMaster = 1;
     }
 
     data.creator = '';
-    data.principal = data.principal_user;
-    data.partnerRaw = data.attend_ids;
+    data.principal = data.principalUser;
+    data.partnerRaw = data.attendIds;
 
     return data;
 };

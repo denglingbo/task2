@@ -284,7 +284,7 @@ editCom.initImportanceLevel = function (selector, data) {
     ];
     /* eslint-disable */
     importData.forEach(function (item) {
-        (item.value === infoData['importance_level']) && (item.selected = true);
+        (item.value === infoData['importanceLevel']) && (item.selected = true);
     });
     /* eslint-enable */
     var data = {
@@ -295,11 +295,11 @@ editCom.initImportanceLevel = function (selector, data) {
         data: importData,
         onSelect: function (text, inst) {
             /* eslint-disable */
-            var oldVal = +infoData['importance_level'];
-            infoData['importance_level'] = +inst.getVal();
+            var oldVal = +infoData['importanceLevel'];
+            infoData['importanceLevel'] = +inst.getVal();
             $(selector + ' .value').text(text);
 
-            validObj.isEdit = oldVal !== infoData['importance_level'] ? true : validObj.isEdit;
+            validObj.isEdit = oldVal !== infoData['importanceLevel'] ? true : validObj.isEdit;
             /* eslint-enable */
         }
     };

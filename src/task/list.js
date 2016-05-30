@@ -109,7 +109,7 @@ page.bindEvents = function () {
         var id = $(this).data('id');
 
         if (id) {
-            CPNavigationBar.redirect('/task-detail.html?task_id=' + id);
+            CPNavigationBar.redirect('/task-detail.html?taskId=' + id);
         }
     });
 
@@ -243,7 +243,7 @@ page.loadPage = function (info, $click) {
 
                 var params = $.extend({
                     role: rid,
-                    curr_page: this.page,
+                    currPage: this.page,
                     number: 10
                 }, info.params || {});
 

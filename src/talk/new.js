@@ -17,7 +17,7 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 
 // 判断是否是编辑页面
-var doing = +util.params('talk_id');
+var doing = +util.params('talkId');
 
 var page = new Page();
 
@@ -26,16 +26,16 @@ var pageData = {
     id: 0,
     attachs: [],
     content: '',
-    importance_level: 1,
+    importanceLevel: 1,
     inheritance: true,
     message: {
-        sent_eim: true,
-        sent_emai: false,
-        sent_sms: false
+        sentEim: true,
+        sentEmai: false,
+        sentSms: false
     },
-    task_id: +util.params('task_id') || 0,
+    taskId: +util.params('taskId') || 0,
     title: '',
-    user_ids: []
+    userIds: []
 };
 /* eslint-enable */
 var selectKey = 'talkAttandSelectKey';
@@ -54,7 +54,7 @@ page.deviceready = function () {
         // 下面为获取人员信息的配置
         var obj = {
             /* eslint-disable */
-            partner: pageData['user_ids']
+            partner: pageData['userIds']
             /* eslint-enable */
         };
         var cid = ls.getData('TASK_PARAMS').cid;
@@ -85,10 +85,10 @@ page.deviceready = function () {
         var url = pageData.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
         var promise = editCom.submit(page, pageData, url);
         promise.done(function (result) {
-            var taskId = pageData.task_id;
+            var taskId = pageData.taskId;
             var talkId = result.data || pageData.id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId + '&task_id=' + taskId);
+            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId + '&taskId=' + taskId);
             /* eslint-enable */
         });
     });
@@ -99,12 +99,12 @@ page.deviceready = function () {
         var val = {
             selectType: 2,
             /* eslint-disable */
-            contacts: editCom.transJid(pageData['attend_ids'])
+            contacts: editCom.transJid(pageData['attendIds'])
             /* eslint-enable */
         };
         editCom.setChoosePersonLoc(selectKey, val);
 
-        var oldVal = pageData['user_ids'];
+        var oldVal = pageData['userIds'];
         CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
             if (!data) {
                 return;
@@ -112,10 +112,10 @@ page.deviceready = function () {
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                pageData['user_ids'].push(+users.takeJid(value.jid));
+                pageData['userIds'].push(+users.takeJid(value.jid));
             });
             $('#attends .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, pageData['user_ids']);
+            editCom.personIsChange(oldVal, pageData['userIds']);
         });
     });
     /* eslint-enable */
@@ -142,7 +142,7 @@ page.loadPage = function () {
                 id: 'urgencyBlock',
                 title: lang.urgentLevel,
                 /* eslint-disable */
-                value: editCom.initImportValue(pageData['importance_level'])
+                value: editCom.initImportValue(pageData['importanceLevel'])
                 /* eslint-enable */
             },
             {
@@ -226,7 +226,7 @@ page.addParallelTask(function (dfd) {
     var url = config.API.TALK_EDIT_URL;
     var promise = me.get(url, {
         /* eslint-disable */
-        talk_id: +util.params('talk_id')
+        talkId: +util.params('talkId')
         /* eslint-enable */
     });
 

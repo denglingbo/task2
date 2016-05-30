@@ -6,7 +6,7 @@
  */
 
 var IScroll = require('dep/iscroll');
-var util = require('common/util');
+// var util = require('common/util');
 var raw = require('common/widgets/raw');
 
 var Getmore = require('common/ui/getmore/getmore');
@@ -25,16 +25,23 @@ function dealData(data) {
     /* eslint-disable */
     // 时间展示
     data.updateDateRaw = function () {
-        return util.formatDateToNow(this.op_time);
+        return raw.formatDateToNow(this.opTime);
     };
     data.statusRaw = function() {
-        return raw.status(this.status, this.end_time);
+
+        var status = this.status;
+
+        if (this.suspend) {
+            status = 7;
+        }
+
+        return raw.status(status, this.endTime);
     };
     data.importanceRaw = function () {
-        return raw.importance(this.importance_level);
+        return raw.importance(this.importanceLevel);
     };
     data.endTimeRaw = function () {
-        return raw.dateToDone(this.end_time);
+        return raw.dateToDone(this.endTime);
     };
     data.isRemindUpdate = function () {
         return this.remind == 2;
@@ -67,9 +74,8 @@ function Init(options) {
         lang: {},
 
         // getmore 需要使用
-        dataKey: 'obj_list',
+        dataKey: 'objList',
         tpl: null,
-
         onComplete: function () {}
     };
 

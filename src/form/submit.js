@@ -24,11 +24,11 @@ var valid = {
 /* eslint-disable */
 // 提交的数据
 var upData = {
-    task_id : +util.params('task_id'),
+    taskId : +util.params('taskId'),
     message: {
-        sent_emai: false,
-        sent_eim: true,
-        sent_sms: false
+        sentEmai: false,
+        sentEim: true,
+        sentSms: false
     }
 }
 /* eslint-enable */
@@ -91,27 +91,27 @@ page.getData = function (type) {
         case 0:
             d = {
                 attachements: me.attach.getModifyAttaches(),
-                complete_remark: $('[data-name=applyReason]').text(),
+                completeRemark: $('[data-name=applyReason]').text(),
                 summary: $('[data-name=summary]').text()
             };
             api = config.API.SUMMARY_TASK
             break;
         case 1:
             d = {
-                suspend_remark: $('[data-name=cancel]').text()
+                suspendRemark: $('[data-name=cancel]').text()
             };
             api = config.API.REVOKE_TASK
             break;
         case 2:
             d = {
-                refuse_reason: $('[data-name=oppose]').text()
+                refuseReason: $('[data-name=oppose]').text()
             };
             api = config.API.REFUSE_TASE
             break;
         case 3:
             d = {
-                audit_remark: $('[data-name=agree]').text(),
-                audit_result: true
+                auditRemark: $('[data-name=agree]').text(),
+                auditResult: true
             };
             api = config.API.AUDIT_TASK
     }
@@ -205,11 +205,11 @@ page.deviceready = function () {
 
     //     var dataArg = me.getData(+me.pageType);
     //     var promise = me.post(dataArg.api, dataArg.data);
-    //     var taskId = util.params('task_id');
+    //     var taskId = util.params('taskId');
     //     promise
     //         .done(function (result) {
     //             if (result.meta.code === 200) {
-    //                 CPNavigationBar.redirect('/task-detail.html?task_id=' + taskId);
+    //                 CPNavigationBar.redirect('/task-detail.html?taskId=' + taskId);
     //             }
     //         })
     //         .fail(function (result) {
@@ -225,11 +225,11 @@ page.deviceready = function () {
     function submit() {
         var dataArg = me.getData(+me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
-        var taskId = util.params('task_id');
+        var taskId = util.params('taskId');
         promise
             .done(function (result) {
                 if (result.meta.code === 200) {
-                    CPNavigationBar.redirect('/task-detail.html?task_id=' + taskId);
+                    CPNavigationBar.redirect('/task-detail.html?taskId=' + taskId);
                 }
             })
             .fail(function (result) {

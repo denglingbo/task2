@@ -59,7 +59,7 @@ page.enter = function () {
 //     var value = key;
 //     var reg = new RegExp(value);
 
-//     data.obj_list.forEach(function (item) {
+//     data.objList.forEach(function (item) {
 //         item.title = item.title.replace(reg, '<span class="input-key">' + value + '</span>');
 //     });
 // }
@@ -71,8 +71,8 @@ page.enter = function () {
 // page.renderList = function () {
 //     var me = this;
 //     setResultKey(me.data);
-//     me.render('.search-content', me.data.obj_list, {
-//         tmpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{task_id}}">'
+//     me.render('.search-content', me.data.objList, {
+//         tmpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{taskId}}">'
 //             + '<a href="javascript:void(0);">{{& title}}</a>'
 //             + '</li>{{/.}}'
 //     });
@@ -99,7 +99,7 @@ page.enter = function () {
  */
 // page.renderOutput = function () {
 //     var me = this;
-//     var dataIsNull = !me.data.obj_list.length;
+//     var dataIsNull = !me.data.objList.length;
 
 //     if (dataIsNull) {
 //         me.renderNull();
@@ -123,12 +123,12 @@ page.enter = function () {
 //     var data = {
 //         title: value,
 //         /* eslint-disable */
-//         curr_page: 1,
+//         currPage: 1,
 //         /* eslint-enable */
 //         number: 15
 //     };
 //     /* eslint-disable */
-//     me.api.taskId && (data.task_id = me.api.taskId);
+//     me.api.taskId && (data.taskId = me.api.taskId);
 //     /* eslint-enable */
 //     var promise = me.get(me.api.list, data);
 
@@ -164,12 +164,12 @@ page.addParallelTask(function (dfd) {
     var data = {
         title: value,
         /* eslint-disable */
-        curr_page: 1,
+        currPage: 1,
         /* eslint-enable */
         number: 15
     };
     /* eslint-disable */
-    me.api.taskId && (data.task_id = me.api.taskId);
+    me.api.taskId && (data.taskId = me.api.taskId);
     /* eslint-enable */
     var promise = me.get(me.api.list, data);
 

@@ -13,7 +13,7 @@ var config = {
 
         prefix: '/mgw/task/v1/',
 
-        HOME_URL: 'get_home_remind',
+        HOME_URL: 'getHomeRemind',
 
         // 列表页，未完成
         LIST_URL: 1001,
@@ -23,57 +23,64 @@ var config = {
         LIST_CANCEL_URL: 1003,
 
         // 任务详情
-        TASK_DETAIL_URL: 'get_task_detail',
+        TASK_DETAIL_URL: 'getTaskDetail',
         // 添加关注
-        TASK_FOLLOW: 'attention_task',
+        TASK_FOLLOW: 'attentionTask',
         // 任务新建
-        TASK_NEW_URL: 'create_task',
+        TASK_NEW_URL: 'createTask',
         // 任务编辑
-        TASK_EDIT_URL: 'update_task',
+        TASK_EDIT_URL: 'updateTask',
         // 任务总结
-        SUMMARY_TASK: 'summary_task',
+        SUMMARY_TASK: 'summaryTask',
         // 任务撤销
-        REVOKE_TASK: 'revoke_task',
+        REVOKE_TASK: 'revokeTask',
         // 任务拒绝
-        REFUSE_TASE: 'refuse_task',
+        REFUSE_TASE: 'refuseTask',
         // 任务同意
-        AUDIT_TASK: 'audit_task',
+        AUDIT_TASK: 'auditTask',
 
         // 事件详情
-        AFFAIR_DETAIL_URL: 'get_affair_detail',
-        AFFAIR_DONE: 'finish_affair',
-        AFFAIR_RESUME: 'recovery_affair',
-        AFFAIR_COMMENT_DELETE: 'delete_affair_comment',
-        AFFAIR_COMMENT_ADD: 'add_affair_comment',
+        AFFAIR_DETAIL_URL: 'getAffairDetail',
+        AFFAIR_DONE: 'finishAffair',
+        AFFAIR_RESUME: 'recoveryAffair',
+        AFFAIR_COMMENT_DELETE: 'deleteAffairComment',
+        AFFAIR_COMMENT_ADD: 'addAffairComment',
         // 加载更多事件和讨论
-        AFFAIR_TALK_MORE_URL: 'get_task_slaves',
+        AFFAIR_TALK_MORE_URL: 'getTaskSlaves',
         // 事件新建
-        AFFAIR_NEW_URL: 'create_affair',
+        AFFAIR_NEW_URL: 'createAffair',
         // 事件编辑
-        AFFAIR_EDIT_URL: 'update_affair',
+        AFFAIR_EDIT_URL: 'updateAffair',
         // 事件评论列表
-        AFFAIR_COMMENT_LIST: 'get_affair_comment_list',
-        GET_AFFAIR_TAGS: 'get_affair_tags',
+        AFFAIR_COMMENT_LIST: 'getAffairCommentList',
+        GET_AFFAIR_TAGS: 'getAffairTags',
 
         // 讨论编辑
-        TALK_EDIT_URL: 'update_talk',
+        TALK_EDIT_URL: 'updateTalk',
         // 讨论
-        TALK_DETAIL_URL: 'get_talk_detail',
+        TALK_DETAIL_URL: 'getTalkDetail',
         // 讨论新建
-        TALK_NEW_URL: 'create_talk',
-        TALK_DONE: 'close_talk',
-        TALK_RESUME: 'resume_talk',
-        TALK_COMMENT_DELETE: 'delete_talk_comment',
-        TALK_COMMENT_ADD: 'add_talk_comment',
+        TALK_NEW_URL: 'createTalk',
+        TALK_DONE: 'closeTalk',
+        TALK_RESUME: 'resumeTalk',
+        TALK_COMMENT_DELETE: 'deleteTalkComment',
+        TALK_COMMENT_ADD: 'addTalkComment',
         // 讨论评论列表
-        TALK_COMMENT_LIST: 'get_talk_comment_list',
+        TALK_COMMENT_LIST: 'getTalkCommentList',
 
-            // 任务列表
-        GET_TASK_LIST: 'get_task_list',
-        GET_TALK_LIST: 'get_talk_list',
-        GET_AFFAIR_LIST: 'get_affair_list'
+
+
+        // 列表
+        // 任务列表
+        GET_TASK_LIST: 'getTaskList',
+        GET_TALK_LIST: 'getTalkList',
+        GET_AFFAIR_LIST: 'getAffairList'
     }
 };
+
+// attach uploadUrl
+config.API.ATTACH_UPLOADURL = config.API.prefix + 'attachment/getFsTokensOnCreate';
+config.API.ATTACH_RESUMEURL = config.API.prefix + 'attachment/getFsTokensOnContinue';
 
 /**
  * [重要] 目前上传等和以前组件相关的因为没有自动拼装 ajax url, 所以这里要写完整
@@ -96,7 +103,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '246ed448-e2de-46a3-86c5-d34cf4cf0f9c-261858'
+    token: '818c818c-8941-44ee-80d1-ac96bcbb09a4-301549'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -118,8 +125,8 @@ if (config.debug) {
     // 直接走 mock server
 
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
-    config.API.prefix = '/data/';
+    // config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    // config.API.prefix = '/data/';
 }
 /* eslint-enable */
 

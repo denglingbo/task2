@@ -29,12 +29,12 @@ function Search(page, options) {
 
     this.opts = {
         url: '',
-        taskId: util.params('task_id') || '',
+        taskId: util.params('taskId') || '',
         pageType: '',
         isSearchPage: false,
         selector: '',
         inject: 'body',
-        itemTpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{task_id}}">'
+        itemTpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{taskId}}">'
                     + '<a href="javascript:void(0);">{{& title}}</a>'
                     + '</li>{{/.}}'
     };
@@ -152,9 +152,9 @@ Search.prototype.redirectSearch = function () {
     var opts = this.opts;
     // var href = location.href;
     // ls.addData('history', href);
-    var taskId = util.params('task_id');
+    var taskId = util.params('taskId');
     /* eslint-disable */
-    var query = taskId ? '&task_id=' + taskId : '';
+    var query = taskId ? '&taskId=' + taskId : '';
     CPNavigationBar.redirect('/search-search.html?key=' 
         + encodeURIComponent(this.dom.$input.val()) 
         + '&pageType=' + opts.pageType + query, opts.search);
@@ -274,7 +274,7 @@ Search.prototype.clearInput = function () {
  * @return {boolean}, 搜索结果是否为空
  */
 Search.prototype.dataIsNull = function (data) {
-    return !(data.obj_list && data.obj_list.length);
+    return !(data.objList && data.objList.length);
 };
 
 /**
@@ -291,13 +291,13 @@ Search.prototype.loadList = function () {
     var data = {
         title: key,
         /* eslint-disable */
-        curr_page: 1,
+        currPage: 1,
         /* eslint-enable */
         number: 15
     };
     var taskId = opts.taskId;
     /* eslint-disable */
-    taskId && (data.task_id = taskId);
+    taskId && (data.taskId = taskId);
     /* eslint-enable */
     var promise = me.page.get(me.opts.url, data);
 
@@ -348,7 +348,7 @@ Search.prototype.renderList = function (data) {
     me.setResultKey(data);
 
     var selector = opts.wrap + ' ' + opts.content;
-    me.page.render(selector, data.obj_list, {
+    me.page.render(selector, data.objList, {
         tmpl: opts.itemTpl
     });
 };
@@ -380,7 +380,7 @@ Search.prototype.setResultKey = function (data) {
     var key = me.getKey();
     var reg = new RegExp(key);
 
-    data.obj_list.forEach(function (item) {
+    data.objList.forEach(function (item) {
         item.title = item.title.replace(reg, '<span class="input-key">' + key + '</span>');
     });
 };
@@ -487,13 +487,13 @@ Search.prototype.bindEvents = function () {
         var url;
         switch (opts.pageType) {
             case 'task':
-                url = '/task-detail.html?task_id=' + id;
+                url = '/task-detail.html?taskId=' + id;
                 break;
             case 'talk':
-                url = '/talk-detail.html?task_id=' + parentId + '&id=' + id;
+                url = '/talk-detail.html?taskId=' + parentId + '&id=' + id;
                 break;
             case 'affair':
-                url = '/affair-detail.html?task_id=' + parentId + '&id=' + id;
+                url = '/affair-detail.html?taskId=' + parentId + '&id=' + id;
                 break;
         }
         /* eslint-disable */

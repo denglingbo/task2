@@ -24,15 +24,15 @@ var pageData = {
     id: 0,
     attachs: [],
     message: {
-        sent_eim: true,
-        sent_emai: false,
-        sent_sms: false
+        sentEim: true,
+        sentEmai: false,
+        sentSms: false
     },
-    task_id: +util.params('task_id') || 0,
+    taskId: +util.params('taskId') || 0,
     title: '',
     content: '',
-    importance_level: 1,
-    label_id: 1506
+    importanceLevel: 1,
+    labelId: 1506
 };
 /* eslint-enable */
 page.enter = function () {
@@ -55,8 +55,8 @@ page.deviceready = function () {
         // editCom.submit(me, url);
         var promise = editCom.submit(page, pageData, url);
         promise.done(function (result) {
-            var taskId = pageData.task_id;
-            var affairId = result.data || pageData.affair_id;
+            var taskId = pageData.taskId;
+            var affairId = result.data || pageData.affairId;
             /* eslint-disable */
             CPNavigationBar.redirect('/affair-detail.html?id=' + affairId + '&task_id=' + taskId);
             /* eslint-ensable */
@@ -121,8 +121,8 @@ page.initPlugin = function () {
         me.affairType.forEach(function (item) {
             typeData.push({
                 text: item.name,
-                value: item['sub_id'],
-                selected: (item['sub_id'] === pageData['label_id']) && (currName = item.name)
+                value: item['subId'],
+                selected: (item['subId'] === pageData['labelId']) && (currName = item.name)
             });
         });
         $('#affairType .value').text(currName);
@@ -135,11 +135,11 @@ page.initPlugin = function () {
             data: typeData,
             onSelect: function (text, inst) {
                 /* eslint-disable */
-                var oldVal = pageData['label_id'];
-                pageData['label_id'] = +inst.getVal();
+                var oldVal = pageData['labelId'];
+                pageData['labelId'] = +inst.getVal();
                 $('#affairType .value').text(text);
 
-                editCom.valid.isEdit = oldVal !== pageData['label_id'] ? true : editCom.valid.isEdit;
+                editCom.valid.isEdit = oldVal !== pageData['labelId'] ? true : editCom.valid.isEdit;
                 /* eslint-enable */
             }
         });
@@ -179,7 +179,7 @@ page.addParallelTask(function (dfd) {
 
     var url = config.API.AFFAIR_EDIT_URL;
     var promise = me.get(url, {
-        affair_id: +util.params('affair_id')
+        affairId: +util.params('affairId')
     });
 
     promise

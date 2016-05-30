@@ -418,57 +418,6 @@ util.dateDiff = function (date1, date2) {
     return (date1 - date2) / 86400000;
 };
 
-
-/**
- * 获取时间戳距离当前时间有多久的文案
- *
- * @param {number} date 要处理的事件戳
- * @param {number} now 当前时间戳
- * @return {string} 事件间隔的文案
- */
-util.formatDateToNow = function (date, now) {
-
-    if (!date) {
-        return '';
-    }
-
-    if (!now) {
-        now = util.fixTimeZone(new Date()).getTime();
-    }
-
-    var diff = now - date;
-    // error
-    if (diff < 0) {
-        return null;
-    }
-    // 0-60s
-    if (diff < 60000) {
-        return '刚刚';
-    }
-    // 1-15min
-    if (diff < 900000) {
-        return Math.round(diff / 60000) + '分钟前';
-    }
-    // 16-30min
-    if (diff < 1800000) {
-        return '半小时前';
-    }
-    // 30-60min
-    if (diff < 3600000) {
-        return '1小时前';
-    }
-    // 1-24h
-    if (diff < 86400000) {
-        return Math.floor(diff / 3600000) + '小时前';
-    }
-    // 1d-4d
-    if (diff < 345600000) {
-        return Math.floor(diff / 86400000) + '天前';
-    }
-    // > 4d
-    return '更新时间 ' + util.dateformat(date, true);
-};
-
 /**
  * 转换string驼峰
  *

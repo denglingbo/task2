@@ -1,4 +1,4 @@
-<dd id="item-{{ id }}" class="user-{{ user_id }}" data-uid="{{ user_id }}" data-id="{{ id }}">
+<dd id="item-{{ id }}" class="user-{{ userId }}" data-uid="{{ userId }}" data-id="{{ id }}">
     <div class="column-left user-photo">
         <!-- <img src="base64" /> -->
     </div>
@@ -11,7 +11,7 @@
                 {{&content}}
             </div>
 
-            <div class="comments-button delete" data-id="{{ id }}" data-uid="{{ user_id }}">{{ lang.delete }}</div>
+            <div class="comments-button delete" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
 
             <div class="comments-attach">
                 <!-- By Attach js -->

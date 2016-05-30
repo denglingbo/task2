@@ -3,6 +3,7 @@ var tmplList = require('./list.tpl');
 var tmplMsg = require('./msg.tpl');
 var users = require('common/middleware/user/users');
 var util = require('common/util');
+var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var Loader = require('common/ui/loader');
@@ -16,7 +17,7 @@ var Loader = require('common/ui/loader');
 var fn = function (page, options) {
     var me = this;
     this.opts = {
-        dataKey: 'obj_list',
+        dataKey: 'objList',
         wrapper: '#comments-main',
         tpl: tmplList,
         partials: {
@@ -41,11 +42,11 @@ var fn = function (page, options) {
 
         // 时间展示
         data.dataRaw = function () {
-            return util.formatDateToNow(this.op_time);
+            return raw.formatDateToNow(this.opTime);
         };
 
         data.isOwner = function () {
-            return this.user_id.toString() === users.uid.toString();
+            return this.userId.toString() === users.uid.toString();
         };
 
         // 渲染组件
@@ -54,12 +55,12 @@ var fn = function (page, options) {
         me.$listNull = me.$main.find('.list-null');
 
         /* eslint-disable */
-        if (data.obj_list && data.obj_list.length <= 0) {
+        if (data.objList && data.objList.length <= 0) {
             me.$listNull.removeClass('hide');
             return;
         }
 
-        getUserAndPhoto(data.obj_list);
+        getUserAndPhoto(data.objList);
         /* eslint-enable */
 
         if (data.attachs && data.attachs.length > 0) {
@@ -146,12 +147,12 @@ $.extend(fn.prototype, {
         var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
             id: 0,
-            module_id: me.data.id,
+            moduleId: me.data.id,
             content: text,
             message: {
-                'sent_eim': true,
-                'sent_emai': false,
-                'sent_sms': false
+                'sentEim': true,
+                'sentEmai': false,
+                'sentSms': false
             },
             // 附件暂时为空
             attachements: []
@@ -200,7 +201,7 @@ function getUserAndPhoto(arr) {
     var jids = [];
 
     arr.forEach(function (item) {
-        jids.push(item.user_id);
+        jids.push(item.userId);
     });
 
     users.getUserAndPhoto(jids)

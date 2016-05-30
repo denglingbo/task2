@@ -53,22 +53,22 @@
         {{#rights}}
         <div class="fixbar border">
             <ul>
-                {{#audit_right}}
+                {{#auditRight}}
                 <li>{{ lang.notAgree }}</li>
                 <li>{{ lang.agree }}</li>
-                {{/audit_right}}
+                {{/auditRight}}
 
-                {{#add_event_right}}
-                <li data-page="/affair-new.html?task_id={{ task_id }}" data-log='{"actionTag":"taskDetailNewAffair"}'>{{ lang.newAffair }}</li>
-                {{/add_event_right}}
+                {{#addEventRight}}
+                <li data-page="/affair-new.html?taskId={{ taskId }}" data-log='{"actionTag":"taskDetailNewAffair"}'>{{ lang.newAffair }}</li>
+                {{/addEventRight}}
 
-                {{#add_talk_right}}
-                <li data-page="/talk-new.html?task_id={{ task_id }}" data-log='{"actionTag":"taskDetailNewTalk"}'>{{ lang.startTalk }}</li>
-                {{/add_talk_right}}
+                {{#addTalkRight}}
+                <li data-page="/talk-new.html?taskId={{ taskId }}" data-log='{"actionTag":"taskDetailNewTalk"}'>{{ lang.startTalk }}</li>
+                {{/addTalkRight}}
 
-                {{#apply_right}}
-                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&task_id={{ task_id }}" data-log='{"actionTag":"taskDetailCompleteTask"}'>{{ lang.taskDone }}</li>
-                {{/apply_right}}
+                {{#applyRight}}
+                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&taskId={{ taskId }}" data-log='{"actionTag":"taskDetailCompleteTask"}'>{{ lang.taskDone }}</li>
+                {{/applyRight}}
             </ul>
         </div>
         {{/rights}}
@@ -80,7 +80,7 @@
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#list}}
-    <dd data-pagenum="{{ pagenum }}" tid="{{ target_id }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ target_id }}&task_id={{ task_id }}" data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'>
+    <dd data-pagenum="{{ pagenum }}" tid="{{ targetId }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}" data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'>
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
         </div>

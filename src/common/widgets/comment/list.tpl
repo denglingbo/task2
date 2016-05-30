@@ -5,7 +5,7 @@
     {{ lang.commentNotFound }}
     </dd>
 
-    {{#obj_list}}
+    {{#objList}}
     {{> msg}}
-    {{/obj_list}}
+    {{/objList}}
 </dl>

@@ -6,7 +6,7 @@
  * 1. 为了让用户更快的进入页面
  * 2. 如果有该策略的页面，即便网络错误，一样可以进入页面，使用上次成功的数据进行模版渲染
  */
-
+/* eslint-disable */
 var config = require('../config');
 var util = require('./util');
 var storage = require('./localstorage');

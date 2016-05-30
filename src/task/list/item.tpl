@@ -1,4 +1,4 @@
-{{#obj_list}}
+{{#objList}}
 <div class="list-item" data-id={{ id }} data-pagenum="{{ pagenum }}" data-log='{"actionTag":"taskListEnterDetail"}'>
 
     {{#isRemindUpdate}}
@@ -21,4 +21,4 @@
         <!-- <div class="star"><em></em></div> -->
     </div>
 </div>
-{{/obj_list}}
+{{/objList}}

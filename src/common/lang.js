@@ -58,6 +58,7 @@ Lang.prototype = {
      * 获取 语言包 数据
      *
      * @param {string} key [options], 指定获取某语言包数据
+     * @return {Object}
      */
     getData: function (key) {
 
@@ -70,10 +71,13 @@ Lang.prototype = {
 
     /**
      * 判断是否是输入类型的 dom
+     *
+     * @param {Element} $elem, 元素
+     * @return {boolean}
      */
     valueDOM: function ($elem) {
 
-        for(var i = 0; i < valueArr.length; i++) {
+        for (var i = 0; i < valueArr.length; i++) {
             var type = valueArr[i];
 
             if ($elem.is(type)) {

@@ -44,7 +44,7 @@ page.enter = function () {
     me.data.isTaskPage = true;
     me.data.describeTitle = this.lang.taskTitle;
     /* eslint-disable */
-    me.data.rights['task_id'] = me.data.id;
+    me.data.rights['taskId'] = me.data.id;
     /* eslint-enable */
     me.render('#detail-main', me.data, {
         partials: {
@@ -59,15 +59,15 @@ page.enter = function () {
         promise: function () {
             /* eslint-disable */
             return page.get(config.API.AFFAIR_TALK_MORE_URL, {
-                task_id: me.data.id,
-                curr_page: this.page,
+                taskId: me.data.id,
+                currPage: this.page,
                 number: requestPageNum,
-                sort_type: 0
+                sortType: 0
             });
             /* eslint-enable */
         },
         // 后端数据节点位置
-        listKey: 'obj_list',
+        listKey: 'objList',
         pageNum: requestPageNum
     });
 
@@ -130,16 +130,16 @@ page.deviceready = function () {
     /* eslint-enable */
 
     me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.summary_attachs,
+        attachData: data.summaryAttachs,
         container: '.attach-container',
         wrapper: '.attach'
     });
 
     // 下面为获取人员信息的配置
     var obj = {
-        creator: data.create_user,
-        principal: data.principal_user,
-        partner: data.attend_ids
+        creator: data.createUser,
+        principal: data.principalUser,
+        partner: data.attendIds
     };
 
     var jids = users.makeArray(obj);
@@ -205,7 +205,7 @@ page.bindEvents = function () {
         // data.typeRaw =
         // console.log(data)
 
-        data.list = detailUtil.getEventTalkList(data.obj_list);
+        data.list = detailUtil.getEventTalkList(data.objList);
 
         me.render('#affair-talk', data, {type: 'append'});
 
@@ -250,7 +250,7 @@ page.follow = function (target) {
 
     /* eslint-disable */
     var promise = page.post(config.API.TASK_FOLLOW, {
-        task_id: me.data.id,
+        taskId: me.data.id,
         level: status
     });
     /* eslint-enable */
@@ -400,7 +400,7 @@ page.addParallelTask(function (dfd) {
 
     /* eslint-disable */
     var promise = page.get(config.API.TASK_DETAIL_URL, {
-        task_id: util.params('task_id')
+        taskId: util.params('taskId')
     });
     /* eslint-enable */
     promise

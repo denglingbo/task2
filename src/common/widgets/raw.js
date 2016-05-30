@@ -9,13 +9,14 @@ var raw = {};
 
 // 状态显示
 var statusMap = {
-    1: lang.doneText,
-    2: lang.cancelText,
-    3: lang.doingText,
-    4: lang.receivedText,
-    5: lang.assignmentText,
-    6: lang.reviewText,
-    7: lang.refuseText
+    0: lang.undoneText,
+    6: lang.doneText,
+    7: lang.cancelText,
+    4: lang.doingText,
+    1: lang.receivedText,
+    2: lang.assignmentText,
+    5: lang.reviewText,
+    3: lang.refuseText
 };
 
 // 紧要程度
@@ -28,8 +29,8 @@ var importanceMap = {
 
 raw.status = function (key, endDate) {
 
-    // 这里对 进行中 的进行一次单独的判断，如果当前时间晚于结束时间，则单独修改状态文字未，延期
-    if (util.now() > util.fixTimeZone(endDate) && key === 3) {
+    // 这里对 {进行中} 的进行一次单独的判断，如果当前时间晚于结束时间，则单独修改状态文字未，延期
+    if (util.now() > util.fixTimeZone(endDate) && key === 4) {
         return lang.delayText;
     }
 
@@ -141,6 +142,60 @@ function yearRaw(date) {
 
     return util.dateformat(dateInfo.time, true) + ' ' + lang.beforeText;
 }
+
+
+
+
+/**
+ * 获取时间戳距离当前时间有多久的文案
+ *
+ * @param {number} date 要处理的事件戳
+ * @param {number} now 当前时间戳
+ * @return {string} 事件间隔的文案
+ */
+raw.formatDateToNow = function (date, now) {
+
+    if (!date) {
+        return '';
+    }
+
+    if (!now) {
+        now = util.fixTimeZone(new Date()).getTime();
+    }
+
+    var diff = now - date;
+    // error
+    if (diff < 0) {
+        return null;
+    }
+    // 0-60s
+    if (diff < 60000) {
+        return '刚刚';
+    }
+    // 1-15min
+    if (diff < 900000) {
+        return Math.round(diff / 60000) + '分钟前';
+    }
+    // 16-30min
+    if (diff < 1800000) {
+        return '半小时前';
+    }
+    // 30-60min
+    if (diff < 3600000) {
+        return '1小时前';
+    }
+    // 1-24h
+    if (diff < 86400000) {
+        return Math.floor(diff / 3600000) + '小时前';
+    }
+    // 1d-4d
+    if (diff < 345600000) {
+        return Math.floor(diff / 86400000) + '天前';
+    }
+
+    // > 4d
+    return util.dateformat(date, true);
+};
 
 /**
  * 获取时间戳距离当前时间有多久的文案

@@ -82,12 +82,12 @@ page.deviceready = function () {
     var data = me.data;
 
     me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.summary_attachs,
+        attachData: data.summaryAttachs,
         container: '.attach-container',
         wrapper: '.attach'
     });
 
-    var dfdPub = users.getUserInfo(data.user_ids);
+    var dfdPub = users.getUserInfo(data.userIds);
 
     // 查询用户信息失败
     if (dfdPub === null) {
@@ -158,8 +158,8 @@ page.bindEvents = function () {
 
         /* eslint-disable */
         var promise = page.post(api, {
-            task_id: me.data.task_id,
-            talk_id: me.data.id
+            taskId: me.data.taskId,
+            talkId: me.data.id
         });
         /* eslint-enable */
 
@@ -228,9 +228,9 @@ page.initCommentList = function () {
         // 获取列表
         promise: function () {
             return me.get(config.API.TALK_COMMENT_LIST, {
-                talk_id: me.data.id,
-                curr_page: this.page,
-                sort_type: 0,
+                talkId: me.data.id,
+                currPage: this.page,
+                sortType: 0,
                 number: 10
             });
         }
@@ -249,7 +249,7 @@ page.addParallelTask(function (dfd) {
 
     /* eslint-disable */
     var promise = page.get(config.API.TALK_DETAIL_URL, {
-        talk_id: util.params('id')
+        talkId: util.params('id')
     });
     /* eslint-enable */
 
