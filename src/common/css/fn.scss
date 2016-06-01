@@ -44,15 +44,17 @@
 /**
  * icon 左上角的 icon 图标
  *
+ * @param {$bg} bg-color
  * @param {$size} nubmer
  */
-@mixin icon-new ($size: 30) {
+@mixin icon-corner ($bg: #666, $size: 28) {
 
     position: absolute;
     width: $size + px;
     height: $size + px;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: 2px 0 0 0;
+    z-index: 1;
 
     em {
         position: absolute;
@@ -60,7 +62,7 @@
         font-size: rem(10px);
         color: $white;
         left: 3px;
-        top: 3px;
+        top: 2px;
     }
 
     &:after {
@@ -70,7 +72,7 @@
         z-index: 0;
         left: 0;
         top: 0;
-        background: $drak-red;
+        background: $bg;
         transform-origin: 0 0;
         transform: rotate(45deg);
         
@@ -289,7 +291,7 @@
  * @param {$color-to} 结束颜色
  *
  */
-@mixin loading($size: 20px, $border: 2px, $color-form: #F1F2F4, $color-mid: #CECFD3, $color-to: #ABADB2) {
+@mixin loading($size: 20px, $border: 2px, $bg: #fff, $color-form: #F1F2F4, $color-mid: #CECFD3, $color-to: #ABADB2) {
     
     width: $size;
     height: $size;
@@ -322,7 +324,7 @@
         top: $border;
         width: $size - $border * 2;
         height: $size - $border * 2;
-        background: #fff;
+        background: $bg;
         border-radius: 100%;
     }
 

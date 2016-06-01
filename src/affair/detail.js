@@ -72,6 +72,7 @@ page.deviceready = function () {
             
         }
     }]);
+
     CPNavigationBar.setLeftButton({
         title : lang.back,
         iconPath : '',
@@ -83,53 +84,12 @@ page.deviceready = function () {
 };
 
 page.bindEvents = function () {
-    var me = this;
 
-    this.$more = $('#affair-talk-more-handler');
-    this.$affairTalk = $('#affair-talk');
-
-    /* eslint-disable */
-    var map = {
-        '0': {
-            done: 'untick',
-            fail: 'ticked'
-        },
-        '1': {
-            done: 'ticked',
-            fail: 'untick'
-        }
-    };
-
-    this.ticker.on('tick', function (isCurTicked) {
-        var myTicker = this;
-        // 0: 取消
-        // 1: 完成
-        var changeStatus = isCurTicked ? 0 : 1;
-        var api = changeStatus === 1 ? config.API.AFFAIR_DONE : config.API.AFFAIR_RESUME;
-
-        /* eslint-disable */
-        var promise = page.post(api, {
-            taskId: me.data.taskId,
-            affairId: me.data.id
-        });
-        /* eslint-enable */
-
-        var type = map[changeStatus];
-
-        promise
-            .done(function (result) {
-                if (result && result.meta.code === 200) {
-                    myTicker[type.done]();
-                }
-                else {
-                    myTicker[type.fail]();
-                }
-            })
-            .fail(function () {
-                myTicker[type.fail]();
-            });
+    // 绑定 tick 点击事件
+    detailUtil.bindTickEvents.call(this, {
+        ticked: config.API.AFFAIR_DONE,
+        untick: config.API.AFFAIR_RESUME
     });
-    /* eslint-enable */
 };
 
 /**

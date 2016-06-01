@@ -14,13 +14,19 @@
             @include column($at-left-width, $at-right-width);
             
             .column-left {
-                color: $light-gray;
+                color: $black;
                 @include ellipsis();
             }
 
             &.new-msg {
                 .column-left {
                     color: $black;
+                }
+            }
+
+            &.item-done {
+                .column-left {
+                    color: $light-gray;
                 }
             }
         }

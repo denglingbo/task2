@@ -194,9 +194,11 @@ middleware.getPubData = function (options) {
  */
 middleware.getUserInfo = function (jids, cid, dataFlag) {
     var me = this;
+    var dfd = new $.Deferred();
 
     if (!jids || jids.length <= 0) {
-        return null;
+        dfd.reject(null);
+        return dfd;
     }
 
     if (!$.isArray(jids)) {
@@ -225,6 +227,7 @@ middleware.getUserInfo = function (jids, cid, dataFlag) {
             dataFlag: dataFlag
         }
     };
+
     return this.getPubData(options);
 };
 

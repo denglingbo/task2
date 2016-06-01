@@ -10,7 +10,7 @@ require('./detail.scss');
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
 var users = require('common/middleware/user/users');
-var Getmore = require('common/ui/getmore/getmore');
+var DataLoader = require('common/ui/dataLoader/dataLoader');
 var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
@@ -54,7 +54,7 @@ page.enter = function () {
     });
 
     // 初始化一个点击加载组件
-    me.getmore = new Getmore({
+    me.dataLoader = new DataLoader({
         wrapper: '.affair-talk-wrapper',
         promise: function () {
             /* eslint-disable */
@@ -67,7 +67,8 @@ page.enter = function () {
             /* eslint-enable */
         },
         // 后端数据节点位置
-        listKey: 'objList',
+        dataKey: 'objList',
+        loadType: 0,
         pageNum: requestPageNum
     });
 
@@ -120,6 +121,7 @@ page.deviceready = function () {
             
         }
     }]);
+
     CPNavigationBar.setLeftButton({
         title : lang.back,
         iconPath : '',
@@ -144,12 +146,6 @@ page.deviceready = function () {
 
     var jids = users.makeArray(obj);
     var dfdPub = users.getUserInfo(jids, data.cid);
-
-    // 查询用户信息失败
-    if (dfdPub === null) {
-        me.failUser();
-        return;
-    }
 
     dfdPub
         .done(function (pubData) {
@@ -176,41 +172,11 @@ page.bindEvents = function () {
         me.follow(this);
     });
 
-    // 第一次的时候把 page 相关的参数配置好
-    // me.getmore.on('complete', function (data) {
-    //     me.pagination = new Pagination({
-    //         elems: '#affair-talk dd',
-    //         // data-pagenum，数据来源
-    //         finder: 'pagenum',
-    //         pageNum: requestPageNum,
-    //         // 可视偏移量
-    //         offset: -44,
-    //         total: data.total,
-    //         // 在屏幕下方作为展示的基准点
-    //         screen: 1
-    //     });
-    // });
+    me.dataLoader.on('more', function (data) {
 
-    me.getmore.on(['complete', 'loadmore'], function (data) {
-        var loader = this;
-
-        // Mustache.js 的逗比之处
-        // {{#list}}
-        //  中无法获取到 list 同级的数据，类似当前这个 data.pagenum, ...
-        // {{/list}}
-        data.pagenum = function () {
-            // return data.page;
-            return loader.page;
-        };
-        // data.typeRaw =
-        // console.log(data)
-
-        data.list = detailUtil.getEventTalkList(data.objList);
+        detailUtil.formatEventTalkData(data, this.page);
 
         me.render('#affair-talk', data, {type: 'append'});
-
-        // 分页要放在render 之后
-        // me.pagination.complete();
     });
 };
 
@@ -224,18 +190,16 @@ page.follow = function (target) {
     var $elem = $(target);
     var status = 0;
 
-    /* eslint-disable */
     var map = {
-        '0': {
+        0: {
             done: 'removeClass',
             fail: 'addClass'
         },
-        '1': {
+        1: {
             done: 'addClass',
             fail: 'removeClass'
         }
     };
-    /* eslint-enable */
 
     // 取消关注
     if ($elem.hasClass('follow')) {
@@ -248,12 +212,10 @@ page.follow = function (target) {
 
     var type = map[status];
 
-    /* eslint-disable */
     var promise = page.post(config.API.TASK_FOLLOW, {
         taskId: me.data.id,
         level: status
     });
-    /* eslint-enable */
 
     promise
         .done(function (result) {

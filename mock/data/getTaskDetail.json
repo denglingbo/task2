@@ -1,0 +1,50 @@
+{
+    "meta": {
+        "code": 200,
+        "message" : "请求成功"
+    },
+    "data": {
+        "rights": {
+            "addEventRight": true,
+            "addTalkRight": true,
+            "applyRight": true,
+            "auditRight": false,
+
+            "assignRight": false,
+            "editRight": true,
+            "uploadFileRight": true,
+            "receiveRight": false,
+            "recoverRight": false,
+            "refuseRight": false,
+            "revokeRight": true,
+            "summaryRight": true,
+            "seeRight": true
+        },
+        "id": 69585,
+        "status": 6,
+        "importanceLevel": 4,
+        "suspend": false,
+        "createTime": 1459133566738,
+        "createUser": 19,
+        "principal_user": 19,
+        "endTime": 1460538000000,
+        "opTime": 1460530670905,
+        "cid": 10,
+        "title": "sadc",
+        "content": "<p>sdfzcsaf</p>",
+        "attendIds": [55, 22, 333],
+        "attachements": [],
+        "notice": 0,
+        "summary": null,
+        "content": "<p>sdfzcsaf</p>",
+        "audit_remark": null,
+        "suspend_remark": null,
+        "refuse_reason": null,
+        "complete_remark": null,
+        "attachements": [],
+        "audit_result": false,
+        "attention": 1,
+        "delay_time": "8",
+        "delay_type": 2
+    }
+}

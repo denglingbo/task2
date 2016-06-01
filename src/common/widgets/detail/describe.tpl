@@ -3,5 +3,5 @@
 
     <div class="layout-section word-content">{{& content }}</div>
     <div class="layout-section">{{ lang.importance }}: {{ importanceRaw }}</div>
-    <div class="layout-section">{{ lang.doneTime }}: 尽快完成</div>
+    <div class="layout-section">{{ lang.doneTime }}: {{ doneTimeRaw }}</div>
 </div>

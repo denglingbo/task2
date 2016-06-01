@@ -198,8 +198,9 @@ $star-size: rem(16px);
  * Loading
  */
 $loading-size: 20px;
+
 .loading {
-    @include loading($loading-size);
+    @include loading($loading-size, 2px, $body-bg);
 }
 
 .loading-status {
@@ -209,6 +210,7 @@ $loading-size: 20px;
     .loading, .loading-text {
         display: inline-flex;
     }
+
     .loading-text {
         height: $loading-size;
         line-height: $loading-size;
@@ -218,10 +220,19 @@ $loading-size: 20px;
     }
 }
 
+/**
+ * layout list 重写一些 loading 样式
+ */
 .layout-list {
-    .loading-status {
-        padding-top: 0;
-        padding-bottom: rem(15px);
+
+    .layout-loading {
+        @include border-1px(top);
+
+        padding: rem(12px) 0;
+
+        .loading {
+            @include loading($loading-size, 2px);
+        }
     }
 }
 
@@ -229,13 +240,18 @@ $loading-size: 20px;
 .status {
     color: $blue;
 }
+
+.errline {
+    color: $light-gray;
+}
+
 .time {
     font-size: rem(11px);
     color: $light-gray;
 }
 
-/* ICONS */
-.icons {
+/* icon */
+.icon {
     position: absolute;
     left: 0;
     top: 0;
@@ -248,7 +264,11 @@ $loading-size: 20px;
     }
 
     &-new {
-        @include icon-new();
+        @include icon-corner($drak-red);
+    }
+
+    &-delay {
+        @include icon-corner(#999);
     }
 }
 

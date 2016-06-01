@@ -28,6 +28,10 @@ var CPNavigationBar = {
 
     setRightButton: function (rightBtnIconPath, rightBtnArr) {
         
+    },
+
+    setGoBackHandler: function (rightBtnIconPath, rightBtnArr) {
+        
     }
 };
 

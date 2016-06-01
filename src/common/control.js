@@ -192,7 +192,7 @@ Control.prototype._init = function () {
 Control.prototype.init = function () {};
 
 /**
- * 渲染控件
+ * 渲染控件, 如果要调用该方法，请务必给 Control 传递 tpl
  *
  * @param {Object} data 渲染所需数据
  * @return {string}
@@ -207,9 +207,9 @@ Control.prototype.render = function (data, type) {
         type: type || 'html'
     };
 
-    view.render(selector, data, options);
+    return view.render(selector, data, options);
 
-    me.bindEvents();
+    // me.bindEvents();
 };
 
 /**

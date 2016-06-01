@@ -22,11 +22,11 @@
         "inheritance": true,
         "create_user": 179,
         "last_up_user": 179,
-        "op_time": 1461657522213,
+        "opTime": 1461657522213,
         "cid": 10,
         "title": "WEB-ADD-001",
         "content": "<p>WEB-ADD-001</p>",
-        "user_ids": [
+        "userIds": [
             179
         ],
         "attachs": [

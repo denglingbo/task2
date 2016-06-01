@@ -62,6 +62,7 @@
     }
 }
 
+/*
 .edit-title-wrap {
     padding: rem(15px) 0 rem(15px) rem(15px);
     height: rem(80px);
@@ -81,20 +82,23 @@
         }
     }
 }
+*/
 
 .edit-content-wrap {
-    padding-left: rem(15px);
 
     .edit-words {
         height: rem(120px);
-        padding: rem(15px) 0;
         @include border-1px(bottom, #e3e4e5);
         font-size: rem(16px);
         position: relative;
     }
     
     .content-wrap {
-        height: rem(90px);
+        height: rem(120px);
+
+        &.phone-input {
+            margin-top: 0;
+        }
     }
 }
 
@@ -145,16 +149,6 @@
 
 .edit-container .phone-input {
 
-    &-item {
-        position: absolute;
-    }
-
-    &-placeholder {
-        color: #aaafb2;
-        top: rem(16px);
-        left: rem(2px);
-    }
-
     &-limit {
         font-size: rem(12px);
         color: #FA575D;
@@ -198,6 +192,7 @@
 }
 
 .edit-attach {
+    padding: 0 10px;
 
     .edit-add-attach {
         min-height: rem(50px);
@@ -207,7 +202,8 @@
         display: flex;
         align-items: center;
         
-        >i {
+        > i {
+            margin-top: -2px;
             margin-right: rem(6px);
         }
     }

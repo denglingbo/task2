@@ -54,14 +54,12 @@ var fn = function (page, options) {
 
         me.$listNull = me.$main.find('.list-null');
 
-        /* eslint-disable */
         if (data.objList && data.objList.length <= 0) {
             me.$listNull.removeClass('hide');
             return;
         }
 
         getUserAndPhoto(data.objList);
-        /* eslint-enable */
 
         if (data.attachs && data.attachs.length > 0) {
             AttachWrapper.initDetailAttach({

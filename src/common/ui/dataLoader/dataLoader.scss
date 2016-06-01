@@ -1,20 +1,26 @@
+/**
+ * @file dataLoader.scss
+ * @author deo
+ *
+ * 基础样式
+ */
+
 .hide {
     display: none;
 }
 
-// 加载更多
+/* 加载更多 */
 .data-more {
-    // position: absolute;
     height: 20px;
     line-height: 20px;
     padding: 10px 0;
     color: #a0a0a0;
-
     width: 100%;
     text-align: center;
     font-size: 12px;
 }
 
+/* 重载 */
 .data-reload {
     position: absolute;
     height: 30px;
@@ -34,6 +40,7 @@
     }
 }
 
+/* 占位 */
 .data-reload-place {
     position: relative;
     margin-top: 0;

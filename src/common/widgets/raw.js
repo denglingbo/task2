@@ -21,19 +21,23 @@ var statusMap = {
 
 // 紧要程度
 var importanceMap = {
-    1: lang.impLevel1,
-    2: lang.impLevel2,
-    3: lang.impLevel3,
-    4: lang.impLevel4
+    1: lang.urgentAndImportant,
+    2: lang.urgent,
+    3: lang.important,
+    4: lang.general
 };
 
-raw.status = function (key, endDate) {
+raw.delay = function (key, endDate) {
 
     // 这里对 {进行中} 的进行一次单独的判断，如果当前时间晚于结束时间，则单独修改状态文字未，延期
     if (util.now() > util.fixTimeZone(endDate) && key === 4) {
-        return lang.delayText;
+        return 'icon-delay';
     }
 
+    return '';
+};
+
+raw.status = function (key) {
     return statusMap[key] || '';
 };
 
@@ -137,7 +141,9 @@ function yearRaw(date) {
     var nowInfo = getDateInfo(util.now());
 
     if (dateInfo.y - nowInfo.y === 0) {
-        return dateInfo.M + '-' + dateInfo.d + ' ' + dateInfo.h + ':' + dateInfo.m + ' ' + lang.beforeText;
+        return dateInfo.M + '-' + dateInfo.d
+                + ' ' + dateInfo.h + ':' + dateInfo.m
+                + ' ' + lang.beforeText;
     }
 
     return util.dateformat(dateInfo.time, true) + ' ' + lang.beforeText;
@@ -164,6 +170,7 @@ raw.formatDateToNow = function (date, now) {
     }
 
     var diff = now - date;
+
     // error
     if (diff < 0) {
         return null;
@@ -206,6 +213,10 @@ raw.formatDateToNow = function (date, now) {
  */
 raw.dateToDone = function (date, now) {
 
+    if (date === 0) {
+        return '尽快完成';
+    }
+
     if (!date) {
         return '';
     }
@@ -237,11 +248,15 @@ raw.dateToDone = function (date, now) {
     var weeksAway = getWeeksAway(date);
 
     if (weeksAway === 0) {
-        return lang.currentWeekText + dateInfo.dayOfWeek + ' ' + dateInfo.h + ':' + dateInfo.m + ' ' + lang.beforeText;
+        return lang.currentWeekText + dateInfo.dayOfWeek
+                + ' ' + dateInfo.h + ':' + dateInfo.m + ' '
+                + lang.beforeText;
     }
 
     if (weeksAway === 1) {
-        return lang.nextWeekText + dateInfo.dayOfWeek + ' ' + dateInfo.h + ':' + dateInfo.m + ' ' + lang.beforeText;
+        return lang.nextWeekText + dateInfo.dayOfWeek
+                + ' ' + dateInfo.h + ':' + dateInfo.m
+                + ' ' + lang.beforeText;
     }
 
     return yearRaw(date);

@@ -250,9 +250,12 @@ page.deviceready = function () {
     CPNavigationBar.setLeftButton({
         title : lang.cancel,
         iconPath : '',
-        callback : goBack
+        callback : goBack,
+        callback: function () {
+            CPNavigationBar.returnPreviousPage();
+        }
     });
-    CPNavigationBar.setGoBackHandler(goBack,true);
+    // CPNavigationBar.setGoBackHandler(goBack,true);
     /* eslint-enable */
 };
 

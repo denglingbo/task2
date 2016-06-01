@@ -21,24 +21,27 @@
 
         <!-- 成员 -->
         <dl id="partner" class="layout-list partner">
+            <dt class="sub-title">{{ lang.partner }}</dt>
             <!-- Call pub data -->
             {{#userInfoFail}}
-            <dt class="sub-title">{{ lang.noGetPersonInfo }}</dt>
+            <dd class="errline">{{ lang.noGetPersonInfo }}</dd>
             {{/userInfoFail}}
             {{^userInfoFail}}
-            <dt class="sub-title">{{ lang.dataLoading }}</dt>
+            <div class="layout-loading loading-status">
+                <span class="loading"></span>
+                <span class="loading-text">{{ lang.loading }}</span>
+            </div>
             {{/userInfoFail}}
         </dl>
 
         <!-- 附件 -->
-        <div class="layout-list attach">
+        <div class="layout-list attach hide">
             <div class="sub-title">{{ lang.attach }}</div>
             <div class='attach-container'></div>
         </div>
         </script>
 
     </div>
-
 
     <!-- 团队成员 -->
     <script id="partner-tmpl" type="x-tmpl-mustache">
@@ -60,6 +63,9 @@
             </div>
         </div>
     </dd>
+    {{/partnerLength}}
+    {{^partnerLength}}
+    <dd class="errline">{{ lang.noGetPersonInfo }}</dd>
     {{/partnerLength}}
     </script>
     

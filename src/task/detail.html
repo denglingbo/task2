@@ -24,7 +24,7 @@
             <dd>{{ lang.noGetPersonInfo }}</dd>
             {{/userInfoFail}}
             {{^userInfoFail}}
-            <div class="loading-status">
+            <div class="layout-loading loading-status">
                 <span class="loading"></span>
                 <span class="loading-text">{{ lang.loading }}</span>
             </div>
@@ -38,9 +38,8 @@
                 <!-- 另一个异步请求获取数据 -->
             </dl>
 
-            <div id="affair-talk-more-handler" class="load-more">
-                <!-- JS create -->
-            </div>
+            <!-- 用于加载更多数据 -->
+            <div class="data-more"></div>
         </div>
 
         <!-- 附件 -->
@@ -79,8 +78,13 @@
     
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
-    {{#list}}
-    <dd data-pagenum="{{ pagenum }}" tid="{{ targetId }}" class="affair-talk-item {{#num}}new-msg{{/num}}" data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}" data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'>
+    {{#objList}}
+    <dd data-pagenum="{{ pagenum }}" 
+        tid="{{ targetId }}" 
+        class="affair-talk-item {{#isDone}}item-done{{/isDone}} {{#num}}new-msg{{/num}}" 
+        data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}" 
+        data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'
+    >
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
         </div>
@@ -93,7 +97,7 @@
             </div>
         </div>
     </dd>
-    {{/list}}
+    {{/objList}}
     </script>
     
     <!-- 团队成员 -->

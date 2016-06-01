@@ -16,6 +16,8 @@
         {{#isTaskPage}}
         <p class="star {{#attention}}follow{{/attention}}" data-log='{"actionTag":"taskDetailFollow"}'><em></em></p>
         {{/isTaskPage}}
-        <p class="detail-title-state {{^isTaskPage}}detail-title-state-fixed{{/isTaskPage}}">{{ statusRaw }}</p>
+        <p class="detail-title-state {{^isTaskPage}}detail-title-state-fixed{{/isTaskPage}}"
+            data-status="{{ statusRaw }}"
+        >{{ statusRaw }}</p>
     </div>
 </div>

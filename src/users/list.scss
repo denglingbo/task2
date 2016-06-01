@@ -17,10 +17,10 @@
     &.users-list {
 
         dd {
+            @include column($left-width, $right-width);
             height: rem(36px);
             line-height: rem(36px);
-
-            @include column($left-width, $right-width);
+            padding-bottom: 13px;
 
             .column-left {
                 overflow: hidden;
@@ -41,14 +41,6 @@
                     }
                 }
             }
-/*
-            &:first-child {
-
-                &:before {
-                    display: none;   
-                }
-            }
-*/
         }
     }
 }

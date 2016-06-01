@@ -145,21 +145,16 @@
                     @include arrow-more(7px);
                 }
             }
-
-            .download {
-                width: rem(27px);
-                height: rem(27px);
-                background-size: rem(27px);
-            }
         }
     }
 
-    .load-more {
+    .data-more {
         color: $light-gray;
         text-align: center;
         height: rem(20px);
         line-height: rem(20px);
         padding: rem(13px) 0 rem(11px) 0;
+        text-indent: -10px;
 
         @include border-1px(top, #e1e4e6);
     }
@@ -229,7 +224,7 @@
 
             &.list-null {
                 padding: rem(13px) 0 rem(11px) 0;
-                color: $gray;
+                color: $light-gray;
             }
         }
 

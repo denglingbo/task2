@@ -23,13 +23,13 @@ editCom.valid = {
  *
  */
 editCom.bindGetFocus = function () {
-    $('.edit-title-wrap').on('click', function () {
-        $('#edit-title').focus();
-    });
+    // $('.edit-title-wrap').on('click', function () {
+    //     $('#edit-title').focus();
+    // });
 
-    $('.edit-words').on('click', function () {
-        $('#edit-content').focus();
-    });
+    // $('.edit-words').on('click', function () {
+    //     $('#edit-content').focus();
+    // });
 };
 
 /**
@@ -267,19 +267,19 @@ editCom.initImportanceLevel = function (selector, data) {
     var importData = [
         {
             text: lang.urgentAndImportant,
-            value: 4
-        },
-        {
-            text: lang.general,
             value: 1
         },
         {
-            text: lang.important,
+            text: lang.urgent,
             value: 2
         },
         {
-            text: lang.urgent,
+            text: lang.important,
             value: 3
+        },
+        {
+            text: lang.general,
+            value: 4
         }
     ];
     /* eslint-disable */
@@ -364,7 +364,7 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    var importanceLevel = [lang.general, lang.important, lang.urgent, lang.urgentAndImportant];
+    var importanceLevel = [lang.urgentAndImportant, lang.urgent, lang.important, lang.general];
     return importanceLevel[level - 1];
 };
 

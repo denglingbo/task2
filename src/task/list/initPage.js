@@ -9,7 +9,7 @@ var IScroll = require('dep/iscroll');
 // var util = require('common/util');
 var raw = require('common/widgets/raw');
 
-var Getmore = require('common/ui/getmore/getmore');
+var DataLoader = require('common/ui/dataLoader/dataLoader');
 
 // 页码提示
 require('common/ui/pagination/pagination.scss');
@@ -28,7 +28,6 @@ function dealData(data) {
         return raw.formatDateToNow(this.opTime);
     };
     data.statusRaw = function() {
-
         var status = this.status;
 
         if (this.suspend) {
@@ -37,10 +36,15 @@ function dealData(data) {
 
         return raw.status(status, this.endTime);
     };
-    data.importanceRaw = function () {
-        return raw.importance(this.importanceLevel);
+    data.delayFlag = function() {
+        return raw.delay(this.status, this.endTime);
     };
-    data.endTimeRaw = function () {
+    data.importanceRaw = function () {
+        var str = raw.importance(this.importanceLevel);
+
+        return str && str.length ? '[' + str + ']' : '';
+    };
+    data.doneTimeRaw = function () {
         return raw.dateToDone(this.endTime);
     };
     data.isRemindUpdate = function () {
@@ -66,26 +70,26 @@ function Init(options) {
         wrapper: null,
 
         // 实际内容容器
-        // 这个 $main 将用于 getmore 的wrapper
+        // 这个 $main 将用于 dataLoader 的wrapper
         main: null,
 
         promise: null,
         offset: 0,
         lang: {},
 
-        // getmore 需要使用
+        // dataLoader 需要使用
         dataKey: 'objList',
-        tpl: null,
-        onComplete: function () {}
+
+        tpl: null
     };
 
     $.extend(me.opts, options);
 
-    me.lang = {
-        'doing': me.opts.lang.loading,
-        'done': me.opts.lang.dataDone,
-        'default': me.opts.lang.getMore
-    };
+    // me.lang = {
+    //     'doing': me.opts.lang.loading,
+    //     'done': me.opts.lang.dataDone,
+    //     'default': me.opts.lang.getMore
+    // };
 
     me.$wrapper = $(me.opts.wrapper);
     me.$main = me.$wrapper.find(me.opts.main);
@@ -114,14 +118,15 @@ Init.prototype = {
     init: function () {
         var me = this;
 
-        // 这里的分页请求由 getmore 来处理
-        me.getmore = new Getmore(
-            $.extend(me.opts, {
-                wrapper: me.$main,
-                reloadHandler: me.$wrapper.find('.data-reload'),
-                moreHandler: me.$wrapper.find('.data-more')
-            })
-        );
+        // 这里的分页请求由 dataLoader 来处理
+        me.dataLoader = new DataLoader({
+            promise: me.opts.promise,
+            dataKey: 'objList',
+            wrapper: me.$main,
+            tpl: me.opts.tpl,
+            reloadHandler: me.$wrapper.find('.data-reload'),
+            moreHandler: me.$wrapper.find('.data-more')
+        });
 
         me.getMoreData(function (data) {
             me.initScroll();
@@ -233,7 +238,7 @@ Init.prototype = {
             // 准备进行数据重载
             if (me._reloadRange === true) {
                 me._reloadAllow = true;
-                me.getmore.statusChange('reload', 'process');
+                me.dataLoader.statusChange('reload', 'process');
                 me.getReloadData();
             }
         });
@@ -250,7 +255,7 @@ Init.prototype = {
     getReloadData: function (callback) {
         var me = this;
 
-        me.getmore.requestReload()
+        me.dataLoader.requestReload()
             .done(function (data, unchanged) {
 
                 // 最新数据没有变化，不进行后面的 dom 操作
@@ -261,7 +266,7 @@ Init.prototype = {
                 // 用于分页提示
                 data.pagenum = this.page;
                 dealData(data);
-                me.getmore.render(data);
+                me.dataLoader.render(data);
                 me.setBasic();
                 me.scroll.refresh();
                 me.reset();
@@ -278,7 +283,7 @@ Init.prototype = {
     getMoreData: function (callback) {
         var me = this;
 
-        me.getmore.requestMore(function (data) {
+        me.dataLoader.requestMore(function (data) {
 
             if (!data) {
                 return;
@@ -323,12 +328,12 @@ Init.prototype = {
         }
 
         if (scroll.y > 0 && me._reloading === false && me._reloadRange === false) {
-            me.getmore.statusChange('reload', 'default');
+            me.dataLoader.statusChange('reload', 'default');
         }
 
         // 到达临界点
         if (scroll.y >= 80 && me._reloading === false) {
-            me.getmore.statusChange('reload', 'holder');
+            me.dataLoader.statusChange('reload', 'holder');
 
             me.reloadStartTime = +new Date();
 

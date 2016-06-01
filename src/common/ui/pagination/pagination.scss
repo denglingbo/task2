@@ -1,31 +1,36 @@
-$pagination-default-y: 40px;
-$pagination-show-y: -54px;
+$pagination-y: -24px;
 
-.pagination-tips {
+.hide {
+    display: none;
+}
+
+.pagination {
     position: fixed;
     padding: 4px 6px 2px 6px;
     height: 12px;
     line-height: 12px;
     background: rgba(0, 0, 0, 0.4);
-    bottom: 0;
     left: 50%;
+    bottom: -18px;
     border-radius: 4px;
     font-size: 12px;
     color: #fff;
     margin-left: -12px;
-    display: box;
+    display: block;
+    /*
     display: -webkit-box;
     display: -moz-box;
+    */
     box-pack: center;
     -moz-box-pack: center;
     -webkit-box-align: center;
     -moz-box-align: center;
-    z-index: 9;
-    transform: translate3d(0, $pagination-default-y, 0);
-    transition: transform .4s ease-out;
+    z-index: 99;
+    transform-origin: 0 0;
+    transform: translate3d(0, 0, 0);
 }
 
 .pagination-show {
-    transform: translate3d(0, $pagination-show-y, 0);
+    transform: translate3d(0, $pagination-y, 0);
     transition: transform .4s ease-out;
 }

@@ -64,7 +64,7 @@ page.enter = function () {
 
     // new Sticky({target: '#search', top: 0});
 
-    // 3个底部切换内容的 page 页
+    // 切换内容的 page 页
     this.initPageSlider();
 
     // 设置滚动的元素的高宽
@@ -120,24 +120,6 @@ page.bindEvents = function () {
 };
 
 /**
- * 初始化配置 滑动切换页面 函数
- *
- */
-page.initPageSlider = function () {
-    var me = this;
-
-    new PageSlider({
-        outer: '.slider-outer',
-        tabs: '.page-loader li',
-        pages: pages,
-
-        onSlide: function (info, $click) {
-            me.loadPage(info, $click);
-        }
-    });
-};
-
-/**
  * 初始化顶部 tab
  */
 page.initTab = function () {
@@ -171,35 +153,55 @@ page.initTab = function () {
 };
 
 /**
- * 加载页面
+ * 初始化配置 滑动切换页面 函数
  *
- * @param {Object} info, 当前展示的页面配置
- * @param {Element} $click, 点击的 tab
  */
-page.loadPage = function (info, $click) {
+page.initPageSlider = function () {
+    var me = this;
+
+    new PageSlider({
+        outer: '#slider-outer',
+        tabs: '.page-loader li',
+        pages: pages,
+
+        onSlide: function (target, info) {
+
+            me.switchPage(target, info);
+
+            // 如果已经加载了页面，则只进行切换操作
+            if (pageCache[info.name] && target.signPage && target.signPage.pagination) {
+                target.signPage.pagination.show();
+                return;
+            }
+
+            new LoadPage(target, info);
+        }
+    });
+};
+
+/**
+ * 切换页面
+ *
+ * @param {Element} target, 点击的 tab
+ * @param {Object} info, 当前展示的页面配置
+ */
+page.switchPage = function (target, info) {
+
+    // var $click = $(target);
 
     if (!info || !info.name) {
         return;
     }
 
     var $wrapper = $(info.selector);
-    var isFilter = false;
 
-    if ($click && $click.length && $click.data('filter')) {
-        isFilter = true;
-    }
+    $wrapper.css({
+        'z-index': 2
+    });
 
-    // 如果是点击加载数据，同时点击项有 data-filter 则不进行 z-index 的设置
-    // 第一个展示页，没有传递 点击项，所以也会自动设置 z-index
-    if (isFilter === false) {
-        $wrapper.css({
-            'z-index': 2
-        });
-
-        $wrapper.siblings().css({
-            'z-index': 1
-        });
-    }
+    $wrapper.siblings().css({
+        'z-index': 1
+    });
 
     // search bar 添加 border
     if (/done|cancel/.test(info.name)) {
@@ -208,12 +210,18 @@ page.loadPage = function (info, $click) {
     else {
         $('.search-inner').removeClass('border');
     }
+};
 
-    // 有数据了，则不再 ajax 请求
-    if (pageCache[info.name]) {
-        return;
-    }
+/**
+ * 加载页面
+ *
+ * @param {Element} target, 点击的 tab
+ * @param {Object} info, 当前展示的页面配置
+ */
+function LoadPage(target, info) {
+    // var me = this;
 
+    var $wrapper = $(info.selector);
     var $tab = $('.tab');
     var $loader = $wrapper.find('.data-more');
     var $search = $('#search');
@@ -227,14 +235,13 @@ page.loadPage = function (info, $click) {
                 + (!info.index ? $tab.height() : 0)
                 + ($loader.length ? $loader.height() : 0);
 
-    /* eslint-disable */
     require.ensure(['./list/item'], function () {
 
         var template = require('./list/item');
 
         var api = info.api || config.API.GET_TASK_LIST;
 
-        new InitPage({
+        target.signPage = new InitPage({
             wrapper: $wrapper.find('.scroll-outter'),
             main: '.list-wrapper-content',
 
@@ -255,28 +262,11 @@ page.loadPage = function (info, $click) {
             lang: page.lang
         });
     });
-    /* eslint-enable */
 
     pageCache[info.name] = {
         name: info.name
     };
-};
-
-/**
- * 请求页面接口
- *
- * @param {deferred} dfd, deferred
- *
- */
-page.addParallelTask(function (dfd) {
-
-    // 第一个不放在 enter 中进行请求数据
-    page.loadPage(pages.opened);
-
-    dfd.resolve();
-
-    return dfd;
-});
+}
 
 $(function () {
     page.start();

@@ -36,7 +36,7 @@ var PageSlider = function (options) {
 
         'slide': false,
 
-        'onInit': function () {},
+        // 'onInit': function () {},
         'onSlide': function () {},
         'onSlideBefore': function () {}
     };
@@ -60,10 +60,7 @@ PageSlider.prototype = {
 
         var me = this;
 
-        var item = this.find('doing');
-
-        // 获取第一个
-        me.opts.onInit.call(me, item);
+        // var item = this.find('opened');
 
         // me.page = item.index;
         me.defaultX = 0;
@@ -81,6 +78,8 @@ PageSlider.prototype = {
         });
 
         this.bindEvents();
+
+        $('.page-opened').trigger('click');
     },
 
     /**
@@ -103,101 +102,33 @@ PageSlider.prototype = {
 
         this.$items.on('click', function (event) {
             event.stopPropagation();
-            event.preventDefault();
+            // event.preventDefault();
 
             var $click = $(this);
             var key = $click.data('name');
 
-            me.gotoPage($click, key);
+            me.gotoPage(this, key);
 
             $click.siblings().removeClass('selected');
             $click.addClass('selected');
         });
-
-        // Hey my go
-        // slide 包用来界定用户的滑动行为
-        // if (this.opts.slide) {
-        //     this.slide = new Slide('.slider-container');
-
-        //     this.slide.on('slideX', function (pos) {
-        //         me.$outer.removeClass('slide-fast');
-        //     });
-
-        //     this.slide.on('slideMoveX', function (pos) {
-        //         // 正数表示往右，负数表示往左
-        //         me.step = (pos.diffX / me.winWidth) * 100;
-        //         var step = me.step + me.defaultX;
-
-        //         me.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
-        //     });
-
-        //     this.slide.on('slideEndX', function (pos) {
-        //         // var item = me.find();
-        //         // var to = me.gotoPage(item, pos);
-        //         // me.run(to);
-        //     });
-        // }
     },
-
-    /**
-     * 切换页面
-     *
-     * @param {Object} item, item 对象信息
-     * @param {Object} pos, 位置信息
-     * @return {nubmer}
-     */
-    // gotoPage: function (item, pos) {
-    //     var len = this.opts.pages.length - 1;
-    //     var to = 0;
-
-    //     if (Math.abs(pos.diffX) > this.opts.slideNum) {
-    //         // 往右
-    //         if (pos.diffX < 0) {
-    //             to = item.index + 1;
-    //         }
-    //         // 往左移动
-    //         else {
-    //             to = item.index - 1;
-    //         }
-    //     }
-    //     // 返回
-    //     else {
-    //         to = item.index;
-    //     }
-
-    //     // fix 左侧
-    //     if (to < 0) {
-    //         to = 0;
-    //     }
-    //     if (Math.abs(to) > len) {
-    //         to = len;
-    //     }
-
-    //     return to;
-    // },
 
     /**
      * 切换动画
      *
-     * @param {Element} $click, 位移到的索引位置
+     * @param {Element} target, 点击的 tab 项
      * @param {string} key, page name
      */
-    gotoPage: function ($click, key) {
+    gotoPage: function (target, key) {
         var item = this.find(key);
         var step = item.index * 100 * -1;
 
-        this.opts.onSlide.call(this, item, $click);
-
-        // this.$outer.css({
-        //     'transform': 'translate3d(' + step + '%, 0px, 0px)'
-        // });
+        this.opts.onSlide.call(this, target, item);
 
         this.$outer[0].style[util.prefixStyle('transform')] = 'translate3d(' + step + '%, 0px, 0px)';
 
         this.$outer.addClass('slide-fast');
-
-        // this.defaultX = step;
-        // this.page = item.index;
     }
 };
 

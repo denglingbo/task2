@@ -12,12 +12,14 @@ var users = require('common/middleware/user/users');
 var Page = require('../common/page');
 var page = new Page();
 
-page.enter = function () {
-    this.render('#users-list', this.data);
-};
+// page.enter = function () {
+//     this.render('#users-list', this.data);
+// };
 
 page.deviceready = function () {
-    var lang = this.lang;
+    var me = this;
+    var lang = me.lang;
+
     /* eslint-disable */
     CPNavigationBar.setLeftButton({
         title: lang.back,
@@ -27,6 +29,18 @@ page.deviceready = function () {
         }
     });
     /* eslint-enable */
+
+    var jids = util.params('jids');
+
+    users.getUserAndPhoto(jids)
+        .done(function (data) {
+
+            me.render('#users-list', {
+                list: data
+            });
+        })
+        .fail(function () {
+        });
 };
 
 /**
@@ -35,24 +49,24 @@ page.deviceready = function () {
  * @param {deferred} dfd, deferred
  *
  */
-page.addParallelTask(function (dfd) {
-    var me = this;
-    var jids = util.params('jids');
+// page.addParallelTask(function (dfd) {
+//     var me = this;
+//     var jids = util.params('jids');
 
-    users.getUserAndPhoto(jids)
-        .done(function (data) {
-            me.data = {
-                list: data
-            };
+//     users.getUserAndPhoto(jids)
+//         .done(function (data) {
+//             me.data = {
+//                 list: data
+//             };
 
-            dfd.resolve();
-        })
-        .fail(function () {
-            dfd.reject();
-        });
+//             dfd.resolve();
+//         })
+//         .fail(function () {
+//             dfd.reject();
+//         });
 
-    return dfd;
-});
+//     return dfd;
+// });
 
 $(function () {
     page.start();

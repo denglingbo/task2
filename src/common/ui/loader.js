@@ -1,9 +1,11 @@
 /* eslint-disable */
-// var Control = require('common/control');
 
+/* 将废弃 */
+
+var Control = require('common/control');
 var Loader = function (options) {
 
-    // Control.call(this, options);
+    Control.call(this, options);
 
     this.opts = {
         // 默认第几页
@@ -26,7 +28,7 @@ var Loader = function (options) {
     this.page = this.opts.page;
 };
 
-// $.extend(Loader.prototype, Control.prototype);
+$.extend(Loader.prototype, Control.prototype);
 
 $.extend(Loader.prototype, {
 

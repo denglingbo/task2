@@ -4,93 +4,72 @@
  *
  * 点击加载功能，不需要指定内容容器，该组建点击之后会返回 data
  * require getmore.scss
+ *
+ * 如果要直接调用 dataLoader.render() 请给 options.tpl 传值
  */
 
-require('./getmore.scss');
+require('./dataLoader.scss');
 
 var md5 = require('dep/md5');
 var Control = require('common/control');
 
+var template = require('./template');
+
 // 重载完成时候的占位 class，临时保持加载状态一直可见
 var placeholder = 'data-reload-place';
 
-/**
- * 获取重载的 dom 节点
- */
-var getReloadTemplate = function (classObject) {
-
-    var c = {};
-    var obj = classObject.reload;
-
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            c[key] = obj[key].replace(/^\./, '');
-        }
-    }
-
-    return '<div class="data-reload-tips ' + c.default + ' hide">下拉刷新</div>'
-        + '<div class="' + c.holder + ' hide">释放刷新</div>'
-        + '<div class="' + c.process + ' hide">加载中</div>'
-        + '<div class="' + c.fail + ' hide">数据加载失败，请重试</div>'
-        + '<div class="' + c.unchanged + ' hide">已经是最新数据</div>'
-        + '<div class="' + c.done + ' hide">加载完成</div>';
-};
-
-/**
- * 获取加载条的 dom 节点
- */
-var getMoreTemplate = function (classObject) {
-
-    var c = {};
-    var obj = classObject.more;
-
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            c[key] = obj[key].replace(/^\./, '');
-        }
-    }
-
-    return '<span class="' + c.default + ' hide">加载更多</span>'
-        + '<span class="' + c.process + ' hide">'
-            + '<div class="loading-status">'
-                + '<span class="loading"></span>'
-                + '<span class="loading-text">加载中</span>'
-            + '</div>'
-        + '</span>'
-        + '<span class="' + c.done + ' hide">加载完成</span>'
-        + '<span class="' + c.max + ' hide">所有数据加载完成</span>'
-        + '<span class="' + c.fail + ' hide">数据加载失败，请重试</span>';
-};
-
-var _SELECTOR = {
+// 必须要要实现的 选择器
+var selector = {
 
     more: {
-        default: '.data-more-holder',
+        default: '.data-more-default',
         process: '.data-more-process',
         done: '.data-more-done',
+        fail: '.data-more-fail',
         max: '.data-more-max',
-        fail: '.data-more-fail'
+        nodata: '.data-more-nodata'
     },
 
     reload: {
         default: '.data-reload-default',
         process: '.data-reload-process',
-        holder: '.data-reload-holder',
         done: '.data-reload-done',
         fail: '.data-reload-fail',
+        holder: '.data-reload-holder',
         unchanged: '.data-reload-unchanged'
+    }
+};
+
+var lang = {
+
+    more: {
+        default: '点击加载更多',
+        process: '加载中',
+        done: '加载完成',
+        fail: '加载失败，请重试',
+        max: '内容全部加载完毕',
+        nodata: '暂无数据'
+    },
+
+    reload: {
+        default: '下拉刷新',
+        process: '加载中',
+        done: '加载完成',
+        fail: '加载失败，请重试',
+        holder: '释放刷新',
+        unchanged: '已经是最新数据'
     }
 };
         
 var timerId = null;
 
 /**
- * 点击加载更多主函数
+ * 数据加载器
  *
  * @param {Ojbect} options, 配置项
  *  options.promise: 用于 ajax
  */
-var Getmore = function (options) {
+var DataLoader = function (options) {
 
     Control.call(this, options);
 
@@ -106,6 +85,9 @@ var Getmore = function (options) {
         // promise 一定要在 function 内部 return，不然一万年都不是一个新的请求了
         promise: null,
 
+        // 该 tpl 根据后端数据进行渲染的模版，由 Control 进行负责操作
+        // tpl: null,
+
         // 每次请求后端会返回的 list 长度，默认为 10条，如果返回的 list.length 小于这个值，就认为没有新数据了
         pageNum: 10,
 
@@ -113,6 +95,11 @@ var Getmore = function (options) {
 
         // 点击按钮，触发事件
         moreHandler: '.data-more',
+
+        // 加载触发的方式
+        // 0: click
+        // 1: scroll
+        loadType: 1,
 
         // 要进行比较的字段，如果 null， 则对整个 object 进行比较
         // 后端 data.list
@@ -122,19 +109,26 @@ var Getmore = function (options) {
         totalKey: 'total',
 
         reloadDisable: false,
+
         moreDisable: false,
 
+        lang: lang || (options && options.lang),
+
         // 点击状态的 选择器对象
-        status: _SELECTOR,
-
-        // 加载更多模版数据
-        reloadTemplate: getReloadTemplate(_SELECTOR),
-
-        // 加载更多模版数据
-        moreTemplate: getMoreTemplate(_SELECTOR),
+        status: selector,
 
         // 是否进行相同数据比较
-        changedCompare: false
+        changedCompare: false,
+
+        // 加载更多模版数据
+        reloadTemplate: function (tpl) {
+            return tpl || template.reload(this.status, this.lang && this.lang.reload);
+        },
+
+        // 加载更多模版数据
+        moreTemplate: function (tpl) {console.log(this)
+            return tpl || template.more(this.status, this.lang && this.lang.more);
+        }
     };
 
     $.extend(me.opts, options);
@@ -163,9 +157,9 @@ var Getmore = function (options) {
     me.init();
 };
 
-$.extend(Getmore.prototype, Control.prototype);
+$.extend(DataLoader.prototype, Control.prototype);
 
-$.extend(Getmore.prototype, {
+$.extend(DataLoader.prototype, {
 
     // 缓存上一次的数据，用于新请求数据的比较
     _compare: null,
@@ -243,24 +237,16 @@ $.extend(Getmore.prototype, {
 
     /**
      * 添加 内部 more loader dom 节点
-     *
-     * @param {string} moreTemplate, 模板字符串
      */
-    createReloadHtml: function (reloadTemplate) {
-        var html = reloadTemplate || this.opts.reloadTemplate;
-
-        this.$reloadHandler.html(html);
+    createReloadHtml: function () {
+        this.$reloadHandler.html(this.opts.reloadTemplate());
     },
 
     /**
      * 添加 内部 more loader dom 节点
-     *
-     * @param {string} moreTemplate, 模板字符串
      */
-    createMoreHtml: function (moreTemplate) {
-        var html = moreTemplate || this.opts.moreTemplate;
-
-        this.$moreHandler.html(html);
+    createMoreHtml: function () {
+        this.$moreHandler.html(this.opts.moreTemplate());
     },
 
     /**
@@ -269,15 +255,28 @@ $.extend(Getmore.prototype, {
     bindEvents: function () {
         var me = this;
 
-        this.$moreHandler.on('click', function (event) {
-            event.stopPropagation();
-            event.preventDefault();
+        // 绑定点击加载更多
+        if (me.opts.loadType === 0) {
 
-            // 是否需求加载更多，由 requestMore 进行判断
-            me.requestMore(function (data) {
-                me.fire('loadmore', data);
+            this.$moreHandler.on('click', function (event) {
+
+                event.stopPropagation();
+                event.preventDefault();
+
+                if (me.isAllLoaded()) {
+                    me.fire('alldone', null);
+                    return;
+                }
+
+                // 是否需求加载更多，由 requestMore 进行判断
+                me.requestMore(function (data) {
+                    me.fire('more', data);
+                });
             });
-        });
+
+            // 默认触发
+            this.$moreHandler.triggerHandler('click');
+        }
     },
 
     /**
@@ -328,7 +327,6 @@ $.extend(Getmore.prototype, {
         if (this._total === null) {
             return false;
         }
-
         return this._total <= this._length;
     },
 
@@ -436,14 +434,19 @@ $.extend(Getmore.prototype, {
                 me._total = data[me.opts.totalKey];
 
                 // 添加数据长度
-                me._length = me._length + list.length;
+                me._length = me._length + me.opts.pageNum;
+
+                if (list.length <= 0) {
+                    me.statusChange('more', 'nodata');
+                    return;
+                }
+
+                if (me.$wrapper.hasClass('hide')) {
+                    me.$wrapper.removeClass('hide');
+                }
 
                 // 以下两种情况认为数据已经加载完毕
-                if (// 所有数据已经加载完成
-                    me.isAllLoaded()
-                    // 当前请求回来的数据长度小于 request 的 pagenum
-                    || list.length < me.opts.pageNum
-                ) {
+                if (me.isAllLoaded() || me._total - me._length <= 0) {
                     me.statusChange('more', 'max');
                 }
                 else {
@@ -539,4 +542,4 @@ $.extend(Getmore.prototype, {
     }
 });
 
-module.exports = Getmore;
+module.exports = DataLoader;

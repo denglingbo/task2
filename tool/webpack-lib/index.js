@@ -241,7 +241,7 @@ Webpacker.prototype.getCssLoader = function (name) {
     if (this.config.debug) {
         // 开发阶段，css直接内嵌
         // cssLoader = 'style-loader!css-loader' + xCss + '!autoprefixer-loader';
-        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader', {
+        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader' + xCss, {
             // 关键，这个会被添加到 生成后的 css 的 image url 的最前面
             publicPath: '../'
         });
@@ -252,7 +252,7 @@ Webpacker.prototype.getCssLoader = function (name) {
         // 如果没有的情况下，如果 url 是相对路径开头，则会 默认添加上 ./
         // 因为该打包后的目录结构发生变化，所以 ./img/... 无法正确识别
         // 打包后的目录结构为  img, css, js 为同级文件夹
-        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader' + xCss + '!autoprefixer-loader', {
+        cssLoader = ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader' + xCss, {
             publicPath: '../'
         });
     }

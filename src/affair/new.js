@@ -56,6 +56,8 @@ page.deviceready = function () {
         var promise = editCom.submit(page, pageData, url);
         promise.done(function (result) {
             var taskId = pageData.taskId;
+
+            // 后端 result.data 返回的是对应的 id, 并非对象
             var affairId = result.data || pageData.affairId;
             /* eslint-disable */
             CPNavigationBar.redirect('/affair-detail.html?id=' + affairId + '&task_id=' + taskId);
@@ -110,7 +112,7 @@ page.initPlugin = function () {
     // 初始化事件标签
     var promise = me.get(config.API.GET_AFFAIR_TAGS);
     promise.done(function (result) {
-        if (result.meta.code !== 200) {
+        if (!result || !result.meta || result.meta.code !== 200) {
             return;
         }
         var currName = '';

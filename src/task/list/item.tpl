@@ -2,11 +2,15 @@
 <div class="list-item" data-id={{ id }} data-pagenum="{{ pagenum }}" data-log='{"actionTag":"taskListEnterDetail"}'>
 
     {{#isRemindUpdate}}
-    <div class="icons icons-point"></div>
+    <div class="icon icon-point"></div>
     {{/isRemindUpdate}}
 
+    {{#delayFlag}}
+    <div class="icon icon-delay"><em>{{ lang.iconDelay }}</em></div>
+    {{/delayFlag}}
+
     {{#isRemindNew}}
-    <div class="icons icons-new"><em>{{ lang.iconNew }}</em></div>
+    <div class="icon icon-new"><em>{{ lang.iconNew }}</em></div>
     {{/isRemindNew}}
 
     <div class="list-item-title">
@@ -16,7 +20,7 @@
 
     <div class="list-item-content">
         <div class="">{{ lang.principal }}：{{ name }}</div>
-        <div class="">{{ endTimeRaw }} [{{ importanceRaw }}]</div>
+        <div class="">{{ doneTimeRaw }} {{ importanceRaw }}</div>
         <div class="time">{{ lang.updateDate }} {{ updateDateRaw }}</div>
         <!-- <div class="star"><em></em></div> -->
     </div>

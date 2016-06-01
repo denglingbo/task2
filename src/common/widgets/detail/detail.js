@@ -13,28 +13,6 @@ var raw = require('common/widgets/raw');
 
 var detail = {};
 
-// 状态显示
-var statusMap = {
-    1: lang.doneText,
-    2: lang.cancelText,
-    3: lang.doingText,
-    4: lang.receivedText,
-    5: lang.assignmentText,
-    6: lang.reviewText,
-    7: lang.refuseText
-};
-
-// 紧要程度
-var importanceMap = {
-    1: lang.impLevel1,
-    2: lang.impLevel2,
-    3: lang.impLevel3,
-    4: lang.impLevel4
-};
-
-detail.statusMap = statusMap;
-detail.importanceMap = importanceMap;
-
 /**
  * 初始化 Page 基本数据
  *
@@ -55,18 +33,15 @@ detail.dealPageData = function (result) {
     };
 
     data.statusRaw = function () {
-
-        var status = this.status;
-
-        if (this.suspend) {
-            status = 7;
-        }
-
-        return raw.status(status, this.endTime);
+        return raw.status(this.status, this.endTime);
     };
 
     data.importanceRaw = function () {
         return raw.importance(this.importanceLevel);
+    };
+
+    data.doneTimeRaw = function () {
+        return raw.dateToDone(this.endTime);
     };
 
     data.isMaster = 0;
@@ -87,20 +62,30 @@ detail.dealPageData = function (result) {
 /**
  * format 事件 讨论 列表的数据格式
  *
- * @param {Array} arr, 列表数据
- * @return {Array|null}
+ * @param {Object} data, 数据
+ * @param {number} pagenum, 当前页数
  */
-detail.getEventTalkList = function (arr) {
+detail.formatEventTalkData = function (data, pagenum) {
 
-    if (!arr || arr.length <= 0) {
-        return null;
-    }
+    var temp = [];
+    var list = data.objList || [];
 
-    var list = [];
+    // Mustache.js 的逗比之处
+    // {{#list}}
+    //  中无法获取到 list 同级的数据，类似当前这个 data.pagenum, ...
+    // {{/list}}
+    data.pagenum = function () {
+        return pagenum;
+    };
+    data.isDone = function () {
+        return this.status === 6;
+    };
 
-    arr.forEach(function (item) {
+    list.forEach(function (item) {
         if (item.type === 2) {
             item.typeRaw = lang.talk;
+
+            // 用于跳转到的页面类型
             item.pageType = 'talk';
         }
         if (item.type === 3) {
@@ -108,17 +93,82 @@ detail.getEventTalkList = function (arr) {
             item.pageType = 'affair';
         }
 
-        list.push(item);
+        temp.push(item);
     });
 
-    return list;
+    data.objList = temp;
 };
 
 /**
- * 展示、操作 权限
+ * 绑定 tick 相关事件，调用：
+ * [module].bindTickEvents.call(this, {
+ *    ticked: config.API.TALK_DONE,
+ *    untick: config.API.TALK_RESUME
+ * });
+ * this -> 指向 page
  *
- * @param {Object} rights, 后端权限数据
+ * @param {Object} options, api config
  */
-detail.rightsView = function (rights) {};
+detail.bindTickEvents = function (options) {
+
+    var me = this;
+
+    // 完成按钮点击事件
+    var map = {
+        0: {
+            done: 'untick',
+            fail: 'ticked'
+        },
+        1: {
+            done: 'ticked',
+            fail: 'untick'
+        }
+    };
+
+    // 要改变的状态容器
+    var $status = $('.detail-title-state');
+
+    function changeStatus(status) {
+        var statusText = $status.data('status');
+
+        if (status === 'ticked') {
+            $status.html(me.lang.doneText);
+        }
+        else {
+            $status.html(statusText);
+        }
+    }
+
+    me.ticker.on('tick', function (isCurTicked) {
+        var myTicker = this;
+        // 0: 取消
+        // 1: 完成
+        var change = isCurTicked ? 0 : 1;
+        var api = change === 1 ? options.ticked : options.untick;
+
+        var promise = me.post(api, {
+            taskId: me.data.taskId,
+            talkId: me.data.id
+        });
+
+        var type = map[change];
+
+        promise
+            .done(function (result) {
+                if (result && result.meta && result.meta.code === 200) {
+                    myTicker[type.done]();
+                    changeStatus(type.done);
+                }
+                else {
+                    myTicker[type.fail]();
+                    changeStatus(type.fail);
+                }
+            })
+            .fail(function () {
+                myTicker[type.fail]();
+                changeStatus(type.fail);
+            });
+    });
+};
 
 module.exports = detail;
