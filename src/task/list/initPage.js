@@ -15,6 +15,8 @@ var DataLoader = require('common/ui/dataLoader/dataLoader');
 require('common/ui/pagination/pagination.scss');
 var Pagination = require('common/ui/pagination/pagination');
 
+var lang = require('common/lang').getData();
+
 
 /**
  * 批量处理数据
@@ -123,6 +125,11 @@ Init.prototype = {
             promise: me.opts.promise,
             dataKey: 'objList',
             wrapper: me.$main,
+            lang: {
+                more: {
+                    'default': lang.touchLoadMore
+                }
+            },
             tpl: me.opts.tpl,
             reloadHandler: me.$wrapper.find('.data-reload'),
             moreHandler: me.$wrapper.find('.data-more')

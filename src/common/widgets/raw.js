@@ -22,12 +22,16 @@ var statusMap = {
 // 紧要程度
 var importanceMap = {
     1: lang.urgentAndImportant,
-    2: lang.urgent,
-    3: lang.important,
+    2: lang.important,
+    3: lang.urgent,
     4: lang.general
 };
 
 raw.delay = function (key, endDate) {
+    // 尽快完成，不需要延期标识符
+    if (endDate === 0) {
+        return '';
+    }
 
     // 这里对 {进行中} 的进行一次单独的判断，如果当前时间晚于结束时间，则单独修改状态文字未，延期
     if (util.now() > util.fixTimeZone(endDate) && key === 4) {

@@ -67,6 +67,8 @@ var getParams = function () {
         lang: checkParamNull('lang') || 'zh_CN',
         // puse 区分平台
         puse: checkParamNull('puse'),
+        // app 版本号
+        appver: checkParamNull('appver'),
         // client 客户端类型
         client: checkParamNull('client')
     };
@@ -74,6 +76,41 @@ var getParams = function () {
     storage.addData(config.const.TASK_PARAMS, data);
 
     return data;
+};
+
+/**
+ * 获取壳外的配置信息
+ *
+ * @param {Object} data, data
+ * @return {Object} 壳外需要使用的配置
+ */
+var getShell = function (data) {
+    var shell = {
+        right: {},
+        left: {}
+    };
+
+    var iconPath = 'img/shell';
+
+    // 判断 app
+    if ((/(iphone|ipad)/i).test(navigator.appVersion)) {
+        iconPath += '/ios';
+    }
+    else {
+        iconPath += '/android';
+    }
+
+    if (data.appver && parseInt(data.appver, 10) >= 7) {
+        iconPath += '/high';
+    }
+    else {
+        iconPath += '/low';
+    }
+
+    shell.right.add = iconPath + '/add.png';
+    shell.right.more = iconPath + '/more.png';
+
+    return shell;
 };
 
 /**
@@ -101,6 +138,9 @@ function Page(opts) {
      * 保存上一个页面传过来的数据
      */
     this._data;
+
+    // 壳外配置
+    this._shell;
 
     /**
      * 得到上一个页面的params
@@ -206,6 +246,8 @@ Page.prototype.start = function () {
     });
 
     me._data = getParams();
+    me._shell = getShell(me._data);
+
     dfd.resolve();
 
     return dfd;

@@ -8,7 +8,7 @@
 require('./searchEnter.scss');
 // require('dep/touch');
 // var ls = require('common/localstorage');
-var util = require('common/util');
+// var util = require('common/util');
 
 /**
  * Search
@@ -29,14 +29,13 @@ function Search(page, options) {
 
     this.opts = {
         url: '',
-        taskId: util.params('taskId') || '',
-        pageType: '',
+        role: options.role,
         isSearchPage: false,
         selector: '',
         inject: 'body',
-        itemTpl: '{{#.}}<li class="item" data-id="{{id}}" data-taskId="{{taskId}}">'
+        itemTpl: '{{#objList}}<li class="item" data-id="{{id}}">'
                     + '<a href="javascript:void(0);">{{& title}}</a>'
-                    + '</li>{{/.}}'
+                    + '</li>{{/objList}}'
     };
 
     if (!page) {
@@ -152,12 +151,11 @@ Search.prototype.redirectSearch = function () {
     var opts = this.opts;
     // var href = location.href;
     // ls.addData('history', href);
-    var taskId = util.params('taskId');
+
     /* eslint-disable */
-    var query = taskId ? '&taskId=' + taskId : '';
     CPNavigationBar.redirect('/search-search.html?key=' 
         + encodeURIComponent(this.dom.$input.val()) 
-        + '&pageType=' + opts.pageType + query, opts.search);
+        + '&role=' + opts.role, opts.search);
     /* eslint-enable */
 };
 
@@ -290,26 +288,27 @@ Search.prototype.loadList = function () {
     }
     var data = {
         title: key,
+        role: opts.role,
         /* eslint-disable */
-        currPage: 1,
+        page: 1,
         /* eslint-enable */
         number: 15
     };
-    var taskId = opts.taskId;
     /* eslint-disable */
-    taskId && (data.taskId = taskId);
     /* eslint-enable */
     var promise = me.page.get(me.opts.url, data);
 
     promise
         .done(function (result) {
-            if (result.meta.code === 200) {
-                me.data = result.data;
-                me.renderOutput(me.data);
-            }
-            else {
-                me.renderNull();
-            }
+            setTimeout(function () {
+                if (result.meta.code === 200) {
+                    me.data = result.data;
+                    me.renderOutput(me.data);
+                }
+                else {
+                    me.renderNull();
+                }
+            }, 200);
         })
         .fail(function (result) {
             me.renderNull();
@@ -341,16 +340,24 @@ Search.prototype.renderNull = function () {
  * 搜索结果不为空的处理函数, 渲染搜索结果列表
  *
  * @param {Object} data, 搜索数据
+ * @param {string} append, 添加dom 节点的方式
  */
-Search.prototype.renderList = function (data) {
+Search.prototype.renderList = function (data, append) {
     var me = this;
     var opts = me.opts;
     me.setResultKey(data);
-
     var selector = opts.wrap + ' ' + opts.content;
-    me.page.render(selector, data.objList, {
+    var ul = $(selector);
+    var str = me.page.render(null, data, {
         tmpl: opts.itemTpl
     });
+
+    if (append) {
+        ul.append(str);
+    }
+    else {
+        ul.html(str);
+    }
 };
 
 /**
@@ -366,6 +373,7 @@ Search.prototype.renderOutput = function (data) {
         me.renderNull();
     }
     else {
+        $('.no-output').remove();
         me.renderList(data);
     }
 };
@@ -482,20 +490,8 @@ Search.prototype.bindEvents = function () {
     });
 
     $(opts.wrap + ' .search-content').on('click', 'li', function (e) {
-        var id = $(this).attr('data-id');
-        var parentId = $(this).attr('data-taskId');
-        var url;
-        switch (opts.pageType) {
-            case 'task':
-                url = '/task-detail.html?taskId=' + id;
-                break;
-            case 'talk':
-                url = '/talk-detail.html?taskId=' + parentId + '&id=' + id;
-                break;
-            case 'affair':
-                url = '/affair-detail.html?taskId=' + parentId + '&id=' + id;
-                break;
-        }
+        var id = +$(this).data('id');
+        var url = '/task-detail.html?taskId=' + id;
         /* eslint-disable */
         if (CPNavigationBar) {
             CPNavigationBar.redirect(url);

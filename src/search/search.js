@@ -8,38 +8,19 @@
 var config = require('config');
 var util = require('common/util');
 var Page = require('common/page');
+var IScroll = require('dep/iscroll');
+
 var Search = require('common/widgets/search/searchEnter');
 
 var page = new Page();
 
 var key = '';
 
-var searchPage = {
-    task: function () {
-        return {
-            list: config.API.GET_TASK_LIST,
-            pageType: 'task'
-        };
-    },
-    talk: function () {
-        return {
-            list: config.API.GET_TALK_LIST,
-            pageType: 'talk'
-        };
-    },
-    affair: function () {
-        return {
-            list: config.API.GET_AFFAIR_LIST,
-            pageType: 'affair'
-        };
-    }
-};
-
 page.enter = function () {
     var me = this;
     me.search = new Search(me, {
-        url: me.api.list,
-        pageType: me.api.pageType,
+        url: config.API.SEARCH_TASK,
+        role: util.params('role'),
         isSearchPage: true,
         selector: '#search'
     });
@@ -47,7 +28,23 @@ page.enter = function () {
     search.setKey(key);
     search.stateChange();
     search.togglePage(true);
-    search.renderOutput(me.data);
+    $('.search-page').height($(window).height());
+    // 初始化 scroll
+    new IScroll('.search-page', {
+        scrollX: true,
+        scrollY: false,
+        scrollbars: false,
+        click: true,
+
+        // 禁用监听鼠标和指针
+        disableMouse: true,
+        disablePointer: true,
+
+        mouseWheel: false,
+
+        // 快速触屏的势能缓冲开关
+        momentum: false
+    });
 };
 
 /**
@@ -155,23 +152,20 @@ page.enter = function () {
 page.addParallelTask(function (dfd) {
     var me = this;
 
-    var pageType = util.params('pageType');
-
-    me.api = pageType ? searchPage[pageType]() : '';
+    var role = util.params('role');
     key = util.params('key');
     key = key ? decodeURIComponent(key) : '';
     var value = key;
     var data = {
         title: value,
+        role: role,
         /* eslint-disable */
-        currPage: 1,
+        page: 1,
         /* eslint-enable */
         number: 15
     };
-    /* eslint-disable */
-    me.api.taskId && (data.taskId = me.api.taskId);
     /* eslint-enable */
-    var promise = me.get(me.api.list, data);
+    var promise = me.get(config.API.SEARCH_TASK, data);
 
     promise
         .done(function (result) {
@@ -189,6 +183,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

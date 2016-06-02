@@ -10,6 +10,7 @@ require('common/widgets/search/searchEnter.scss');
 
 var config = require('../config');
 var util = require('common/util');
+var navigation = require('common/middleware/navigation');
 var Page = require('common/page');
 // var Sticky = require('common/ui/sticky');
 
@@ -83,50 +84,55 @@ page.deviceready = function () {
     var me = this;
     var lang = me.lang;
 
-    /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: '+',
-        iconPath: '',
-        callback: function() {
-            
-        }
-    }]);
-
-    CPNavigationBar.setLeftButton({
-        title : lang.back,
-        iconPath : '',
-        callback : function () {
-            CPNavigationBar.returnPreviousPage();
+    navigation.left({
+        title: lang.back,
+        click: function () {
+            navigation.open(-1, {
+                title: me.lang.taskDetail
+            });
         }
     });
-    /* eslint-enable */
+
+    navigation.right([
+        {
+            icon: me._shell.right.add,
+            click: function () {
+                navigation.open('/task-new.html', {
+                    referer: '/task-list.html?rid=' + rid,
+                    title: me.lang.newTask
+                });
+            }
+        }
+    ]);
 };
 
 page.bindEvents = function () {
+    var me = this;
 
-    /* eslint-disable */
     $('#main').on('click', '.list-item', function () {
         var id = $(this).data('id');
 
         if (id) {
-            CPNavigationBar.redirect('/task-detail.html?taskId=' + id);
+            navigation.open('/task-detail.html?taskId=' + id, {
+                title: me.lang.taskDetail
+            });
         }
     });
 
     $('.search-in').on('click', function () {
-        CPNavigationBar.redirect('/search-search.html');
+        navigation.open('/search-search.html?role=' + rid, {
+            title: me.lang.search
+        });
     });
-    /* eslint-enable */
 };
 
 /**
  * 初始化顶部 tab
  */
 page.initTab = function () {
-    // var me = this;
-
     var $tab = $('.tab');
     var $ul = $tab.find('ul');
+
     $tab.width(999);
     $ul.width($ul.width());
     $tab.width('auto');
@@ -268,6 +274,4 @@ function LoadPage(target, info) {
     };
 }
 
-$(function () {
-    page.start();
-});
+page.start();

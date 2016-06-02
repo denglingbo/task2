@@ -14,6 +14,8 @@ var DataLoader = require('common/ui/dataLoader/dataLoader');
 var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
+var navigation = require('common/middleware/navigation');
+var midUtil = require('common/middleware/util');
 
 // 页码提示
 /*
@@ -43,9 +45,7 @@ page.enter = function () {
 
     me.data.isTaskPage = true;
     me.data.describeTitle = this.lang.taskTitle;
-    /* eslint-disable */
-    me.data.rights['taskId'] = me.data.id;
-    /* eslint-enable */
+    me.data.rights.taskId = me.data.id;
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
@@ -89,47 +89,111 @@ page.deviceready = function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {
-            CPNavigationBar.redirect('/users-list.html?jids=' + jids);
+            navigation.open('/users-list.html?jids=' + jids, {
+                title: me.lang.usersView
+            });
         }
     });
+
+    var titleMap = {
+        affair: me.lang.affairDetail,
+        talk: me.lang.talkDetail
+    };
 
     // 跳转到事件或讨论页面
     me.$main.on('click', '.affair-talk-item', function () {
         // affair or talk
         var pageTo = $(this).data('page');
+        var type = $(this).data('type');
 
         if (pageTo && pageTo.length > 0) {
-            CPNavigationBar.redirect(pageTo);
+            navigation.open(pageTo, {
+                title: titleMap[type]
+            });
         }
     });
+
+    var barMap = {
+        affair: me.lang.newAffair,
+        talk: me.lang.startTalk,
+        summary: me.lang.summary,
+        notAgree: me.lang.notAgree,
+        agree: me.lang.agree
+    };
 
     // 页面底部跳转
     me.$fixbar.find('li').on('click', function () {
         var pageTo = $(this).data('page');
+        var type = $(this).data('type');
 
         if (pageTo && pageTo.length > 0) {
-            CPNavigationBar.redirect(pageTo);
+            navigation.open(pageTo, {
+                title: barMap[type]
+            });
         }
     });
     /* eslint-enable */
 
     /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: '...',
-        iconPath: '',
-        callback: function() {
-            
-        }
-    }]);
-
-    CPNavigationBar.setLeftButton({
-        title : lang.back,
-        iconPath : '',
-        callback : function () {
-            CPNavigationBar.returnPreviousPage();
+    // 这里需要根据 referer 判断是否返回指定页面
+    navigation.left({
+        title: lang.back,
+        click: function () {
+            navigation.open(-1, {
+                title: me.lang.dispatch
+            });
         }
     });
-    /* eslint-enable */
+
+    var rightBar = [me._shell.right.more];
+    var rights = me.data.rights;
+
+    // 编辑权限
+    if (rights.editRight) {
+        rightBar.push({
+            title: me.lang.editButton,
+            click: function() {
+                alert('/task-new.html?taskId=' + me.data.id)
+                navigation.open('/task-new.html?taskId=' + me.data.id, {
+                    title: me.lang.newTask
+                });
+            }
+        });
+    }
+
+    var getAlert = function() {
+
+        midUtil.alert({
+            content: me.lang.alertRevokeContent,
+            onApply: function () {
+                alert('apply');
+            }
+        });
+    };
+
+    // 恢复权限
+    if (rights.recoverRight) {
+        rightBar.push({
+            title: me.lang.recover,
+            click: getAlert
+        });
+    }
+
+    // 撤消权限
+    if (rights.revokeRight) {
+        rightBar.push({
+            title: me.lang.cancelButton,
+            click: function () {
+                navigation.open('/form-submit.html?type=revoke&taskId=' + me.data.id, {
+                    title: me.lang.cancelTitle
+                });
+            }
+        });
+    }
+
+    if (rightBar.length > 1) {
+        navigation.right(rightBar);
+    }
 
     me.attach = AttachWrapper.initDetailAttach({
         attachData: data.summaryAttachs,
@@ -319,12 +383,12 @@ page.renderUser = function (originArr, dataArr) {
     var dataRaw = {};
 
     // 创建人数据
-    if (data.creator) {
+    if (data.creator && data.creator.name) {
         dataRaw.creator = data.creator.name;
     }
 
     // 负责人数据
-    if (data.principal) {
+    if (data.principal && data.principal.name) {
         dataRaw.principal = data.principal.name;
     }
 
@@ -385,6 +449,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

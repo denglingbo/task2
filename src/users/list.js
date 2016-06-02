@@ -68,6 +68,6 @@ page.deviceready = function () {
 //     return dfd;
 // });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

@@ -198,6 +198,6 @@ page.addParallelTask(function (dfd) {
 });
 
 /* eslint-enable */
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

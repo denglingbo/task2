@@ -91,7 +91,6 @@ $search-key-color: #e51717;
     .search-mask, .search-page {
         position: absolute;
         top: rem(43px);
-        bottom: 0;
         left: 0;
         right: 0;
     }
@@ -137,7 +136,6 @@ $search-key-color: #e51717;
             }
 
             .no-output {
-                position: absolute;
                 height: 100%;
                 width: 100%;
                 display: flex;

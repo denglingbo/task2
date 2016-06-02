@@ -12,6 +12,7 @@ var Page = require('common/page');
 var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
+var navigation = require('common/middleware/navigation');
 
 var page = new Page();
 var lang = page.lang;
@@ -21,21 +22,20 @@ var valid = {
     isEdited: false
 };
 
-/* eslint-disable */
 // 提交的数据
-var upData = {
-    taskId : +util.params('taskId'),
+var REQUEST_DATA = {
+    taskId: util.params('taskId'),
     message: {
         sentEmai: false,
         sentEim: true,
         sentSms: false
     }
-}
-/* eslint-enable */
+};
+
 /* eslint-disable */
 var pages = {
     // 完成任务
-    '0': function (isMaster) {
+    summary: function (isMaster) {
         var arr = [{
             name: 'summary',
             holder: lang.taskSummaryPlaceholder
@@ -52,26 +52,34 @@ var pages = {
     },
 
     // 撤销
-    '1': function () {
+    revoke: function () {
         return [{
-            name: 'cancel',
-            holder: lang.cancelReasonPlaceholder
+            name: 'revoke',
+            holder: lang.revokeReasonPlaceholder
         }];
     },
 
     // 拒绝
-    '2': function () {
+    refuse: function () {
         return [{
-            name: 'oppose',
-            holder: lang.opposeReasonPlaceholder
+            name: 'refuse',
+            holder: lang.refuseReasonPlaceholder
         }];
     },
 
     // 同意
-    '3': function () {
+    agree: function () {
         return [{
             name: 'agree',
             holder: lang.agreeReasonPlaceholder
+        }];
+    },
+
+    // 不同意
+    notAgree: function () {
+        return [{
+            name: 'notAgree',
+            holder: lang.notAgreeReasonPlaceholder
         }];
     }
 };
@@ -85,60 +93,95 @@ var pages = {
  */
 page.getData = function (type) {
     var me = this;
-    var d = null;
+    var data = null;
     var api = '';
+
+    var $remark = $('[data-name=applyReason]');
+    var $val = $('.phone-input-main');
+
     switch(type) {
-        case 0:
-            d = {
+
+        case 'summary':
+            data = {
                 attachements: me.attach.getModifyAttaches(),
-                completeRemark: $('[data-name=applyReason]').text(),
+                completeRemark: $remark && $remark.text() ? $remark.text() : '',
                 summary: $('[data-name=summary]').text()
             };
-            api = config.API.SUMMARY_TASK
+
+            api = config.API.COMPLETE_TASK;
+
             break;
-        case 1:
-            d = {
-                suspendRemark: $('[data-name=cancel]').text()
+
+        case 'revoke':
+            data = {
+                suspendRemark: $val.text()
             };
-            api = config.API.REVOKE_TASK
+
+            api = config.API.REVOKE_TASK;
+
             break;
-        case 2:
-            d = {
-                refuseReason: $('[data-name=oppose]').text()
+
+        case 'refuse':
+            data = {
+                refuseReason: $val.text()
             };
-            api = config.API.REFUSE_TASE
+
+            api = config.API.REFUSE_TASE;
+
             break;
-        case 3:
-            d = {
-                auditRemark: $('[data-name=agree]').text(),
+
+        case 'agree':
+            data = {
+                auditRemark: $val.text(),
                 auditResult: true
             };
-            api = config.API.AUDIT_TASK
+
+            api = config.API.AUDIT_TASK;
+
+            break;
+
+        case 'notAgree':
+            data = {
+                auditRemark: $val.text(),
+                auditResult: false
+            };
+
+            api = config.API.AUDIT_TASK;
     }
 
     return {
         api: api,
-        data: $.extend(upData, d)
-    }
+        data: $.extend(REQUEST_DATA, data)
+    };
 };
 
 page.enter = function () {
+
     var me = this;
 
     // 页面类型
-    var pageType = this.pageType = util.params('type');
+    me.pageType = util.params('type');
     
     // 判断是不是 master，完成总结的 master
     var isMaster = parseInt(util.params('master'), 2);
 
     // 获取当前页面配置
-    var curPage = pages[pageType];
+    var curPage = pages[me.pageType];
 
     var attachTpl = '';
-    if (+pageType === 0) {
-        attachTpl = require('common/middleware/attach/attach.tpl')
+
+    // 总结情景下，提供上传附件功能
+    if (me.pageType === 'summary') {
+        attachTpl = require('common/middleware/attach/attach.tpl');
+
+        this.attach = AttachWrapper.initAttach({
+            containerDOM: '#attachList',
+            addBtnDOM: '#addAttach'
+        });
     }
+
     var alertBox = require('common/widgets/edit/alert.tpl');
+
     // 如果没有问题就渲染对应模板
     if (curPage) {
         this.render('#main', {
@@ -151,20 +194,14 @@ page.enter = function () {
         });
     }
 
-    if (+pageType === 0) {
-        var attachOptions = {
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        };
-        this.attach = AttachWrapper.initAttach(attachOptions);
-    }
-
     me.phoneInput = [];
+
     $('.phone-input').each(function (i) {
         var limits = 50;
-        if (!+pageType && i) {
+        if (!me.pageType && i) {
             limits = 500;
         }
+
         me.phoneInput.push(new PhoneInput({
             handler: this,
             limit: limits
@@ -195,70 +232,75 @@ function cancelValidate() {
 
             }
         };
+
         CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
+
+        return;
     }
+
+    navigation.go(-1);
 };
+
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
-    // $('#submit').on('click', function () {
 
-    //     var dataArg = me.getData(+me.pageType);
-    //     var promise = me.post(dataArg.api, dataArg.data);
-    //     var taskId = util.params('taskId');
-    //     promise
-    //         .done(function (result) {
-    //             if (result.meta.code === 200) {
-    //                 CPNavigationBar.redirect('/task-detail.html?taskId=' + taskId);
-    //             }
-    //         })
-    //         .fail(function (result) {
-
-    //         });
-    // });
-
-    // $('#cancel').on('click', function () {
-    //     validEdited(me);
-    //     cancelValidate();
-    // });
-
-    function submit() {
-        var dataArg = me.getData(+me.pageType);
-        var promise = me.post(dataArg.api, dataArg.data);
-        var taskId = util.params('taskId');
-        promise
-            .done(function (result) {
-                if (result.meta.code === 200) {
-                    CPNavigationBar.redirect('/task-detail.html?taskId=' + taskId);
-                }
-            })
-            .fail(function (result) {
-
-            });
-    }
-
-    /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: lang.submit,
-        iconPath: '',
-        callback: submit
-    }]);
     function goBack() {
         validEdited(me);
         cancelValidate();
     }
-    CPNavigationBar.setLeftButton({
-        title : lang.cancel,
-        iconPath : '',
-        callback : goBack,
-        callback: function () {
-            CPNavigationBar.returnPreviousPage();
+
+    function submit() {
+        var dataArg = me.getData(me.pageType);
+        var promise = me.post(dataArg.api, dataArg.data);
+        var taskId = util.params('taskId');
+
+        promise
+            .done(function (result) {
+
+                if (result && result.meta && result.meta.code === 200) {
+                    navigation.open('/task-detail.html?taskId=' + taskId, {
+                        title: me.lang.taskDetail
+                    });
+                }
+            })
+            .fail(function (result) {
+                alert('我错了，我再看看');
+            });
+    }
+
+    navigation.left({
+        title: me.lang.cancel,
+        click: function () {
+            navigation.open(-1);
         }
     });
+
+    navigation.right([
+        {
+            title: me.lang.submit,
+            click: submit
+        }
+    ]);
+
+    /* eslint-disable */
+    // CPNavigationBar.setRightButton('xxx', [{
+    //     title: me.lang.submit,
+    //     iconPath: '',
+    //     callback: submit
+    // }]);
+
+    // CPNavigationBar.setLeftButton({
+    //     title : me.lang.cancel,
+    //     iconPath : '',
+    //     callback : goBack,
+    //     callback: function () {
+    //         CPNavigationBar.returnPreviousPage();
+    //     }
+    // });
     // CPNavigationBar.setGoBackHandler(goBack,true);
     /* eslint-enable */
 };
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

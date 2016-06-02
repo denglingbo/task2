@@ -87,6 +87,7 @@ page.bindEvents = function () {
 
     // 绑定 tick 点击事件
     detailUtil.bindTickEvents.call(this, {
+        pageKey: 'affairId',
         ticked: config.API.AFFAIR_DONE,
         untick: config.API.AFFAIR_RESUME
     });
@@ -153,6 +154,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

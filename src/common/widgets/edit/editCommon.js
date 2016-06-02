@@ -9,6 +9,7 @@ var attachWrapper = require('common/middleware/attach/attachWrapper');
 var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
 var lang = require('common/lang').getData();
+var navigation = require('common/middleware/navigation');
 
 var editCom = {};
 editCom.valid = {
@@ -117,13 +118,14 @@ editCom.cancelValidate = function () {
         var OKButton = {
             title: lang.confirm,
             callback: function () {
-                CPNavigationBar.returnPreviousPage();
+                navigation.open(-1);
             }
         };
+
         CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
     }
     else {
-        CPNavigationBar.returnPreviousPage();
+        navigation.open(-1);
     }
 };
 
@@ -195,26 +197,28 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
     //     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     //     me.cancelValidate();
     // });
-    /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: lang.submit,
-        iconPath: '',
-        callback: function() {
-            me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-            me.submitValid(submitFn);
-        }
-    }]);
+
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
         me.cancelValidate();
     }
-    CPNavigationBar.setLeftButton({
-        title : lang.cancel,
-        iconPath : '',
-        callback : goBack
+
+    navigation.left({
+        title: lang.cancel,
+        click: goBack
     });
+
+    navigation.right([
+        {
+            title: lang.submit,
+            click: function() {
+                me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+                me.submitValid(submitFn);
+            }
+        }
+    ]);
+
     // CPNavigationBar.setGoBackHandler(goBack,true);
-    /* eslint-enable */
 };
 
 /**

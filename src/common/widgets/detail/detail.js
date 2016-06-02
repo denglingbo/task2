@@ -146,10 +146,13 @@ detail.bindTickEvents = function (options) {
         var change = isCurTicked ? 0 : 1;
         var api = change === 1 ? options.ticked : options.untick;
 
-        var promise = me.post(api, {
-            taskId: me.data.taskId,
-            talkId: me.data.id
-        });
+        var params = {
+            taskId: me.data.taskId
+        };
+
+        params[options.pageKey] = me.data.id;
+
+        var promise = me.post(api, params);
 
         var type = map[change];
 

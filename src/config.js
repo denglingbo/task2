@@ -30,8 +30,8 @@ var config = {
         TASK_NEW_URL: 'createTask',
         // 任务编辑
         TASK_EDIT_URL: 'updateTask',
-        // 任务总结
-        SUMMARY_TASK: 'summaryTask',
+        // 任务完成
+        COMPLETE_TASK: 'completeTask',
         // 任务撤销
         REVOKE_TASK: 'revokeTask',
         // 任务拒绝
@@ -68,27 +68,18 @@ var config = {
         // 讨论评论列表
         TALK_COMMENT_LIST: 'getTalkCommentList',
 
-
-
         // 列表
         // 任务列表
         GET_TASK_LIST: 'getTaskList',
         GET_TALK_LIST: 'getTalkList',
-        GET_AFFAIR_LIST: 'getAffairList'
+        GET_AFFAIR_LIST: 'getAffairList',
+        SEARCH_TASK: 'searchTask'
     }
 };
 
 // attach uploadUrl
 config.API.ATTACH_UPLOADURL = config.API.prefix + 'attachment/getFsTokensOnCreate';
 config.API.ATTACH_RESUMEURL = config.API.prefix + 'attachment/getFsTokensOnContinue';
-
-/**
- * [重要] 目前上传等和以前组件相关的因为没有自动拼装 ajax url, 所以这里要写完整
- */
-// attach uploadUrl
-config.API.ATTACH_UPLOADURL = config.API.prefix + 'attachment/get_fs_tokens_on_create';
-// attach resumeUrl
-config.API.ATTACH_RESUMEURL = config.API.prefix + 'attachment/get_fs_tokens_on_continue';
 
 /**
  * 静态参数
@@ -103,7 +94,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: 'd7940e7e-593d-401e-b6fe-0a8dc96321fb-11430'
+    token: 'f1e6a189-73da-4cf6-ba9e-3b8c7cd88d0f-21801'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -117,7 +108,7 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 
-config.debug = true;
+// config.debug = true;
 
 if (config.debug) {
     var loc = window.location;

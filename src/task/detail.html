@@ -53,20 +53,55 @@
         <div class="fixbar border">
             <ul>
                 {{#auditRight}}
-                <li>{{ lang.notAgree }}</li>
-                <li>{{ lang.agree }}</li>
+                <li 
+                    data-type="notAgree" 
+                    data-page="/form-submit.html?type=notAgree&taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailNotAgree"}'
+                >{{ lang.notAgree }}</li>
+                <li 
+                    data-type="agree" 
+                    data-page="/form-submit.html?type=agree&taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailAgree"}'
+                >{{ lang.agree }}</li>
                 {{/auditRight}}
 
+                {{#refuseRight}}
+                <li 
+                    data-type="refuse" 
+                    data-page="/form-submit.html?type=refuse&taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailRefuse"}'
+                >{{ lang.refuse }}</li>
+                {{/refuseRight}}
+
+                {{#receiveRight}}
+                <li 
+                    data-type="receive" 
+                    data-log='{"actionTag":"taskDetailReceive"}'
+                >{{ lang.receivedButton }}</li>
+                {{/receiveRight}}
+
                 {{#addEventRight}}
-                <li data-page="/affair-new.html?taskId={{ taskId }}" data-log='{"actionTag":"taskDetailNewAffair"}'>{{ lang.newAffair }}</li>
+                <li 
+                    data-type="affair" 
+                    data-page="/affair-new.html?taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailNewAffair"}'
+                >{{ lang.newAffair }}</li>
                 {{/addEventRight}}
 
                 {{#addTalkRight}}
-                <li data-page="/talk-new.html?taskId={{ taskId }}" data-log='{"actionTag":"taskDetailNewTalk"}'>{{ lang.startTalk }}</li>
+                <li 
+                    data-type="talk" 
+                    data-page="/talk-new.html?taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailNewTalk"}'
+                >{{ lang.startTalk }}</li>
                 {{/addTalkRight}}
 
                 {{#applyRight}}
-                <li data-page="/form-submit.html?type=0&master={{ isMaster }}&taskId={{ taskId }}" data-log='{"actionTag":"taskDetailCompleteTask"}'>{{ lang.taskDone }}</li>
+                <li 
+                    data-type="summary" 
+                    data-page="/form-submit.html?type=summary&master={{ isMaster }}&taskId={{ taskId }}" 
+                    data-log='{"actionTag":"taskDetailCompleteTask"}'
+                >{{ lang.taskDone }}</li>
                 {{/applyRight}}
             </ul>
         </div>
@@ -82,6 +117,7 @@
     <dd data-pagenum="{{ pagenum }}" 
         tid="{{ targetId }}" 
         class="affair-talk-item {{#isDone}}item-done{{/isDone}} {{#num}}new-msg{{/num}}" 
+        data-type="{{ pageType }}" 
         data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}" 
         data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'
     >

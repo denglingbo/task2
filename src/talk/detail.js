@@ -123,6 +123,7 @@ page.bindEvents = function () {
 
     // 绑定 tick 点击事件
     detailUtil.bindTickEvents.call(this, {
+        pageKey: 'talkId',
         ticked: config.API.TALK_DONE,
         untick: config.API.TALK_RESUME
     });
@@ -222,6 +223,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

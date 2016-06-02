@@ -172,10 +172,16 @@ middleware.getPubData = function (options) {
             dfd.reject(null);
         }
         else {
-            // 模拟延迟
-            setTimeout(function () {
+
+            if (config.debug) {
+                // 模拟延迟
+                setTimeout(function () {
+                    dfd.resolve(data.rel);
+                }, 100);
+            }
+            else {
                 dfd.resolve(data.rel);
-            }, 100);
+            }
         }
     });
     /* eslint-enable */

@@ -39,10 +39,10 @@ module.exports = function () {
         //     to: './dep/ui/'
         // }
         // ,
-        // {
-        //     from: './src/common/img/',
-        //     to: './img/'
-        // }
+        {
+            from: './src/img/shell/',
+            to: './img/shell/'
+        }
     ];
 
     // 非生产环境，需要使用 mock cordova.js 

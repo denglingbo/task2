@@ -112,7 +112,7 @@ var DataLoader = function (options) {
 
         moreDisable: false,
 
-        lang: lang || (options && options.lang),
+        lang: lang,
 
         // 点击状态的 选择器对象
         status: selector,
@@ -126,12 +126,12 @@ var DataLoader = function (options) {
         },
 
         // 加载更多模版数据
-        moreTemplate: function (tpl) {console.log(this)
+        moreTemplate: function (tpl) {
             return tpl || template.more(this.status, this.lang && this.lang.more);
         }
     };
 
-    $.extend(me.opts, options);
+    $.extend(true, me.opts, options);
 
     me.page = me.opts.page;
     me.promise = me.opts.promise;

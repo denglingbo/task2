@@ -14,15 +14,15 @@ var users = require('common/middleware/user/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
+var navigation = require('common/middleware/navigation');
 
 // 判断是否是编辑页面
 var doing = +util.params('taskId');
 
 var page = new Page();
-
+/* eslint-disable */
 // new: 默认值
 // edit: $.extend(pageData, page.data);
-/* eslint-disable */
 var pageData = {
     id : 0,
     title: '',
@@ -39,7 +39,6 @@ var pageData = {
         sentSms: false
     }
 };
-/* eslint-ensable */
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
@@ -56,9 +55,6 @@ page.deviceready = function () {
     var lang = me.lang;
 
     if (doing) {
-        // 渲染人员信息
-        
-
         // 下面为获取人员信息的配置
         var obj = {
             principal: pageData['principalUser'],
@@ -93,11 +89,14 @@ page.deviceready = function () {
         var url = pageData.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
 
         var promise = editCom.submit(page, pageData, url);
+
         promise.done(function (result) {
             var taskId = result.data || pageData.id;
-            /* eslint-disable */
-            CPNavigationBar.redirect('/task-detail.html?taskId=' + taskId);
-            /* eslint-enable */
+            
+            navigation.open('/task-detail.html?taskId=' + taskId, {
+                keep: true,
+                title: me.lang.taskDetail
+            });
         });
     });
 
@@ -318,7 +317,7 @@ page.renderUser = function (originArr, dataArr) {
     var dataRaw = {};
 
     // 负责人数据
-    if (data.principal) {
+    if (data.principal && data.principal.name) {
         dataRaw.principal = data.principal.name;
     }
 
@@ -346,10 +345,12 @@ page.renderUser = function (originArr, dataArr) {
 
 page.addParallelTask(function (dfd) {
     var me = this;
+
     if (!doing) {
         dfd.resolve();
         return dfd;
     }
+
     var url = config.API.TASK_EDIT_URL;
     var promise = me.get(url, {
         taskId: +util.params('taskId')
@@ -357,11 +358,13 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (result) {
+            alert(JSON.stringify(result));
             if (result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {
                 util.getDataFromObj(pageData, result.data);
+                alert(JSON.stringify(pageData));
                 dfd.resolve();
             }
         });
@@ -369,6 +372,6 @@ page.addParallelTask(function (dfd) {
 });
 
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });

@@ -32,6 +32,15 @@ var CPNavigationBar = {
 
     setGoBackHandler: function (rightBtnIconPath, rightBtnArr) {
         
+    },
+
+    setTitle: function (rightBtnIconPath, rightBtnArr) {
+        
+    },
+
+    setButtonEnable: function () {
+        //将右侧按钮置灰
+        // CPNavigationBar.setButtonEnable('right', false);
     }
 };
 

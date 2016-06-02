@@ -243,6 +243,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(function () {
+$(window).on('load', function () {
     page.start();
 });
