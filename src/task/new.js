@@ -17,13 +17,13 @@ var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 
 // 判断是否是编辑页面
-var doing = +util.params('taskId');
+var doing = util.params('taskId');
 
 var page = new Page();
 /* eslint-disable */
 // new: 默认值
-// edit: $.extend(pageData, page.data);
-var pageData = {
+// edit: $.extend(DATA, page.data);
+var DATA = {
     id : 0,
     title: '',
     content: '',
@@ -57,8 +57,8 @@ page.deviceready = function () {
     if (doing) {
         // 下面为获取人员信息的配置
         var obj = {
-            principal: pageData['principalUser'],
-            partner: pageData['attendIds']
+            principal: DATA['principalUser'],
+            partner: DATA['attendIds']
         };
         var cid = ls.getData('TASK_PARAMS')['cid'];
         var jids = users.makeArray(obj);
@@ -80,18 +80,18 @@ page.deviceready = function () {
     }
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(pageData.attachements);
+    me.attach = editCom.initEditAttach(DATA.attachements);
     
 
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
-        pageData.attachements = me.attach.getModifyAttaches();
-        var url = pageData.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
+        DATA.attachements = me.attach.getModifyAttaches();
+        var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
 
-        var promise = editCom.submit(page, pageData, url);
+        var promise = editCom.submit(page, DATA, url);
 
         promise.done(function (result) {
-            var taskId = result.data || pageData.id;
+            var taskId = result.data || DATA.id;
             
             navigation.open('/task-detail.html?taskId=' + taskId, {
                 keep: true,
@@ -103,15 +103,15 @@ page.deviceready = function () {
     /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
-        var oldVal = pageData['endTime'];
-        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + pageData['endTime'], lang.doneTime, false, function (data) {
+        var oldVal = DATA['endTime'];
+        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + DATA['endTime'], lang.doneTime, false, function (data) {
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
-            pageData['endTime'] = data.endTime;
-            $('#doneTime .value').text(editCom.initDoneTime(pageData['endTime']));
-            editCom.valid.isEdit = oldVal !== pageData['endTime'] ? true : editCom.valid.isEdit;
+            DATA['endTime'] = data.endTime;
+            $('#doneTime .value').text(editCom.initDoneTime(DATA['endTime']));
+            editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
         });
     });
 
@@ -120,14 +120,14 @@ page.deviceready = function () {
         var pVal = {
             selectType: 1,
             /* eslint-disable */
-            contacts: editCom.transJid(pageData['principalUser'])
+            contacts: editCom.transJid(DATA['principalUser'])
             /* eslint-enable */
         };
 
         var aVal = {
             selectType: 2,
             /* eslint-disable */
-            contacts: editCom.transJid(pageData['attendIds'])
+            contacts: editCom.transJid(DATA['attendIds'])
             /* eslint-enable */
         };
 
@@ -148,23 +148,23 @@ page.deviceready = function () {
             itemKey = 'attendIds';
             id = '#attends';
         } 
-        oldVal = pageData[itemKey];
+        oldVal = DATA[itemKey];
         CPNavigationBar.redirect('/selector-selector.html?paramId=' + key, lang.choosePerson, false, function (data) {
             if (!data) {
                 return;
             }
             data = JSON.parse(data);
             var contacts = data.contacts;
-            if ($.isArray(pageData[itemKey])) {
+            if ($.isArray(DATA[itemKey])) {
                 contacts.forEach(function (value, index) {
-                    pageData[itemKey].push(+users.takeJid(value.jid));
+                    DATA[itemKey].push(+users.takeJid(value.jid));
                 });
             }
             else {
-                pageData[itemKey] = +users.takeJid(contacts[0].jid);
+                DATA[itemKey] = +users.takeJid(contacts[0].jid);
             }
             $(id + ' .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, pageData[itemKey]);
+            editCom.personIsChange(oldVal, DATA[itemKey]);
         });
     });
     /* eslint-enable */
@@ -186,7 +186,7 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
     var lang = me.lang;
-    var data = $.extend({}, pageData, {
+    var data = $.extend({}, DATA, {
         view: [
             {
                 persons: [
@@ -206,14 +206,14 @@ page.loadPage = function () {
                         id: 'doneTime',
                         title: lang.doneTime,
                         /* eslint-disable */
-                        value: editCom.initDoneTime(pageData['endTime'])
+                        value: editCom.initDoneTime(DATA['endTime'])
                         /* eslint-enable */
                     },
                     {
                         id: 'urgencyBlock',
                         title: lang.urgentLevel,
                         /* eslint-disable */
-                        value: editCom.initImportValue(pageData['importanceLevel'])
+                        value: editCom.initImportValue(DATA['importanceLevel'])
                         /* eslint-enable */
                     }
                 ]
@@ -229,7 +229,7 @@ page.loadPage = function () {
 page.initPlugin = function () {
     var me = this;
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', pageData);
+    editCom.initImportanceLevel('#urgencyBlock', DATA);
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -353,25 +353,20 @@ page.addParallelTask(function (dfd) {
 
     var url = config.API.TASK_EDIT_URL;
     var promise = me.get(url, {
-        taskId: +util.params('taskId')
+        taskId: util.params('taskId')
     });
 
     promise
         .done(function (result) {
-            alert(JSON.stringify(result));
             if (result.meta.code !== 200) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(pageData, result.data);
-                alert(JSON.stringify(pageData));
+                util.getDataFromObj(DATA, result.data);
                 dfd.resolve();
             }
         });
     return dfd;
 });
 
-
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

@@ -13,6 +13,7 @@ var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var navigation = require('common/middleware/navigation');
+var MidUI = require('common/middleware/ui');
 
 var page = new Page();
 var lang = page.lang;
@@ -219,22 +220,12 @@ function validEdited(page) {
 function cancelValidate() {
 
     if(valid.isEdited) {
-        var cancelButton = {
-            title: lang.cancel,
-            callback: function () {
-
+        MidUI.alert({
+            content: lang.whetherGiveUpCurrContent,
+            onApply: function () {
+                navigation.open(-1);
             }
-        };
-
-        var OKButton = {
-            title: lang.confirm,
-            callback: function () {
-
-            }
-        };
-
-        CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
-
+        });
         return;
     }
 
@@ -282,23 +273,7 @@ page.deviceready = function () {
         }
     ]);
 
-    /* eslint-disable */
-    // CPNavigationBar.setRightButton('xxx', [{
-    //     title: me.lang.submit,
-    //     iconPath: '',
-    //     callback: submit
-    // }]);
-
-    // CPNavigationBar.setLeftButton({
-    //     title : me.lang.cancel,
-    //     iconPath : '',
-    //     callback : goBack,
-    //     callback: function () {
-    //         CPNavigationBar.returnPreviousPage();
-    //     }
-    // });
     // CPNavigationBar.setGoBackHandler(goBack,true);
-    /* eslint-enable */
 };
 
 $(window).on('load', function () {

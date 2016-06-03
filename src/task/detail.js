@@ -15,7 +15,7 @@ var util = require('common/util');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var navigation = require('common/middleware/navigation');
-var midUtil = require('common/middleware/util');
+var MidUI = require('common/middleware/ui');
 
 // 页码提示
 /*
@@ -163,7 +163,7 @@ page.deviceready = function () {
 
     var getAlert = function() {
 
-        midUtil.alert({
+        MidUI.alert({
             content: me.lang.alertRevokeContent,
             onApply: function () {
                 alert('apply');

@@ -108,21 +108,12 @@ editCom.clearAlert = function () {
 editCom.cancelValidate = function () {
 
     if(this.valid.isEdit) {
-        var cancelButton = {
-            title: lang.cancel,
-            callback: function () {
-
-            }
-        };
-
-        var OKButton = {
-            title: lang.confirm,
-            callback: function () {
+        MidUI.alert({
+            content: lang.whetherGiveUpCurrContent,
+            onApply: function () {
                 navigation.open(-1);
             }
-        };
-
-        CPUtils.showAlertView('', lang.whetherGiveUpCurrContent, cancelButton, OKButton);
+        });
     }
     else {
         navigation.open(-1);

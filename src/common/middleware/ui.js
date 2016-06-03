@@ -1,5 +1,5 @@
 /**
- * @file util.js
+ * @file ui.js
  * @author deo
  *
  * utils 封装原生
@@ -9,9 +9,9 @@
 var util = require('common/util');
 var lang = require('common/lang').getData();
 
-var mid = {};
+var ui = {};
 
-mid.alert = function (options) {
+ui.alert = function (options) {
 
     var opts = {
         title: '',
@@ -37,4 +37,4 @@ mid.alert = function (options) {
     CPUtils.showAlertView(opts.title, opts.content, myCancel, myApply);
 };
 
-module.exports = mid;
+module.exports = ui;
