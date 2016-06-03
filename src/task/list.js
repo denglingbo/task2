@@ -178,7 +178,7 @@ page.initPageSlider = function () {
 
             // 如果已经加载了页面，则只进行切换操作
             if (myPage && myPage.fn) {
-                myPage.fn.pagination.show();
+                myPage.fn.pagination && myPage.fn.pagination.show();
                 return;
             }
 

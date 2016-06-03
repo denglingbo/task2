@@ -197,6 +197,10 @@ Pagination.prototype = {
     },
 
     show: function () {
+        if (!this.totalPage) {
+            return;
+        }
+
         var $other = $('.pagination').not(this.$view);
 
         $other.addClass('hide');
@@ -207,6 +211,10 @@ Pagination.prototype = {
     },
 
     hide: function () {
+        if (!this.totalPage) {
+            return;
+        }
+
         this.curTop = null;
         this.$view.removeClass('pagination-show');
     },
