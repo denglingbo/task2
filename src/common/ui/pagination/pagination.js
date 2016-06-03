@@ -211,10 +211,6 @@ Pagination.prototype = {
     },
 
     hide: function () {
-        if (!this.totalPage) {
-            return;
-        }
-
         this.curTop = null;
         this.$view.removeClass('pagination-show');
     },
