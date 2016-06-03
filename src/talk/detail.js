@@ -27,6 +27,7 @@ var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var WidgetCommentList = require('common/widgets/comment/list');
+var navigation = require('common/middleware/navigation');
 
 var page = new Page();
 
@@ -90,23 +91,33 @@ page.deviceready = function () {
             me.renderUser(null);
         });
 
-    /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: '...',
-        iconPath: '',
-        callback: function() {
-            
-        }
-    }]);
 
-    CPNavigationBar.setLeftButton({
-        title : lang.back,
-        iconPath : '',
-        callback : function () {
-            CPNavigationBar.returnPreviousPage();
+    navigation.left({
+        title: lang.back,
+        click: function () {
+            navigation.open(-1);
         }
     });
-    /* eslint-enable */
+
+    var rightBar = [];
+    var rights = me.data.rights;
+
+    // 编辑权限
+    if (rights.editRight) {
+        rightBar.push({
+            title: me.lang.editButton,
+            click: function () {
+                navigation.open('/talk-new.html?talkId=' + me.data.id, {
+                    title: me.lang.editTalk
+                });
+            }
+        });
+    }
+
+    if (rightBar.length >= 1) {
+        navigation.right(rightBar);
+    }
+
 };
 
 page.bindEvents = function () {
@@ -115,9 +126,7 @@ page.bindEvents = function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {
-            /* eslint-disable */
-            CPNavigationBar.redirect('/users-list.html?jids=' + jids);
-            /* eslint-enable */
+            navigation.open('/users-list.html?jids=' + jids);
         }
     });
 

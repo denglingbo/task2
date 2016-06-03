@@ -21,6 +21,7 @@ var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var widgetCommentList = require('common/widgets/comment/list');
+var navigation = require('common/middleware/navigation');
 
 var Page = require('common/page');
 
@@ -64,23 +65,37 @@ page.deviceready = function () {
         wrapper: '.attach'
     });
 
-    /* eslint-disable */
-    CPNavigationBar.setRightButton('xxx', [{
-        title: '...',
-        iconPath: '',
-        callback: function() {
-            
-        }
-    }]);
-
-    CPNavigationBar.setLeftButton({
-        title : lang.back,
-        iconPath : '',
-        callback : function () {
-            CPNavigationBar.returnPreviousPage();
+    navigation.left({
+        title: lang.back,
+        click: function () {
+            navigation.open(-1);
         }
     });
-    /* eslint-enable */
+
+    var rightBar = [];
+    var rights = me.data.rights;
+
+    // 编辑权限
+    if (rights.editRight) {
+        rightBar.push({
+            title: me.lang.editButton,
+            click: function () {
+                navigation.open('/affair-new.html?affairId=' + me.data.id, {
+                    title: me.lang.editAffair
+                });
+            }
+        });
+    }
+
+    if (rightBar.length >= 1) {
+        navigation.right(rightBar);
+    }
+
+    me.attach = AttachWrapper.initDetailAttach({
+        attachData: data.attachs,
+        container: '.attach-container',
+        wrapper: '.attach'
+    });
 };
 
 page.bindEvents = function () {

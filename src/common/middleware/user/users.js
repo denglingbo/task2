@@ -202,6 +202,9 @@ middleware.getUserInfo = function (jids, cid, dataFlag) {
     var me = this;
     var dfd = new $.Deferred();
 
+    // 如果没有dataFlag，dataFlag默认值为0
+    dataFlag = dataFlag || 0;
+
     if (!jids || jids.length <= 0) {
         dfd.reject(null);
         return dfd;

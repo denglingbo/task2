@@ -15,6 +15,7 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
+// var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
 var doing = util.params('taskId');
@@ -351,8 +352,7 @@ page.addParallelTask(function (dfd) {
         return dfd;
     }
 
-    var url = config.API.TASK_EDIT_URL;
-    var promise = me.get(url, {
+    var promise = me.get(config.API.TASK_DETAIL_URL, {
         taskId: util.params('taskId')
     });
 

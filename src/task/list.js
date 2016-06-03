@@ -163,7 +163,7 @@ page.initTab = function () {
  *
  */
 page.initPageSlider = function () {
-    var me = this;
+    // var me = this;
 
     new PageSlider({
         outer: '#slider-outer',
@@ -172,15 +172,17 @@ page.initPageSlider = function () {
 
         onSlide: function (target, info) {
 
-            me.switchPage(target, info);
+            switchPage(info);
+
+            var myPage = pageCache[info.name];
 
             // 如果已经加载了页面，则只进行切换操作
-            if (pageCache[info.name] && target.signPage && target.signPage.pagination) {
-                target.signPage.pagination.show();
+            if (myPage && myPage.fn) {
+                myPage.fn.pagination.show();
                 return;
             }
 
-            new LoadPage(target, info);
+            new LoadPage(info);
         }
     });
 };
@@ -188,12 +190,9 @@ page.initPageSlider = function () {
 /**
  * 切换页面
  *
- * @param {Element} target, 点击的 tab
  * @param {Object} info, 当前展示的页面配置
  */
-page.switchPage = function (target, info) {
-
-    // var $click = $(target);
+function switchPage(info) {
 
     if (!info || !info.name) {
         return;
@@ -216,16 +215,19 @@ page.switchPage = function (target, info) {
     else {
         $('.search-inner').removeClass('border');
     }
-};
+}
 
 /**
  * 加载页面
  *
- * @param {Element} target, 点击的 tab
  * @param {Object} info, 当前展示的页面配置
  */
-function LoadPage(target, info) {
-    // var me = this;
+function LoadPage(info) {
+
+    // 这里只绑定数据
+    pageCache[info.name] = {
+        name: info.name
+    };
 
     var $wrapper = $(info.selector);
     var $tab = $('.tab');
@@ -233,7 +235,7 @@ function LoadPage(target, info) {
     var $search = $('#search');
     var $fixbar = $('#fixbar');
 
-    // 10: margin
+    // num: margin
     var offset = 6
                 + $search.height()
                 + $fixbar.height()
@@ -247,7 +249,8 @@ function LoadPage(target, info) {
 
         var api = info.api || config.API.GET_TASK_LIST;
 
-        target.signPage = new InitPage({
+        pageCache[info.name].fn = new InitPage({
+
             wrapper: $wrapper.find('.scroll-outter'),
             main: '.list-wrapper-content',
 
@@ -268,10 +271,6 @@ function LoadPage(target, info) {
             lang: page.lang
         });
     });
-
-    pageCache[info.name] = {
-        name: info.name
-    };
 }
 
 page.start();

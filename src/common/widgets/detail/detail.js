@@ -147,7 +147,7 @@ detail.bindTickEvents = function (options) {
         var api = change === 1 ? options.ticked : options.untick;
 
         var params = {
-            taskId: me.data.taskId
+            // taskId: me.data.taskId
         };
 
         params[options.pageKey] = me.data.id;

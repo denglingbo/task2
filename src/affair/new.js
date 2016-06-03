@@ -13,9 +13,11 @@ var config = require('config');
 var Page = require('common/page');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
+// var navigation = require('common/middleware/navigation');
+// var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
-var doing = +util.params('affair_id');
+var doing = util.params('affairId');
 
 var page = new Page();
 
@@ -28,11 +30,11 @@ var pageData = {
         sentEmai: false,
         sentSms: false
     },
-    taskId: +util.params('taskId') || 0,
+    taskId: util.params('taskId') || 0,
     title: '',
     content: '',
     importanceLevel: 1,
-    labelId: 1506
+    labelId: 0
 };
 /* eslint-enable */
 page.enter = function () {
@@ -53,16 +55,20 @@ page.deviceready = function () {
         pageData.attachs = me.attach.getModifyAttaches();
         var url = pageData.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
         // editCom.submit(me, url);
-        var promise = editCom.submit(page, pageData, url);
-        promise.done(function (result) {
-            var taskId = pageData.taskId;
+        // 事件类型必填
+        if (pageData.labelId) {
 
-            // 后端 result.data 返回的是对应的 id, 并非对象
-            var affairId = result.data || pageData.affairId;
-            /* eslint-disable */
-            CPNavigationBar.redirect('/affair-detail.html?id=' + affairId + '&task_id=' + taskId);
-            /* eslint-ensable */
-        });
+            var promise = editCom.submit(page, pageData, url);
+            promise.done(function (result) {
+                var taskId = pageData.taskId;
+
+                // 后端 result.data 返回的是对应的 id, 并非对象
+                var affairId = result.data || pageData.affairId;
+                /* eslint-disable */
+                CPNavigationBar.redirect('/affair-detail.html?id=' + affairId + '&task_id=' + taskId);
+                /* eslint-ensable */
+            });
+        }
     });
 };
 
@@ -138,7 +144,7 @@ page.initPlugin = function () {
             onSelect: function (text, inst) {
                 /* eslint-disable */
                 var oldVal = pageData['labelId'];
-                pageData['labelId'] = +inst.getVal();
+                pageData['labelId'] = inst.getVal();
                 $('#affairType .value').text(text);
 
                 editCom.valid.isEdit = oldVal !== pageData['labelId'] ? true : editCom.valid.isEdit;
@@ -179,9 +185,8 @@ page.addParallelTask(function (dfd) {
         return dfd;
     }
 
-    var url = config.API.AFFAIR_EDIT_URL;
-    var promise = me.get(url, {
-        affairId: +util.params('affairId')
+    var promise = me.get(config.API.AFFAIR_DETAIL_URL, {
+        affairId: util.params('affairId')
     });
 
     promise
@@ -198,6 +203,4 @@ page.addParallelTask(function (dfd) {
 });
 
 /* eslint-enable */
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

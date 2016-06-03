@@ -145,22 +145,6 @@ page.deviceready = function () {
         }
     });
 
-    var rightBar = [me._shell.right.more];
-    var rights = me.data.rights;
-
-    // 编辑权限
-    if (rights.editRight) {
-        rightBar.push({
-            title: me.lang.editButton,
-            click: function() {
-                alert('/task-new.html?taskId=' + me.data.id)
-                navigation.open('/task-new.html?taskId=' + me.data.id, {
-                    title: me.lang.newTask
-                });
-            }
-        });
-    }
-
     var getAlert = function() {
 
         MidUI.alert({
@@ -170,6 +154,21 @@ page.deviceready = function () {
             }
         });
     };
+
+    var rightBar = [me._shell.right.more];
+    var rights = me.data.rights;
+
+    // 编辑权限
+    if (rights.editRight) {
+        rightBar.push({
+            title: me.lang.editButton,
+            click: function() {
+                navigation.open('/task-new.html?taskId=' + me.data.id, {
+                    title: me.lang.editTask
+                });
+            }
+        });
+    }
 
     // 恢复权限
     if (rights.recoverRight) {
@@ -196,17 +195,21 @@ page.deviceready = function () {
     }
 
     me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.summaryAttachs,
+        attachData: data.attachements,
         container: '.attach-container',
         wrapper: '.attach'
     });
 
     // 下面为获取人员信息的配置
     var obj = {
-        creator: data.createUser,
-        principal: data.principalUser,
-        partner: data.attendIds
+        creator: data.createUser
     };
+    if (data.principalUser) {
+        obj.principal = data.principalUser;
+    }
+    if (data.attendIds.length) {
+        obj.partner = data.attendIds;
+    }
 
     var jids = users.makeArray(obj);
     var dfdPub = users.getUserInfo(jids, data.cid);

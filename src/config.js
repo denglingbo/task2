@@ -78,8 +78,13 @@ var config = {
 };
 
 // attach uploadUrl
-config.API.ATTACH_UPLOADURL = config.API.prefix + 'attachment/getFsTokensOnCreate';
-config.API.ATTACH_RESUMEURL = config.API.prefix + 'attachment/getFsTokensOnContinue';
+
+/**
+ * [重要] 目前上传等和以前组件相关的因为没有自动拼装 ajax url, 所以这里要写完整
+ */
+config.API.ATTACH_UPLOADURL = config.API.host + '/mgw/common/attachment/getFSTokensOnCreate';
+// attach resumeUrl
+config.API.ATTACH_RESUMEURL = config.API.host + '/mgw/common/attachment/getFSTokensOnContinue';
 
 /**
  * 静态参数
@@ -108,7 +113,7 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 
-config.debug = true;
+// config.debug = true;
 
 if (config.debug) {
     var loc = window.location;

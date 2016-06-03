@@ -71,17 +71,12 @@
                 width: 100%;
                 height: 100%;
                 position: absolute;
+                left: 0;
+                top: 0;
                 background: $body-bg;
             }
         }
-/*
-        #opened-main {
-            .pagination-show {
-                transform: translate3d(0, -145px, 0) !important;
-                transition: transform .4s ease-out;
-            }
-        }
-*/
+
     }
 }
 

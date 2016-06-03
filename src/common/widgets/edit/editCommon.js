@@ -10,6 +10,7 @@ var users = require('common/middleware/user/users');
 var localStorage = require('common/localstorage');
 var lang = require('common/lang').getData();
 var navigation = require('common/middleware/navigation');
+var MidUI = require('common/middleware/ui');
 
 var editCom = {};
 editCom.valid = {
