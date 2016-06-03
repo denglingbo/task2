@@ -197,13 +197,14 @@ Pagination.prototype = {
     },
 
     show: function () {
-        if (!this.totalPage) {
-            return;
-        }
 
         var $other = $('.pagination').not(this.$view);
 
         $other.addClass('hide');
+
+        if (!this.totalPage) {
+            return;
+        }
 
         this.$view
             .removeClass('hide')
