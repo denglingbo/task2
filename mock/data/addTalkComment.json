@@ -5,7 +5,7 @@
     },
     "data": {
         "id": 555,
-        "user_id": 222,
+        "userId": 222,
         "content": "nidaye"
     }
 }

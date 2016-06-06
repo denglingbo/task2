@@ -8,7 +8,8 @@
 var IScroll = require('dep/iscroll');
 // var util = require('common/util');
 var raw = require('common/widgets/raw');
-
+var users = require('common/middleware/users/users');
+var Pharos = require('common/ui/pharos');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 
 // 页码提示
@@ -24,6 +25,11 @@ var lang = require('common/lang').getData();
  * @param {Object} data, data
  */
 function dealData(data) {
+
+    if (!data.lang) {
+        data.lang = lang;
+    }
+
     /* eslint-disable */
     // 时间展示
     data.updateDateRaw = function () {
@@ -56,6 +62,21 @@ function dealData(data) {
         return this.remind == 1;
     };
     /* eslint-enable */
+}
+
+/**
+ * 获取整个 dataList 中 负责人的 jid
+ *
+ * @param {Array} arr, data.obj
+ * @return {Array} jids
+ */
+function getJids(arr) {
+    var jids = [];
+    for (var i = 0; i < arr.length; i++) {
+        arr[i].principalUser && jids.push(arr[i].principalUser);
+    }
+
+    return jids;
 }
 
 /**
@@ -205,7 +226,7 @@ Init.prototype = {
                 mouseWheel: false,
 
                 // 快速触屏的势能缓冲开关
-                momentum: true
+                momentum: false
             });
 
             me.bindEvents();
@@ -277,6 +298,9 @@ Init.prototype = {
                 me.setBasic();
                 me.scroll.refresh();
                 me.reset();
+
+                var jids = getJids(data.objList);
+                me.renderUser(jids);
             })
             .fail(function () {
                 me._reloadFailed = true;
@@ -301,14 +325,36 @@ Init.prototype = {
             // 用于分页提示
             data.pagenum = this.page;
             dealData(data);
+
             this.render(data, 'append');
             me.setBasic();
+
+            var jids = getJids(data.objList);
+            me.renderUser(jids);
 
             callback && callback(data);
 
             // 请求新数据之后，重新查找分页提示的 dom
             me.pagination.complete();
         });
+    },
+
+    renderUser: function (jids) {
+        var me = this;
+        var dfdPub = users.getUserInfo(jids);
+
+        dfdPub
+            .done(function (pubData) {
+                if (pubData && pubData.contacts) {
+                    new Pharos(me.$wrapper, {list: pubData.contacts});
+                }
+                else {
+                    // me.failUser();
+                }
+            })
+            .fail(function () {
+                // me.failUser();
+            });
     },
 
     reloadStartTime: 0,

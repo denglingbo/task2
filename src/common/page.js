@@ -132,7 +132,7 @@ function Page(opts) {
      */
     this.data;
 
-    this.lang = lang.data;
+    this.lang = (lang && lang.data) || null;
 
     /**
      * 保存上一个页面传过来的数据
@@ -218,10 +218,8 @@ Page.prototype.start = function () {
         me.execute()
             .done(function () {
 
-                if (!me.data && me.lang) {
-                    me.data = {
-                        lang: me.lang
-                    };
+                if (me.data && !me.data.lang) {
+                    me.data.lang = me.lang;
                 }
 
                 // 页面逻辑
@@ -235,14 +233,12 @@ Page.prototype.start = function () {
             })
             .fail(function () {
                 // Do something
-                // me.error();
+                me.failed();
                 dfd.reject();
+            })
+            .always(function () {
+                lang.parseDOM();
             });
-    })
-    .fail(function () {
-        // Do something
-        me.failed();
-        dfd.reject();
     });
 
     me._data = getParams();
@@ -338,10 +334,6 @@ Page.prototype.failed = function (errObj) {
         });
         /* eslint-enable */
     }
-
-    me.data = {
-        lang: this.lang
-    };
 
     // 页面失败逻辑
     me.error();
@@ -575,11 +567,6 @@ Page.ajax = function (api, data, options) {
     }
 
     ajaxSettings.success = function (result) {
-
-        // 将语言包数据添加到 this.data
-        if (result && result.data) {
-            result.data.lang = me.lang;
-        }
 
         // Just debug test
         // 模拟网络延迟

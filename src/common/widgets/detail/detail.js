@@ -6,7 +6,7 @@
  * 处理 任务详情页，事件详情页，讨论详情页
  *
  */
-var users = require('common/middleware/user/users');
+var users = require('common/middleware/users/users');
 // var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
@@ -26,6 +26,10 @@ detail.dealPageData = function (result) {
     }
 
     var data = result.data;
+
+    data.isDone = function () {
+        return this.status === 6;
+    };
 
     // 时间展示
     data.updateDateRaw = function () {
@@ -135,6 +139,12 @@ detail.bindTickEvents = function (options) {
             $status.html(me.lang.doneText);
         }
         else {
+
+            // 已经是完成状态的，取消的时候直接改为 进行中
+            if (statusText === me.lang.doneText) {
+                statusText = me.lang.doingText;
+            }
+
             $status.html(statusText);
         }
     }

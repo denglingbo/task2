@@ -20,7 +20,7 @@ var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
-var widgetCommentList = require('common/widgets/comment/list');
+var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
 
 var Page = require('common/page');
@@ -115,7 +115,7 @@ page.initCommentList = function () {
     var me = this;
 
     /* eslint-disable */
-    new widgetCommentList(me, {
+    new WidgetCommentList(me, {
 
         data: me.data,
 

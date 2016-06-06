@@ -13,7 +13,7 @@
  * 2. 如果有语言包是在非 <script type='x-tmpl-mustache'> 的普通节点上，则会调用 parseDOM 来完成语言包输出
  *      <div data-lang='langKey'></dt>
  *
- * 3. 默认情况下，view.js 的 render 之后 会自动调用 parseDOM
+ * 3. 默认情况下 会自动调用 parseDOM
  */
 
 var util = require('./util');

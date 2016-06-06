@@ -91,6 +91,8 @@ module.exports = function () {
         chunkFilename: config.debug ? 'chunk.js' : 'js/chunk.min.js'
     };
 
+    // webpackConfig.externals = {};
+
     // 图片 path
     // img 为 输出后的 图片的 文件夹
     var imgPath = config.debug ? '' : 'img/';

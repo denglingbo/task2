@@ -184,6 +184,8 @@ Webpacker.prototype.getPager = function () {
  */
 Webpacker.prototype.getCommonPlugins = function () {
 
+    var commonChunks = this.allChunks.concat(['lang', 'base']);
+
     var plugins = [
 
         new BellOnBundlerErrorPlugin(),
@@ -195,7 +197,7 @@ Webpacker.prototype.getCommonPlugins = function () {
         // 提取所有 打包后 js 入口文件中的公共部分
         new webpack.optimize.CommonsChunkPlugin({
             name: 'common',
-            chunks: this.allChunks.concat('lang')
+            chunks: this.allChunks
         })
     ];
 

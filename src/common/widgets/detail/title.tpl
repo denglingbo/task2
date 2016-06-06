@@ -2,7 +2,7 @@
     {{^isTaskPage}}
     <div class="detail-title-control">
         <div class="detail-checkbox">
-            <div class="tick untick"></div>
+            <div class="tick {{#isDone}}ticked{{/isDone}}{{^isDone}}untick{{/isDone}}"></div>
         </div>
     </div>
     {{/isTaskPage}}

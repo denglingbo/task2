@@ -19,7 +19,9 @@
     </div>
 
     <div class="list-item-content">
-        <div class="">{{ lang.principal }}：{{ name }}</div>
+        <div class="">
+            {{ lang.principal }}：<span loader="{#list.id:{{ principalUser }}}{name}{/list.id}"></span>
+        </div>
         <div class="">{{ doneTimeRaw }} {{ importanceRaw }}</div>
         <div class="time">{{ lang.updateDate }} {{ updateDateRaw }}</div>
         <!-- <div class="star"><em></em></div> -->

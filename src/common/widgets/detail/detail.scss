@@ -193,6 +193,10 @@
 
     &.comments {
 
+        .sub-title {
+            @include border-1px(bottom, #e1e4e6);
+        }
+
         dd {
             @include column($comments-left-width);
             padding: 0;
@@ -208,29 +212,41 @@
             .column-middle {
 
                 .column-inner {
-                    @include border-1px(top, #e1e4e6);
+                    @include clearfix();
                     padding: rem(17px) 0 rem(11px) 0;
 
                     .comments-button {
+                        position: relative;
                         text-align: right;
                         display: block;
                         width: 100%;
-                        padding-right: rem(15px);
-                        position: relative;
-                        float: right;
+                        right: rem(15px);
+                        color: $state-doing;
                     }
                 }
             }
+        }
 
-            &.list-null {
-                padding: rem(13px) 0 rem(11px) 0;
-                color: $light-gray;
+        dd:not(:last-child) {
+            .column-inner {
+                @include border-1px(bottom, #e1e4e6);
             }
         }
 
-        // dt next dd [first dd]
-        dd:nth-child(2) {
-            @include border-1px(top, #e1e4e6);
+        .list-null {
+            padding: rem(30px) rem(20px) rem(30px) 0;
+            color: $light-gray;
+
+            &-img {
+                width: 100%;
+                height: rem(44px);
+                background: url('../img/no-comments.png') no-repeat 50% 0;
+                background-size: rem(44px);
+            }
+            &-text {
+                margin-top: rem(15px);
+                text-align: center;
+            }
         }
 
         .columnu-title {
@@ -239,14 +255,16 @@
         .columnu-date {
             font-size: rem(11px);
         }
-        .comments-main {
+        .comments-content {
             margin: rem(10px) 0 rem(5px) 0;
         }
         .comments-attach {
-            margin-top: rem(5px);
+            .componentAttaches {
+                @include border-1px(top, #e1e4e6);
+                margin-top: rem(8px);
+            }
         }
 
-        .comments-main,
         .comments-attach {
             width: 100%;
 
@@ -258,6 +276,15 @@
             }
             .componentAttachLine {
                 margin-left: 0;
+            }
+        }
+
+        .comments-content {
+            padding-right: rem(15px);
+            overflow: hidden;
+
+            &-inner {
+                @extend .word-content;    
             }
         }
     }

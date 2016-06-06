@@ -3,7 +3,7 @@
  * @author deo
  *
  * 日志
- * <dom data-log='{"da_src":"KeyName"}'
+ * <dom data-log='{"actionTag": "key name"}'
  */
 
 /* eslint-disable */
@@ -12,13 +12,12 @@ var util = require('./util');
 
 window.onerror = function (err, url, lineno) {
 
-/* im tester */
-var idx = url.lastIndexOf("/");  
-if(idx > -1) {  
-    url = url.substring(idx+1);  
-}  
-alert("ERROR in " + url + " (line #" + lineno + "): " + err);
-/* im tester */
+    /* i am tester */
+    // var idx = url.lastIndexOf("/");  
+    // if(idx > -1) {  
+    //     url = url.substring(idx+1);  
+    // }  
+    // alert("ERROR in " + url + " (line #" + lineno + "): " + err);
 
     // 如果发生错误，则把错误信息打到日志里面
     /* eslint-disable */
@@ -82,7 +81,6 @@ function consume() {
 
         if (config.debug) {
             /* eslint-disable */
-            // console.info('LOGGER: ', params.da_act, params.da_src, params.referer);
             console.log(params);
             /* eslint-enable */
             return;

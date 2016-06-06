@@ -4,9 +4,9 @@
         "message" : "请求成功"
     },
     "data": {
-        "my_duty": 0,
-        "my_assign": 0,
-        "my_attend": 1,
+        "myDuty": 3,
+        "myAssign": 21,
+        "myAttend": 12,
 
         "list": [{
             "name": "partake",

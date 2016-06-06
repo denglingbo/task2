@@ -12,8 +12,8 @@ require('common/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
 var util = require('../common/util');
-var detailUtil = require('common/widgets/detail/detail.js');
-var users = require('common/middleware/user/users.js');
+var detailUtil = require('common/widgets/detail/detail');
+var users = require('common/middleware/users/users');
 var Page = require('common/page');
 var VirtualInput = require('common/ui/virtualInput/virtualInput');
 
@@ -30,14 +30,6 @@ var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
 
 var page = new Page();
-
-page.error = function () {
-    // this.render('#detail-main', this.data, {
-    //     partials: {
-    //         title: tmplError
-    //     }
-    // });
-};
 
 page.enter = function () {
     var me = this;

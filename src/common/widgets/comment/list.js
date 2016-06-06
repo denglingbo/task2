@@ -1,12 +1,81 @@
 /* eslint-disable */
-var tmplList = require('./list.tpl');
-var tmplMsg = require('./msg.tpl');
-var users = require('common/middleware/user/users');
+var tmplItem = require('./item.tpl');
+var Pharos = require('common/ui/pharos');
+var users = require('common/middleware/users/users');
 var util = require('common/util');
 var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
+var DataLoader = require('common/ui/dataLoader/dataLoader');
 
-var Loader = require('common/ui/loader');
+function dealData(data, page) {
+    // 时间展示
+    data.dataRaw = function () {
+        return raw.formatDateToNow(this.opTime);
+    };
+
+    // 判断是否是评论所有者
+    data.isOwner = function () {
+        var uid = users.uid();
+
+        if (this.userId && uid) {
+            return this.userId.toString() === uid.toString();
+        }
+
+        return false;
+    };
+
+    data.lang = page.lang;
+}
+
+function getJids(arr, key) {
+    var jids = [];
+    for (var i = 0; i < arr.length; i ++) {
+        var item = arr[i][key];
+
+        if (item && $.inArray(item, jids) === -1) {
+            jids.push(item);
+        }
+    }
+
+    return jids;
+}
+
+var renderUser = function ($layout, objList) {
+    var me = this;
+
+    if (objList.length <= 0) {
+        return;
+    }
+
+    var jids = getJids(objList, 'userId');
+
+    var dfdPub = users.getUserAndPhoto(jids);
+
+    dfdPub
+        .done(function (pubData) {
+            if (pubData && pubData) {
+                new Pharos($layout, {list: pubData});
+            }
+            else {
+                // me.failUser();
+            }
+        })
+        .fail(function () {
+            // me.failUser();
+        });
+
+
+    objList.forEach(function (item) {
+        var $item = $('#item-' + item.id);
+//attach-container
+        if (item.attachs && item.attachs.length > 0) {
+            AttachWrapper.initDetailAttach({
+                attachData: item.attachs,
+                container: $item.find('.comments-attach')
+            });
+        }
+    });
+};
 
 /**
  * 初始化 评论数据
@@ -16,63 +85,55 @@ var Loader = require('common/ui/loader');
  */
 var fn = function (page, options) {
     var me = this;
-    this.opts = {
+
+    me.opts = {
         dataKey: 'objList',
         wrapper: '#comments-main',
-        tpl: tmplList,
-        partials: {
-            msg: tmplMsg
-        },
         API: {},
         data: null
     };
 
-    $.extend(this.opts, options);
+    $.extend(me.opts, options);
 
-    this.page = page;
-    this.data = this.opts.data;
-    this.$main = $(this.opts.wrapper);
+    me.page = page;
+    me.data = me.opts.data;
+    me.$main = $(me.opts.wrapper);
 
-    this.loader = new Loader(this.opts);
-    this.loader.req(function (data) {
+    me.$listNull = $('.list-null');
 
-        if (!data) {
-            return;
-        }
+    // 初始化一个点击加载组件
+    me.dataLoader = new DataLoader({
+        loadType: 0,
+        tpl: tmplItem,
+        wrapper: me.$main,
+        promise: me.opts.promise,
+        // 后端数据节点位置
+        dataKey: me.opts.dataKey,
+        pageNum: 10
+    });
 
-        // 时间展示
-        data.dataRaw = function () {
-            return raw.formatDateToNow(this.opTime);
-        };
+    me.dataLoader.on('more', function (data) {
 
-        data.isOwner = function () {
-            return this.userId.toString() === users.uid.toString();
-        };
+        dealData(data, me.page);
 
-        // 渲染组件
-        this.render(data);
+        this.render(data, 'append');
 
-        me.$listNull = me.$main.find('.list-null');
+        renderUser(me.$main, data.objList);
 
-        if (data.objList && data.objList.length <= 0) {
+        if (!me.isComments()) {
             me.$listNull.removeClass('hide');
-            return;
         }
 
-        getUserAndPhoto(data.objList);
-
-        if (data.attachs && data.attachs.length > 0) {
-            AttachWrapper.initDetailAttach({
-                attachData: data.attachs,
-                container: '.attach-container'
-            });
-        }
     });
 
     this.bindEvents();
 };
 
 $.extend(fn.prototype, {
+
+    isComments: function () {
+        return this.$main.find('dd').not('.list-null').length;
+    },
 
     bindEvents: function () {
         var me = this;
@@ -165,12 +226,24 @@ $.extend(fn.prototype, {
 
                 // 添加成功
                 if (result.meta.code === 200) {
-                    me.page.render($('.comments dd').eq(0), result.data, {
-                        tmpl: tmplMsg,
+
+                    // 共用 ./item.tpl
+                    var data = {
+                        objList: [result.data]
+                    };
+
+                    dealData(data, me.page);
+
+                    me.page.render($('.comments dd').eq(0), data, {
+                        tmpl: tmplItem,
                         type: 'before'
                     });
 
                     getUserAndPhoto([result.data]);
+
+                    // 待优化
+                    // 这里可以判断是否已经有了当前用户的信息
+                    renderUser(me.$main, data.objList);
 
                     me.page.virtualInput.reset();
 
@@ -208,8 +281,7 @@ function getUserAndPhoto(arr) {
                 render(data);
             }
         })
-        .fail(function () {
-        });
+        .fail(function () {});
 }
 
 /**

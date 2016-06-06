@@ -156,6 +156,23 @@ middleware.mergeObject2Array = function (arr1, arr2, key) {
 };
 
 /**
+ * 给没有 id 的 pubData.contacts 创建 id，用于前端展示
+ *
+ * @param {Array} arr, 数组
+ */
+function createIdFromJid(arr) {
+    if (!arr) {
+        return;
+    }
+
+    arr.forEach(function (item) {
+        if (item.id === undefined && item.jid) {
+            item.id = middleware.takeJid(item.jid);
+        }
+    });
+}
+
+/**
  * 封装原生接口 改为 deferred
  * 获取公共数据 统一 入口
  *
@@ -172,6 +189,10 @@ middleware.getPubData = function (options) {
             dfd.reject(null);
         }
         else {
+
+            if (data.rel && data.rel.contacts) {
+                createIdFromJid(data.rel.contacts);
+            }
 
             if (config.debug) {
                 // 模拟延迟
@@ -317,6 +338,7 @@ middleware.getUserAndPhoto = function (jids, cid) {
         .done(function (userInfo, userIcon) {
 
             var userInfoArr = userInfo.contacts;
+
             var data = me.mergeObject2Array(userInfoArr, userIcon, 'jid');
 
             dfd.resolve(data);

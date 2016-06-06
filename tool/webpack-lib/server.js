@@ -51,9 +51,11 @@ var servers = {
         var compiler = webpack(this.webpackConfig);
 
         var server = new devServer(compiler, serverConfig);
+        var path = (this.config.https ? 'https://' : 'http://') + this.config.host + ':' + this.config.port;
 
-        server.listen(this.config.port, this.config.host, function() {
+        server.listen(this.config.port, this.config.host, function(a) {
             console.log('----- [server.js] webpack server start -----');
+            console.log('dev server: ' + path);
         });
 
         return server;

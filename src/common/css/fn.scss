@@ -132,30 +132,32 @@
     box-align: center;
     height: auto;
 
-    div {
-        
+    .column-left, .column-middle {
         float: left;
+    }
 
-        &.column-left {
-            width: $left-width;
-        }
+    .column-left {
+        width: $left-width;
+    }
 
-        &.column-middle {
-            width: 100%;
-            margin: 0 ($right-width * -1) 0 ($left-width * -1);
+    .column-middle {
+        width: 100%;
+        margin: 0 ($right-width * -1) 0 ($left-width * -1);
 
-            .column-inner {
-                float: none;
-                margin: 0 ($right-width) 0 ($left-width);
+        .column-inner {
+            float: none;
+            margin: 0 ($right-width) 0 ($left-width);
+
+            &.inline {
                 @include ellipsis();
             }
         }
-        
-        @if $right-width != 0 {
-            &.column-right {
-                float: right;
-                width: $right-width;
-            }
+    }
+    
+    @if $right-width != 0 {
+        .column-right {
+            float: right;
+            width: $right-width;
         }
     }
 }

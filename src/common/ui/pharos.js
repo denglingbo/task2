@@ -45,10 +45,14 @@ Pharos.prototype = {
     queue: {},
 
     init: function () {
-
         var me = this;
+        var loaders = this.$wrapper.find('[loader]');
 
-        this.$wrapper.find('[loader]').each(function(i, item) {
+        if (loaders.length === 0) {
+            return;
+        }
+
+        loaders.each(function(i, item) {
             var $item = $(item);
             var guid = util.guid();
             $item.data('guid', guid);

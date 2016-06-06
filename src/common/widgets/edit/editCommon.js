@@ -6,7 +6,7 @@
  */
 var util = require('common/util');
 var attachWrapper = require('common/middleware/attach/attachWrapper');
-var users = require('common/middleware/user/users');
+var users = require('common/middleware/users/users');
 var localStorage = require('common/localstorage');
 var lang = require('common/lang').getData();
 var navigation = require('common/middleware/navigation');

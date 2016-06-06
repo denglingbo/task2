@@ -12,7 +12,20 @@
         <div id="detail-main"></div>
         
         <!-- 评论 -->
-        <div id="comments-main"></div>
+        <div class="comments-outter">
+            <!-- 模版数据由 widgets/comment 提供 -->
+            <dl id="comments-main" class="layout-list comments">
+                <dt class="sub-title" data-lang="commentTitle"></dt>
+                
+                <dd class="list-null hide">
+                    <div class="list-null-img"></div>
+                    <div class="list-null-text" data-lang="commentNotFound"></div>
+                </dd>
+            </dl>
+
+            <!-- 用于加载更多数据 -->
+            <div class="data-more"></div>
+        </div>
 
         <!-- title -->
         <script id="detail-main-tmpl" type="x-tmpl-mustache">
@@ -50,7 +63,7 @@
     <dd class="partner-more" data-jids="{{partnerJids}}" data-log='{"actionTag":"talkDetailpartnerDetail"}'>
         <div class="column-left">{{lang.attends}}: </div>
         <div class="column-middle">
-            <div class="column-inner">
+            <div class="column-inner inline">
                 {{partnerRaw}}
             </div>
         </div>

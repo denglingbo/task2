@@ -99,6 +99,7 @@
         line-height: rem(15px);
 
         &-text {
+            width: 80%;
             display: inline-block;
             @include ellipsis();
         }

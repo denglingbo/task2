@@ -10,26 +10,30 @@
 var https = require('https');
 var fs = require('fs');
 
-var fn = function (dir, config) {
+var options = {
+    key: fs.readFileSync(__dirname + '/ssl/server.key'),
+    cert: fs.readFileSync(__dirname + '/ssl/server.crt')
+};
 
-    var options = {
-        key: fs.readFileSync(__dirname + '/ssl/server.key'),
-        cert: fs.readFileSync(__dirname + '/ssl/server.crt')
+var getHeaders = function (origin) {
+
+    return {
+        'Content-Type': 'application/json; charset=utf-8',
+        // 解决跨域, 允许任意 origin
+        'Access-Control-Allow-Origin': origin,
+        // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass'
+        // 'Access-Control-Request-Method': 'GET, POST'
     };
+};
+
+module.exports = function (dir, config) {
 
     var server = https.createServer(options, function (req, res) {
 
         var url = req.url.replace(/(\?.+)/, '');
-
-        res.writeHead(200, {
-            'Content-Type': 'application/json; charset=utf-8',
-            // 解决跨域, 允许任意 origin
-            'Access-Control-Allow-Origin': req.headers.origin,
-            // 前端使用 withCredentials: true 来模拟 cookie 传递，同时 Origin 不能用 *
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, campo-proxy-request, x-spdy-bypass'
-            // 'Access-Control-Request-Method': 'GET, POST'
-        });
+        var origin = req.headers.origin;
 
         var expr = /\/data\/(.+)/.exec(url);
         var file = null;
@@ -41,25 +45,30 @@ var fn = function (dir, config) {
 
             try {
                 var buffer = fs.readFileSync(file);
+
+                res.writeHead(200, getHeaders(origin));
+
                 res.end(JSON.stringify(JSON.parse(buffer)));
             }
             catch (ex) {
 
                 // 耍你1秒钟
                 setTimeout(function () {
+
+                    res.writeHead(404, getHeaders(origin));
+
                     res.end(JSON.stringify({
-                        status: 1,
-                        error: ex,
-                        msg: 'No file'
+                        error: ex
                     }));
                 }, 1000)
             }
         }
         else {
+
+            res.writeHead(404, getHeaders(origin));
+
             res.end(JSON.stringify({
-                status: 0,
-                msg: 'Bye',
-                error: 'Bye'
+                error: '[' + url + '] Error.'
             }));
         }
     });
@@ -67,5 +76,3 @@ var fn = function (dir, config) {
     server.listen(config.port, config.host);
 
 };
-
-module.exports = fn;

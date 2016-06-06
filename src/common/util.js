@@ -29,6 +29,23 @@ util.vendor = function () {
 };
 
 /**
+ * 判断是否是手机端
+ *
+ * @return {boolean}
+ *
+ */
+util.isPhone = function () {
+    var agents = ['Android', 'iPhone', 'SymbianOS', 'Windows\\s*Phone', 'iPad', 'iPod'];
+    var expr = new RegExp(agents.join('|'), 'i');
+
+    if (expr.test(navigator.userAgent)) {
+        return true;
+    }
+
+    return false;
+};
+
+/**
  * 获取当前浏览器下的 css3 key
  *
  * @param {string} style, 样式名 transform, ...

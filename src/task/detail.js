@@ -9,7 +9,7 @@ require('./detail.scss');
 
 var config = require('../config');
 var detailUtil = require('common/widgets/detail/detail');
-var users = require('common/middleware/user/users');
+var users = require('common/middleware/users/users');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var util = require('common/util');
 var Page = require('common/page');

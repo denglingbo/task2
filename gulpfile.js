@@ -21,18 +21,22 @@ var Webpacker = require('./tool/webpack-lib/index');
 var connect = require('gulp-connect');
 
 var os = require('os');
-var ip;
+
 var getIfs = function () {
     var osnet = os.networkInterfaces();
     return (osnet.en0 || osnet.eth0) || osnet['以太网'];
 };
-var ifsArr = getIfs();
-for (var i = 0; i < ifsArr.length; i++ ) {
-    var ifs = ifsArr[i];
-    if (/ipv4/i.test(ifs.family)) {
-        ip = ifs.address;
+
+var getIp = function () {
+    var ifsArr = getIfs();
+
+    for (var i = 0; i < ifsArr.length; i++ ) {
+        var ifs = ifsArr[i];
+        if (/ipv4/i.test(ifs.family)) {
+            return ifs.address;
+        }
     }
-}
+};
 
 /**
  * webpack config
@@ -42,7 +46,7 @@ var config = {
     debug: true,
 
     host: '127.0.0.1',
-    // host: ip,
+    // host: getIp(),
 
     port: 8014,
 
@@ -75,11 +79,6 @@ gulp.task('dev', function () {
     config.debug = true;
 
     var webpacker = new Webpacker(config, root);
-    
-    // webpacker.mockStart({
-    //     mockDir: './mock',
-    //     https: config.https
-    // });
 
     webpacker.devStart();
 });
@@ -92,11 +91,6 @@ gulp.task('test', function () {
     config.debug = false;
 
     var webpacker = new Webpacker(config, root);
-    
-    // webpacker.mockStart({
-    //     mockDir: './mock',
-    //     https: config.https
-    // });
 
     webpacker.testStart();
 });

@@ -10,7 +10,7 @@ require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
 var Page = require('common/page');
-var users = require('common/middleware/user/users');
+var users = require('common/middleware/users/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
