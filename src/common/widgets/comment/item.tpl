@@ -2,7 +2,7 @@
 <dd id="item-{{ id }}" class="user-{{ userId }}" data-uid="{{ userId }}" data-id="{{ id }}">
     <div 
         class="column-left user-photo" 
-        loader='<img src="{#list.id:{{ userId }}}{base64}{/list.id}" />'
+        loader='<img src="data:image/png;base64,{#list.id:{{ userId }}}{base64}{/list.id}" />'
     >
         <!-- <img src="base64" /> -->
     </div>
@@ -15,13 +15,13 @@
                 <div class="comments-content-inner">{{&content}}</div>
             </div>
 
+            <div class="comments-attach-{{ id }}">
+                <!-- By Attach js -->
+            </div>
+
             {{#isOwner}}
             <div class="comments-button delete" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
             {{/isOwner}}
-
-            <div class="comments-attach">
-                <!-- By Attach js -->
-            </div>
         </div>
     </div>
 </dd>

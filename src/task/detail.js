@@ -8,35 +8,22 @@
 require('./detail.scss');
 
 var config = require('../config');
+var Page = require('common/page');
+var page = new Page();
+
 var detailUtil = require('common/widgets/detail/detail');
 var users = require('common/middleware/users/users');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var util = require('common/util');
-var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var navigation = require('common/middleware/navigation');
 var MidUI = require('common/middleware/ui');
 
-// 页码提示
-/*
-require('common/ui/pagination/pagination.scss');
-var Pagination = require('common/ui/pagination/pagination');
-*/
-
 require('common/widgets/emptyPage/netErr.scss');
-// var tmplError = require('common/widgets/emptyPage/netErr');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
-var page = new Page();
-
 var requestPageNum = 10;
-
-page.error = function () {
-    // this.render('#detail-main', this.data, {
-    //     tmpl: tmplError
-    // });
-};
 
 page.enter = function () {
     var me = this;
@@ -44,7 +31,11 @@ page.enter = function () {
     me.$main = $('.main');
 
     me.data.isTaskPage = true;
-    me.data.describeTitle = this.lang.taskTitle;
+
+    me.data.describeTitleRaw = this.lang.taskTitle;
+    me.data.reasonsTitleRaw = this.lang.reasonsTitle;
+    me.data.summaryTitleRaw = me.lang.taskSummaryTitle;
+
     me.data.rights.taskId = me.data.id;
     me.render('#detail-main', me.data, {
         partials: {
@@ -52,6 +43,8 @@ page.enter = function () {
             describe: tmplDescribe
         }
     });
+
+    detailUtil.richContent();
 
     // 初始化一个点击加载组件
     me.dataLoader = new DataLoader({
@@ -194,12 +187,6 @@ page.deviceready = function () {
         navigation.right(rightBar);
     }
 
-    me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.attachements,
-        container: '.attach-container',
-        wrapper: '.attach'
-    });
-
     // 下面为获取人员信息的配置
     var obj = {
         creator: data.createUser
@@ -226,6 +213,14 @@ page.deviceready = function () {
         .fail(function () {
             me.failUser();
         });
+
+    if (data.attachements) {
+        me.attach = AttachWrapper.initDetailAttach({
+            attachData: data.attachements,
+            container: '.attach-container',
+            wrapper: '.attach'
+        });
+    }
 };
 
 page.bindEvents = function () {

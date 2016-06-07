@@ -7,6 +7,7 @@
 
 @import "../common/css/global.scss";
 @import "../common/css/ui.scss";
+@import "../common/css/rich.scss";
 @import "../common/middleware/attach/attachWrapper";
 
 .main {
@@ -102,7 +103,13 @@
         margin-top: rem(5px);
         line-height: rem(18px);
         word-break: break-all;
+        overflow: hidden;
     }
+}
+
+/* 可以用来获取实际高宽 */
+.absolute {
+    position: absolute;
 }
 
 .layout-list {
@@ -195,6 +202,8 @@
 
         .sub-title {
             @include border-1px(bottom, #e1e4e6);
+
+            .comment-total {}
         }
 
         dd {

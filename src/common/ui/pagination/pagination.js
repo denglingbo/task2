@@ -187,7 +187,7 @@ Pagination.prototype = {
         }
 
         // 展示分页提示容器
-        if (Math.abs(top) >= this.boxTop && Math.abs(top) < this.boxBottom && match !== null) {
+        if (match !== null && Math.abs(top) >= this.boxTop /* && Math.abs(top) < this.boxBottom */) {
             this.show();
         }
         // 隐藏分页提示容器

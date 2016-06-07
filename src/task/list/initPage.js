@@ -103,7 +103,9 @@ function Init(options) {
         // dataLoader 需要使用
         dataKey: 'objList',
 
-        tpl: null
+        tpl: null,
+
+        onPaginationDone: function () {}
     };
 
     $.extend(me.opts, options);
@@ -173,6 +175,8 @@ Init.prototype = {
                 // 在屏幕下方作为展示的基准点
                 screen: 1
             });
+
+            me.opts.onPaginationDone.call(me);
         });
     },
 

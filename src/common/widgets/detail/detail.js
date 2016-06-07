@@ -7,9 +7,10 @@
  *
  */
 var users = require('common/middleware/users/users');
-// var util = require('common/util');
+var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
+var IScroll = require('dep/iscroll');
 
 var detail = {};
 
@@ -20,12 +21,15 @@ var detail = {};
  * @return {Object}
  */
 detail.dealPageData = function (result) {
-
     if (result.meta && result.meta.code !== 200) {
         return null;
     }
 
     var data = result.data;
+
+    if (data.content) {
+        data.content = util.decodeHTML(data.content);
+    }
 
     data.isDone = function () {
         return this.status === 6;
@@ -181,6 +185,63 @@ detail.bindTickEvents = function (options) {
                 myTicker[type.fail]();
                 changeStatus(type.fail);
             });
+    });
+};
+
+/**
+ * 富文本区域支持滑动
+ */
+detail.richContent = function () {
+
+    var $outer = $('.rich-outter');
+    var $inner = $('.rich-inner');
+
+    var max = {
+        width: $outer.width(),
+        height: 400
+    };
+    var real = {};
+
+    $inner.addClass('absolute');
+    real.width = $inner.width();
+    real.height = $inner.height();
+    $inner.removeClass('absolute');
+
+    var scrollX = false;
+    var scrollY = false;
+    if (real.width > max.width) {
+        scrollX = true;
+        $outer.width(max.width);
+    }
+    if (real.height > max.height) {
+        scrollY = true;
+        $outer.height(max.height);
+    }
+
+    if (!scrollX && !scrollY) {
+        return;
+    }
+
+    $inner.css({
+        width: real.width,
+        height: real.height
+    });
+
+    // 初始化 scroll
+    new IScroll($outer[0], {
+        scrollX: scrollX,
+        scrollY: scrollY,
+        scrollbars: false,
+        // click: true,
+
+        // 禁用监听鼠标和指针
+        disableMouse: true,
+        disablePointer: true,
+
+        mouseWheel: false,
+
+        // 快速触屏的势能缓冲开关
+        momentum: false
     });
 };
 

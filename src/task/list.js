@@ -172,17 +172,20 @@ page.initPageSlider = function () {
 
         onSlide: function (target, info) {
 
-            switchPage(info);
+            switchPage(target, info);
 
-            var myPage = pageCache[info.name];
-
-            // 如果已经加载了页面，则只进行切换操作
-            if (myPage && myPage.fn) {
-                myPage.fn.pagination && myPage.fn.pagination.show();
-                return;
-            }
+            // var myPage = pageCache[info.name];
 
             new LoadPage(info);
+
+            // 如果已经加载了页面，则只进行切换操作
+            // setTimeout(function() {
+            //     var myPage = pageCache[info.name]
+            //     if (myPage && myPage.fn) {
+            //         myPage.fn.pagination && myPage.fn.pagination.show();
+            //         return;
+            //     }
+            // }, 0);
         }
     });
 };
@@ -190,23 +193,14 @@ page.initPageSlider = function () {
 /**
  * 切换页面
  *
+ * @param {Element} target, 点击的 tab
  * @param {Object} info, 当前展示的页面配置
  */
-function switchPage(info) {
+function switchPage(target, info) {
 
     if (!info || !info.name) {
         return;
     }
-
-    var $wrapper = $(info.selector);
-
-    $wrapper.css({
-        'z-index': 2
-    });
-
-    $wrapper.siblings().css({
-        'z-index': 1
-    });
 
     // search bar 添加 border
     if (/done|cancel/.test(info.name)) {
@@ -215,6 +209,35 @@ function switchPage(info) {
     else {
         $('.search-inner').removeClass('border');
     }
+
+    var $wrapper = $(info.selector);
+    var filter = $(target).data('filter');
+
+    // 如果有数据的情况下，重新切换回 opened tab，则不触发opened 的 z 改变
+    var myPage = pageCache[info.name];
+
+    if (myPage) {
+
+        myPage.fn && myPage.fn.pagination.show();
+
+        // 点击已有数据的未完成，要特殊处理下
+        if (myPage.name === 'opened' && filter) {
+
+            var $second = $('.tab .selected');
+            var selectedName = $second.data('name');
+            pageCache[selectedName].fn.pagination.show();
+
+            return;
+        }
+    }
+
+    $wrapper.css({
+        'z-index': 2
+    });
+
+    $wrapper.siblings().css({
+        'z-index': 1
+    });
 }
 
 /**
@@ -223,6 +246,10 @@ function switchPage(info) {
  * @param {Object} info, 当前展示的页面配置
  */
 function LoadPage(info) {
+
+    if (pageCache[info.name]) {
+        return;
+    }
 
     // 这里只绑定数据
     pageCache[info.name] = {
@@ -246,7 +273,6 @@ function LoadPage(info) {
     require.ensure(['./list/item'], function () {
 
         var template = require('./list/item');
-
         var api = info.api || config.API.GET_TASK_LIST;
 
         pageCache[info.name].fn = new InitPage({

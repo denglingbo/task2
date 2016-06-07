@@ -2,8 +2,7 @@
  * @file ui.scss
  * @author deo
  *
- * icon样式
- *
+ * ui
  */
 
 /**
@@ -183,12 +182,12 @@ $star-size: rem(16px);
  * 计数器
  */
 .count {
-    display: inline-flex;
-    padding: 0 rem(2px);
+    display: inline-block;
+    padding: rem(3px) rem(2px) rem(1px) rem(2px);
     min-width: rem(14px);
     text-align: center;
-    height: rem(18px);
-    line-height: rem(18px);
+    height: rem(14px);
+    line-height: rem(14px);
     background: $red;
     border-radius: 10px;
     color: $white;

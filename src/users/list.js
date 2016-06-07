@@ -9,7 +9,7 @@ require('./list.scss');
 
 var util = require('../common/util');
 var users = require('common/middleware/users/users');
-var Page = require('../common/page');
+var Page = require('common/page');
 var page = new Page();
 
 // page.enter = function () {
@@ -34,12 +34,12 @@ page.deviceready = function () {
 
     users.getUserAndPhoto(jids)
         .done(function (data) {
-
             me.render('#users-list', {
                 list: data
             });
         })
-        .fail(function () {
+        .fail(function (err) {
+
         });
 };
 
@@ -68,6 +68,6 @@ page.deviceready = function () {
 //     return dfd;
 // });
 
-$(window).on('load', function () {
-    page.start();
-});
+// $(window).on('load', function () {
+page.start();
+// });

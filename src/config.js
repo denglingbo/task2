@@ -99,7 +99,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '5d1c1986-57dc-46cf-bace-fb58c5e880ca-30944'
+    token: '6e116fcb-055f-434b-b506-0de26f65a8d3-71446'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -121,8 +121,8 @@ if (config.debug) {
     // 直接走 mock server
 
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
-    config.API.prefix = '/data/';
+    // config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    // config.API.prefix = '/data/';
 }
 /* eslint-enable */
 

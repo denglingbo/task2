@@ -10,7 +10,7 @@
         "objList": [
             {
                 "id": 1234,
-                "createUser": 179,
+                "userId": 179,
                 "opTime": 1438852920000,
                 "content": "成"
             },

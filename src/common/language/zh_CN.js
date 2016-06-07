@@ -99,6 +99,9 @@ module.exports = {
     back: '返回',
     submit: '提交',
 
+    reasonsTitle: '申请理由',
+    taskSummaryTitle: '任务总结',
+    talkSummaryTitle: '讨论总结',
     alertRevokeContent: '是否要恢复该任务',
     task: '任务',
     summary: '总结',

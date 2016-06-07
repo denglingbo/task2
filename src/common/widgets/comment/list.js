@@ -53,7 +53,9 @@ var renderUser = function ($layout, objList) {
 
     dfdPub
         .done(function (pubData) {
-            if (pubData && pubData) {
+
+            if (pubData) {
+
                 new Pharos($layout, {list: pubData});
             }
             else {
@@ -67,11 +69,11 @@ var renderUser = function ($layout, objList) {
 
     objList.forEach(function (item) {
         var $item = $('#item-' + item.id);
-//attach-container
+
         if (item.attachs && item.attachs.length > 0) {
             AttachWrapper.initDetailAttach({
                 attachData: item.attachs,
-                container: $item.find('.comments-attach')
+                container: '.comments-attach-' + item.id
             });
         }
     });
@@ -115,6 +117,9 @@ var fn = function (page, options) {
     me.dataLoader.on('more', function (data) {
 
         dealData(data, me.page);
+
+        var total = data.total || 0;
+        $('.comment-total').html('(' + total + ')');
 
         this.render(data, 'append');
 
@@ -161,7 +166,7 @@ $.extend(fn.prototype, {
         // var uid = $target.data('uid');
 
         var promise = this.page.post(this.opts.API.delete, {
-            id: id
+            commentId: id
         });
 
         promise
@@ -296,7 +301,7 @@ function render(data) {
         var $item = $('.user-' + users.takeJid(item.jid));
 
         if ($item.length) {
-            $item.find('.user-photo').html('<img src="' + item.base64 + '" />');
+            $item.find('.user-photo').html('<img src="data:image/png;base64,' + item.base64 + '" />');
             $item.find('.user-name').html(item.name);
         }
     });

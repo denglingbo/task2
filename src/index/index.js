@@ -97,6 +97,4 @@ page.bindEvents = function () {
     }, false);
 };
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

@@ -97,7 +97,7 @@ var DataLoader = function (options) {
         moreHandler: '.data-more',
 
         // 如果没有数据，则不显示状态条
-        moreNullHidden: true,
+        moreNullHidden: false,
 
         // 加载触发的方式
         // 0: click

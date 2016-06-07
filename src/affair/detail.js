@@ -24,13 +24,14 @@ var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
 
 var Page = require('common/page');
-
 var page = new Page();
 
 page.enter = function () {
     var me = this;
 
-    me.data.describeTitle = me.lang.affairDescribeTitle;
+    me.data.describeTitleRaw = me.lang.affairDescribeTitle;
+    me.data.reasonsTitleRaw = me.lang.reasonsTitle;
+
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
@@ -38,7 +39,12 @@ page.enter = function () {
         }
     });
 
-    me.render('#goalui-fixedinput', {lang: me.data.lang});
+    detailUtil.richContent();
+
+    // 是否有评论权限
+    if (me.data.rights.commentRight) {
+        me.render('#comment-input-wrapper', {lang: me.data.lang});
+    }
 
     this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
@@ -169,6 +175,6 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(window).on('load', function () {
-    page.start();
-});
+// $(window).on('load', function () {
+page.start();
+// });

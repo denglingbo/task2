@@ -1,0 +1,22 @@
+/*表格处理*/
+.richtext-wrap {
+    overflow-x: auto;
+    display: block;
+}
+.richtext-wrap > table,
+.richtext-wrap > table > tr > th,
+.richtext-wrap > table > tr > td,
+.richtext-wrap > table > thead > tr > th,
+.richtext-wrap > table > thead > tr > td,
+.richtext-wrap > table > tbody > tr > th,
+.richtext-wrap > table > tbody > tr > td,
+.richtext-wrap > table > tfoot > tr > th,
+.richtext-wrap > table > tfoot > tr > td {
+    border: 1px solid #e0e0e0 !important;
+}
+
+.rich-inner {
+    span {
+        display: inline;
+    }
+}

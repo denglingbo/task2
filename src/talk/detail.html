@@ -82,10 +82,12 @@
     {{/partnerLength}}
     </script>
     
+    <div id="comment-input-wrapper"></div>
+
     <!-- 底部输入框 -->
+    <script id="comment-input-wrapper-tmpl" type="x-tmpl-mustache">
     <div id="goalui-fixedinput-shadow" class="hide"></div>
-    <div id="goalui-fixedinput" class="goalui-fixedinput"></div>
-    <script id="goalui-fixedinput-tmpl" type="x-tmpl-mustache">
+    <div id="goalui-fixedinput" class="goalui-fixedinput">
         <div class="input-out">
             <div class="editable-out">
                 <div class="editable" contenteditable="plaintext-only"></div>
@@ -97,6 +99,7 @@
             <span class="button"></span>
             <span class="send hide" data-log='{"actionTag":"talkDetailSubmitComment"}'>{{ lang.send }}</span>
         </div>
+    </div>
     </script>
     <script type="text/javascript" src="./cordova.js"></script>
 </body>

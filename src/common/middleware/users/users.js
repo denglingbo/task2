@@ -185,6 +185,7 @@ middleware.getPubData = function (options) {
 
     /* eslint-disable */
     CPPubData.getPubData(options, function (data) {
+
         if (!data || data.code !== 0) {
             dfd.reject(null);
         }

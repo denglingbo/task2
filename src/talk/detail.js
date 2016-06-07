@@ -11,10 +11,12 @@ require('./detail.scss');
 require('common/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
+var Page = require('common/page');
+var page = new Page();
+
 var util = require('../common/util');
 var detailUtil = require('common/widgets/detail/detail');
 var users = require('common/middleware/users/users');
-var Page = require('common/page');
 var VirtualInput = require('common/ui/virtualInput/virtualInput');
 
 var Ticker = require('common/ui/ticker/ticker');
@@ -29,34 +31,40 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
 
-var page = new Page();
-
 page.enter = function () {
     var me = this;
-    this.$main = $('.main');
+    me.$main = $('.main');
 
-    this.data.describeTitle = me.lang.talkDescribeTitle;
+    me.data.describeTitleRaw = me.lang.talkDescribeTitle;
+    me.data.reasonsTitleRaw = me.lang.reasonsTitle;
+    me.data.summaryTitleRaw = me.lang.talkSummaryTitle;
 
-    this.render('#detail-main', this.data, {
+    me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
             describe: tmplDescribe
         }
     });
-    me.render('#goalui-fixedinput', {lang: me.data.lang});
-    this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
-    this.ticker = new Ticker('.tick', {
+    detailUtil.richContent();
+
+    // 是否有评论权限
+    if (me.data.rights.commentRight) {
+        me.render('#comment-input-wrapper', {lang: me.data.lang});
+        me.virtualInput = new VirtualInput('.goalui-fixedinput');
+    }
+
+    me.ticker = new Ticker('.tick', {
         async: true
     });
 
-    this.bindEvents();
+    me.bindEvents();
+
+    me.initCommentList();
 
     if (me.isFailed) {
         return;
     }
-
-    me.initCommentList();
 };
 
 /**
@@ -67,11 +75,13 @@ page.deviceready = function () {
     var lang = me.lang;
     var data = me.data;
 
-    me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.summaryAttachs,
-        container: '.attach-container',
-        wrapper: '.attach'
-    });
+    if (data.summaryAttachs) {
+        me.attach = AttachWrapper.initDetailAttach({
+            attachData: data.summaryAttachs,
+            container: '.attach-container',
+            wrapper: '.attach'
+        });
+    }
 
     var dfdPub = users.getUserInfo(data.userIds);
 
@@ -109,7 +119,6 @@ page.deviceready = function () {
     if (rightBar.length >= 1) {
         navigation.right(rightBar);
     }
-
 };
 
 page.bindEvents = function () {

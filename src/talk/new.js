@@ -87,10 +87,10 @@ page.deviceready = function () {
         var url = DATA.id === 0 ? config.API.TALK_NEW_URL : config.API.TALK_EDIT_URL;
         var promise = editCom.submit(page, DATA, url);
         promise.done(function (result) {
-            var taskId = DATA.taskId;
+            // var taskId = DATA.taskId;
             var talkId = result.data || DATA.id;
             /* eslint-disable */
-            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId + '&taskId=' + taskId);
+            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId);
             /* eslint-enable */
         });
     });
