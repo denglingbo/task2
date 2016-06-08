@@ -71,6 +71,9 @@ var Pagination = function (options) {
         // 可视区域偏移量
         offset: 0,
 
+        // 是否显示完成之后，自动隐藏
+        autoHide: true,
+
         // view 模版输出
         // @param {new Pagination} this, function 中返回的第一个参数是 pagination
         // @param {Object} match, 匹配到的当前的进入临界位置的配置
@@ -113,6 +116,9 @@ Pagination.prototype = {
     // 用于匹配的对象的配置
     finder: {},
 
+    // 显示完成之后自动隐藏
+    timerId: null,
+
     init: function () {
         var me = this;
 
@@ -129,18 +135,6 @@ Pagination.prototype = {
 
                 this.$view.html(view);
             }
-
-            // if (!$outter.find('.pagination-tips').length) {
-            //     $outter.append($view);
-            //     me.$view = $outter.find('.pagination-tips');
-            // }
-            // me.$view.css({
-            //     top: $(window).height(),
-            //     bottom: 'auto'
-            // });
-            // if (!me.$view) {
-            //     $('body').append(me.$view = $($view));
-            // }
         }
         // 直接在指定的已经存在位置展示
         else {
@@ -187,7 +181,7 @@ Pagination.prototype = {
         }
 
         // 展示分页提示容器
-        if (match !== null && Math.abs(top) >= this.boxTop /* && Math.abs(top) < this.boxBottom */) {
+        if (match !== null && Math.abs(top) >= this.boxTop) {
             this.show();
         }
         // 隐藏分页提示容器
@@ -197,18 +191,29 @@ Pagination.prototype = {
     },
 
     show: function () {
-
-        var $other = $('.pagination').not(this.$view);
+        var me = this;
+        var $other = $('.pagination').not(me.$view);
 
         $other.addClass('hide');
 
-        if (!this.totalPage) {
+        if (!me.totalPage) {
             return;
         }
 
-        this.$view
+        me.$view
             .removeClass('hide')
             .addClass('pagination-show');
+
+        me.$view.css({
+            'margin-left': me.$view.width() * -.48
+        });
+
+        if (me.opts.autoHide) {
+            clearTimeout(me.timerId);
+            me.timerId = setTimeout(function () {
+                me.hide();
+            }, 800);
+        }
     },
 
     hide: function () {

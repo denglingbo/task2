@@ -29,11 +29,9 @@
     }
 }
 
-.pagination-show {
-    transform: translate3d(0, -70px, 0) !important;
-    transition: transform .4s ease-out;
+.pagination {
+    transform: translate3d(0, rem(-70px), 0) !important;
 }
-
 
 /* 内容主容器 */
 .slider-container {
