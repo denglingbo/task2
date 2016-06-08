@@ -18,24 +18,28 @@
             <dl id="comments-main" class="layout-list comments">
                 <dt class="sub-title"><span data-lang="commentTitle"></span><span class="comment-total"></span></dt>
                 
-                <dd class="list-null hide" data-lang="commentNotFound"></dd>
+                <dd class="list-null hide">
+                    <div class="list-null-img"></div>
+                    <div class="list-null-text" data-lang="commentNotFound"></div>
+                </dd>
             </dl>
 
             <!-- 用于加载更多数据 -->
             <div class="data-more"></div>
         </div>
 
-        <!-- title -->
-        <script id="detail-main-tmpl" type="x-tmpl-mustache">
-        {{> title}}
-        {{> describe}}
-        </script>
-        <!-- 附件 -->
-        <div class="layout-list attach hide">
-            <div class="sub-title">{{lang.attach}}</div>
-            <div class="attach-container"></div>
-        </div>
     </div>
+
+    <script id="detail-main-tmpl" type="x-tmpl-mustache">
+    {{> title}}
+    {{> describe}}
+
+    <!-- 附件 -->
+    <div class="layout-list attach hide">
+        <div class="sub-title">{{lang.attach}}</div>
+        <div class="attach-container"></div>
+    </div>
+    </script>
 
     <div id="comment-input-wrapper"></div>
 

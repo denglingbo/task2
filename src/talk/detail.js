@@ -36,7 +36,6 @@ page.enter = function () {
     me.$main = $('.main');
 
     me.data.describeTitleRaw = me.lang.talkDescribeTitle;
-    me.data.reasonsTitleRaw = me.lang.reasonsTitle;
     me.data.summaryTitleRaw = me.lang.talkSummaryTitle;
 
     me.render('#detail-main', me.data, {

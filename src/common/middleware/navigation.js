@@ -208,7 +208,11 @@ navigation.right = function (buttonArray) {
         }
     });
 
-    var icon = main || (arr[0].iconPath || arr[0].title);
+    var icon = '';
+    // 如果只有一个下拉，则不需要菜单 icon
+    if (arr.length > 1) {
+        icon = main || (arr[0].iconPath || arr[0].title);
+    }
     
     CPNavigationBar.setRightButton(icon, arr);
 };

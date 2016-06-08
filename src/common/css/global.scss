@@ -101,6 +101,13 @@ input, button, select, textarea {
     float: right;
 }
 
+/**
+ * webkit contenteditable 可编辑
+ */
+div[contenteditable], div[contenteditable] * {
+    -webkit-user-select: text !important;
+}
+
 @media only screen and (min-width: 481px){
     html {
         font-size: 94% !important;

@@ -48,8 +48,8 @@ module.exports = {
     tapPageReLoad: '点击页面重新加载',
     attach: '附件',
     noAttach: '无附件',
-    putTaskCompleted: '提交任务完成',
-    putTaskFailed: '提交任务失败',
+    putTaskCompleted: '提交完成',
+    putTaskFailed: '提交失败',
     earlyComplete: '尽快完成',
     urgentLevel: '紧急程度',
     affairType: '事件类型',
@@ -99,6 +99,7 @@ module.exports = {
     back: '返回',
     submit: '提交',
 
+    refuseReason: '拒绝理由',
     reasonsTitle: '申请理由',
     taskSummaryTitle: '任务总结',
     talkSummaryTitle: '讨论总结',

@@ -180,15 +180,6 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
-    // $('#submit').on('click', function () {
-    //     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-    //     me.submitValid(submitFn);
-    // });
-
-    // $('#cancel').on('click', function () {
-    //     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
-    //     me.cancelValidate();
-    // });
 
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
@@ -225,9 +216,8 @@ editCom.submit = function (page, data, ajaxUrl) {
     // var data = page.data;
     
     data.title = $('#edit-title').text();
-    data.content = $('#edit-content').text();
+    data.content = $('#edit-content').html();
 
-    /* eslint-disable */
     var promise = page.post(ajaxUrl, data);
 
     promise
@@ -246,7 +236,6 @@ editCom.submit = function (page, data, ajaxUrl) {
             me.submitAlert(false);
             dfd.reject(result);
         });
-    /* eslint-enable */
 
     return dfd;
 };

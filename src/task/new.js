@@ -83,7 +83,7 @@ page.deviceready = function () {
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachements);
     
-
+    // 
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();

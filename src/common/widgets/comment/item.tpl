@@ -15,12 +15,12 @@
                 <div class="comments-content-inner">{{&content}}</div>
             </div>
 
-            <div class="comments-attach-{{ id }}">
+            <div class="comments-attach comments-attach-{{ id }}">
                 <!-- By Attach js -->
             </div>
 
             {{#isOwner}}
-            <div class="comments-button delete" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
+            <div class="comments-button delete {{#isDone}}hide{{/isDone}}" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
             {{/isOwner}}
         </div>
     </div>

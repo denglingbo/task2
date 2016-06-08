@@ -255,7 +255,7 @@ page.deviceready = function () {
                 }
             })
             .fail(function (result) {
-                alert('我错了，我再看看');
+                
             });
     }
 

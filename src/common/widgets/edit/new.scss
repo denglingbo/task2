@@ -1,5 +1,6 @@
 @import '../../css/global';
 @import '../../css/ui';
+@import '../../css/rich.scss';
 
 .alert-length-limit, .alert-submit-after {
     position: fixed;
@@ -87,14 +88,15 @@
 .edit-content-wrap {
 
     .edit-words {
-        height: rem(120px);
         @include border-1px(bottom, #e3e4e5);
+
+        height: rem(180px);
         font-size: rem(16px);
         position: relative;
     }
     
     .content-wrap {
-        height: rem(120px);
+        height: 100%;
 
         &.phone-input {
             margin-top: 0;

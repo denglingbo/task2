@@ -17,12 +17,10 @@ var util = require('common/util');
 // var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
-var doing = util.params('affairId');
-
+var isEdit = util.params('affairId');
 var page = new Page();
 
-/* eslint-disable */
-var pageData = {
+var DATA = {
     id: 0,
     attachs: [],
     message: {
@@ -36,7 +34,7 @@ var pageData = {
     importanceLevel: 1,
     labelId: 0
 };
-/* eslint-enable */
+
 page.enter = function () {
     var me = this;
     me.loadPage();
@@ -48,20 +46,20 @@ page.deviceready = function () {
     var me = this;
 
     // 初始化附件组件
-    me.attach = editCom.initEditAttach(pageData.attachs);
+    me.attach = editCom.initEditAttach(DATA.attachs);
 
     // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
-        pageData.attachs = me.attach.getModifyAttaches();
-        var url = pageData.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
+        DATA.attachs = me.attach.getModifyAttaches();
+        var url = DATA.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
         // editCom.submit(me, url);
         // 事件类型必填
-        if (pageData.labelId) {
+        if (DATA.labelId) {
 
-            var promise = editCom.submit(page, pageData, url);
+            var promise = editCom.submit(page, DATA, url);
             promise.done(function (result) {
                 // 后端 result.data 返回的是对应的 id, 并非对象
-                var affairId = result.data || pageData.affairId;
+                var affairId = result.data || DATA.affairId;
                 /* eslint-disable */
                 CPNavigationBar.redirect('/affair-detail.html?id=' + affairId);
                 /* eslint-ensable */
@@ -86,14 +84,12 @@ page.bindEvents = function () {
 page.loadPage = function () {
     var me = this;
     var lang = me.lang;
-    var data = $.extend({}, pageData, {
+    var data = $.extend({}, DATA, {
         view: [
             {
                 id: 'urgencyBlock',
                 title: lang.urgentLevel,
-                /* eslint-disable */
-                value: editCom.initImportValue(pageData['importance_level'])
-                /* eslint-enable */
+                value: editCom.initImportValue(DATA['importanceLevel'])
             },
             {
                 id: 'affairType',
@@ -110,46 +106,76 @@ page.loadPage = function () {
 page.initPlugin = function () {
     var me = this;
     var lang = me.lang;
+
     // 初始化紧急程度
-    editCom.initImportanceLevel('#urgencyBlock', pageData);
+    editCom.initImportanceLevel('#urgencyBlock', DATA);
 
     // 初始化事件标签
     var promise = me.get(config.API.GET_AFFAIR_TAGS);
-    promise.done(function (result) {
-        if (!result || !result.meta || result.meta.code !== 200) {
-            return;
-        }
-        var currName = '';
-        // 事件类型
-        me.affairType = result.data;
-        var typeData = [];
-        /* eslint-disable */
-        me.affairType.forEach(function (item) {
-            typeData.push({
-                text: item.name,
-                value: item['subId'],
-                selected: (item['subId'] === pageData['labelId']) && (currName = item.name)
+
+    var $type = $('#affairType .value');
+
+    promise
+        .done(function (result) {
+            if (!result || !result.meta || result.meta.code !== 200) {
+                return;
+            }
+
+            // 事件类型
+            me.affairType = result.data;
+
+            var currName = '';
+            var typeData = [];
+
+            me.affairType.forEach(function (item) {
+
+                var selected = false;
+
+                if (item.subId === DATA.labelId) {
+                    currName = item.name;
+                    selected = true;
+                }
+
+                typeData.push({
+                    text: item.name,
+                    value: item.subId,
+                    selected: selected
+                });
+            });
+
+            // 新建状态，直接使用第一项作为默认选中
+            if (!isEdit) {
+                var def = typeData[0];
+                currName = def.text;
+                def.selected = true;
+            }
+
+            $type.text(currName);
+
+            if (typeData.length <= 0) {
+                return;
+            }
+
+            editCom.initMobiscroll('select', '#affairType', {
+                headerText: lang.affairType,
+                showInput: false,
+                showMe: true,
+                rows: 3,
+                data: typeData,
+                onSelect: function (text, inst) {
+                    var oldVal = DATA.labelId;
+                    DATA.labelId = inst.getVal();
+
+                    $type.text(text);
+
+                    editCom.valid.isEdit = (
+                        oldVal !== DATA.labelId ?
+                            true :
+                            editCom.valid.isEdit
+                    );
+                }
             });
         });
-        $('#affairType .value').text(currName);
-        /* eslint-enable */
-        editCom.initMobiscroll('select', '#affairType', {
-            headerText: lang.affairType,
-            showInput: false,
-            showMe: true,
-            rows: 3,
-            data: typeData,
-            onSelect: function (text, inst) {
-                /* eslint-disable */
-                var oldVal = pageData['labelId'];
-                pageData['labelId'] = inst.getVal();
-                $('#affairType .value').text(text);
-
-                editCom.valid.isEdit = oldVal !== pageData['labelId'] ? true : editCom.valid.isEdit;
-                /* eslint-enable */
-            }
-        });
-    });
 
     // 初始化富文本框
     me.phoneInputTitle = new PhoneInput({
@@ -178,7 +204,8 @@ page.initPlugin = function () {
 
 page.addParallelTask(function (dfd) {
     var me = this;
-    if (!doing) {
+
+    if (!isEdit) {
         dfd.resolve();
         return dfd;
     }
@@ -193,7 +220,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(pageData, result.data);
+                util.getDataFromObj(DATA, result.data);
                 dfd.resolve();
             }
         });

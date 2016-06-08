@@ -13,7 +13,7 @@
         },
         "id": 69357,
         "importanceLevel": 4,
-        "status": 4,
+        "status": 6,
         "taskId": 69585,
         "labelId": 1506,
         "createUser": 179,
@@ -26,7 +26,12 @@
         "create_time": 1461642525510,
         "task_tag_name": "求助",
         "task_title": "sadc",
-        "attachs": [],
+        "attachs": [
+            {
+                "id": 1234,
+                "fileName": "papapa.png"
+            }
+        ],
         "attention": 0,
         "tags": [
             {

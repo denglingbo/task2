@@ -41,7 +41,13 @@ detail.dealPageData = function (result) {
     };
 
     data.statusRaw = function () {
-        return raw.status(this.status, this.endTime);
+        var status = this.status;
+
+        if (this.suspend) {
+            status = 7;
+        }
+
+        return raw.status(status, this.endTime);
     };
 
     data.importanceRaw = function () {
@@ -136,11 +142,21 @@ detail.bindTickEvents = function (options) {
     // 要改变的状态容器
     var $status = $('.detail-title-state');
 
+    /**
+     * 改变状态
+     *
+     * @param {string} status, 点击完成后的勾选状态，ticked or untick
+     */
     function changeStatus(status) {
         var statusText = $status.data('status');
+        var $delete = $('.comments-button');
 
         if (status === 'ticked') {
             $status.html(me.lang.doneText);
+            $delete.addClass('hide');
+
+            // 更改完成状态
+            me.isDone = true;
         }
         else {
 
@@ -149,7 +165,9 @@ detail.bindTickEvents = function (options) {
                 statusText = me.lang.doingText;
             }
 
+            me.isDone = false;
             $status.html(statusText);
+            $delete.removeClass('hide');
         }
     }
 
@@ -160,9 +178,7 @@ detail.bindTickEvents = function (options) {
         var change = isCurTicked ? 0 : 1;
         var api = change === 1 ? options.ticked : options.untick;
 
-        var params = {
-            // taskId: me.data.taskId
-        };
+        var params = {};
 
         params[options.pageKey] = me.data.id;
 
@@ -198,18 +214,28 @@ detail.richContent = function () {
 
     var max = {
         width: $outer.width(),
-        height: 400
+        height: 250
     };
     var real = {};
+
+    $outer.css({
+        width: 9999,
+        position: 'relative'
+    });
 
     $inner.addClass('absolute');
     real.width = $inner.width();
     real.height = $inner.height();
     $inner.removeClass('absolute');
 
+    $outer.css({
+        width: max.width
+    });
+
     var scrollX = false;
     var scrollY = false;
-    if (real.width > max.width) {
+
+    if (real.width - max.width > 10) {
         scrollX = true;
         $outer.width(max.width);
     }
@@ -235,8 +261,8 @@ detail.richContent = function () {
         // click: true,
 
         // 禁用监听鼠标和指针
-        disableMouse: true,
-        disablePointer: true,
+        disableMouse: false,
+        disablePointer: false,
 
         mouseWheel: false,
 

@@ -20,7 +20,7 @@
 
 .sub-title {
     color: $gray;
-    padding-bottom: rem(15px);
+    padding-bottom: rem(14px);
 }
 
 // title 部分
@@ -267,12 +267,6 @@
         .comments-content {
             margin: rem(10px) 0 rem(5px) 0;
         }
-        .comments-attach {
-            .componentAttaches {
-                @include border-1px(top, #e1e4e6);
-                margin-top: rem(8px);
-            }
-        }
 
         .comments-attach {
             width: 100%;
@@ -282,6 +276,9 @@
             }
             ul, li {
                 @include clearfix();
+            }
+            .componentAttaches {
+                margin-top: rem(10px);
             }
             .componentAttachLine {
                 margin-left: 0;
@@ -296,6 +293,10 @@
                 @extend .word-content;    
             }
         }
+
+        .componentAttachLine {
+            margin-left: 0;
+        }
     }
 
     .columnu-date {
@@ -309,4 +310,12 @@
     z-index: 10;
 
     @include fixbar(3);
+}
+
+/* 详情页的附件公共样式 */
+.componentAttaches {}
+
+.componentAttachLine {
+    margin-left: 0;
+    @include border-1px(top, #e1e4e6);
 }

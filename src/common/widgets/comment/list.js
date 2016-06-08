@@ -8,6 +8,10 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 
 function dealData(data, page) {
+
+    // page.isDone 不能直接使用，该值为进入页面赋值，并未更改
+    data.isDone = page.isDone;
+
     // 时间展示
     data.dataRaw = function () {
         return raw.formatDateToNow(this.opTime);
@@ -108,6 +112,7 @@ var fn = function (page, options) {
         loadType: 0,
         tpl: tmplItem,
         wrapper: me.$main,
+        moreNullHidden: me.opts.moreNullHidden || false,
         promise: me.opts.promise,
         // 后端数据节点位置
         dataKey: me.opts.dataKey,
@@ -115,6 +120,9 @@ var fn = function (page, options) {
     });
 
     me.dataLoader.on('more', function (data) {
+
+        // 评论需要知道是否是已经完成的 讨论 或者 事件
+        data.isDone = me.page.data.isDone();
 
         dealData(data, me.page);
 

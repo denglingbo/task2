@@ -19,4 +19,11 @@
     span {
         display: inline;
     }
+
+    $font-size-reset: 14px;
+
+    * {
+        font-size: rem($font-size-reset) !important;
+        line-height: rem($font-size-reset) !important;
+    }
 }

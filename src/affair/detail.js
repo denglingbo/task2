@@ -30,7 +30,6 @@ page.enter = function () {
     var me = this;
 
     me.data.describeTitleRaw = me.lang.affairDescribeTitle;
-    me.data.reasonsTitleRaw = me.lang.reasonsTitle;
 
     me.render('#detail-main', me.data, {
         partials: {
@@ -124,6 +123,7 @@ page.initCommentList = function () {
     new WidgetCommentList(me, {
 
         data: me.data,
+        moreNullHidden: true,
 
         API: {
             delete: config.API.AFFAIR_COMMENT_DELETE,

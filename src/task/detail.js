@@ -33,7 +33,6 @@ page.enter = function () {
     me.data.isTaskPage = true;
 
     me.data.describeTitleRaw = this.lang.taskTitle;
-    me.data.reasonsTitleRaw = this.lang.reasonsTitle;
     me.data.summaryTitleRaw = me.lang.taskSummaryTitle;
 
     me.data.rights.taskId = me.data.id;
