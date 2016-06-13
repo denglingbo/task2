@@ -6,11 +6,14 @@ var util = require('common/util');
 var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
+var MidUI = require('common/middleware/ui');
 
 function dealData(data, page) {
 
     // page.isDone 不能直接使用，该值为进入页面赋值，并未更改
-    data.isDone = page.isDone;
+    data.isDone = function () {
+        return page.data.status === 6;
+    };
 
     // 时间展示
     data.dataRaw = function () {
@@ -89,7 +92,7 @@ var renderUser = function ($layout, objList) {
  * @param {Page} page, new Page
  * @param {Object} options, 配置
  */
-var fn = function (page, options) {
+var list = function (page, options) {
     var me = this;
 
     me.opts = {
@@ -119,7 +122,7 @@ var fn = function (page, options) {
         pageNum: 10
     });
 
-    me.dataLoader.on('more', function (data) {
+    me.dataLoader.on('more', function (err, data) {
 
         // 评论需要知道是否是已经完成的 讨论 或者 事件
         data.isDone = me.page.data.isDone();
@@ -142,7 +145,7 @@ var fn = function (page, options) {
     this.bindEvents();
 };
 
-$.extend(fn.prototype, {
+$.extend(list.prototype, {
 
     isComments: function () {
         return this.$main.find('dd').not('.list-null').length;
@@ -153,8 +156,14 @@ $.extend(fn.prototype, {
         var $main = $('#comments-main');
 
         $main.on('click', '.delete', function () {
+            var target = this;
 
-            me.removeData(this);
+            MidUI.alert({
+                content: me.page.lang.alertRemoveComment,
+                onApply: function () {
+                    me.removeData(target);
+                }
+            });
         });
 
         $('.send').on('click', function () {
@@ -233,38 +242,31 @@ $.extend(fn.prototype, {
         promise
             .done(function (result) {
 
-                if (!result) {
+                if (!result || result.meta.code !== 200) {
                     return;
                 }
 
-                // 添加成功
-                if (result.meta.code === 200) {
+                // 共用 ./item.tpl
+                var data = {
+                    objList: [result.data]
+                };
 
-                    // 共用 ./item.tpl
-                    var data = {
-                        objList: [result.data]
-                    };
+                dealData(data, me.page);
 
-                    dealData(data, me.page);
+                me.page.render($('.comments dd').eq(0), data, {
+                    tmpl: tmplItem,
+                    type: 'before'
+                });
 
-                    me.page.render($('.comments dd').eq(0), data, {
-                        tmpl: tmplItem,
-                        type: 'before'
-                    });
+                getUserAndPhoto([result.data]);
 
-                    getUserAndPhoto([result.data]);
+                // 待优化
+                // 这里可以判断是否已经有了当前用户的信息
+                renderUser(me.$main, data.objList);
 
-                    // 待优化
-                    // 这里可以判断是否已经有了当前用户的信息
-                    renderUser(me.$main, data.objList);
+                me.page.virtualInput.reset();
 
-                    me.page.virtualInput.reset();
-
-                    me.$listNull.addClass('hide');
-                }
-                else {
-
-                }
+                me.$listNull.addClass('hide');
             })
             .fail(function (err) {
                 
@@ -315,4 +317,4 @@ function render(data) {
     });
 }
 
-module.exports = fn;
+module.exports = list;

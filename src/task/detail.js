@@ -32,7 +32,7 @@ page.enter = function () {
 
     me.data.isTaskPage = true;
 
-    me.data.describeTitleRaw = this.lang.taskTitle;
+    me.data.describeTitleRaw = me.lang.taskTitle;
     me.data.summaryTitleRaw = me.lang.taskSummaryTitle;
 
     me.data.rights.taskId = me.data.id;
@@ -49,14 +49,12 @@ page.enter = function () {
     me.dataLoader = new DataLoader({
         wrapper: '.affair-talk-wrapper',
         promise: function () {
-            /* eslint-disable */
             return page.get(config.API.AFFAIR_TALK_MORE_URL, {
                 taskId: me.data.id,
                 currPage: this.page,
                 number: requestPageNum,
                 sortType: 0
             });
-            /* eslint-enable */
         },
         // 后端数据节点位置
         dataKey: 'objList',
@@ -75,7 +73,6 @@ page.deviceready = function () {
     var lang = me.lang;
     var data = me.data;
 
-    /* eslint-disable */
     // 查看更多人员
     me.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
@@ -115,18 +112,20 @@ page.deviceready = function () {
 
     // 页面底部跳转
     me.$fixbar.find('li').on('click', function () {
-        var pageTo = $(this).data('page');
-        var type = $(this).data('type');
+        var $click = $(this);
+        var pageTo = $click.data('page');
+        var type = $click.data('type');
 
         if (pageTo && pageTo.length > 0) {
             navigation.open(pageTo, {
                 title: barMap[type]
             });
         }
+        else {
+            asyncTaskWork(this, type);
+        }
     });
-    /* eslint-enable */
 
-    /* eslint-disable */
     // 这里需要根据 referer 判断是否返回指定页面
     navigation.left({
         title: lang.back,
@@ -137,12 +136,12 @@ page.deviceready = function () {
         }
     });
 
-    var getAlert = function() {
+    var getAlert = function () {
 
         MidUI.alert({
             content: me.lang.alertRevokeContent,
             onApply: function () {
-                alert('apply');
+                asyncTaskWork(null, 'revoke');
             }
         });
     };
@@ -154,7 +153,7 @@ page.deviceready = function () {
     if (rights.editRight) {
         rightBar.push({
             title: me.lang.editButton,
-            click: function() {
+            click: function () {
                 navigation.open('/task-new.html?taskId=' + me.data.id, {
                     title: me.lang.editTask
                 });
@@ -222,6 +221,51 @@ page.deviceready = function () {
     }
 };
 
+/**
+ * 异步处理任务相关事务
+ *
+ * @param {Element} target, 点击项
+ * @param {string} ajaxKey, 对应 receive, revoke
+ */
+function asyncTaskWork(target, ajaxKey) {
+
+    // 默认配置
+    var defMap = {
+        params: {
+            taskId: page.data.id
+        },
+        done: function () {
+            navigation.open('/task-detail.html?taskId=' + page.data.id);
+        }
+    };
+
+    var workMap = {
+        // 接收
+        receive: {
+            api: config.API.TASK_RECEIVE
+        },
+
+        // 恢复
+        revoke: {
+            api: config.API.TASK_RECOVER
+        }
+    };
+
+    var taskWorker = workMap[ajaxKey];
+    if (!taskWorker) {
+        return;
+    }
+
+    $.extend(taskWorker, defMap);
+
+    page.post(taskWorker.api, taskWorker.params)
+        .done(function (data) {
+            taskWorker.done();
+        });
+
+    target && $(target).off('click');
+}
+
 page.bindEvents = function () {
     var me = this;
 
@@ -233,7 +277,11 @@ page.bindEvents = function () {
         me.follow(this);
     });
 
-    me.dataLoader.on('more', function (data) {
+    me.dataLoader.on('more', function (err, data) {
+
+        if (err) {
+            return;
+        }
 
         detailUtil.formatEventTalkData(data, this.page);
 

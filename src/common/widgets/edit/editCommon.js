@@ -201,6 +201,7 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         }
     ]);
 
+    navigation.buttonAutoEnable();
     // CPNavigationBar.setGoBackHandler(goBack,true);
 };
 
@@ -255,11 +256,11 @@ editCom.initImportanceLevel = function (selector, data) {
             value: 1
         },
         {
-            text: lang.urgent,
+            text: lang.important,
             value: 2
         },
         {
-            text: lang.important,
+            text: lang.urgent,
             value: 3
         },
         {
@@ -267,11 +268,11 @@ editCom.initImportanceLevel = function (selector, data) {
             value: 4
         }
     ];
-    /* eslint-disable */
+
     importData.forEach(function (item) {
         (item.value === infoData['importanceLevel']) && (item.selected = true);
     });
-    /* eslint-enable */
+
     var data = {
         headerText: lang.urgentLevel,
         showInput: false,
@@ -279,13 +280,11 @@ editCom.initImportanceLevel = function (selector, data) {
         rows: 3,
         data: importData,
         onSelect: function (text, inst) {
-            /* eslint-disable */
             var oldVal = +infoData['importanceLevel'];
             infoData['importanceLevel'] = +inst.getVal();
             $(selector + ' .value').text(text);
 
             validObj.isEdit = oldVal !== infoData['importanceLevel'] ? true : validObj.isEdit;
-            /* eslint-enable */
         }
     };
     this.initMobiscroll('select', selector, data);
@@ -394,12 +393,19 @@ editCom.loadPage = function (page, data) {
 editCom.transJid = function (id) {
     var cid = localStorage.getData('TASK_PARAMS')['cid'];
     var jid = [];
+
+    if (!id) {
+        return [];
+    }
+
     if (!$.isArray(id)) {
-        return [{jid: users.makeJid(id, cid)}];
+        // return [{jid: users.makeJid(id, cid)}];
+        return [users.makeJid(id, cid)];
     }
     else {
         id.forEach(function (itemId) {
-            jid.push({jid: users.makeJid(itemId, cid)});
+            // jid.push({jid: users.makeJid(itemId, cid)});
+            jid.push(users.makeJid(itemId, cid));
         });
 
         return jid;
@@ -476,6 +482,7 @@ editCom.setChoosePersonLoc = function (key, value) {
             headers: {}
         }
     };
+
     localStorage.addData(key, JSON.stringify(selectValue));
 };
 

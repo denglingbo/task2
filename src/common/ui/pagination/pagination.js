@@ -116,15 +116,11 @@ Pagination.prototype = {
     // 用于匹配的对象的配置
     finder: {},
 
-    // 显示完成之后自动隐藏
-    timerId: null,
-
     init: function () {
         var me = this;
 
         // 默认会添加的 dom
         if ($.isFunction(this.opts.view)) {
-            // var $outter = me.opts.wrapper || $('body');
             var view = me.opts.view();
 
             if (!this.$view) {
@@ -141,6 +137,10 @@ Pagination.prototype = {
             me.$view = $(this.opts.view);
         }
 
+        if (util.isApple()) {
+            this.$view.addClass('pagination-apple-app');
+        }
+
         var $elems = this.$wrapper.find(this.opts.elems);
 
         // 为了计算的正确性
@@ -154,6 +154,12 @@ Pagination.prototype = {
         $(window).one('scroll', $.proxy(this.process, this));
     },
 
+    // 显示完成之后自动隐藏
+    autoHideTimerId: null,
+
+    // 延迟显示
+    showTimerId: null,
+
     /**
      * process 这里接收外面传递的 scroll top
      * 因使用了 scroll.js 无法通过 bindEvents 监听到 scroll
@@ -161,33 +167,37 @@ Pagination.prototype = {
      * @param {number} scrollTop, 可选 该值不传递则使用 window scrolltop
      */
     process: function (scrollTop) {
+        var me = this;
 
         // 实际可视区域的临界点 y 坐标
-        var top = (scrollTop || this.$win.scrollTop()) + this.opts.offset;
+        var top = (scrollTop || me.$win.scrollTop()) + me.opts.offset;
 
-        if (this.opts.screen === 1) {
-            top = top + this.$win.height() * -1;
+        if (me.opts.screen === 1) {
+            top = top + me.$win.height() * -1;
         }
 
-        var match = this.matcher(top);
+        clearTimeout(me.autoHideTimerId);
+        clearTimeout(me.showTimerId);
+        me.showTimerId = setTimeout(function () {
+            var match = me.matcher(top);
 
-        // matched
-        if (match !== null) {
-            var str = this.opts.template.call(this, match);
+            // matched
+            if (match !== null) {
+                var str = me.opts.template.call(me, match);
 
-            this.$view.html(str);
+                me.curTop = match.top;
+            }
 
-            this.curTop = match.top;
-        }
-
-        // 展示分页提示容器
-        if (match !== null && Math.abs(top) >= this.boxTop) {
-            this.show();
-        }
-        // 隐藏分页提示容器
-        else {
-            this.hide();
-        }
+            // 展示分页提示容器
+            if (match !== null && Math.abs(top) >= me.boxTop) {
+                me.$view.html(str);
+                me.show();
+            }
+            // 隐藏分页提示容器
+            else {
+                me.hide();
+            }
+        }, 37);
     },
 
     show: function () {
@@ -209,8 +219,9 @@ Pagination.prototype = {
         });
 
         if (me.opts.autoHide) {
-            clearTimeout(me.timerId);
-            me.timerId = setTimeout(function () {
+            clearTimeout(me.autoHideTimerId);
+            clearTimeout(me.showTimerId);
+            me.autoHideTimerId = setTimeout(function () {
                 me.hide();
             }, 800);
         }

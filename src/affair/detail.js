@@ -136,7 +136,7 @@ page.initCommentList = function () {
                 affairId: me.data.id,
                 currPage: this.page,
                 sortType: 0,
-                number: 5
+                number: 10
             });
         }
     });

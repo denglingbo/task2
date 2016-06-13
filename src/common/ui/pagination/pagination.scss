@@ -41,19 +41,23 @@ $pagination-y: rem(-24px);
     -moz-box-align: center;
     z-index: 99;
     transform-origin: 0 0;
-    // transform: translate3d(0, 0, 0);
     transform: translate3d(0, $pagination-y, 0);
+    opacity: 0;
 }
 
-.pagination {
-    // transition: transform .4s ease-out;
-    animation: hide .5s;
-    animation-fill-mode: forwards;
-}
 .pagination-show {
-    // transform: translate3d(0, $pagination-y, 0);
-    // transition: transform .4s ease-out;
+    opacity: 1;
+}
 
-    animation: show .5s;
-    animation-fill-mode: forwards;
+/* Apple */
+.pagination-apple-app {
+    &.pagination {
+        animation: hide .4s;
+        animation-fill-mode: forwards;
+    }
+
+    &.pagination-show {
+        animation: show .4s;
+        animation-fill-mode: forwards;
+    }
 }

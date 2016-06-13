@@ -29,11 +29,13 @@ var DATA = {
     title: '',
     content: '',
     endTime: 0,
-    importanceLevel: 1,
-    attendIds: [],
+    importanceLevel: 4,
     notice: 0,
-    principalUser: 0,
     attachements: [],
+
+    attendIds: [],
+    principalUser: 0,
+
     message: {
         sentEim: true,
         sentEmai: false,
@@ -101,74 +103,100 @@ page.deviceready = function () {
         });
     });
 
-    /* eslint-disable */
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         var oldVal = DATA['endTime'];
-        CPNavigationBar.redirect('/task-doneTime.html?endTime=' + DATA['endTime'], lang.doneTime, false, function (data) {
-            if (!data) {
-                return;
+
+        CPNavigationBar.redirect(
+            '/task-doneTime.html?endTime=' + DATA['endTime'],
+            lang.doneTime,
+            false,
+            function (data) {
+                if (!data) {
+                    return;
+                }
+                data = JSON.parse(data);
+                DATA['endTime'] = data.endTime;
+                $('#doneTime .value').text(
+                    editCom.initDoneTime(DATA['endTime'])
+                );
+                editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
             }
-            data = JSON.parse(data);
-            DATA['endTime'] = data.endTime;
-            $('#doneTime .value').text(editCom.initDoneTime(DATA['endTime']));
-            editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
-        });
+        );
     });
 
     // 选择人员跳转页面
     $('#principal, #attends').on('click', function (e) {
-        var pVal = {
-            selectType: 1,
-            /* eslint-disable */
-            contacts: editCom.transJid(DATA['principalUser'])
-            /* eslint-enable */
-        };
-
-        var aVal = {
-            selectType: 2,
-            /* eslint-disable */
-            contacts: editCom.transJid(DATA['attendIds'])
-            /* eslint-enable */
-        };
-
-        editCom.setChoosePersonLoc(principalSelectKey, pVal);
-        editCom.setChoosePersonLoc(attendSelectKey, aVal);
 
         var key = '';
         var itemKey = '';
         var id = '';
-        var oldVal = null;
-        if (e.target.id === 'principal') {
+        // var oldVal = null;
+
+        // if (e.target.id === 'principal') {
+        if ($(this).attr('id') === 'principal') {
+
+            editCom.setChoosePersonLoc(principalSelectKey, {
+                selectType: 1,
+                contacts: editCom.transJid(DATA['principalUser'])
+            });
+
             key = principalSelectKey;
             itemKey = 'principalUser';
             id = '#principal';
         }
         else {
+            editCom.setChoosePersonLoc(attendSelectKey, {
+                selectType: 2,
+                contacts: editCom.transJid(DATA['attendIds'])
+            });
+
             key = attendSelectKey;
             itemKey = 'attendIds';
             id = '#attends';
-        } 
-        oldVal = DATA[itemKey];
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key, lang.choosePerson, false, function (data) {
-            if (!data) {
-                return;
+        }
+
+        // 根据电击判断是哪个数据
+        var clickObj = DATA[itemKey];
+
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
+            lang.choosePerson,
+            false,
+            function (data) {
+                if (!data) {
+                    return;
+                }
+
+                data = JSON.parse(data);
+                var contacts = data.contacts;
+
+                // if ($.isArray(DATA[itemKey])) {
+                // 参与人
+                if ($.isArray(clickObj)) {
+                    // 使用选人组件传递的新的数据
+                    DATA[itemKey] = [];
+
+                    contacts.forEach(function (value, index) {
+                        var uid = users.takeJid(value.jid);
+
+                        // 避免重复
+                        if ($.inArray(uid, DATA[itemKey]) === -1) {
+                            DATA[itemKey].push(uid);
+                        }
+                    });
+                }
+                // 负责人
+                else {
+                    DATA[itemKey] = users.takeJid(contacts[0].jid);
+                }
+
+                // 对应的点击栏容器
+                $(id + ' .value').text(util.getPersonsName(contacts));
+
+                // editCom.personIsChange(clickObj, DATA[itemKey]);
             }
-            data = JSON.parse(data);
-            var contacts = data.contacts;
-            if ($.isArray(DATA[itemKey])) {
-                contacts.forEach(function (value, index) {
-                    DATA[itemKey].push(+users.takeJid(value.jid));
-                });
-            }
-            else {
-                DATA[itemKey] = +users.takeJid(contacts[0].jid);
-            }
-            $(id + ' .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, DATA[itemKey]);
-        });
+        );
     });
-    /* eslint-enable */
 };
 
 /**
@@ -206,16 +234,12 @@ page.loadPage = function () {
                     {
                         id: 'doneTime',
                         title: lang.doneTime,
-                        /* eslint-disable */
                         value: editCom.initDoneTime(DATA['endTime'])
-                        /* eslint-enable */
                     },
                     {
                         id: 'urgencyBlock',
                         title: lang.urgentLevel,
-                        /* eslint-disable */
                         value: editCom.initImportValue(DATA['importanceLevel'])
-                        /* eslint-enable */
                     }
                 ]
             }

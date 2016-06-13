@@ -292,7 +292,7 @@ Search.prototype.loadList = function () {
         /* eslint-disable */
         page: 1,
         /* eslint-enable */
-        number: 15
+        number: 1000
     };
     /* eslint-disable */
     /* eslint-enable */

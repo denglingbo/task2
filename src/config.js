@@ -30,6 +30,10 @@ var config = {
         TASK_NEW_URL: 'createTask',
         // 任务编辑
         TASK_EDIT_URL: 'updateTask',
+        // 接收任务
+        TASK_RECEIVE: 'receiveTask',
+        // 恢复任务
+        TASK_RECOVER: 'recoverTask',
         // 任务完成
         COMPLETE_TASK: 'completeTask',
         // 任务撤销
@@ -87,11 +91,15 @@ config.API.ATTACH_UPLOADURL = config.API.host + '/mgw/common/attachment/getFSTok
 config.API.ATTACH_RESUMEURL = config.API.host + '/mgw/common/attachment/getFSTokensOnContinue';
 
 /**
- * 静态参数
+ * 公用参数
  */
 config.const = {
-    TASK_PARAMS: 'TASK_PARAMS',
-    TASK_CACHE: 'TASK_CACHE'
+
+    // localstorage 公用参数
+    PARAMS: 'TASK_PARAMS',
+
+    // local database
+    DATABASE_NAME: 'TASK_DATABASE'
 };
 
 // 以下参数 febd.config.js & page.js 使用
@@ -99,7 +107,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '61e132d5-2c53-4e8c-8f9a-c8b95f33254f-81048'
+    token: '4b4d9bb1-b463-4f1d-9786-ca5a995e89e9-131335'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 

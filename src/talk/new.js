@@ -28,7 +28,7 @@ var DATA = {
     id: 0,
     attachs: [],
     content: '',
-    importanceLevel: 1,
+    importanceLevel: 4,
     inheritance: true,
     message: {
         sentEim: true,

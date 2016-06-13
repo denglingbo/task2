@@ -81,7 +81,7 @@ function consume() {
 
         if (config.debug) {
             /* eslint-disable */
-            console.log(params);
+            // console.log(params);
             /* eslint-enable */
             return;
         }

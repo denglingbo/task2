@@ -31,7 +31,7 @@ var DATA = {
     taskId: util.params('taskId') || 0,
     title: '',
     content: '',
-    importanceLevel: 1,
+    importanceLevel: 4,
     labelId: 0
 };
 

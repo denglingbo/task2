@@ -101,6 +101,7 @@
 
     .layout-section {
         margin-top: rem(5px);
+        padding-bottom: rem(5px);
         line-height: rem(18px);
         word-break: break-all;
         overflow: hidden;
@@ -311,6 +312,25 @@
 
     @include fixbar(3);
 }
+
+
+.height-auto {
+    height: auto !important;
+    overflow-x: auto !important;
+}
+
+.rich-outter {
+    overflow-x: auto !important;
+}
+
+.toggle-view {
+    text-align: center;
+    color: $gray;
+    width: rem(100px);
+    margin: 0 auto;
+    padding: rem(10px) rem(10px) rem(2px) rem(10px);
+}
+
 
 /* 详情页的附件公共样式 */
 .componentAttaches {}

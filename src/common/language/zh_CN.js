@@ -75,7 +75,7 @@ module.exports = {
     newAffairPlaceholderContent: '请输入事件描述(选填)',
     dataLoadFailPleaseReLoad: '数据加载失败, 刷新重试',
     taskSummaryPlaceholder: '请输入任务总结(选填)',
-    applyReasonPlaceholder: '请输入申请理由(选填)',
+    applyReasonPlaceholder: '请输入备注(选填)',
     revokeReasonPlaceholder: '请输入撤销理由',
     refuseReasonPlaceholder: '请输入拒绝理由',
     agreeReasonPlaceholder: '请输入同意理由',
@@ -99,8 +99,11 @@ module.exports = {
     back: '返回',
     submit: '提交',
 
+    auditRemark: '审核理由',
+    alertRemoveComment: '是否删除该条评论',
+    searchOut: '退出搜索',
     refuseReason: '拒绝理由',
-    reasonsTitle: '申请理由',
+    reasonsTitle: '备注',
     taskSummaryTitle: '任务总结',
     talkSummaryTitle: '讨论总结',
     alertRevokeContent: '是否要恢复该任务',
@@ -129,5 +132,6 @@ module.exports = {
     notAgreeReasonPlaceholder: '请输入不同意理由',
     cancelButton: '撤消',
     cancelTitle: '撤消任务',
+    revokeReason: '撤消理由',
     touchLoadMore: '下拉刷新数据'
 };

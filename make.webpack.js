@@ -10,7 +10,6 @@ var webpack = require('webpack');
 var CopyPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-
 var dep = path.join(__dirname, '/dep/');
 var common = path.join(__dirname, '/src/common/');
 

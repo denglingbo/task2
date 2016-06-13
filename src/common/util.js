@@ -46,6 +46,17 @@ util.isPhone = function () {
 };
 
 /**
+ * 判断是否是苹果
+ *
+ * @return {boolean}
+ *
+ */
+util.isApple = function () {
+    var appVersion = navigator.userAgent;
+    return appVersion && (/(iphone|ipad)/i).test(appVersion);
+};
+
+/**
  * 获取当前浏览器下的 css3 key
  *
  * @param {string} style, 样式名 transform, ...
@@ -170,7 +181,7 @@ util.getParam = function (key) {
         return this.params(key);
     }
 
-    var ls = storage.getData(config.const.TASK_PARAMS);
+    var ls = storage.getData(config.const.PARAMS);
 
     return (ls && ls[key]) || null;
 };

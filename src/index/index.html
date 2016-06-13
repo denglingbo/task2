@@ -13,7 +13,7 @@
     <div id="menu" class="menu">
         <ul>
             <li class="director" data-rid="2" data-log='{"actionTag":"indexMyDuty"}'>
-                <div>
+                <div class="touch-button">
                     <p>
                         <b>{{ lang.director }}</b>
                         <span loader="(<em>{myDuty}</em>)" class="hide"></span>
@@ -21,7 +21,7 @@
                 </div>
             </li>
             <li class="dispatch" data-rid="1" data-log='{"actionTag":"indexMyAssign"}'>
-                <div>
+                <div class="touch-button">
                     <p>
                         <b>{{ lang.dispatch }}</b>
                         <span loader="(<em>{myAssign}</em>)" class="hide">(<em></em>)</span>
@@ -29,7 +29,7 @@
                 </div>
             </li>
             <li class="partake" data-rid="3" data-log='{"actionTag":"indexMyAttend"}'>
-                <div>
+                <div class="touch-button">
                     <p>
                         <b>{{ lang.partake }}</b>
                         <span loader="(<em>{myAttend}</em>)" class="hide">(<em></em>)</span>
@@ -39,10 +39,12 @@
         </ul>
     </div>
 
-    <div id="add-newtask" class="add-task" data-log='{"actionTag":"indexNewTask"}'>
-        <div class="button-layout">
-            <div class="button"></div>
-            <div class="text">{{ lang.newTask }}</div>
+    <div id="bottom-wrapper">
+        <div id="add-newtask" class="add-task touch-button" data-log='{"actionTag":"indexNewTask"}'>
+            <div class="button-layout">
+                <div class="button-img button"></div>
+                <div class="button-text text">{{ lang.newTask }}</div>
+            </div>
         </div>
     </div>
     </script>

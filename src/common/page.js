@@ -10,10 +10,7 @@ var util = require('./util');
 var storage = require('./localstorage');
 var lang = require('./lang');
 var log = require('./log');
-// var fastclick = require('dep/fastclick');
-// var localcache = require('./localcache');
-/* test cookie */
-// var cookies = require('dep/cookies');
+var md5 = require('dep/md5');
 
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
@@ -30,7 +27,7 @@ if (!window.pageLog) {
  * @return {string|null}
  */
 var checkParamNull = function (key) {
-    var ls = storage.getData(config.const.TASK_PARAMS);
+    var ls = storage.getData(config.const.PARAMS);
 
     if (!ls) {
         return '';
@@ -73,7 +70,7 @@ var getParams = function () {
         client: checkParamNull('client')
     };
 
-    storage.addData(config.const.TASK_PARAMS, data);
+    storage.addData(config.const.PARAMS, data);
 
     return data;
 };
@@ -85,9 +82,12 @@ var getParams = function () {
  * @return {Object} 壳外需要使用的配置
  */
 var getShell = function (data) {
+    var appVersion = navigator.appVersion;
     var shell = {
         right: {},
-        left: {}
+        left: {},
+        // 判断是否是 苹果机器
+        apple: appVersion && (/(iphone|ipad)/i).test(appVersion)
     };
 
     var iconPath = 'img/shell';
@@ -429,7 +429,7 @@ Page.prototype.getRequestConfig = function (api, data, opts) {
     };
 
     // 默认情况都需要带给 网关 的参数
-    var defParams = storage.getData(config.const.TASK_PARAMS);
+    var defParams = storage.getData(config.const.PARAMS);
     var reqData = defParams;
     // url 上的参数
     var urlData = [];
@@ -484,6 +484,7 @@ Page.post = function (api, data, options) {
 
 /**
  * Ajax 请求数据
+ * 注意 此处在请求前添加了防一个请求重复提交的过滤
  *
  * @param {number} api api号
  * @param {Object} data 请求数据
@@ -511,9 +512,9 @@ Page.ajax = function (api, data, options) {
             msg: 'Offline'
         };
 
-        if (/get/i.test(opts.type)) {
-            me.failed(err);
-        }
+        // if (/get/i.test(opts.type)) {
+        //     me.failed(err);
+        // }
 
         dfd.reject(err);
         return dfd;
@@ -573,7 +574,7 @@ Page.ajax = function (api, data, options) {
         if (config.debug) {
             setTimeout(function () {
                 dfd.resolve(result);
-            }, 40);
+            }, 100);
         }
         else {
             dfd.resolve(result);
@@ -584,15 +585,93 @@ Page.ajax = function (api, data, options) {
         dfd.reject(err);
     };
 
-    /* eslint-disable */
-    console.info(ajaxSettings);
-    /* eslint-enable */
+    // 移除该请求
+    ajaxSettings.complete = function () {
+        if (config.debug) {
+            setTimeout(function () {
+                removeAjaxId(dfd.__ajaxId);
+            }, 100);
+        }
+        else {
+            removeAjaxId(dfd.__ajaxId);
+        }
+    };
 
-    // 这里实际会经过 mbreq.js 重写
-    $.ajax(ajaxSettings);
+    // 避免一个请求多次发送
+    var ajaxId = createAjaxId(ajaxSettings);
+
+    // 加入队列成功
+    if (ajaxId) {
+        dfd.__ajaxId = ajaxId;
+
+        // 这里实际会经过 mbreq.js 重写
+        $.ajax(ajaxSettings);
+
+        /* eslint-disable */
+        console.info(ajaxSettings);
+        /* eslint-enable */
+    }
+    else {
+        dfd.reject();
+    }
 
     return dfd;
 };
+
+/**
+ * ajax 请求队列
+ */
+var ajaxQueue = [];
+
+/**
+ * 创建ajax id
+ *
+ * @param {Object} ajaxSettings, ajax 配置
+ * @return {string|null} 成功则返回 ajaxId
+ */
+function createAjaxId(ajaxSettings) {
+
+    try {
+
+        // 判断是否是同一个请求
+        // 如果是同一个请求，并且之前的请求还没有结束，则不再发送
+        var ajaxId = $.isPlainObject(ajaxSettings)
+                        ? md5(JSON.stringify(ajaxSettings))
+                        : md5(ajaxSettings);
+
+        // 判断请求是否在队列中
+        if ($.inArray(ajaxId, ajaxQueue) === -1) {
+
+            ajaxQueue.push(ajaxId);
+
+            return ajaxId;
+        }
+    }
+    catch (ex) {
+        return null;
+    }
+
+    return null;
+}
+
+/**
+ * 删除ajax id
+ *
+ * @param {Object} ajaxId, 要删除的 ajaxId
+ * @return {boolean} 是否删除成功
+ */
+function removeAjaxId(ajaxId) {
+    var index = $.inArray(ajaxId, ajaxQueue);
+
+    if (index === -1) {
+        return false;
+    }
+
+    ajaxQueue.splice(index, 1);
+
+    return true;
+}
+
 
 Page.prototype.ajax = Page.ajax;
 Page.prototype.post = Page.post;

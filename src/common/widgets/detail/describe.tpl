@@ -1,6 +1,32 @@
+{{#auditRemark}}
+<!-- 审核理由，同意 不同意 的内容 -->
+<div class="layout">
+    <div class="sub-title">{{ lang.auditRemark }}</div>
+
+    <div class="layout-section word-content rich-outter">
+        <div class="rich-inner">
+        {{& auditRemark }}
+        </div>
+    </div>
+</div>
+{{/auditRemark}}
+
+{{#suspenRemark}}
+<!-- 撤消理由 -->
+<div class="layout">
+    <div class="sub-title">{{ lang.revokeReason }}</div>
+
+    <div class="layout-section word-content rich-outter">
+        <div class="rich-inner">
+        {{& suspenRemark }}
+        </div>
+    </div>
+</div>
+{{/suspenRemark}}
+
 {{#refuseReason}}
 <!-- 拒绝理由 -->
-<div class="layout detail-comments">
+<div class="layout">
     <div class="sub-title">{{ lang.refuseReason }}</div>
 
     <div class="layout-section word-content rich-outter">
@@ -13,8 +39,8 @@
 
 {{#completeRemark}}
 <!-- 申请理由 -->
-<div class="layout detail-comments">
-    <div class="sub-title">{{ reasonsTitleRaw }}</div>
+<div class="layout">
+    <div class="sub-title">{{ lang.reasonsTitle }}</div>
 
     <div class="layout-section word-content rich-outter">
         <div class="rich-inner">
@@ -26,8 +52,8 @@
 
 {{#summary}}
 <!-- 总结 -->
-<div class="layout detail-comments">
-    <div class="sub-title">{{ lang.summaryTitle }}</div>
+<div class="layout">
+    <div class="sub-title">{{ summaryTitleRaw }}</div>
 
     <div class="layout-section word-content rich-outter">
         <div class="rich-inner">

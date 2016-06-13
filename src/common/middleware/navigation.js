@@ -129,22 +129,24 @@ navigation.open = function (url, options) {
     // 这个情况下，如果没有 referer，title 传递了也不会使用
     if (url === -1) {
 
+        // 可爱的 PM 说：这个功能不要了
         // 如果有 referer 则直接跳转到指定页面
-        if (urlReferer) {
-            // 使用跳转 url
-            try {
-                url = formatUrlReferer(urlReferer, opts.keep);
-            }
-            catch (ex) {
-                CPNavigationBar.redirect('/');
-            }
+        // if (urlReferer) {
+        //     // 使用跳转 url
+        //     try {
+        //         url = formatUrlReferer(urlReferer, opts.keep);
+        //     }
+        //     catch (ex) {
+        //         CPNavigationBar.redirect('/');
+        //     }
 
-            CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams);
-        }
-        else {
-            CPNavigationBar.returnPreviousPage();
-        }
+        //     CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams);
+        // }
+        // else {
+        //     CPNavigationBar.returnPreviousPage();
+        // }
 
+        CPNavigationBar.returnPreviousPage();
         return;
     }
 
@@ -192,7 +194,7 @@ navigation.right = function (buttonArray) {
     }
 
     var arr = [];
-    var main;
+    var main = '';
 
     buttonArray.forEach(function (item) {
 
@@ -208,9 +210,9 @@ navigation.right = function (buttonArray) {
         }
     });
 
-    var icon = '';
+    var icon = main;
     // 如果只有一个下拉，则不需要菜单 icon
-    if (arr.length > 1) {
+    if (arr.length === 1) {
         icon = main || (arr[0].iconPath || arr[0].title);
     }
     
@@ -219,6 +221,47 @@ navigation.right = function (buttonArray) {
 
 navigation.title = function (title) {
     CPNavigationBar.setTitle(title);
+};
+
+navigation.button = function (dir, enable) {
+    CPNavigationBar.setButtonEnable(dir, enable);
+};
+
+/**
+ * 检查必填内容是否输入完整
+ */
+var setButtonEnable = function ($required) {
+    var enable = true;
+
+    $required.each(function () {
+        var $item = $(this);
+        var txt = '';
+        if ($item.is('textarea') || $item.is('input')) {
+            txt = $item.val();
+        }
+        else {
+            txt = $item.html();
+        }
+
+        if (txt.length === 0) {
+            enable = false;
+        }
+    });
+
+    navigation.button('right', enable);
+};
+
+navigation.buttonAutoEnable = function () {
+
+    var $required = $('[required]');
+
+    // 设置默认状态
+    setButtonEnable($required);
+
+    // 监听输入
+    $required.on('input', function () {
+        setButtonEnable($required);
+    });
 };
 
 module.exports = navigation;

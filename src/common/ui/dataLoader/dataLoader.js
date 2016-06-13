@@ -274,8 +274,8 @@ $.extend(DataLoader.prototype, {
                 }
 
                 // 是否需求加载更多，由 requestMore 进行判断
-                me.requestMore(function (data) {
-                    me.fire('more', data);
+                me.requestMore(function (err, data) {
+                    me.fire('more', err, data);
                 });
             });
 
@@ -308,7 +308,7 @@ $.extend(DataLoader.prototype, {
             .done(function (result) {
 
                 if (result.meta && result.meta.code !== 200) {
-                    callback && callback.call(me, false);
+                    callback && callback.call(me, result.meta);
                     return;
                 }
 
@@ -319,12 +319,12 @@ $.extend(DataLoader.prototype, {
                     me.storeMD5Data(data);
                 }
 
-                callback && callback.call(me, data);
+                callback && callback.call(me, null, data);
 
                 me.page ++;
             })
             .fail(function (err) {
-                callback && callback.call(me, false);
+                callback && callback.call(me, err);
             })
             .always(function () {
                 me.reqEnd = +new Date();
@@ -383,10 +383,13 @@ $.extend(DataLoader.prototype, {
 
         var curpage = me.page;
 
+        // 记录一下当前page 页
+        var curPageNum = me.page;
+
         // 重置 page
         me.page = 1;
 
-        me.send(function (data) {
+        me.send(function (err, data) {
 
             if (data) {
 
@@ -394,6 +397,8 @@ $.extend(DataLoader.prototype, {
 
                 // 最新数据没有变化，不进行后面的操作
                 if (unChanged) {
+                    // 如果没有重载整个 dom 区，则恢复 me.page
+                    me.page = curPageNum;
                     me.statusChange('reload', 'unchanged');
                     dfd.resolve.call(me, data, unChanged);
                     return;
@@ -436,49 +441,49 @@ $.extend(DataLoader.prototype, {
         // 开始请求
         me.statusChange('more', 'process');
 
-        me.send(function (data) {
+        me.send(function (err, data) {
 
-            if (data) {
+            if (err) {
+                me.statusChange('more', 'fail');
+                fn && fn.call(me, err);
+                return;
+            }
 
-                // 当前数据长度
-                var list = data[me.opts.dataKey] || [];
+            // 当前数据长度
+            var list = data[me.opts.dataKey] || [];
 
-                // 记录总的数据长度
-                me._total = data[me.opts.totalKey];
+            // 记录总的数据长度
+            me._total = data[me.opts.totalKey];
 
-                // 添加数据长度
-                me._length = me._length + me.opts.pageNum;
+            // 添加数据长度
+            me._length = me._length + me.opts.pageNum;
 
-                if (list.length <= 0) {
-                    if (me.opts.moreNullHidden) {
-                        me.statusChange('more');
-                    }
-                    else {
-                        me.statusChange('more', 'nodata');
-                    }
-
-                    fn && fn.call(me, data);
-                    return;
-                }
-
-                if (me.$wrapper.hasClass('hide')) {
-                    me.$wrapper.removeClass('hide');
-                }
-
-                // 以下两种情况认为数据已经加载完毕
-                if (me.isAllLoaded() || me._total - me._length <= 0) {
-                    me.statusChange('more', 'max');
+            if (list.length <= 0) {
+                if (me.opts.moreNullHidden) {
+                    me.statusChange('more');
                 }
                 else {
-                    me.statusChange('more', 'done');
-                    me.statusChange('more', 'default', 300);
+                    me.statusChange('more', 'nodata');
                 }
-            }
-            else {
-                me.statusChange('more', 'fail');
+
+                fn && fn.call(me, null, data);
+                return;
             }
 
-            fn && fn.call(me, data);
+            if (me.$wrapper.hasClass('hide')) {
+                me.$wrapper.removeClass('hide');
+            }
+
+            // 以下两种情况认为数据已经加载完毕
+            if (me.isAllLoaded() || me._total - me._length <= 0) {
+                me.statusChange('more', 'max');
+            }
+            else {
+                me.statusChange('more', 'done');
+                me.statusChange('more', 'default', 300);
+            }
+
+            fn && fn.call(me, null, data);
         });
     },
 

@@ -7,12 +7,14 @@
 
 require('./index.scss');
 
-var config = require('../config');
 var Page = require('common/page');
+var page = new Page();
+
+var config = require('../config');
 var Pharos = require('common/ui/pharos');
 var navigation = require('common/middleware/navigation');
 
-var page = new Page();
+require('common/ui/touchButton')();
 
 page.enter = function () {
 
@@ -20,11 +22,11 @@ page.enter = function () {
         lang: this.lang
     });
 
-    this.initHomeNum();
-
-    this.setMenuHeight();
+    this.setSize();
 
     this.bindEvents();
+
+    this.initHomeNum();
 };
 
 page.deviceready = function () {
@@ -40,28 +42,31 @@ page.deviceready = function () {
     });
 };
 
-page.initHomeNum = function () {
-
-    var promise = this.get(config.API.HOME_URL);
-
-    promise
-        .done(function (result) {
-            if (result && result.meta.code === 200) {
-                new Pharos('#menu', result.data);
-            }
-        });
-};
-
-page.setMenuHeight = function () {
+page.setSize = function () {
 
     var winHeight = $(window).height();
 
     var topHeight = winHeight * .68;
-    var bottomHeight = winHeight - topHeight;
 
-    $('.add-task').height(bottomHeight);
+    var $menu = $('#menu');
+    var $bottomWrapper = $('#bottom-wrapper');
+    var $buttonWrapper = $('.button-layout');
 
-    $('#menu').height(topHeight);
+    $menu.height(topHeight);
+    $bottomWrapper.height(winHeight - topHeight);
+
+    // 获取底部 按钮区域总高度
+    var buttonWrapperHeight = $('.add-task').height();
+    var buttonSize = buttonWrapperHeight - $('.button-text').height();
+
+    $('.button-img').css({
+        width: buttonSize,
+        height: buttonSize
+    });
+
+    $buttonWrapper .css({
+        'margin-left': $buttonWrapper .width() * -.5
+    });
 };
 
 page.bindEvents = function () {
@@ -77,7 +82,7 @@ page.bindEvents = function () {
 
         var rid = $(this).data('rid');
 
-        if (rid) {
+        if (rid !== undefined) {
             navigation.open('/task-list.html?rid=' + rid, {
                 title: ridMap[rid]
             });
@@ -95,6 +100,21 @@ page.bindEvents = function () {
     window.addEventListener(evt, function () {
         me.setMenuHeight();
     }, false);
+};
+
+/**
+ * 设置首页计数器
+ */
+page.initHomeNum = function () {
+
+    var promise = this.get(config.API.HOME_URL);
+
+    promise
+        .done(function (result) {
+            if (result && result.meta.code === 200) {
+                new Pharos('#menu', result.data);
+            }
+        });
 };
 
 page.start();

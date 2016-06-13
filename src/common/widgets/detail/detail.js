@@ -10,7 +10,7 @@ var users = require('common/middleware/users/users');
 var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
-var IScroll = require('dep/iscroll');
+// var IScroll = require('dep/iscroll');
 
 var detail = {};
 
@@ -205,70 +205,107 @@ detail.bindTickEvents = function (options) {
 };
 
 /**
- * 富文本区域支持滑动
+ * 富文本
  */
 detail.richContent = function () {
 
-    var $outer = $('.rich-outter');
-    var $inner = $('.rich-inner');
+    var richFormat = function ($outer, $inner) {
 
-    var max = {
-        width: $outer.width(),
-        height: 250
+        var max = {
+            width: $outer.width(),
+            height: 250
+        };
+        var real = {};
+
+        $outer.css({
+            width: 9999,
+            position: 'relative'
+        });
+
+        $inner.addClass('absolute');
+        real.width = $inner.width();
+        real.height = $inner.height();
+        $inner.removeClass('absolute');
+
+        $outer.css({
+            width: max.width
+        });
+
+        var scrollX = false;
+        // var scrollY = false;
+
+        if (real.width - max.width > 10) {
+            scrollX = true;
+            $outer.width(max.width);
+        }
+        // if (real.height > max.height) {
+        //     scrollY = true;
+        //     $outer.height(max.height);
+        // }
+
+        if (!scrollX) {
+            return;
+        }
+
+        $inner.css({
+            width: real.width
+        });
     };
-    var real = {};
 
-    $outer.css({
-        width: 9999,
-        position: 'relative'
+    $('.rich-outter').each(function () {
+
+        var $outer = $(this);
+        var $inner = $outer.find('.rich-inner');
+
+        var html = $inner.html();
+
+        if (/<*.+>/.test(html)) {
+            richFormat($outer, $inner);
+        }
+
+        // $outer.after(
+        //     '<div toggle-closed="全部" toggle-opened="收起" class="toggle-view">查看全部内容</div>'
+        // );
+
+        // $toggle = $('.toggle-view');
     });
 
-    $inner.addClass('absolute');
-    real.width = $inner.width();
-    real.height = $inner.height();
-    $inner.removeClass('absolute');
+    // $('.main').on('click', '.toggle-view', function () {
+    //     var $toggle = $(this);
+    //     var opened = $toggle.attr('toggle-opened');
+    //     var closed = $toggle.attr('toggle-closed');
+    //     var $content = $toggle.parent().find('.rich-outter');
 
-    $outer.css({
-        width: max.width
-    });
+    //     var h = $toggle.html();
 
-    var scrollX = false;
-    var scrollY = false;
-
-    if (real.width - max.width > 10) {
-        scrollX = true;
-        $outer.width(max.width);
-    }
-    if (real.height > max.height) {
-        scrollY = true;
-        $outer.height(max.height);
-    }
-
-    if (!scrollX && !scrollY) {
-        return;
-    }
-
-    $inner.css({
-        width: real.width,
-        height: real.height
-    });
+    //     // 收起
+    //     if (h === opened) {
+    //         $toggle.html(closed);
+    //         $content.removeClass('height-auto');
+    //     }
+    //     // 展开
+    //     else {
+    //         $toggle.html(opened);
+    //         $content.addClass('height-auto');
+    //     }
+    // });
 
     // 初始化 scroll
-    new IScroll($outer[0], {
-        scrollX: scrollX,
-        scrollY: scrollY,
-        scrollbars: false,
-        // click: true,
+    // new IScroll($outer[0], {
+    //     scrollX: scrollX,
+    //     scrollY: scrollY,
+    //     scrollbars: false,
+    //     // click: true,
 
-        // 禁用监听鼠标和指针
-        disableMouse: false,
-        disablePointer: false,
+    //     // 禁用监听鼠标和指针
+    //     disableMouse: false,
+    //     disablePointer: false,
 
-        mouseWheel: false,
+    //     mouseWheel: false,
 
-        // 快速触屏的势能缓冲开关
-        momentum: false
-    });
+    //     // 快速触屏的势能缓冲开关
+    //     momentum: false
+    // });
 };
 
 module.exports = detail;

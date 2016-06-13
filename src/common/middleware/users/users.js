@@ -16,7 +16,7 @@ var middleware = {};
  * @return {string} uid
  */
 middleware.uid = function () {
-    var data = storage.getData(config.const.TASK_PARAMS);
+    var data = storage.getData(config.const.PARAMS);
 
     if (!data) {
         return null;
@@ -36,7 +36,7 @@ middleware.uid = function () {
  */
 middleware.companyId = function (cid) {
     // localstorage
-    var data = storage.getData(config.const.TASK_PARAMS);
+    var data = storage.getData(config.const.PARAMS);
 
     if (!data) {
         return null;
@@ -45,7 +45,7 @@ middleware.companyId = function (cid) {
     // 1. 后端传递的 cid
     if (cid !== undefined && cid !== null) {
         data.cid = cid;
-        storage.addData(config.const.TASK_PARAMS, data);
+        storage.addData(config.const.PARAMS, data);
         return cid;
     }
 

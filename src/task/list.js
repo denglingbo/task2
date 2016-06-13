@@ -8,20 +8,19 @@
 require('./list.scss');
 require('common/widgets/search/searchEnter.scss');
 
+var Page = require('common/page');
+var page = new Page();
+
 var config = require('../config');
 var util = require('common/util');
 var navigation = require('common/middleware/navigation');
-var Page = require('common/page');
 // var Sticky = require('common/ui/sticky');
 
 // 初始化 单页
 var InitPage = require('./list/initPage');
-
 // 初始化多页切换
 var PageSlider = require('./list/pageSlider');
-
 var pageTpl = require('./list/page');
-
 var IScroll = require('dep/iscroll');
 
 /**
@@ -32,7 +31,8 @@ var IScroll = require('dep/iscroll');
  */
 var rid = util.getParam('rid');
 
-var page = new Page();
+var Localdb = require('common/ui/localdb');
+var coll = new Localdb(config.const.DATABASE_NAME, 'LIST');
 
 
 /**
@@ -218,14 +218,14 @@ function switchPage(target, info) {
 
     if (myPage) {
 
-        myPage.fn && myPage.fn.pagination.show();
+        // myPage.fn && myPage.fn.pagination.show();
 
         // 点击已有数据的未完成，要特殊处理下
         if (myPage.name === 'opened' && filter) {
 
-            var $second = $('.tab .selected');
-            var selectedName = $second.data('name');
-            pageCache[selectedName].fn.pagination.show();
+            // var $second = $('.tab .selected');
+            // var selectedName = $second.data('name');
+            // pageCache[selectedName].fn.pagination.show();
 
             return;
         }
@@ -253,7 +253,9 @@ function LoadPage(info) {
 
     // 这里只绑定数据
     pageCache[info.name] = {
-        name: info.name
+        name: info.name,
+        fn: null,
+        data: null
     };
 
     var $wrapper = $(info.selector);
@@ -276,7 +278,7 @@ function LoadPage(info) {
         var api = info.api || config.API.GET_TASK_LIST;
 
         pageCache[info.name].fn = new InitPage({
-
+            isApple: page._shell.apple,
             wrapper: $wrapper.find('.scroll-outter'),
             main: '.list-wrapper-content',
 
@@ -290,6 +292,17 @@ function LoadPage(info) {
                 }, info.params || {});
 
                 return page.get(api, params);
+            },
+
+            onFirstDone: function (data) {
+                pageCache[info.name].data = data;
+
+                if (info.name === 'opened' && data) {
+
+                    coll.update(data, {
+                        rid: rid
+                    });
+                }
             },
 
             tpl: template,

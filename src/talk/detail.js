@@ -180,6 +180,7 @@ page.initCommentList = function () {
     new WidgetCommentList(me, {
 
         data: me.data,
+        moreNullHidden: true,
 
         API: {
             'delete': config.API.TALK_COMMENT_DELETE,
@@ -232,6 +233,4 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

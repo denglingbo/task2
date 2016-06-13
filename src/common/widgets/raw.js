@@ -19,6 +19,8 @@ var statusMap = {
     3: lang.refuseText
 };
 
+raw.statusMap = statusMap;
+
 // 紧要程度
 var importanceMap = {
     1: lang.urgentAndImportant,
@@ -26,6 +28,8 @@ var importanceMap = {
     3: lang.urgent,
     4: lang.general
 };
+
+raw.importanceMap = importanceMap;
 
 raw.delay = function (key, endDate) {
     // 尽快完成，不需要延期标识符

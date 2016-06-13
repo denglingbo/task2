@@ -5,19 +5,30 @@
  * 初始化滚动 test [没有实现完成]
  */
 
+var config = require('../../config');
 var IScroll = require('dep/iscroll');
 // var util = require('common/util');
 var raw = require('common/widgets/raw');
 var users = require('common/middleware/users/users');
 var Pharos = require('common/ui/pharos');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
-
+var util = require('common/util');
 // 页码提示
 require('common/ui/pagination/pagination.scss');
 var Pagination = require('common/ui/pagination/pagination');
 
 var lang = require('common/lang').getData();
 
+/**
+ * role id
+ * 1: 我派发的
+ * 2: 我负责的
+ * 3: 我参与的
+ */
+var rid = util.getParam('rid');
+
+var Localdb = require('common/ui/localdb');
+var coll = new Localdb(config.const.DATABASE_NAME, 'LIST');
 
 /**
  * 批量处理数据
@@ -89,6 +100,8 @@ function Init(options) {
     var me = this;
 
     me.opts = {
+        isApple: false,
+
         // 外容器，scroll 的外容器
         wrapper: null,
 
@@ -104,6 +117,8 @@ function Init(options) {
         dataKey: 'objList',
 
         tpl: null,
+
+        onFirstDone: function () {},
 
         onPaginationDone: function () {}
     };
@@ -161,6 +176,12 @@ Init.prototype = {
         me.getMoreData(function (data) {
             me.initScroll();
 
+            me.opts.onFirstDone(data);
+
+            if (!data) {
+                return;
+            }
+
             // 初始化一个分页提示控件
             me.pagination = new Pagination({
                 wrapper: me.$wrapper,
@@ -187,7 +208,6 @@ Init.prototype = {
 
         var me = this;
 
-        // var width = $(window).width();
         var height = $(window).height();
 
         // 这里要先获取高度
@@ -230,7 +250,7 @@ Init.prototype = {
                 mouseWheel: false,
 
                 // 快速触屏的势能缓冲开关
-                momentum: false
+                momentum: me.opts.isApple
             });
 
             me.bindEvents();
@@ -239,13 +259,18 @@ Init.prototype = {
 
     bindEvents: function () {
         var me = this;
-
+        var timer = null;
         // 监听滚动
         me.scroll.on('scroll', function () {
-            me.checkReload(this);
-            me.checkMore(this);
+            var target = this;
+            me.checkReload(target);
+            me.checkMore(target);
 
-            me.pagination.process(this.y);
+            clearTimeout(timer);
+
+            timer = setTimeout(function () {
+                me.pagination.process(target.y);
+            }, 10);
         });
 
         me.scroll.on('scrollStart', function () {
@@ -284,6 +309,11 @@ Init.prototype = {
         this._moring = false;
     },
 
+    /**
+     * 重新加载数据
+     *
+     * @param {Function} callback, 回调
+     */
     getReloadData: function (callback) {
         var me = this;
 
@@ -297,14 +327,16 @@ Init.prototype = {
 
                 // 用于分页提示
                 data.pagenum = this.page;
-                dealData(data);
-                me.dataLoader.render(data);
+
+                // this.render(data);
+                // var jids = getJids(data.objList);
+                // me.renderUser(jids);
+
+                me.renderMain(this, data);
+
                 me.setBasic();
                 me.scroll.refresh();
                 me.reset();
-
-                var jids = getJids(data.objList);
-                me.renderUser(jids);
             })
             .fail(function () {
                 me._reloadFailed = true;
@@ -315,12 +347,32 @@ Init.prototype = {
             });
     },
 
+    /**
+     * 获取更多数据
+     *
+     * @param {Function} callback, 回调
+     */
     getMoreData: function (callback) {
         var me = this;
 
-        me.dataLoader.requestMore(function (data) {
+        me.dataLoader.requestMore(function (err, data) {
 
             if (!data) {
+
+                // 离线机制
+                if (!util.isNetwork()) {
+                    var offlineData = coll.find({
+                        rid: rid
+                    });
+
+                    me.renderMain(this, offlineData, 'append');
+                    me.offline();
+                }
+
+                else {
+                    callback && callback(null);
+                }
+
                 return;
             }
 
@@ -328,13 +380,13 @@ Init.prototype = {
             me._moring = false;
             // 用于分页提示
             data.pagenum = this.page;
-            dealData(data);
 
-            this.render(data, 'append');
+            // this.render(data, 'append');
+            // var jids = getJids(data.objList);
+            // me.renderUser(jids);
+            me.renderMain(this, data, 'append');
+
             me.setBasic();
-
-            var jids = getJids(data.objList);
-            me.renderUser(jids);
 
             callback && callback(data);
 
@@ -360,6 +412,37 @@ Init.prototype = {
                 // me.failUser();
             });
     },
+
+    /**
+     * 渲染主体部分
+     *
+     * @param {Function} loader, dataLoader
+     * @param {Object} data, 数据
+     * @param {string} appendType, append 方式
+     */
+    renderMain: function (loader, data, appendType) {
+        if (!data) {
+            return;
+        }
+
+        dealData(data);
+
+        loader.render(data, appendType || 'html');
+
+        var jids = getJids(data.objList);
+        this.renderUser(jids);
+    },
+
+    /**
+     * 页面离线事务
+     */
+    offline: function () {
+        $('#main').off('click');
+        $('.page-loader li').off('click');
+        $('.search-in').offx('click');
+    },
+
+
 
     reloadStartTime: 0,
     reloadEndTime: 0,
