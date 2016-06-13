@@ -5,7 +5,6 @@
  * 本地数据库，主要应用于 离线状态
  */
 /* eslint-disable */
-
 var md5 = require('dep/md5');
 var util = require('common/util');
 var localstorage = require('common/localstorage');
