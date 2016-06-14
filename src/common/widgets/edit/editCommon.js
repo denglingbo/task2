@@ -130,6 +130,7 @@ editCom.submitValid = function (submitFn) {
     var validObj = this.valid;
     var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
+
     if (flag) {
        submitFn(); 
     }
@@ -287,6 +288,7 @@ editCom.initImportanceLevel = function (selector, data) {
             validObj.isEdit = oldVal !== infoData['importanceLevel'] ? true : validObj.isEdit;
         }
     };
+
     this.initMobiscroll('select', selector, data);
 };
 
@@ -308,6 +310,7 @@ editCom.initMobiscroll = function (method, selector, data) {
         buttons: ['cancel', 'set'],
         height: 50
     };
+
     $(selector).mobiscroll()[method]($.extend({}, mobiOptions, data));
 };
 
@@ -348,7 +351,7 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    var importanceLevel = [lang.urgentAndImportant, lang.urgent, lang.important, lang.general];
+    var importanceLevel = [lang.urgentAndImportant, lang.important, lang.urgent, lang.general];
     return importanceLevel[level - 1];
 };
 

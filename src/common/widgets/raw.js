@@ -180,9 +180,10 @@ raw.formatDateToNow = function (date, now) {
     var diff = now - date;
 
     // error
-    if (diff < 0) {
-        return null;
-    }
+    // java 返回的时间非准确值
+    // if (diff < 0) {
+    //     return null;
+    // }
     // 0-60s
     if (diff < 60000) {
         return '刚刚';

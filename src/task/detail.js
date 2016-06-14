@@ -277,12 +277,16 @@ page.bindEvents = function () {
         me.follow(this);
     });
 
+    // 加载 事件&讨论 列表
     me.dataLoader.on('more', function (err, data) {
 
         if (err) {
             return;
         }
 
+        // 事件 & 讨论 详情需要 任务的状态
+        // taskStatus
+        data.taskStatus = me.data.status;
         detailUtil.formatEventTalkData(data, this.page);
 
         me.render('#affair-talk', data, {type: 'append'});

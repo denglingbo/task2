@@ -32,7 +32,9 @@ var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
 
 page.enter = function () {
+
     var me = this;
+
     me.$main = $('.main');
 
     me.data.describeTitleRaw = me.lang.talkDescribeTitle;
@@ -61,9 +63,9 @@ page.enter = function () {
 
     me.initCommentList();
 
-    if (me.isFailed) {
-        return;
-    }
+    // if (me.isFailed) {
+    //     return;
+    // }
 };
 
 /**
@@ -99,6 +101,11 @@ page.deviceready = function () {
             navigation.open(-1);
         }
     });
+
+    // 如果任务已经结束，不再有以下操作
+    if (me.data.taskDoing() === false) {
+        return;
+    }
 
     var rightBar = [];
     var rights = me.data.rights;

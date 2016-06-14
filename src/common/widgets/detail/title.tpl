@@ -1,10 +1,12 @@
 <div class="layout detail-title">
     {{^isTaskPage}}
+    {{#taskDoing}}
     <div class="detail-title-control">
         <div class="detail-checkbox">
             <div class="tick {{#isDone}}ticked{{/isDone}}{{^isDone}}untick{{/isDone}}"></div>
         </div>
     </div>
+    {{/taskDoing}}
     {{/isTaskPage}}
 
     <div class="detail-title-main">

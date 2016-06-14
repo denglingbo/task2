@@ -35,6 +35,18 @@ detail.dealPageData = function (result) {
         return this.status === 6;
     };
 
+    // 只有［任务］在进行中，才可以对事件 & 讨论进行操作
+    var taskStatus = util.params('taskStatus');
+
+    // 判断任务是否在进行中
+    data.taskDoing = function () {
+        if (!taskStatus) {
+            return true;
+        }
+
+        return parseInt(taskStatus, 10) === 4;
+    };
+
     // 时间展示
     data.updateDateRaw = function () {
         return raw.formatDateToNow(this.opTime);

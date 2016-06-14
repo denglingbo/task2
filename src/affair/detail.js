@@ -77,6 +77,17 @@ page.deviceready = function () {
         }
     });
 
+    me.attach = AttachWrapper.initDetailAttach({
+        attachData: data.attachs,
+        container: '.attach-container',
+        wrapper: '.attach'
+    });
+
+    // 如果任务已经结束，不再有以下操作
+    if (me.data.taskDoing() === false) {
+        return;
+    }
+
     var rightBar = [];
     var rights = me.data.rights;
 
@@ -95,12 +106,6 @@ page.deviceready = function () {
     if (rightBar.length >= 1) {
         navigation.right(rightBar);
     }
-
-    me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.attachs,
-        container: '.attach-container',
-        wrapper: '.attach'
-    });
 };
 
 page.bindEvents = function () {
@@ -175,6 +180,4 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-// $(window).on('load', function () {
 page.start();
-// });

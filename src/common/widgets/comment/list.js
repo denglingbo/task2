@@ -20,11 +20,23 @@ function dealData(data, page) {
         return raw.formatDateToNow(this.opTime);
     };
 
+    // 只有［任务］在进行中，才可以对事件 & 讨论进行操作
+    var taskStatus = util.params('taskStatus');
+
+    // 判断任务是否在进行中
+    data.taskDoing = function () {
+        if (!taskStatus) {
+            return true;
+        }
+
+        return parseInt(taskStatus, 10) === 4;
+    };
+
     // 判断是否是评论所有者
-    data.isOwner = function () {
+    data.deleteRights = function () {
         var uid = users.uid();
 
-        if (this.userId && uid) {
+        if (this.userId && uid && data.taskDoing()) {
             return this.userId.toString() === uid.toString();
         }
 

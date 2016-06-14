@@ -118,7 +118,7 @@
         tid="{{ targetId }}" 
         class="affair-talk-item {{#isDone}}item-done{{/isDone}} {{#num}}new-msg{{/num}}" 
         data-type="{{ pageType }}" 
-        data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}" 
+        data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}&taskStatus={{ taskStatus }}" 
         data-log='{"actionTag":"taskDetailEnter{{ pageType }}"}'
     >
         <div class="column-left">

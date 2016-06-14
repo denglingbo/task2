@@ -52,14 +52,14 @@ page.deviceready = function () {
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachs = me.attach.getModifyAttaches();
         var url = DATA.id === 0 ? config.API.AFFAIR_NEW_URL : config.API.AFFAIR_EDIT_URL;
-        // editCom.submit(me, url);
+
         // 事件类型必填
         if (DATA.labelId) {
 
             var promise = editCom.submit(page, DATA, url);
             promise.done(function (result) {
                 // 后端 result.data 返回的是对应的 id, 并非对象
-                var affairId = result.data || DATA.affairId;
+                var affairId = result.data || DATA.id;
                 /* eslint-disable */
                 CPNavigationBar.redirect('/affair-detail.html?id=' + affairId);
                 /* eslint-ensable */
@@ -173,8 +173,15 @@ page.initPlugin = function () {
                             true :
                             editCom.valid.isEdit
                     );
+                },
+                onInit: function (context) {
+                    var sData = context.settings.data;
+                    var first = sData[0];
+
+                    DATA.labelId = first.value;
                 }
             });
+
         });
 
     // 初始化富文本框

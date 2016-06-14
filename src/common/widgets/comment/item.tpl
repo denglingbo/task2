@@ -19,9 +19,9 @@
                 <!-- By Attach js -->
             </div>
 
-            {{#isOwner}}
+            {{#deleteRights}}
             <div class="comments-button delete {{#isDone}}hide{{/isDone}}" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
-            {{/isOwner}}
+            {{/deleteRights}}
         </div>
     </div>
 </dd>

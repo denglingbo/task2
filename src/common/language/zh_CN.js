@@ -99,6 +99,7 @@ module.exports = {
     back: '返回',
     submit: '提交',
 
+    noNetwork: '没有网络',
     auditRemark: '审核理由',
     alertRemoveComment: '是否删除该条评论',
     searchOut: '退出搜索',
