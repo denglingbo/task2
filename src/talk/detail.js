@@ -75,10 +75,9 @@ page.deviceready = function () {
     var me = this;
     var lang = me.lang;
     var data = me.data;
-
-    if (data.summaryAttachs) {
+    if (data.attachs && data.attachs.length) {
         me.attach = AttachWrapper.initDetailAttach({
-            attachData: data.summaryAttachs,
+            attachData: data.attachs,
             container: '.attach-container',
             wrapper: '.attach'
         });

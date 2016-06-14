@@ -16,6 +16,12 @@
         {{> title}}
         {{> describe}}
 
+        <!-- 附件 -->
+        <div class="layout-list attach hide">
+            <div class="sub-title">{{lang.attach}}</div>
+            <div class="attach-container"></div>
+        </div>
+        
         <!-- 成员 -->
         <dl id="partner" class="layout-list partner">
             <dt class="sub-title">{{ lang.partner }}</dt>
@@ -42,11 +48,6 @@
             <div class="data-more"></div>
         </div>
 
-        <!-- 附件 -->
-        <div class="layout-list attach hide">
-            <div class="sub-title">{{lang.attach}}</div>
-            <div class="attach-container"></div>
-        </div>
 
         <!-- 底部按钮条 -->
         {{#rights}}

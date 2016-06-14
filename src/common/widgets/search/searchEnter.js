@@ -176,7 +176,7 @@ Search.prototype.redirectHistory = function () {
  * @return {string}, 搜索关键字
  */
 Search.prototype.getKey = function () {
-    return this.dom.$input.val();
+    return this.dom.$input.val().trim();
 };
 
 /**
@@ -282,10 +282,11 @@ Search.prototype.dataIsNull = function (data) {
 Search.prototype.loadList = function () {
     var me = this;
     var opts = me.opts;
-    var key = me.dom.$input.val();
+    var key = me.dom.$input.val().trim();
     if (key === '') {
         return;
     }
+    key = encodeURIComponent(key);
     var data = {
         title: key,
         role: opts.role,
@@ -342,7 +343,7 @@ Search.prototype.renderNull = function () {
  * @param {Object} data, 搜索数据
  * @param {string} append, 添加dom 节点的方式
  */
-Search.prototype.renderList = function (data, append) {
+Search.prototype.renderList = function (data) {
     var me = this;
     var opts = me.opts;
     me.setResultKey(data);
@@ -352,12 +353,7 @@ Search.prototype.renderList = function (data, append) {
         tmpl: opts.itemTpl
     });
 
-    if (append) {
-        ul.append(str);
-    }
-    else {
-        ul.html(str);
-    }
+    ul.html(str);
 };
 
 /**
@@ -386,10 +382,44 @@ Search.prototype.renderOutput = function (data) {
 Search.prototype.setResultKey = function (data) {
     var me = this;
     var key = me.getKey();
-    var reg = new RegExp(key);
+    if (key.indexOf('$') > -1) {
+        key = key.replace('$', '\\$');
+    }
+    else if (key.indexOf('^') > -1) {
+        key = key.replace('^', '\\^');
+    }
+    else if (key.indexOf('*') > -1) {
+        key = key.replace('*', '\\*');
+    }
+    else if (key.indexOf('.') > -1) {
+        key = key.replace('.', '\\.');
+    }
+    else if (key.indexOf('?') > -1) {
+        key = key.replace('?', '\\?');
+    }
+    else if (key.indexOf(')') > -1) {
+        key = key.replace(')', '\\)');
+    }
+    else if (key.indexOf('(') > -1) {
+        key = key.replace('(', '\\(');
+    }
+    else if (key.indexOf('|') > -1) {
+        key = key.replace('|', '\\|');
+    }
+    else if (key.indexOf('\\') > -1) {
+        key = key.replace('\\', '\\\\');
+    }
+    if (key === '<') {
+        key = '&lt;';
+    }
+    if (key === '>') {
+        key = '&gt;';
+    }
+    var reg = new RegExp(key, 'gi');
 
     data.objList.forEach(function (item) {
-        item.title = item.title.replace(reg, '<span class="input-key">' + key + '</span>');
+        item.title = item.title.replace(new RegExp(/</g), '&lt;').replace(new RegExp(/>/g), '&gt;');
+        item.title = item.title.replace(reg, '<span class="input-key">' + reg.exec(item.title) + '</span>');
     });
 };
 
@@ -489,7 +519,7 @@ Search.prototype.bindEvents = function () {
         }
     });
 
-    $(opts.wrap + ' .search-content').on('click', 'li', function (e) {
+    $(opts.wrap + ' .search-content').on('click', 'li.item', function (e) {
         var id = +$(this).data('id');
         var url = '/task-detail.html?taskId=' + id;
         /* eslint-disable */

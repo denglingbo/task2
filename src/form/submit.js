@@ -11,9 +11,9 @@ var config = require('config');
 var Page = require('common/page');
 var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
-var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var navigation = require('common/middleware/navigation');
 var MidUI = require('common/middleware/ui');
+var editCom = require('common/widgets/edit/editCommon');
 
 var page = new Page();
 var lang = page.lang;
@@ -159,7 +159,6 @@ page.getData = function (type) {
 page.enter = function () {
 
     var me = this;
-
     // 页面类型
     me.pageType = util.params('type');
     
@@ -171,18 +170,11 @@ page.enter = function () {
 
     var attachTpl = '';
 
-    // 总结情景下，提供上传附件功能
-    if (me.pageType === 'summary') {
-        attachTpl = require('common/middleware/attach/attach.tpl');
-
-        this.attach = AttachWrapper.initAttach({
-            containerDOM: '#attachList',
-            addBtnDOM: '#addAttach'
-        });
-    }
 
     var alertBox = require('common/widgets/edit/alert.tpl');
-
+    if (me.pageType === 'summary') {
+        attachTpl = require('common/middleware/attach/attach.tpl');
+    }
     // 如果没有问题就渲染对应模板
     if (curPage) {
         this.render('#main', {
@@ -193,6 +185,11 @@ page.enter = function () {
                 alertBox: alertBox
             }
         });
+    }
+
+    // 总结情景下，提供上传附件功能
+    if (me.pageType === 'summary') {
+        this.attach = editCom.initEditAttach();
     }
 
     me.phoneInput = [];

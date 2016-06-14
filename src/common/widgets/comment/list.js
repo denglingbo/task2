@@ -7,6 +7,7 @@ var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var MidUI = require('common/middleware/ui');
+var editCom = require('common/widgets/edit/editCommon');
 
 function dealData(data, page) {
 
@@ -181,6 +182,7 @@ $.extend(list.prototype, {
         $('.send').on('click', function () {
             me.addComment();
         });
+        me.attach = editCom.initEditAttach();
     },
 
     /**
@@ -236,7 +238,7 @@ $.extend(list.prototype, {
         var $content = $('.editable');
         var text = $content.text();
         var $null = $('.list-null');
-
+        var attachs = me.attach.getModifyAttaches();
         var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
             id: 0,
@@ -248,7 +250,7 @@ $.extend(list.prototype, {
                 'sentSms': false
             },
             // 附件暂时为空
-            attachements: []
+            attachements: attachs
         });
 
         promise
@@ -257,13 +259,15 @@ $.extend(list.prototype, {
                 if (!result || result.meta.code !== 200) {
                     return;
                 }
+                // 添加成功
+                if (result.meta.code === 200) {
 
-                // 共用 ./item.tpl
-                var data = {
-                    objList: [result.data]
-                };
-
-                dealData(data, me.page);
+                    // 共用 ./item.tpl
+                    var data = {
+                        objList: [result.data]
+                    };
+                    
+                    dealData(data, me.page);
 
                 me.page.render($('.comments dd').eq(0), data, {
                     tmpl: tmplItem,
@@ -276,9 +280,13 @@ $.extend(list.prototype, {
                 // 这里可以判断是否已经有了当前用户的信息
                 renderUser(me.$main, data.objList);
 
-                me.page.virtualInput.reset();
+                    me.page.virtualInput.reset();
+                    $('#attachList').html('');
+                    me.$listNull.addClass('hide');
+                }
+                else {
 
-                me.$listNull.addClass('hide');
+                }
             })
             .fail(function (err) {
                 

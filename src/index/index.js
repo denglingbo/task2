@@ -32,7 +32,6 @@ page.enter = function () {
 page.deviceready = function () {
 
     var lang = this.lang;
-
     navigation.title(lang.task);
 
     navigation.left({
