@@ -115,8 +115,14 @@ page.deviceready = function () {
             DATA.inheritance = false;
             data = JSON.parse(data);
             var contacts = data.contacts;
+            DATA.userIds = [];
             contacts.forEach(function (value, index) {
-                DATA.userIds.push(users.takeJid(value.jid));
+                var uid = users.takeJid(value.jid);
+
+                // 避免重复
+                if ($.inArray(uid, DATA.userIds) === -1) {
+                    DATA.userIds.push(uid);
+                }
             });
             $('#attends .value').text(editCom.getPersonsName(contacts));
             editCom.personIsChange(oldVal, DATA.userIds);

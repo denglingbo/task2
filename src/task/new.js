@@ -325,7 +325,6 @@ page.failUser = function () {
  */
 page.renderUser = function (originArr, dataArr) {
     var me = this;
-
     var data = {
         principal: null,
         partner: null
@@ -348,9 +347,15 @@ page.renderUser = function (originArr, dataArr) {
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
         });
-
+        for (var i = 0, len = partnerRaw.length; i < len; i++) {
+            if (dataRaw.principal === partnerRaw[i]) {
+                partnerRaw.splice(i, 1);
+                break;
+            }
+        }
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
+    
     $('#principal .value').text(dataRaw.principal);
     $('#attends .value').text(dataRaw.partnerRaw);
 };

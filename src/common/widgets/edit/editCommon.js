@@ -239,10 +239,13 @@ editCom.submit = function (page, data, ajaxUrl) {
                 success = true;
                 dfd.resolve(result);
             }
-        }).fail(function (result) {
+        })
+        .fail(function (result) {
             dfd.reject(result);
+        })
+        .always(function () {
+            me.submitAlert(success);
         });
-    me.submitAlert(success);
     return dfd;
 };
 
@@ -527,8 +530,8 @@ editCom.compareArr = function (arr1, arr2) {
  */
 editCom.getDataFromObj = function (target, source) {
     for (var key in target) {
-        if (target.hasOwnProperty(key)) {
-            target[key] = source[key] ? source[key] : target[key];
+        if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
+            target[key] = source[key];
         }
     }
 };
