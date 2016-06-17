@@ -359,7 +359,6 @@ util.phoneEncode = function (phoneNum) {
     return phoneNum.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
 };
 
-
 /**
  * 格式化日期
  *
@@ -447,62 +446,6 @@ util.dateDiff = function (date1, date2) {
 };
 
 /**
- * 转换string驼峰
- *
- * @param {string} str, 需要转换的字符串
- * @return {string} 转换后的驼峰命名
- */
-util.camelCase = function (str) {
-    return str.replace(/_+(.)?/g, function (str, e) {
-        return e ? e.toUpperCase() : '';
-    });
-};
-
-/**
- * 附件data传入 key转为 camelCase
- *
- * @param {Array} arr, 附件传入data.attachements
- * @return {Array}, 属性转换成驼峰命名的对象的集合
- */
-util.transKey = function (arr) {
-    var newArr = [];
-    var me = this;
-    if ($.isArray(arr)) {
-        newArr = arr;
-    }
-    else if (arr instanceof Object) {
-        newArr.push(arr);
-    }
-    var outArr = [];
-    var newObj = {};
-    for (var i = 0, len = newArr.length; i < len; i++) {
-        var item = newArr[i];
-        newObj = {};
-        for (var key in item) {
-            if (item.hasOwnProperty(key)) {
-                newObj[me.camelCase(key)] = item[key];
-            }
-        }
-        outArr.push(newObj);
-    }
-    return outArr;
-};
-
-/**
- * 数组浅层次clone
- *
- * @param {Array} arr, 需要clone的数组
- * @return {Array} clone的数组
- */
-util.arrClone = function (arr) {
-    var newArr = [];
-    arr.forEach(function (value) {
-        newArr.push(value);
-    });
-    return newArr;
-};
-
-/**
  * 把ms转换为 yyyy年MM月dd日 hh:mm的格式
  *
  * @param {number} ms 时间毫秒
@@ -526,54 +469,7 @@ util.formatTime = function (ms) {
 };
 
 /**
- * 比较两个数组的值是否相等
- *
- * @param {Array} arr1, 数组1
- * @param {Array} arr2, 数组2
- * @return {boolean} 是否相等
- */
-util.compareArr = function (arr1, arr2) {
-    var newArr1 = this.arrClone(arr1).sort();
-    var newArr2 = this.arrClone(arr2).sort();
-    var isDiff = newArr1.some(function (value, index) {
-        return value !== newArr2[index];
-    });
-    return isDiff;
-};
-
-/**
- * 从另一个对象获取与当前对象的属性相同的值
- *
- * @param {Object} target, 被赋值的对象
- * @param {Object} source, 源对象
- *
- */
-util.getDataFromObj = function (target, source) {
-    for (var key in target) {
-        if (target.hasOwnProperty(key)) {
-            target[key] = source[key] ? source[key] : target[key];
-        }
-    }
-};
-
-/**
- * 从选人组件返回数据获取人员名
- *
- * @param {Array} arr, 选人组件返回的contacts
- * @return {string}, 人员字符串
- *
- */
-util.getPersonsName = function (arr) {
-    var nameArr = [];
-    arr.forEach(function (item) {
-        nameArr.push(item.name);
-    });
-    return nameArr.join('、');
-};
-
-
-/**
- * 判断网络状态
+ * 判断网络状态, Connection 必须等待 设备就绪
  *
  * @return {boolean} 是否联网
  */

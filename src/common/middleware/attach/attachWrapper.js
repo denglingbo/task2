@@ -13,10 +13,9 @@ require('dep/ui/attaches/attaches');
 var localstorage = require('common/localstorage');
 var config = require('config');
 var lang = require('common/lang').getData();
-var util = require('common/util');
 
 var clientMsg = (function () {
-    var data = localstorage.getData('TASK_PARAMS');
+    var data = localstorage.getData(config.const.PARAMS);
 
     if (!data) {
         return;
@@ -78,7 +77,6 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
-    attachData = util.transKey(attachData);
     var attachOptions = {
         originAttaches: (attachData || []),
         dom: {
@@ -97,13 +95,13 @@ attach.initAttach = function (options, attachData) {
     // 初始化附件组件
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
-    // var renderString = Attach.getRenderString({attach: attachData}, attachOptions.clientMsg.appver);
+    /* eslint-enable */
     var renderString = attachObj.getRenderString();
 
     $(attachOptions.dom.containerDOM).append(renderString);
-    // Attach.initEvent(options.dom.containerDOM, attachOptions.clientMsg.lang);
+
     attachObj.initEvent();
-    /* eslint-enable */
+
     return attachObj;
 };
 
@@ -132,7 +130,7 @@ attach.initDetailAttach = function (options) {
 
     $(options.wrapper).removeClass('hide');
 
-    options.attachData = options.attachData ? util.transKey(options.attachData) : [];
+    options.attachData = options.attachData ? options.attachData : [];
     // 初始化附件组件
     var attachOptions = {
         dom: {

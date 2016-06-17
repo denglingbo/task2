@@ -1,4 +1,4 @@
-
+@import '../../css/global';
 
 #goalui-fixedinput-shadow {
     position: fixed;
@@ -27,6 +27,73 @@
     z-index: 99;
     padding: 6px 12px;
     background: #e8e8e8;
+
+    &.extend {
+        padding: 10px 10px 0;
+
+        .input-out {
+            margin: 0;
+            @include border-1px(bottom, #d4d7d9);
+
+            .placeholder {
+                top: 15px;
+                left: 10px;
+            }
+        }
+
+        .editable-out {
+            height: 110px;
+            border-radius: 4px;
+            padding: 15px 10px 10px;
+            // overflow: hidden;
+        }
+
+        .editable {
+            width: auto;
+            min-height: initial;
+            max-height: initial;
+            padding: 0;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .limit {
+            right: 60px;
+            top: 138px;
+            bottom: initial;
+        }
+
+        .button-wrap {
+            position: relative;
+            top: 0;
+            height: 50px;
+            text-align: right;
+            width: auto;
+
+            .button {
+                position: absolute;
+                top: -42px;
+                right: 10px;
+            }
+
+            .send {
+                width: 60px;
+                height: 30px;
+                border-radius: 4px;
+                background-color: #dcdcdc;
+                color: #fff;
+                float: right;
+                margin-top: 10px;
+                text-align: center;
+                padding-left: 0;
+                line-height: 30px;
+
+                &.enabled {
+                    background-color: #29e;
+                }
+            }
+        }
+    }
 
     .input-out {
         margin: 0 40px 0 0;

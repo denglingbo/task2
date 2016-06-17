@@ -15,6 +15,7 @@ var config = require('../config');
 var util = require('common/util');
 var navigation = require('common/middleware/navigation');
 // var Sticky = require('common/ui/sticky');
+var Pharos = require('common/ui/pharos');
 
 // 初始化 单页
 var InitPage = require('./list/initPage');
@@ -78,6 +79,8 @@ page.enter = function () {
     this.initTab();
 
     this.bindEvents();
+
+    this.initRemindNum();
 };
 
 page.deviceready = function () {
@@ -163,7 +166,6 @@ page.initTab = function () {
  *
  */
 page.initPageSlider = function () {
-    // var me = this;
 
     new PageSlider({
         outer: '#slider-outer',
@@ -174,18 +176,7 @@ page.initPageSlider = function () {
 
             switchPage(target, info);
 
-            // var myPage = pageCache[info.name];
-
             new LoadPage(info);
-
-            // 如果已经加载了页面，则只进行切换操作
-            // setTimeout(function() {
-            //     var myPage = pageCache[info.name]
-            //     if (myPage && myPage.fn) {
-            //         myPage.fn.pagination && myPage.fn.pagination.show();
-            //         return;
-            //     }
-            // }, 0);
         }
     });
 };
@@ -277,15 +268,18 @@ function LoadPage(info) {
         var template = require('./list/item');
         var api = info.api || config.API.GET_TASK_LIST;
 
+        var params = {};
+
         pageCache[info.name].fn = new InitPage({
             isApple: page._shell.apple,
             wrapper: $wrapper.find('.scroll-outter'),
             main: '.list-wrapper-content',
+            status: info.params.status,
 
             // ajax request
             promise: function () {
 
-                var params = $.extend({
+                params = $.extend({
                     role: rid,
                     currPage: this.page,
                     number: 10
@@ -297,12 +291,10 @@ function LoadPage(info) {
             onFirstDone: function (data) {
                 pageCache[info.name].data = data;
 
-                if (info.name === 'opened' && data) {
-
-                    coll.update(data, {
-                        rid: rid
-                    });
-                }
+                coll.update(data, {
+                    rid: rid,
+                    status: params.status
+                });
             },
 
             tpl: template,
@@ -311,5 +303,22 @@ function LoadPage(info) {
         });
     });
 }
+
+/**
+ * 设置计数器
+ */
+page.initRemindNum = function () {
+
+    var promise = this.get(config.API.DOCK_REMIND, {
+        role: util.params('rid')
+    });
+
+    promise
+        .done(function (result) {
+            if (result && result.meta.code === 200) {
+                new Pharos('#fixbar', result.data);
+            }
+        });
+};
 
 page.start();

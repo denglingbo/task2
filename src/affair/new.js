@@ -227,7 +227,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(DATA, result.data);
+                editCom.getDataFromObj(DATA, result.data);
                 dfd.resolve();
             }
         });

@@ -10,22 +10,20 @@ var users = require('common/middleware/users/users');
 var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
-// var IScroll = require('dep/iscroll');
+var navigation = require('common/middleware/navigation');
 
 var detail = {};
 
 /**
  * 初始化 Page 基本数据
  *
- * @param {Object} result, 处理详情页初始数据
+ * @param {Object} data, 处理详情页初始数据
  * @return {Object}
  */
-detail.dealPageData = function (result) {
-    if (result.meta && result.meta.code !== 200) {
+detail.dealPageData = function (data) {
+    if (!data) {
         return null;
     }
-
-    var data = result.data;
 
     if (data.content) {
         data.content = util.decodeHTML(data.content);
@@ -36,9 +34,9 @@ detail.dealPageData = function (result) {
     };
 
     // 只有［任务］在进行中，才可以对事件 & 讨论进行操作
-    var taskStatus = util.params('taskStatus');
-
     // 判断任务是否在进行中
+    // 用于 事件 & 讨论 页面从 url 参数中 获取 task 是否完成
+    var taskStatus = util.params('taskStatus');
     data.taskDoing = function () {
         if (!taskStatus) {
             return true;
@@ -83,6 +81,15 @@ detail.dealPageData = function (result) {
     data.partnerRaw = data.attendIds;
 
     return data;
+};
+
+detail.fixStyles = function () {
+    var $main = $('.main');
+    var $fixbar = $('.fixbar');
+
+    if ($fixbar.find('li').length === 0 && $('#goalui-fixedinput').length === 0) {
+        $main.addClass('nofixbar');
+    }
 };
 
 /**
@@ -183,6 +190,17 @@ detail.bindTickEvents = function (options) {
         }
     }
 
+    function failed(myTicker, type) {
+        myTicker[type.fail]();
+        changeStatus(type.fail);
+
+        var callbackFn = options[type.fail + 'Callback'];
+        callbackFn && callbackFn();
+    }
+
+    /**
+     * 更改状态之后 需要设置 框外右边的按钮状态
+     */
     me.ticker.on('tick', function (isCurTicked) {
         var myTicker = this;
         // 0: 取消
@@ -200,19 +218,163 @@ detail.bindTickEvents = function (options) {
 
         promise
             .done(function (result) {
+
+                // 操作成功
                 if (result && result.meta && result.meta.code === 200) {
                     myTicker[type.done]();
                     changeStatus(type.done);
+
+                    var callbackFn = options[type.done + 'Callback'];
+
+                    callbackFn && callbackFn(result.data);
                 }
                 else {
-                    myTicker[type.fail]();
-                    changeStatus(type.fail);
+                    failed(myTicker, type);
                 }
             })
             .fail(function () {
-                myTicker[type.fail]();
-                changeStatus(type.fail);
+                failed(myTicker, type);
             });
+    });
+};
+
+/**
+ * 公用的 详情页 右上方按钮设置
+ *
+ * @param {Function} page, new Page()
+ * @param {Object} data, 数据
+ * @param {string} pageType, 页面类型 task, talk, affair
+ * @param {Function} getAlert, 弹窗
+ */
+detail.naviRight = function (page, data, pageType, getAlert) {
+
+    data = this.dealPageData(data);
+
+    // 如果任务已经结束，不再有以下操作
+    if (data.taskDoing() === false) {
+        return;
+    }
+
+    var pageMap = {
+        talk: {
+            url: '/talk-new.html?talkId=' + data.id,
+            editTitle: lang.editTalk
+        },
+        affair: {
+            url: '/affair-new.html?affairId=' + data.id,
+            editTitle: lang.editAffair
+        },
+        task: {
+            url: '/task-new.html?taskId=' + data.id,
+            editTitle: lang.editTask
+        }
+    };
+
+    var rightBar = [page._shell.right.more];
+    var rights = data.rights;
+
+    // 当前页面配置
+    var curPage = pageMap[pageType];
+
+    // 编辑权限
+    if (rights.editRight) {
+        rightBar.push({
+            title: lang.editButton,
+            click: function () {
+                navigation.open(curPage.url, {
+                    title: curPage.editTitle
+                });
+            }
+        });
+    }
+
+    // 恢复权限
+    if (rights.recoverRight && getAlert) {
+        rightBar.push({
+            title: lang.recover,
+            click: getAlert
+        });
+    }
+
+    // 撤消权限
+    if (rights.revokeRight) {
+        rightBar.push({
+            title: lang.cancelButton,
+            click: function () {
+                navigation.open('/form-submit.html?type=revoke&taskId=' + data.id, {
+                    title: lang.cancelTitle
+                });
+            }
+        });
+    }
+
+    navigation.right(rightBar);
+};
+
+/**
+ * 处理后端的表单富文本
+ *
+ * @param {string} str, 字符串
+ * @return {string} 处理后的表单富文本
+ */
+// var richForm = function (str) {
+//     return str
+//         .replace(/<table/g, '<div class="richtext-wrap"><table')
+//         .replace(/<\/table>/g, '</table></div>')
+//         .replace(/<colgroup>[\s\S]*<\/colgroup>/, '')
+//         .replace()
+//         .replace(
+//             /<p><img[\s\S]*(src="[\s\S]*?")[\s\S]*?(\/)?><\/p>/g,
+//             '<div class="richtext-img"><img width="100%" style="margin: 5px 0px" $1 /></div>'
+//         );
+// };
+
+/**
+ * 富文本显示方式
+ *
+ * @param {Element} $outer, 富文本外层容器
+ * @param {Element} $inner, 富文本内层容器
+ */
+var richSize = function ($outer, $inner) {
+
+    var max = {
+        width: $outer.width(),
+        height: 250
+    };
+    var real = {};
+
+    $outer.css({
+        width: 9999,
+        position: 'relative'
+    });
+
+    $inner.addClass('absolute');
+    real.width = $inner.width();
+    real.height = $inner.height();
+    $inner.removeClass('absolute');
+
+    $outer.css({
+        width: max.width
+    });
+
+    var scrollX = false;
+    // var scrollY = false;
+
+    if (real.width - max.width > 10) {
+        scrollX = true;
+        $outer.width(max.width);
+    }
+    // if (real.height > max.height) {
+    //     scrollY = true;
+    //     $outer.height(max.height);
+    // }
+
+    if (!scrollX) {
+        return;
+    }
+
+    $inner.css({
+        width: real.width
     });
 };
 
@@ -220,49 +382,6 @@ detail.bindTickEvents = function (options) {
  * 富文本
  */
 detail.richContent = function () {
-
-    var richFormat = function ($outer, $inner) {
-
-        var max = {
-            width: $outer.width(),
-            height: 250
-        };
-        var real = {};
-
-        $outer.css({
-            width: 9999,
-            position: 'relative'
-        });
-
-        $inner.addClass('absolute');
-        real.width = $inner.width();
-        real.height = $inner.height();
-        $inner.removeClass('absolute');
-
-        $outer.css({
-            width: max.width
-        });
-
-        var scrollX = false;
-        // var scrollY = false;
-
-        if (real.width - max.width > 10) {
-            scrollX = true;
-            $outer.width(max.width);
-        }
-        // if (real.height > max.height) {
-        //     scrollY = true;
-        //     $outer.height(max.height);
-        // }
-
-        if (!scrollX) {
-            return;
-        }
-
-        $inner.css({
-            width: real.width
-        });
-    };
 
     $('.rich-outter').each(function () {
 
@@ -272,7 +391,7 @@ detail.richContent = function () {
         var html = $inner.html();
 
         if (/<*.+>/.test(html)) {
-            richFormat($outer, $inner);
+            richSize($outer, $inner);
         }
 
         // $outer.after(

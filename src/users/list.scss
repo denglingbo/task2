@@ -11,16 +11,17 @@
 .layout-list-only {
 
     // 成员
-    $left-width: rem(30px);
+    $left-width: rem(38px);
     $right-width: rem(65px);
 
     &.users-list {
 
         dd {
             @include column($left-width, $right-width);
-            height: rem(34px);
-            line-height: rem(34px);
-            padding-bottom: 13px;
+            height: rem(38px);
+            line-height: rem(38px);
+            padding-top: rem(8px);
+            padding-bottom: rem(8px);
 
             .column-left {
                 overflow: hidden;

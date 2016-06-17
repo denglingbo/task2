@@ -123,7 +123,7 @@ navigation.open = function (url, options) {
     $.extend(opts, options);
 
     // url params 的 referer
-    var urlReferer = getUrlReferer();
+    // var urlReferer = getUrlReferer();
 
     // Goback
     // 这个情况下，如果没有 referer，title 传递了也不会使用
@@ -147,21 +147,22 @@ navigation.open = function (url, options) {
         // }
 
         CPNavigationBar.returnPreviousPage();
-        return;
     }
 
-    // url 上继续跟上 referer
-    if (opts.keep && !opts.referer) {
-        opts.referer = urlReferer;
-    }
+    else {
+        // url 上继续跟上 referer
+        // if (opts.keep && !opts.referer) {
+        //     opts.referer = urlReferer;
+        // }
 
-    // 指定 referer
-    if (opts.referer) {
-        url = addReferer(url, opts.referer);
-    }
+        // 指定 referer
+        // if (opts.referer) {
+        //     url = addReferer(url, opts.referer);
+        // }
 
-    // 跳转
-    CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams);
+        // 跳转
+        CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams);
+    }
 };
 
 /**
@@ -193,13 +194,13 @@ navigation.right = function (buttonArray) {
         return;
     }
 
+    var icon = '';
     var arr = [];
-    var main = '';
 
     buttonArray.forEach(function (item) {
 
         if (typeof item === 'string') {
-            main = item;
+            icon = item;
         }
         else {
             arr.push({
@@ -210,13 +211,21 @@ navigation.right = function (buttonArray) {
         }
     });
 
-    var icon = main;
-    // 如果只有一个下拉，则不需要菜单 icon
-    if (arr.length === 1) {
-        icon = main || (arr[0].iconPath || arr[0].title);
+    // 如果没有下拉菜单，则 return
+    if (arr.length === 0) {
+        return;
     }
-    
+
+    // 如果只有一个下拉，则不需要菜单 icon，同时 icon 使用 第一个下拉的 icon 或者 title
+    if (arr.length === 1) {
+        icon = (arr[0].iconPath || arr[0].title);
+    }
+
     CPNavigationBar.setRightButton(icon, arr);
+};
+
+navigation.clearRight = function () {
+    CPNavigationBar.setRightButton('', []);
 };
 
 navigation.title = function (title) {

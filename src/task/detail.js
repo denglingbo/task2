@@ -63,6 +63,9 @@ page.enter = function () {
     });
 
     me.bindEvents();
+
+    // 根据权限渲染之后修正样式
+    detailUtil.fixStyles();
 };
 
 /**
@@ -136,54 +139,16 @@ page.deviceready = function () {
         }
     });
 
-    var getAlert = function () {
+    detailUtil.naviRight(me, me.data, 'task', function () {
 
+        // 弹出框
         MidUI.alert({
             content: me.lang.alertRevokeContent,
             onApply: function () {
                 asyncTaskWork(null, 'revoke');
             }
         });
-    };
-
-    var rightBar = [me._shell.right.more];
-    var rights = me.data.rights;
-
-    // 编辑权限
-    if (rights.editRight) {
-        rightBar.push({
-            title: me.lang.editButton,
-            click: function () {
-                navigation.open('/task-new.html?taskId=' + me.data.id, {
-                    title: me.lang.editTask
-                });
-            }
-        });
-    }
-
-    // 恢复权限
-    if (rights.recoverRight) {
-        rightBar.push({
-            title: me.lang.recover,
-            click: getAlert
-        });
-    }
-
-    // 撤消权限
-    if (rights.revokeRight) {
-        rightBar.push({
-            title: me.lang.cancelButton,
-            click: function () {
-                navigation.open('/form-submit.html?type=revoke&taskId=' + me.data.id, {
-                    title: me.lang.cancelTitle
-                });
-            }
-        });
-    }
-
-    if (rightBar.length > 1) {
-        navigation.right(rightBar);
-    }
+    });
 
     // 下面为获取人员信息的配置
     var obj = {
@@ -330,6 +295,7 @@ page.follow = function (target) {
         level: status
     });
 
+
     promise
         .done(function (result) {
             if (result && result.meta.code === 200) {
@@ -473,23 +439,19 @@ page.renderUser = function (originArr, dataArr) {
 page.addParallelTask(function (dfd) {
     var me = this;
 
-    /* eslint-disable */
     var promise = page.get(config.API.TASK_DETAIL_URL, {
         taskId: util.params('taskId')
     });
-    /* eslint-enable */
+
     promise
         .done(function (result) {
-            var data = detailUtil.dealPageData(result);
-
-            if (data === null) {
-                dfd.reject(data);
+            if (result.meta && result.meta.code !== 200) {
+                dfd.reject(result);
             }
             else {
-                me.data = data;
-                dfd.resolve(data);
+                me.data = detailUtil.dealPageData(result.data);
+                dfd.resolve(me.data);
             }
-
         })
         .fail(function (err) {
             // console.log(err);

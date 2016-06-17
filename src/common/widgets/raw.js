@@ -23,7 +23,7 @@ raw.statusMap = statusMap;
 
 // 紧要程度
 var importanceMap = {
-    1: lang.urgentAndImportant,
+    1: lang.importantAndUrgent,
     2: lang.important,
     3: lang.urgent,
     4: lang.general

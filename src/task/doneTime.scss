@@ -2,56 +2,57 @@
 @import '../common/css/ui';
 
 .done-container {
-	height: 100%;
-	width: 100%;
-	background-color: rgb(235, 236, 232);
-	.option {
-		width: 100%;
-		height: rem(80px);
-		line-height: rem(80px);
-		background-color: #fff;
-		position: relative;
-		box-sizing: border-box;
-		padding: 0 rem(30px);
-		margin-top: rem(15px);
-		font-size: rem(16px);
-		display: flex;
-		align-items: center;
-		>.hook {
-			margin-right: rem(4px);
-			margin-left: rem(-20px);
-		}
-		.title {
-			flex:1;
-		}
-	}
+    height: 100%;
+    width: 100%;
+
+    .option {
+        width: 100%;
+        height: rem(50px);
+        line-height: rem(50px);
+        background-color: #fff;
+        position: relative;
+        box-sizing: border-box;
+        padding: 0 rem(30px);
+        margin-top: rem(10px);
+        font-size: rem(16px);
+        display: flex;
+        align-items: center;
+    	@include border-1px(bottom);
+
+        > .hook {
+            margin-right: rem(4px);
+            margin-left: rem(-20px);
+        }
+        .title {
+            flex:1;
+        }
+    }
 }
 
 .mbsc-android-holo-light .dwbc {
-	border: none;
-	@include border-1px(top, #d9d9d9);
+    border: none;
 }
 
 .mbsc-android-holo {
 
-	.dwb {
-		height: rem(50px);
-		line-height: rem(50px);
-	}
+    .dwb {
+        height: rem(50px);
+        line-height: rem(50px);
+    }
 
-	.dwbw:first-child .dwb {
-		@include border-1px(right, #d9d9d9);
-	}
+    .dwbw:first-child .dwb {
+        @include border-1px(right, #d9d9d9);
+    }
 
-	.dwwol {
-		width: 110%;
-		left: 50%;
-		transform: translate(-50%, 0);
+    .dwwol {
+        width: 110%;
+        left: 50%;
+        transform: translate(-50%, 0);
 
-	}
+    }
 
-	.dwhl {
-		padding-left: rem(22px);
-		padding-right: rem(22px);
-	}
+    .dwhl {
+        padding-left: rem(22px);
+        padding-right: rem(22px);
+    }
 }

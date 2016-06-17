@@ -28,6 +28,9 @@ module.exports = function () {
     if (config.debug) {
         webpackConfig.devtool = 'eval-source-map';
     }
+    else {
+        webpackConfig.devtool = false;
+    }
 
     // 页面 js 入口
     webpackConfig.entry = this.jsEntries;
@@ -44,17 +47,17 @@ module.exports = function () {
         }
     ];
 
-    // 非生产环境，需要使用 mock cordova.js 
-    if (process.env.NODE_ENV !== 'prod') {
-        copyPlugins.push({
-            from: './cordova.js',
-            to: './cordova.js'
-        });
-    }
-    // 生产环境
-    else {
-        webpackConfig.devtool = false;
-    }
+    // // 非生产环境，需要使用 mock cordova.js 
+    // if (process.env.NODE_ENV !== 'prod') {
+    //     copyPlugins.push({
+    //         from: './cordova.js',
+    //         to: './cordova.js'
+    //     });
+    // }
+    // // 生产环境
+    // else {
+    //     webpackConfig.devtool = false;
+    // }
 
     // 设置 resolve
     webpackConfig.resolve = {

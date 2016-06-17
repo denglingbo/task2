@@ -90,14 +90,17 @@
             <li class="page-opened selected" data-name="opened" data-filter="true" data-log='{"actionTag":"taskListOpened"}'>
                 <div class="fixbar-img"></div>
                 <div class="fixbar-text" data-lang="undoneText"></div>
+                <div loader="{#unFinish}{this}{/unFinish}" class="dock-remind count hide"></div>
             </li>
             <li class="page-done" data-name="done" data-log='{"actionTag":"taskListDone"}'>
                 <div class="fixbar-img"></div>
                 <div class="fixbar-text" data-lang="doneText"></div>
+                <div loader="{#finish}{this}{/finish}" class="dock-remind count hide"></div>
             </li>
             <li class="page-cancel" data-name="cancel" data-log='{"actionTag":"taskListCancel"}'>
                 <div class="fixbar-img"></div>
                 <div class="fixbar-text" data-lang="cancelText"></div>
+                <div loader="{#revocation}{this}{/revocation}" class="dock-remind count hide"></div>
             </li>
         </ul>
     </div>

@@ -53,7 +53,7 @@ module.exports = {
     earlyComplete: '尽快完成',
     urgentLevel: '紧急程度',
     affairType: '事件类型',
-    urgentAndImportant: '紧急且重要',
+    importantAndUrgent: '重要且紧急',
     urgent: '紧急',
     important: '重要',
     general: '普通',

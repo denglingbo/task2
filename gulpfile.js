@@ -14,6 +14,7 @@ var gulp = require('gulp');
 // var mock = require('./tool/webpack-lib/mock');
 var server = require('./tool/webpack-lib/server');
 var mockServer = require('./tool/webpack-lib/deo-mock-server');
+var webpack = require('webpack');
 
 // Webapck utils
 var Webpacker = require('./tool/webpack-lib/index');
@@ -45,8 +46,8 @@ var config = {
 
     debug: true,
 
-    host: '127.0.0.1',
-    // host: getIp(),
+    // host: '127.0.0.1',
+    host: getIp(),
 
     port: 8014,
 
@@ -68,13 +69,13 @@ config.mock = {
 
 var root = path.join(__dirname, '/');
 
-// 启动 mock 服务
-mockServer('./mock', config.mock);
-
 /**
  * 开发环境
  */
 gulp.task('dev', function () {
+
+    // 启动 mock 服务
+    mockServer('./mock', config.mock);
 
     config.debug = true;
 
@@ -93,4 +94,47 @@ gulp.task('test', function () {
     var webpacker = new Webpacker(config, root);
 
     webpacker.testStart();
+});
+
+
+
+
+
+
+
+/**
+ * 线上构建
+ */
+var htmlmin = require('gulp-htmlmin');
+var clean = require('gulp-clean');
+
+gulp.task('build', function () {
+
+    config.debug = false;
+
+    var webpacker = new Webpacker(config, root);
+
+    // Run webpack
+    webpack(
+
+        // webpack config
+        webpacker.webpackConfig,
+
+        function (err, stats) {
+            if (err) {
+                throw new gutil.PluginError('webpack', err);
+            }
+        }
+    );
+});
+
+//清理文件
+gulp.task('clean', function() {
+    return gulp.src(['dist'], {read:false})
+        .pipe(clean());
+});
+
+//预设任务
+gulp.task('default', function () {
+    gulp.start('build');
 });

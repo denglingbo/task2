@@ -195,10 +195,10 @@ Control.prototype.init = function () {};
  * 渲染控件, 如果要调用该方法，请务必给 Control 传递 tpl
  *
  * @param {Object} data 渲染所需数据
+ * @param {string} type 添加方式
  * @return {string}
  */
 Control.prototype.render = function (data, type) {
-    var me = this;
 
     var selector = $(this.opts.wrapper);
     var options = {
@@ -208,8 +208,6 @@ Control.prototype.render = function (data, type) {
     };
 
     return view.render(selector, data, options);
-
-    // me.bindEvents();
 };
 
 /**
@@ -221,7 +219,7 @@ Control.prototype.bindEvents = function () {};
  * 重新渲染
  */
 Control.prototype.rerender = function () {
-    throw new Error(CONST.ERR_MSG.NOT_IMPLEMENTED);
+    throw new Error(ERR_MSG.NOT_IMPLEMENTED);
 };
 
 /**
@@ -277,7 +275,7 @@ Control.prototype.disposeDoms = function () {
  */
 Control.prototype.appendTo = function (wrapper) {
     if (!this.main) {
-        throw new Error(CONST.ERR_MSG.NOT_RENDERED);
+        throw new Error(ERR_MSG.NOT_RENDERED);
     }
     // TODO (by pengxing) 考虑是否需要先移除再append到新的节点
     wrapper.appendChild(this.main);

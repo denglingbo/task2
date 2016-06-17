@@ -61,11 +61,8 @@ page.enter = function () {
 
     me.bindEvents();
 
-    me.initCommentList();
-
-    // if (me.isFailed) {
-    //     return;
-    // }
+    // 根据权限渲染之后修正样式
+    detailUtil.fixStyles();
 };
 
 /**
@@ -101,32 +98,14 @@ page.deviceready = function () {
         }
     });
 
-    // 如果任务已经结束，不再有以下操作
-    if (me.data.taskDoing() === false) {
-        return;
-    }
+    detailUtil.naviRight(me, me.data, 'talk');
 
-    var rightBar = [];
-    var rights = me.data.rights;
-
-    // 编辑权限
-    if (rights.editRight) {
-        rightBar.push({
-            title: me.lang.editButton,
-            click: function () {
-                navigation.open('/talk-new.html?talkId=' + me.data.id, {
-                    title: me.lang.editTalk
-                });
-            }
-        });
-    }
-
-    if (rightBar.length >= 1) {
-        navigation.right(rightBar);
-    }
+    me.initCommentList();
 };
 
 page.bindEvents = function () {
+    var me = this;
+
     // 查看更多人员
     this.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
@@ -140,7 +119,18 @@ page.bindEvents = function () {
     detailUtil.bindTickEvents.call(this, {
         pageKey: 'talkId',
         ticked: config.API.TALK_DONE,
-        untick: config.API.TALK_RESUME
+        untick: config.API.TALK_RESUME,
+
+        // 完成状态
+        tickedCallback: function () {
+            navigation.button('right', false);
+        },
+
+        // 恢复状态
+        untickCallback: function (data) {
+            navigation.button('right', true);
+            detailUtil.naviRight(me, data, 'talk');
+        }
     });
 };
 
@@ -220,17 +210,13 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (result) {
-            var data = detailUtil.dealPageData(result);
-
-            if (data === null) {
-                dfd.reject(data);
+            if (result.meta && result.meta.code !== 200) {
+                dfd.reject(result);
             }
             else {
-                me.data = data;
-
-                dfd.resolve(data);
+                me.data = detailUtil.dealPageData(result.data);
+                dfd.resolve(me.data);
             }
-
         })
         .fail(function () {
             dfd.reject();

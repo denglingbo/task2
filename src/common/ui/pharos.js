@@ -23,36 +23,37 @@ var util = require('common/util');
 var Pharos = function (selector, data) {
 
     this.$wrapper = $(selector);
+
+    // 数据
     this.data = data;
+
+    // 要处理的队列
+    this.queue = {};
+
+    // 当前的队列长度
+    this.length = 0;
 
     this.init();
 
     this.render();
 };
 
+var expr = {
+    check: /({[\w|:|#|\.]+})/g,
+    isSample: /^{(.+)}$/
+};
+
 Pharos.prototype = {
-
-    /**
-     * 正则
-     */
-    expr: {
-        check: /({[\w|:|#|\.]+})/g,
-        isSample: /^{(.+)}$/
-    },
-
-    length: 0,
-
-    queue: {},
 
     init: function () {
         var me = this;
-        var loaders = this.$wrapper.find('[loader]');
+        var $loaders = this.$wrapper.find('[loader]');
 
-        if (loaders.length === 0) {
+        if ($loaders.length === 0) {
             return;
         }
 
-        loaders.each(function(i, item) {
+        $loaders.each(function(i, item) {
             var $item = $(item);
             var guid = util.guid();
             $item.data('guid', guid);
@@ -78,7 +79,7 @@ Pharos.prototype = {
             this.queue[guid] = {};
         }
 
-        var isSample = this.expr.isSample.test(loader);
+        var isSample = expr.isSample.test(loader);
         var tpl = loader;
         var start = null;
         var end = null;
@@ -147,7 +148,7 @@ Pharos.prototype = {
         var me = this;
         var arr = [];
 
-        if (arr = data.tpl.split(me.expr.check)) {
+        if (arr = data.tpl.split(expr.check)) {
             arr = me.trim(arr);
 
             return me.maker(arr);
@@ -207,12 +208,21 @@ Pharos.prototype = {
                     }
                 });
             }
+
             // 数据为对象类型
-            else {
+            if ($.isPlainObject(myData)) {
                 for (var k in myData) {
                     if (myData.hasOwnProperty(k)) {
                         r = me.getHtmlData(myData, obj.params);
                     }
+                }
+            }
+
+            // 获取出来已经是字符或者数字
+            if (typeof myData === 'string' || typeof myData === 'number') {
+
+                if (myData !== 0 && myData.toString().length > 0) {
+                    r = [myData];
                 }
             }
         }

@@ -11,7 +11,11 @@
 @import "../common/middleware/attach/attachWrapper";
 
 .main {
-    // padding-bottom: rem(44px);
+    padding-bottom: rem(44px);
+
+    &.nofixbar {
+        padding-bottom: 0;
+    }
 }
 
 .layout {
@@ -146,6 +150,7 @@
 
                 em {
                     vertical-align: middle;
+                    color: $color-tips;
                 }
 
                 .arrow {
@@ -172,6 +177,7 @@
     $partner-right-width: rem(65px);
 
     &.partner {
+        @include border-1px(bottom);
 
         dd {
             height: rem(20px);
@@ -186,6 +192,7 @@
     $attach-right-width: rem(65px);
 
     &.attach {
+        @include border-1px(bottom);
         
         .componentAttachItem {
             @include border-1px(top, #e1e4e6);
@@ -307,10 +314,16 @@
 }
 
 .fixbar {
-    position: relative;
+    @include fixbar(3);
+
+    position: fixed;
     z-index: 10;
 
-    @include fixbar(3);
+    ul {
+        li {
+            color: $blue;
+        }
+    }
 }
 
 

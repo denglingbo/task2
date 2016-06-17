@@ -113,6 +113,9 @@ function Init(options) {
         offset: 0,
         lang: {},
 
+        // 用于和 rid 一起进行的查询
+        status: null,
+
         // dataLoader 需要使用
         dataKey: 'objList',
 
@@ -174,6 +177,8 @@ Init.prototype = {
         });
 
         me.getMoreData(function (data) {
+
+            // 初始化滚动
             me.initScroll();
 
             me.opts.onFirstDone(data);
@@ -269,7 +274,7 @@ Init.prototype = {
             clearTimeout(timer);
 
             timer = setTimeout(function () {
-                me.pagination.process(target.y);
+                me.pagination && me.pagination.process(target.y);
             }, 10);
         });
 
@@ -357,22 +362,32 @@ Init.prototype = {
 
         me.dataLoader.requestMore(function (err, data) {
 
-            if (!data) {
+            if (err) {
 
-                // 离线机制
+                /**
+                 * 离线机制
+                 */
                 if (!util.isNetwork()) {
                     var offlineData = coll.find({
-                        rid: rid
+                        rid: rid,
+                        status: me.opts.status
                     });
 
-                    me.renderMain(this, offlineData, 'append');
+                    me.renderMain(me.dataLoader, offlineData);
+
+                    me.setBasic();
+
                     me.offline();
+                    // 初始化滚动
+                    me.initScroll();
+
+                    // 初始化了数据之后，直接禁用 loader
+                    me.dataLoader.disable();
+
+                    return;
                 }
 
-                else {
-                    callback && callback(null);
-                }
-
+                callback && callback(null);
                 return;
             }
 
@@ -381,9 +396,6 @@ Init.prototype = {
             // 用于分页提示
             data.pagenum = this.page;
 
-            // this.render(data, 'append');
-            // var jids = getJids(data.objList);
-            // me.renderUser(jids);
             me.renderMain(this, data, 'append');
 
             me.setBasic();
@@ -437,9 +449,9 @@ Init.prototype = {
      * 页面离线事务
      */
     offline: function () {
-        $('#main').off('click');
-        $('.page-loader li').off('click');
-        $('.search-in').offx('click');
+        // $('#main').off('click');
+        // $('.page-loader li').off('click');
+        $('.search-in').off('click');
     },
 
 

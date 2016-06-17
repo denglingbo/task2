@@ -63,7 +63,7 @@ page.deviceready = function () {
             principal: DATA['principalUser'],
             partner: DATA['attendIds']
         };
-        var cid = ls.getData('TASK_PARAMS')['cid'];
+        var cid = ls.getData(config.const.PARAMS).cid;
         var jids = users.makeArray(obj);
         var dfdPub = users.getUserInfo(jids, cid);
 
@@ -125,15 +125,51 @@ page.deviceready = function () {
         );
     });
 
-    // 选择人员跳转页面
-    $('#principal, #attends').on('click', function (e) {
+    function person(key, itemKey, id) {
+        var oldVal = DATA[itemKey];
+        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
+            lang.choosePerson,
+            false,
+            function (data) {
+                if (!data) {
+                    return;
+                }
 
+                data = JSON.parse(data);
+                var contacts = data.contacts;
+
+                // if ($.isArray(DATA[itemKey])) {
+                // 参与人
+                if (itemKey === 'attendIds') {
+                    // 使用选人组件传递的新的数据
+                    DATA[itemKey] = [];
+
+                    contacts.forEach(function (value, index) {
+                        var uid = users.takeJid(value.jid);
+
+                        // 避免重复
+                        if ($.inArray(uid, DATA[itemKey]) === -1) {
+                            DATA[itemKey].push(uid);
+                        }
+                    });
+                }
+                // 负责人
+                else {
+                    DATA[itemKey] = users.takeJid(contacts[0].jid);
+                }
+
+                // 对应的点击栏容器
+                $(id + ' .value').text(editCom.getPersonsName(contacts));
+
+                editCom.personIsChange(oldVal, DATA[itemKey]);
+            }
+        );
+    }
+    $('#principal, #attends').on('click', function (e) {
         var key = '';
         var itemKey = '';
         var id = '';
-        // var oldVal = null;
 
-        // if (e.target.id === 'principal') {
         if ($(this).attr('id') === 'principal') {
 
             editCom.setChoosePersonLoc(principalSelectKey, {
@@ -155,47 +191,7 @@ page.deviceready = function () {
             itemKey = 'attendIds';
             id = '#attends';
         }
-
-        // 根据电击判断是哪个数据
-        var clickObj = DATA[itemKey];
-
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
-            lang.choosePerson,
-            false,
-            function (data) {
-                if (!data) {
-                    return;
-                }
-
-                data = JSON.parse(data);
-                var contacts = data.contacts;
-
-                // if ($.isArray(DATA[itemKey])) {
-                // 参与人
-                if ($.isArray(clickObj)) {
-                    // 使用选人组件传递的新的数据
-                    DATA[itemKey] = [];
-
-                    contacts.forEach(function (value, index) {
-                        var uid = users.takeJid(value.jid);
-
-                        // 避免重复
-                        if ($.inArray(uid, DATA[itemKey]) === -1) {
-                            DATA[itemKey].push(uid);
-                        }
-                    });
-                }
-                // 负责人
-                else {
-                    DATA[itemKey] = users.takeJid(contacts[0].jid);
-                }
-
-                // 对应的点击栏容器
-                $(id + ' .value').text(util.getPersonsName(contacts));
-
-                // editCom.personIsChange(clickObj, DATA[itemKey]);
-            }
-        );
+        person(key, itemKey, id);
     });
 };
 
@@ -386,7 +382,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(DATA, result.data);
+                editCom.getDataFromObj(DATA, result.data);
                 dfd.resolve();
             }
         });

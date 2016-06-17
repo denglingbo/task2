@@ -11,18 +11,18 @@
 </div>
 {{/auditRemark}}
 
-{{#suspenRemark}}
+{{#suspendRemark}}
 <!-- 撤消理由 -->
 <div class="layout">
     <div class="sub-title">{{ lang.revokeReason }}</div>
 
     <div class="layout-section word-content rich-outter">
         <div class="rich-inner">
-        {{& suspenRemark }}
+        {{& suspendRemark }}
         </div>
     </div>
 </div>
-{{/suspenRemark}}
+{{/suspendRemark}}
 
 {{#refuseReason}}
 <!-- 拒绝理由 -->

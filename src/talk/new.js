@@ -52,31 +52,31 @@ page.enter = function () {
 page.deviceready = function () {
     var me = this;
     var lang = me.lang;
-    if (doing) {
-        // 下面为获取人员信息的配置
-        var obj = {
-            /* eslint-disable */
-            partner: DATA['userIds']
-            /* eslint-enable */
-        };
-        var cid = ls.getData('TASK_PARAMS').cid;
-        var jids = users.makeArray(obj);
-        var dfdPub = users.getUserInfo(jids, cid);
 
-        // 查询用户信息失败
-        if (dfdPub === null) {
-            me.userInfoFail = true;
-        }
-        else {
-            dfdPub
-                .done(function (pubData) {
-                    me.renderUser(pubData.contacts);
-                })
-                .fail(function () {
-                    me.failUser();
-                });
-        }
+    // 下面为获取人员信息的配置
+    var obj = {
+        /* eslint-disable */
+        partner: DATA.userIds
+        /* eslint-enable */
+    };
+    var cid = ls.getData(config.const.PARAMS).cid;
+    var jids = users.makeArray(obj);
+    var dfdPub = users.getUserInfo(jids, cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        me.userInfoFail = true;
     }
+    else {
+        dfdPub
+            .done(function (pubData) {
+                me.renderUser(pubData.contacts);
+            })
+            .fail(function () {
+                me.failUser();
+            });
+    }
+
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachs);
@@ -102,23 +102,24 @@ page.deviceready = function () {
         var val = {
             selectType: 2,
             /* eslint-disable */
-            contacts: editCom.transJid(DATA['attendIds'])
+            contacts: editCom.transJid(DATA.userIds)
             /* eslint-enable */
         };
         editCom.setChoosePersonLoc(selectKey, val);
 
-        var oldVal = DATA['userIds'];
+        var oldVal = DATA.userIds;
         CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
             if (!data) {
                 return;
             }
+            DATA.inheritance = false;
             data = JSON.parse(data);
             var contacts = data.contacts;
             contacts.forEach(function (value, index) {
-                DATA['userIds'].push(users.takeJid(value.jid));
+                DATA.userIds.push(users.takeJid(value.jid));
             });
-            $('#attends .value').text(util.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, DATA['userIds']);
+            $('#attends .value').text(editCom.getPersonsName(contacts));
+            editCom.personIsChange(oldVal, DATA.userIds);
         });
     });
     /* eslint-enable */
@@ -145,7 +146,7 @@ page.loadPage = function () {
                 id: 'urgencyBlock',
                 title: lang.urgentLevel,
                 /* eslint-disable */
-                value: editCom.initImportValue(DATA['importanceLevel'])
+                value: editCom.initImportValue(DATA.importanceLevel)
                 /* eslint-enable */
             },
             {
@@ -222,15 +223,17 @@ page.renderUser = function (dataArr) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-
+    var promise;
     if (!doing) {
-        dfd.resolve();
-        return dfd;
+        promise = me.get(config.API.TASK_DETAIL_URL, {
+            taskId: util.params('taskId')
+        });
     }
-
-    var promise = me.get(config.API.TALK_DETAIL_URL, {
-        talkId: util.params('talkId')
-    });
+    else {
+        promise = me.get(config.API.TALK_DETAIL_URL, {
+            talkId: util.params('talkId')
+        });
+    }
 
     promise
         .done(function (result) {
@@ -238,7 +241,12 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                util.getDataFromObj(DATA, result.data);
+                if (!doing) {
+                    DATA.userIds = result.data.attendIds;
+                }
+                else {
+                    editCom.getDataFromObj(DATA, result.data);
+                }
                 dfd.resolve();
             }
         });

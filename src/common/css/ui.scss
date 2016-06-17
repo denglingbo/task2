@@ -182,12 +182,12 @@ $star-size: rem(16px);
  * 计数器
  */
 .count {
+    min-width: rem(12px);
+    height: rem(12px);
+    line-height: rem(12px);
     display: inline-block;
     padding: rem(2px);
-    min-width: rem(14px);
     text-align: center;
-    height: rem(14px);
-    line-height: rem(14px);
     background: $red;
     border-radius: 10px;
     color: $white;

@@ -1,7 +1,7 @@
 @import "../common/css/global.scss";
 @import "../common/css/layout.scss";
 
-$color-add-task: #03b8fe;
+$color-add-task: #2299ee;
 
 html, body {
     height: 100%;
@@ -25,6 +25,7 @@ html, body {
             height: 33%;
             color: $white;
             overflow: hidden;
+            border-radius: rem(3px);
 
             div {
                 display: none;
@@ -38,6 +39,7 @@ html, body {
                 -moz-box-pack: left;
                 -webkit-box-align: center;
                 -moz-box-align: center;
+                border-radius: rem(3px);
 
                 p {
                     position: relative;
@@ -60,12 +62,12 @@ html, body {
                 display: block;
                 top: 50%;
                 right: rem(25px);
-                margin-top: rem(-15px);
-                width: rem(40px);
-                height: rem(40px);
+                margin-top: rem(-18px);
                 background-position: center center;
                 background-repeat: no-repeat;
-                background-size: 38px;
+                width: rem(46px);
+                height: rem(46px);
+                background-size: rem(46px);
             }
 
             // 我负责的
@@ -132,7 +134,7 @@ html, body {
                 border-radius: 100%;
                 background: $color-add-task;
 
-                $new-img-size: 52%;
+                $new-img-size: 46%;
 
                 &:before {
                     position: absolute;
@@ -170,7 +172,7 @@ html, body {
                 padding-bottom: rem(20px);
                 text-align: center;
                 color: $color-add-task;
-                font-size: rem(16px);
+                font-size: rem(22px);
             }
         }
     }

@@ -5,6 +5,8 @@
  */
 var config = {
 
+    VERSION: '1',
+
     debug: false,
 
     API: {
@@ -14,6 +16,7 @@ var config = {
         prefix: '/mgw/task/v1/',
 
         HOME_URL: 'getHomeRemind',
+        DOCK_REMIND: 'getDockRemind',
 
         // 列表页，未完成
         LIST_URL: 1001,
@@ -107,7 +110,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '0690c5a3-fce2-4df5-ad4b-983a04b35c7f-131028'
+    token: '8501df87-478c-4fda-afac-b8b2bc2afa28-161817'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
@@ -121,7 +124,7 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 
-// config.debug = true;
+config.debug = true;
 
 if (config.debug) {
     var loc = window.location;
@@ -129,8 +132,8 @@ if (config.debug) {
     // 直接走 mock server
 
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
-    // config.API.prefix = '/data/';
+    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    config.API.prefix = '/data/';
 }
 /* eslint-enable */
 

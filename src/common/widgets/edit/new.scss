@@ -59,31 +59,33 @@
     background-color: $white;
     overflow: hidden;
     .content-wrap, .title-wrap {
-        overflow: auto;
+        overflow: hidden;
     }
 }
 
-/*
-.edit-title-wrap {
-    padding: rem(15px) 0 rem(15px) rem(15px);
-    height: rem(80px);
 
-    .title-close {
-        top: rem(16px);
-    }
-    
+.edit-container {
+
     .title-wrap {
-        height: rem(50px);
+        height: rem(80px);
 
-        .phone-input {
+        .title-close {
+            top: rem(16px);
+        }
+        
+        .title-wrap {
+            height: rem(50px);
 
-            &-placeholder {
-                left: rem(17px);
+            .phone-input {
+
+                &-placeholder {
+                    left: rem(17px);
+                }
             }
         }
     }
 }
-*/
+
 
 .edit-content-wrap {
 
@@ -124,7 +126,6 @@
         }
 
         .title {
-            float: left;
             color: #666;
         }
 
@@ -208,4 +209,8 @@
             margin-right: rem(6px);
         }
     }
+}
+
+.phone-input {
+    @include border-1px(bottom);
 }

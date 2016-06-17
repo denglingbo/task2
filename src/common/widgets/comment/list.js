@@ -75,7 +75,6 @@ var renderUser = function ($layout, objList) {
         .done(function (pubData) {
 
             if (pubData) {
-
                 new Pharos($layout, {list: pubData});
             }
             else {
@@ -136,6 +135,10 @@ var list = function (page, options) {
     });
 
     me.dataLoader.on('more', function (err, data) {
+
+        if (err) {
+            return;
+        }
 
         // 评论需要知道是否是已经完成的 讨论 或者 事件
         data.isDone = me.page.data.isDone();

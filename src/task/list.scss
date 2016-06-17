@@ -81,25 +81,28 @@
 /* 列表项 */
 .list-item {
     margin: 10px 10px 0 10px;
-    padding: 10px;
+    padding: rem(10px);
     background: $white;
     position: relative;
+    box-shadow: 0 1px 2px -2px $shadow-color;
+    border-radius: rem(2px);
 
     .icon-point {
         left: 12px;
-        top: 20px;
+        top: 19px;
     }
 
     &-title {
         @include border-1px(bottom);
-        padding: rem(5px) rem(10px) rem(10px) rem(10px);
-        height: rem(15px);
-        line-height: rem(15px);
+        padding: rem(4px) rem(10px) rem(12px) rem(10px);
+        height: rem(16px);
+        line-height: rem(16px);
 
         &-text {
+            @include ellipsis();
             width: 80%;
             display: inline-block;
-            @include ellipsis();
+            font-size: rem(16px);
         }
 
         .list-item-status {
@@ -109,7 +112,7 @@
 
     &-content {
         position: relative;
-        padding: 0 rem(10px);
+        padding: rem(5px) rem(10px);
 
         > div {
             margin-top: rem(8px);
@@ -130,6 +133,7 @@
         li {
             height: rem(45px);
             padding: rem(1px) 0 0 0;
+            position: relative;
 
             div {
                 margin: 0;
@@ -142,6 +146,13 @@
                 background-repeat: no-repeat;
                 background-position: 50% 0;
                 background-size: 28px;
+            }
+
+            .dock-remind {
+                position: absolute;
+                left: 50%;
+                margin-left: rem(14px);
+                top: rem(5px);
             }
 
             .fixbar-text {

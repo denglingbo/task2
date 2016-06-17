@@ -19,6 +19,7 @@ var template = require('./template');
 var placeholder = 'data-reload-place';
 
 // 必须要要实现的 选择器
+/* eslint-disable */
 var selector = {
 
     more: {
@@ -60,8 +61,9 @@ var lang = {
         unchanged: '已经是最新数据'
     }
 };
-        
-var timerId = null;
+/* eslint-enable */
+
+// var timerId = null;
 
 /**
  * 数据加载器
@@ -159,15 +161,15 @@ var DataLoader = function (options) {
     // 已经加载的数据长度
     me._length = 0;
 
+    // 缓存上一次的数据，用于新请求数据的比较
+    me._compare = null;
+
     me.init();
 };
 
 $.extend(DataLoader.prototype, Control.prototype);
 
 $.extend(DataLoader.prototype, {
-
-    // 缓存上一次的数据，用于新请求数据的比较
-    _compare: null,
 
     reqStart: 0,
 
@@ -194,7 +196,7 @@ $.extend(DataLoader.prototype, {
     /**
      * 对数据进行 md5
      *
-     * @param {Object|...} data, 数据
+     * @param {Object} data, 数据
      * @return {string} md5 string
      */
     md5Data: function (data) {
@@ -210,7 +212,7 @@ $.extend(DataLoader.prototype, {
     /**
      * 储存 md5 数据
      *
-     * @param {Object|...} data, 数据
+     * @param {Object} data, 数据
      */
     storeMD5Data: function (data) {
         this._compare = {
@@ -222,11 +224,11 @@ $.extend(DataLoader.prototype, {
     /**
      * 是否数据有变化
      *
-     * @param {Object|...} data, 用于比较的数据
+     * @param {Object} data, 用于比较的数据
      * @return {boolean} 数据是否有变化
      */
     dataUnChanged: function (data) {
-        
+
         var md5Data = this.md5Data(data);
 
         if (!this._compare) {
@@ -299,7 +301,12 @@ $.extend(DataLoader.prototype, {
      */
     send: function (callback) {
         var me = this;
-        var dfd = new $.Deferred();
+        // var dfd = new $.Deferred();
+
+        // 如果禁用，不再发送请求
+        if (this._disabled) {
+            return;
+        }
 
         // 请求开始时间
         me.reqStart = +new Date();
@@ -324,7 +331,7 @@ $.extend(DataLoader.prototype, {
                 me.page ++;
             })
             .fail(function (err) {
-                callback && callback.call(me, err);
+                callback && callback.call(me, err || true);
             })
             .always(function () {
                 me.reqEnd = +new Date();
@@ -345,38 +352,55 @@ $.extend(DataLoader.prototype, {
 
     /**
      * 判断是否允许使用 reload
+     *
+     * @return {boolean} 是否能使用 reload 功能
      */
     hasReload: function () {
-        if (this.opts.reloadDisable === true) {
+        if (this.opts.reloadDisable === true || this.$reloadHandler.length === 0) {
             return false;
         }
-        return this.$reloadHandler.length ? true : false;
+        return true;
     },
 
     /**
      * 判断是否允许使用 加载更多
+     *
+     * @return {boolean} 是否能使用 more 功能
      */
     hasMore: function () {
-        if (this.opts.moreDisable === true) {
+        if (this.opts.moreDisable === true || this.$moreHandler.length === 0) {
             return false;
         }
-        return this.$moreHandler.length ? true : false;
+        return true;
+    },
+
+    /**
+     * 设置 reload 的可用性
+     */
+    reloadDisable: function () {
+        this.opts.reloadDisable = true;
+    },
+
+    /**
+     * 设置 more 的可用性
+     */
+    moreDisable: function () {
+        this.opts.moreDisable = true;
     },
 
     /**
      * 重载数据 接口
      *
-     * @param {string} status 要展示的状态
-     * @param {number} delay 延迟执行时间
+     * @return {Deferred}
      */
     requestReload: function () {
         var me = this;
+        var dfd = new $.Deferred();
 
         if (me.hasReload() === false) {
-            return;
+            dfd.reject(null);
+            return dfd;
         }
-
-        var dfd = new $.Deferred();
 
         // 开始请求
         me.statusChange('reload', 'process');
@@ -427,14 +451,14 @@ $.extend(DataLoader.prototype, {
     /**
      * 请求更多数据 接口
      *
-     * @param {string} status 要展示的状态
-     * @param {number} delay 延迟执行时间
+     * @param {Function} fn 回调
      */
     requestMore: function (fn) {
         var me = this;
 
         // 如果数据已经加载完毕，则不再进行 ajax 请求
         if (me.isAllLoaded() || me.hasMore() === false) {
+            fn && fn.call(me, null);
             return;
         }
 
@@ -443,7 +467,7 @@ $.extend(DataLoader.prototype, {
 
         me.send(function (err, data) {
 
-            if (err) {
+            if (err || !data) {
                 me.statusChange('more', 'fail');
                 fn && fn.call(me, err);
                 return;

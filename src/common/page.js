@@ -495,7 +495,7 @@ Page.post = function (api, data, options) {
 Page.ajax = function (api, data, options) {
     var me = this;
     var dfd = new $.Deferred();
-    var isNetwork = util.isNetwork();
+    // var isNetwork = util.isNetwork();
 
     var opts = {
         type: 'POST',
@@ -504,21 +504,22 @@ Page.ajax = function (api, data, options) {
 
     $.extend(opts, options);
 
+    // 暂时不用，isNetwork 中的判断是通过 cordova 的 Connecion
     // 没有网络的状态
     // 根据配置判断如何展示错误信息
-    if (!isNetwork) {
-        var err = {
-            code: 1,
-            msg: 'Offline'
-        };
+    // if (!isNetwork) {
+    //     var err = {
+    //         code: 1,
+    //         msg: 'Offline'
+    //     };
 
-        // if (/get/i.test(opts.type)) {
-        //     me.failed(err);
-        // }
+    //     // if (/get/i.test(opts.type)) {
+    //     //     me.failed(err);
+    //     // }
 
-        dfd.reject(err);
-        return dfd;
-    }
+    //     dfd.reject(err);
+    //     return dfd;
+    // }
 
     // 获取请求配置
     var reqConfig = me.getRequestConfig(api, data, opts);
@@ -608,7 +609,7 @@ Page.ajax = function (api, data, options) {
         $.ajax(ajaxSettings);
 
         /* eslint-disable */
-        console.info(ajaxSettings);
+        // console.info(ajaxSettings);
         /* eslint-enable */
     }
     else {

@@ -51,7 +51,7 @@ module.exports = {
     'earlyComplete': '儘快完成',
     'urgentLevel': '緊急程度',
     'affairType': '事件類型',
-    'urgentAndImportant': '緊急且重要',
+    'importantAndUrgent': '重要且緊急',
     'urgent': '緊急',
     'important': '重要',
     'general': '普通',

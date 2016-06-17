@@ -11,6 +11,12 @@ var localStorage = require('common/localstorage');
 var lang = require('common/lang').getData();
 var navigation = require('common/middleware/navigation');
 var MidUI = require('common/middleware/ui');
+var raw = require('common/widgets/raw');
+var config = require('config');
+
+var newTemplate = require('common/widgets/edit/new');
+var alertTpl = require('common/widgets/edit/alert');
+var attachTpl = require('common/middleware/attach/attach.tpl');
 
 var editCom = {};
 editCom.valid = {
@@ -108,7 +114,7 @@ editCom.clearAlert = function () {
  */
 editCom.cancelValidate = function () {
 
-    if(this.valid.isEdit) {
+    if (this.valid.isEdit) {
         MidUI.alert({
             content: lang.whetherGiveUpCurrContent,
             onApply: function () {
@@ -132,11 +138,11 @@ editCom.submitValid = function (submitFn) {
     var arr = [];
 
     if (flag) {
-       submitFn(); 
+        submitFn();
     }
     else {
         if (!validObj.title) {
-            if(!$('#edit-title').text()) {
+            if (!$('#edit-title').text()) {
                 arr.push(lang.titleCannotNull);
             }
             else {
@@ -195,7 +201,7 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
     navigation.right([
         {
             title: lang.submit,
-            click: function() {
+            click: function () {
                 me.setValidObj(phoneInputTitle, phoneInputContent, attach);
                 me.submitValid(submitFn);
             }
@@ -210,35 +216,33 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
  * 提交操作
  *
  * @param {Object} page, 页面对象
- * @param {string} postUrl, 上传url
+ * @param {string} data, 上传数据
+ * @param {string} ajaxUrl, 上传url
+ * @return {Object} deferr
  */
 editCom.submit = function (page, data, ajaxUrl) {
     var me = this;
     var dfd = new $.Deferred();
     // var data = page.data;
-    
+
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').html();
 
     var promise = page.post(ajaxUrl, data);
-
+    var success = false;
     promise
         .done(function (result) {
             if (result.meta.code !== 200) {
-                me.submitAlert(false);
                 dfd.reject(result);
             }
             else {
-                me.submitAlert(true);
-                // TODO
+                success = true;
                 dfd.resolve(result);
             }
         }).fail(function (result) {
-            // TODO
-            me.submitAlert(false);
             dfd.reject(result);
         });
-
+    me.submitAlert(success);
     return dfd;
 };
 
@@ -253,43 +257,43 @@ editCom.initImportanceLevel = function (selector, data) {
     var validObj = this.valid;
     var importData = [
         {
-            text: lang.urgentAndImportant,
+            text: raw.importanceMap[1],
             value: 1
         },
         {
-            text: lang.important,
+            text: raw.importanceMap[2],
             value: 2
         },
         {
-            text: lang.urgent,
+            text: raw.importanceMap[3],
             value: 3
         },
         {
-            text: lang.general,
+            text: raw.importanceMap[4],
             value: 4
         }
     ];
 
     importData.forEach(function (item) {
-        (item.value === infoData['importanceLevel']) && (item.selected = true);
+        (item.value === infoData.importanceLevel) && (item.selected = true);
     });
 
-    var data = {
+    var optionData = {
         headerText: lang.urgentLevel,
         showInput: false,
         showMe: true,
         rows: 3,
         data: importData,
         onSelect: function (text, inst) {
-            var oldVal = +infoData['importanceLevel'];
-            infoData['importanceLevel'] = +inst.getVal();
+            var oldVal = +infoData.importanceLevel;
+            infoData.importanceLevel = +inst.getVal();
             $(selector + ' .value').text(text);
 
-            validObj.isEdit = oldVal !== infoData['importanceLevel'] ? true : validObj.isEdit;
+            validObj.isEdit = oldVal !== infoData.importanceLevel ? true : validObj.isEdit;
         }
     };
 
-    this.initMobiscroll('select', selector, data);
+    this.initMobiscroll('select', selector, optionData);
 };
 
 /**
@@ -351,8 +355,7 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    var importanceLevel = [lang.urgentAndImportant, lang.important, lang.urgent, lang.general];
-    return importanceLevel[level - 1];
+    return raw.importanceMap[level];
 };
 
 /**
@@ -364,7 +367,7 @@ editCom.initImportValue = function (level) {
 editCom.personIsChange = function (oldValue, newValue) {
     var validObj = this.valid;
     if ($.isArray(oldValue) && $.isArray(newValue)) {
-        validObj.isEdit = util.compareArr(oldValue, newValue) ? true : validObj.isEdit;
+        validObj.isEdit = this.compareArr(oldValue, newValue) ? true : validObj.isEdit;
     }
     else {
         validObj.isEdit = oldValue !== newValue ? true : validObj.isEdit;
@@ -378,12 +381,8 @@ editCom.personIsChange = function (oldValue, newValue) {
  * @param {Object} data, 渲染数据
  */
 editCom.loadPage = function (page, data) {
-    var template = require('common/widgets/edit/new');
-    var alertTpl = require('common/widgets/edit/alert');
-    var attach = require('common/middleware/attach/attach.tpl');
-
     page.render('#edit-container', data, {
-        partials: {editMain: template, alertBox: alertTpl, attach: attach}
+        partials: {editMain: newTemplate, alertBox: alertTpl, attach: attachTpl}
     });
 };
 
@@ -394,7 +393,7 @@ editCom.loadPage = function (page, data) {
  * @return {Array}, jid
  */
 editCom.transJid = function (id) {
-    var cid = localStorage.getData('TASK_PARAMS')['cid'];
+    var cid = localStorage.getData(config.const.PARAMS).cid;
     var jid = [];
 
     if (!id) {
@@ -403,24 +402,24 @@ editCom.transJid = function (id) {
 
     if (!$.isArray(id)) {
         // return [{jid: users.makeJid(id, cid)}];
-        return [users.makeJid(id, cid)];
+        jid = [users.makeJid(id, cid)];
     }
     else {
         id.forEach(function (itemId) {
             // jid.push({jid: users.makeJid(itemId, cid)});
             jid.push(users.makeJid(itemId, cid));
         });
-
-        return jid;
     }
+    return jid;
 };
 
 /**
  * 获取客户端信息
  *
+ * @return {Object} 客户端信息
  */
 editCom.getClientMsg = function () {
-    var data = localStorage.getData('TASK_PARAMS');
+    var data = localStorage.getData(config.const.PARAMS);
     return {
         uid: data.uid,
         cid: data.cid,
@@ -434,7 +433,7 @@ editCom.getClientMsg = function () {
 /**
  * 存储选人组件所需的数据到本地
  *
- * @param {string} key
+ * @param {string} key, 存储的key
  * @param {Object} value, 存储的数据
  */
 editCom.setChoosePersonLoc = function (key, value) {
@@ -442,51 +441,111 @@ editCom.setChoosePersonLoc = function (key, value) {
     var selectValue = {
         clientMsg: me.getClientMsg(),
         selector: {
-            //选择人
+            // 选择人
             contact: 3,
-            //选择部门
+            // 选择部门
             dept: 0,
-            //选择职务
+            // 选择职务
             title: 0
         },
-        //选择组件类型：1.单选 2.复选
+        // 选择组件类型：1.单选 2.复选
         selectType: value.selectType,
-        //指定的过滤数据
+        // 指定的过滤数据
         filter: {
-            //指定不显示的数据
+            // 指定不显示的数据
             disabled: {
                 contacts: [],
                 depts: [],
                 titles: []
             },
-            //指定显示的数据
+            // 指定显示的数据
             enabled: {
                 depts: [],
                 titles: []
             },
-            //已选择的数据
+            // 已选择的数据
             checked: {
-                //数组
+                // 数组
                 contacts: value.contacts,
                 depts: [],
                 titles: []
             }
         },
-        //数据源：1.通过原生插件获取 2.从移动网关服务器获取
+        // 数据源：1.通过原生插件获取 2.从移动网关服务器获取
         dataSource: 1,
-        //从移动网关获取数据的请求信息
+        // 从移动网关获取数据的请求信息
         requestInfo: {
-            //请求方式
-            type: "get",
-            //请求发送的数据
-            data: "",
-            //请求的url
-            url: "",
+            // 请求方式
+            type: 'get',
+            // 请求发送的数据
+            data: '',
+            // 请求的url
+            url: '',
             headers: {}
         }
     };
 
     localStorage.addData(key, JSON.stringify(selectValue));
+};
+
+/**
+ * 数组浅层次clone
+ *
+ * @param {Array} arr, 需要clone的数组
+ * @return {Array} clone的数组
+ */
+editCom.arrClone = function (arr) {
+    var newArr = [];
+    arr.forEach(function (value) {
+        newArr.push(value);
+    });
+    return newArr;
+};
+
+/**
+ * 比较两个数组的值是否相等
+ *
+ * @param {Array} arr1, 数组1
+ * @param {Array} arr2, 数组2
+ * @return {boolean} 是否相等
+ */
+editCom.compareArr = function (arr1, arr2) {
+    var newArr1 = this.arrClone(arr1).sort();
+    var newArr2 = this.arrClone(arr2).sort();
+    var isDiff = newArr1.some(function (value, index) {
+        return value !== newArr2[index];
+    });
+    return isDiff;
+};
+
+/**
+ * 从另一个对象获取与当前对象的属性相同的值
+ *
+ * @param {Object} target, 被赋值的对象
+ * @param {Object} source, 源对象
+ *
+ */
+editCom.getDataFromObj = function (target, source) {
+    for (var key in target) {
+        if (target.hasOwnProperty(key)) {
+            target[key] = source[key] ? source[key] : target[key];
+        }
+    }
+};
+
+/**
+ * 从选人组件返回数据获取人员名
+ *
+ * @param {Array} arr, 选人组件返回的contacts
+ * @return {string}, 人员字符串
+ *
+ */
+editCom.getPersonsName = function (arr) {
+    var nameArr = [];
+    arr.forEach(function (item) {
+        nameArr.push(item.name);
+    });
+    return nameArr.join('、');
 };
 
 module.exports = editCom;
