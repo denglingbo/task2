@@ -116,8 +116,11 @@ navigation.open = function (url, options) {
         // navigationBarHidden: false,
 
         // 回传传送
-        returnParams: null
+        returnParams: null,
         // pageReturnParam: null
+
+        // 页面跳转参数，transFlag 页面过渡动画方式，isClosePage 是否关闭页面
+        transitionParam: null
     };
 
     $.extend(opts, options);
@@ -161,7 +164,7 @@ navigation.open = function (url, options) {
         // }
 
         // 跳转
-        CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams);
+        CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams, opts.transitionParam);
     }
 };
 

@@ -91,7 +91,10 @@ page.bindEvents = function () {
     $('#add-newtask').on('click', function () {
         navigation.open('/task-new.html', {
             referer: '/task-list.html?rid=1',
-            title: me.lang.newTask
+            title: me.lang.newTask,
+            transitionParam: {
+                transFlag: 1
+            }
         });
     });
 
