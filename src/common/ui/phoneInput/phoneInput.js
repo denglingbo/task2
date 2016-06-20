@@ -224,6 +224,10 @@ $.extend(PhoneInput.prototype, {
                 if (me.isNotNull() && !me.isOutLimit()) {
                     me.displayer('placeholder').hide();
                 }
+
+                if (me.isNotNull()) {
+                    me.displayer('delete').show();
+                }
             })
 
             // 输入状态
@@ -237,9 +241,13 @@ $.extend(PhoneInput.prototype, {
                 if (me.isNull()) {
                     me.displayer('placeholder').show();
                 }
+                setTimeout(function () {
+                    me.displayer('delete').hide();
+                }, 100);
+                // me.elems.$delete.trigger('click', {a:1});
             });
 
-        me.elems.$delete.on('click', function () {
+        me.elems.$delete.on('click', function (e) {
             if (me.isNotNull()) {
                 me.$main.attr('edit', true);
             }

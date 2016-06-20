@@ -42,7 +42,14 @@
         "suspend_remark": null,
         "refuse_reason": null,
         "complete_remark": null,
-        "attachements": [],
+        "attachements": [
+            {
+                "deleted": false,
+                "dfs_path": "00012AE75593C73341F7927F567E0C49AD6D",
+                "file_name": "ca.crt",
+                "size": 1391
+            }
+        ],
         "audit_result": false,
         "attention": 1,
         "delay_time": "8",

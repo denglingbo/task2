@@ -90,6 +90,9 @@ page.bindEvents = function () {
     $('#add-newtask').on('click', function () {
         navigation.open('/task-new.html', {
             title: me.lang.newTask,
+            transitionParam: {
+                transFlag: 1
+            },
             returnParams: function (prevData) {
                 if (prevData && prevData === 'refresh') {
                     me.refresh();

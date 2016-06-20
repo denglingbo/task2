@@ -10,7 +10,7 @@ var virtualInput = function (selector, options) {
     var me = this;
 
     this.opts = {
-        maxNum: 50
+        maxNum: 6000
     };
 
     $.extend(this.opts, options);

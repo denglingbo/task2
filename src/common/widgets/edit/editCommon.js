@@ -243,10 +243,13 @@ editCom.submit = function (page, data, ajaxUrl) {
                 success = true;
                 dfd.resolve(result);
             }
-        }).fail(function (result) {
+        })
+        .fail(function (result) {
             dfd.reject(result);
+        })
+        .always(function () {
+            me.submitAlert(success);
         });
-    me.submitAlert(success);
     return dfd;
 };
 
@@ -531,8 +534,8 @@ editCom.compareArr = function (arr1, arr2) {
  */
 editCom.getDataFromObj = function (target, source) {
     for (var key in target) {
-        if (target.hasOwnProperty(key)) {
-            target[key] = source[key] ? source[key] : target[key];
+        if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
+            target[key] = source[key];
         }
     }
 };
@@ -552,4 +555,22 @@ editCom.getPersonsName = function (arr) {
     return nameArr.join('、');
 };
 
+/**
+ * 数组去重
+ *
+ * @param {Array} arr, 需去重的数组
+ * @return {Array}, 去重后的数组
+ *
+ */
+editCom.unique = function (arr) {
+    var newArr = [];
+    arr.forEach(function (item) {
+        newArr[item] = 1;
+    });
+    var newArr2 = [];
+    newArr.forEach(function (item, i) {
+        newArr2.push(i);
+    });
+    return newArr2;
+};
 module.exports = editCom;

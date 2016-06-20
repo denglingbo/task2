@@ -255,7 +255,7 @@ $.extend(list.prototype, {
             // 附件暂时为空
             attachements: attachs
         });
-
+        var success = false;
         promise
             .done(function (result) {
 
@@ -264,7 +264,7 @@ $.extend(list.prototype, {
                 }
                 // 添加成功
                 if (result.meta.code === 200) {
-
+                    success = true;
                     // 共用 ./item.tpl
                     var data = {
                         objList: [result.data]
@@ -293,7 +293,13 @@ $.extend(list.prototype, {
             })
             .fail(function (err) {
                 
-            });
+            })
+            .always(function () {
+                if (success) {
+                    $('#goalui-fixedinput').removeClass('extend');
+                    $('#goalui-fixedinput-shadow').addClass('hide');
+                }
+            })
     }
 });
 
