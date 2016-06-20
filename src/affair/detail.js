@@ -62,8 +62,10 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
+    // var lang = me.lang;
     var data = me.data;
+
+    me.initCommentList();
 
     me.attach = AttachWrapper.initDetailAttach({
         attachData: data.summaryAttachs,
@@ -80,14 +82,12 @@ page.deviceready = function () {
     navigation.left({
         click: function () {
             navigation.open(-1, {
-                goBackParams: 'refesh'
+                goBackParams: 'refresh'
             });
         }
     });
 
     detailUtil.naviRight(me, me.data, 'affair');
-
-    me.initCommentList();
 };
 
 page.bindEvents = function () {

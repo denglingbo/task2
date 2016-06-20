@@ -115,7 +115,8 @@ page.deviceready = function () {
 
     // 页面底部跳转
     me.$fixbar.find('li').on('click', function () {
-        var $click = $(this);
+        var target = this;
+        var $click = $(target);
         var pageTo = $click.data('page');
         var type = $click.data('type');
 
@@ -130,14 +131,21 @@ page.deviceready = function () {
             });
         }
         else {
-            asyncTaskWork(this, type);
+            // 弹出框
+            // 实际这里是接收 ^.^
+            MidUI.alert({
+                content: me.lang.alertReceivedContent,
+                onApply: function () {
+                    asyncTaskWork(target, type);
+                }
+            });
         }
     });
 
     navigation.left({
         click: function () {
             navigation.open(-1, {
-                goBackParams: 'refesh'
+                goBackParams: 'refresh'
             });
         }
     });

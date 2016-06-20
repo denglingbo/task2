@@ -94,7 +94,7 @@ page.deviceready = function () {
     navigation.left({
         click: function () {
             navigation.open(-1, {
-                goBackParams: 'refesh'
+                goBackParams: 'refresh'
             });
         }
     });

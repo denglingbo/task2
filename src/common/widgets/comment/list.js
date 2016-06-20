@@ -155,7 +155,6 @@ var list = function (page, options) {
         if (!me.isComments()) {
             me.$listNull.removeClass('hide');
         }
-
     });
 
     this.bindEvents();

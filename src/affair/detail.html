@@ -12,6 +12,17 @@
         
         <div id="detail-main"></div>
 
+        <script id="detail-main-tmpl" type="x-tmpl-mustache">
+        {{> title}}
+        {{> describe}}
+
+        <!-- 附件 -->
+        <div class="layout-list attach hide">
+            <div class="sub-title">{{lang.attach}}</div>
+            <div class="attach-container"></div>
+        </div>
+        </script>
+
         <!-- 评论 -->
         <div class="comments-outter">
             <!-- 模版数据由 widgets/comment 提供 -->
@@ -29,17 +40,6 @@
         </div>
 
     </div>
-
-    <script id="detail-main-tmpl" type="x-tmpl-mustache">
-    {{> title}}
-    {{> describe}}
-
-    <!-- 附件 -->
-    <div class="layout-list attach hide">
-        <div class="sub-title">{{lang.attach}}</div>
-        <div class="attach-container"></div>
-    </div>
-    </script>
 
     <div id="comment-input-wrapper"></div>
 

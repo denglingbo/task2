@@ -24,6 +24,7 @@
 </div>
 {{/suspendRemark}}
 
+{{#isRefuse}}
 {{#refuseReason}}
 <!-- 拒绝理由 -->
 <div class="layout">
@@ -36,6 +37,7 @@
     </div>
 </div>
 {{/refuseReason}}
+{{/isRefuse}}
 
 {{#completeRemark}}
 <!-- 申请理由 -->

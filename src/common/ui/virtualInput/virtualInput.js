@@ -55,7 +55,7 @@ virtualInput.prototype = {
 
     bindEvents: function () {
         var me = this;
-
+        var $outter = $('#comment-input-wrapper');
         me.$wrap
             // 弹出输入框
             .on('click', me.editor, function (event) {
@@ -65,8 +65,6 @@ virtualInput.prototype = {
                 me.$shadow.removeClass('hide');
                 // me.$placeholder.addClass('hide');
                 me.$wrap.addClass('extend');
-
-                // me.sendStatus(this);
             })
             // 输入
             .on('input', me.editor, function () {
@@ -94,6 +92,7 @@ virtualInput.prototype = {
             // 关闭
             .on('blur', me.editor, function () {
                 if (!$.trim($(this).text())) {
+                    me.$shadow.triggerHandler('click');
                     me.$placeholder.removeClass('hide');
                 }
             });

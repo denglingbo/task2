@@ -33,6 +33,10 @@ detail.dealPageData = function (data) {
         return this.status === 6;
     };
 
+    data.isRefuse = function () {
+        return this.status === 3;
+    };
+
     // 只有［任务］在进行中，才可以对事件 & 讨论进行操作
     // 判断任务是否在进行中
     // 用于 事件 & 讨论 页面从 url 参数中 获取 task 是否完成
@@ -282,7 +286,12 @@ detail.naviRight = function (page, data, pageType, getAlert) {
             title: lang.editButton,
             click: function () {
                 navigation.open(curPage.url, {
-                    title: curPage.editTitle
+                    title: curPage.editTitle,
+                    returnParams: function (prevData) {
+                        if (prevData && prevData === 'refresh') {
+                            page.refresh();
+                        }
+                    }
                 });
             }
         });
@@ -302,7 +311,12 @@ detail.naviRight = function (page, data, pageType, getAlert) {
             title: lang.cancelButton,
             click: function () {
                 navigation.open('/form-submit.html?type=revoke&taskId=' + data.id, {
-                    title: lang.cancelTitle
+                    title: lang.cancelTitle,
+                    returnParams: function (prevData) {
+                        if (prevData && prevData === 'refresh') {
+                            page.refresh();
+                        }
+                    }
                 });
             }
         });
@@ -335,71 +349,72 @@ detail.naviRight = function (page, data, pageType, getAlert) {
  * @param {Element} $outer, 富文本外层容器
  * @param {Element} $inner, 富文本内层容器
  */
-var richSize = function ($outer, $inner) {
 
-    var max = {
-        width: $outer.width(),
-        height: 250
-    };
-    var real = {};
+// var richSize = function ($outer, $inner) {
 
-    $outer.css({
-        width: 9999,
-        position: 'relative'
-    });
+//     var max = {
+//         width: $outer.width(),
+//         height: 250
+//     };
+//     var real = {};
 
-    $inner.addClass('absolute');
-    real.width = $inner.width();
-    real.height = $inner.height();
-    $inner.removeClass('absolute');
+//     $outer.css({
+//         width: 9999,
+//         position: 'relative'
+//     });
 
-    $outer.css({
-        width: max.width
-    });
+//     $inner.addClass('absolute');
+//     real.width = $inner.width();
+//     real.height = $inner.height();
+//     $inner.removeClass('absolute');
 
-    var scrollX = false;
-    // var scrollY = false;
+//     $outer.css({
+//         width: max.width
+//     });
 
-    if (real.width - max.width > 10) {
-        scrollX = true;
-        $outer.width(max.width);
-    }
-    // if (real.height > max.height) {
-    //     scrollY = true;
-    //     $outer.height(max.height);
-    // }
+//     var scrollX = false;
+//     // var scrollY = false;
 
-    if (!scrollX) {
-        return;
-    }
+//     if (real.width - max.width > 10) {
+//         scrollX = true;
+//         $outer.width(max.width);
+//     }
+//     // if (real.height > max.height) {
+//     //     scrollY = true;
+//     //     $outer.height(max.height);
+//     // }
 
-    $inner.css({
-        width: real.width
-    });
-};
+//     if (!scrollX) {
+//         return;
+//     }
+
+//     $inner.css({
+//         width: real.width
+//     });
+// };
 
 /**
  * 富文本
  */
 detail.richContent = function () {
 
-    $('.rich-outter').each(function () {
+    // $('.rich-outter').each(function () {
 
-        var $outer = $(this);
-        var $inner = $outer.find('.rich-inner');
+    //     var $outer = $(this);
+    //     var $inner = $outer.find('.rich-inner');
 
-        var html = $inner.html();
+    //     var html = $inner.html();
 
-        if (/<*.+>/.test(html)) {
-            richSize($outer, $inner);
-        }
+    //     if (/<*.+>/.test(html)) {
+    //         richSize($outer, $inner);
+    //     }
 
-        // $outer.after(
-        //     '<div toggle-closed="全部" toggle-opened="收起" class="toggle-view">查看全部内容</div>'
-        // );
+    //     // $outer.after(
+    //     //     '<div toggle-closed="全部" toggle-opened="收起" class="toggle-view">查看全部内容</div>'
+    //     // );
 
-        // $toggle = $('.toggle-view');
-    });
+    //     // $toggle = $('.toggle-view');
+    // });
 
     // $('.main').on('click', '.toggle-view', function () {
     //     var $toggle = $(this);

@@ -95,13 +95,13 @@ page.deviceready = function () {
         var promise = editCom.submit(page, DATA, url);
 
         promise.done(function (result) {
-            var taskId = result.data || DATA.id;
+            // var taskId = result.data || DATA.id;
             
             // navigation.open('/task-detail.html?taskId=' + taskId, {
             //     title: me.lang.taskDetail
             // });
             navigation.open(-1, {
-                goBackParams: 'refesh'
+                goBackParams: 'refresh'
             });
         });
     });

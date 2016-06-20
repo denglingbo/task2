@@ -108,6 +108,7 @@ module.exports = {
     taskSummaryTitle: '任务总结',
     talkSummaryTitle: '讨论总结',
     alertRevokeContent: '是否要恢复该任务',
+    alertReceivedContent: '是否要接收该任务',
     task: '任务',
     summary: '总结',
     refuse: '拒绝',

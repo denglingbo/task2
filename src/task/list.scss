@@ -119,6 +119,10 @@
 
             &.time {}
         }
+
+        &-name {
+            @include ellipsis();
+        }
     }
 }
 

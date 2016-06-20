@@ -44,6 +44,9 @@ var PhoneInput = function (options) {
     // 实际输入框
     me.$input = me.$main.find(me.opts.input);
 
+    me._isEdit = false;
+    me._defval = me.$input.html();
+
     me.init();
 };
 
@@ -233,7 +236,15 @@ $.extend(PhoneInput.prototype, {
             // 输入状态
             .on('input', function (event) {
                 me.inputStatusChange();
-                me.$main.attr('edit', true);
+
+                var curval = $(this).html();
+
+                if (curval !== me._defval) {
+                    me._isEdit = true;
+                }
+                else {
+                    me._isEdit = false;
+                }
             })
 
             // 关闭
@@ -244,15 +255,23 @@ $.extend(PhoneInput.prototype, {
                 setTimeout(function () {
                     me.displayer('delete').hide();
                 }, 100);
-                // me.elems.$delete.trigger('click', {a:1});
             });
 
+        // 删除按钮
         me.elems.$delete.on('click', function (e) {
-            if (me.isNotNull()) {
-                me.$main.attr('edit', true);
-            }
+
             me.$input.text('');
+
+            if (me.$input.html() !== me._defval) {
+                me._isEdit = true;
+            }
+            else {
+                me._isEdit = false;
+            }
+
             me.inputStatusChange();
+
+            me.$input.triggerHandler('input');
         });
     },
 
@@ -313,8 +332,7 @@ $.extend(PhoneInput.prototype, {
      * @return {boolean}
      */
     isEdited: function () {
-        var edit = this.$main.attr('edit');
-        return !!edit;
+        return this._isEdit;
     }
 });
 

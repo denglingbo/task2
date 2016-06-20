@@ -64,6 +64,7 @@ var pages = {
     refuse: function () {
         return [{
             name: 'refuse',
+            required: true,
             holder: lang.refuseReasonPlaceholder
         }];
     },
@@ -226,7 +227,7 @@ function cancelValidate() {
         return;
     }
 
-    navigation.go(-1);
+    navigation.open(-1);
 };
 
 page.deviceready = function () {
@@ -250,7 +251,7 @@ page.deviceready = function () {
                     //     title: me.lang.taskDetail
                     // });
                     navigation.open(-1, {
-                        goBackParams: 'refesh'
+                        goBackParams: 'refresh'
                     });
                 }
             })
@@ -261,9 +262,7 @@ page.deviceready = function () {
 
     navigation.left({
         title: me.lang.cancel,
-        click: function () {
-            navigation.open(-1);
-        }
+        click: goBack
     });
 
     navigation.right([

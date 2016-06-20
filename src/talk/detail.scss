@@ -23,3 +23,13 @@
 .main {
     padding-bottom: rem(40px);
 }
+
+
+#comment-input-wrapper {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.goalui-fixedinput {
+    position: relative !important;
+}

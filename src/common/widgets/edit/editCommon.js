@@ -121,7 +121,7 @@ editCom.cancelValidate = function () {
 
                 // 编辑过，返回并刷新
                 navigation.open(-1, {
-                    goBackParams: 'refesh'
+                    goBackParams: 'refresh'
                 });
             }
         });
