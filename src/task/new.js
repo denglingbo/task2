@@ -96,9 +96,11 @@ page.deviceready = function () {
         promise.done(function (result) {
             var taskId = result.data || DATA.id;
             
-            navigation.open('/task-detail.html?taskId=' + taskId, {
-                keep: true,
-                title: me.lang.taskDetail
+            // navigation.open('/task-detail.html?taskId=' + taskId, {
+            //     title: me.lang.taskDetail
+            // });
+            navigation.open(-1, {
+                goBackParams: 'refesh'
             });
         });
     });

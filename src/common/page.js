@@ -8,6 +8,7 @@ var config = require('../config');
 var view = require('./view');
 var util = require('./util');
 var storage = require('./localstorage');
+var Control = require('./control');
 var lang = require('./lang');
 var log = require('./log');
 var md5 = require('dep/md5');
@@ -121,6 +122,8 @@ var getShell = function (data) {
  */
 function Page(opts) {
 
+    Control.call(this, opts);
+
     /**
      * Tasks
      * @type {Array<Function>}
@@ -162,6 +165,8 @@ function Page(opts) {
     // 监听设备就绪
     this.deviceListener();
 }
+
+util.inherits(Page, Control);
 
 /**
  * 所有前序任务执行完毕之后，回调 enter
@@ -412,6 +417,30 @@ Page.prototype.addParallelTask = function (task) {
 Page.prototype.render = function (selector, data, options) {
     var str = view.render(selector, data, options);
     return str;
+};
+
+/**
+ * 刷新页面
+ *
+ * @return {Deferred}
+ */
+Page.prototype.refresh = function () {
+    var me = this;
+
+    me.isRefresh = true;
+
+    // 优先销毁事件
+    me.disposeEvents();
+
+    // 刷新任务
+    var oldTasks = me.tasks;
+
+    me.tasks = [];
+    $.each(oldTasks, function (index, item) {
+        me.addParallelTask(item.task);
+    });
+
+    return me.start();
 };
 
 /**

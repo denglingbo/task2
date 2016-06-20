@@ -73,7 +73,7 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
+    // var lang = me.lang;
     var data = me.data;
 
     // 查看更多人员
@@ -121,7 +121,12 @@ page.deviceready = function () {
 
         if (pageTo && pageTo.length > 0) {
             navigation.open(pageTo, {
-                title: barMap[type]
+                title: barMap[type],
+                returnParams: function (prevData) {
+                    if (prevData && prevData === 'refresh') {
+                        me.refresh();
+                    }
+                }
             });
         }
         else {
@@ -129,12 +134,10 @@ page.deviceready = function () {
         }
     });
 
-    // 这里需要根据 referer 判断是否返回指定页面
     navigation.left({
-        title: lang.back,
         click: function () {
             navigation.open(-1, {
-                title: me.lang.dispatch
+                goBackParams: 'refesh'
             });
         }
     });
@@ -200,7 +203,8 @@ function asyncTaskWork(target, ajaxKey) {
             taskId: page.data.id
         },
         done: function () {
-            navigation.open('/task-detail.html?taskId=' + page.data.id);
+            // navigation.open('/task-detail.html?taskId=' + page.data.id);
+            page.refresh();
         }
     };
 

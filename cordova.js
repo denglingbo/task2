@@ -33,7 +33,9 @@ var CPNavigationBar = {
     setGoBackHandler: function (rightBtnIconPath, rightBtnArr) {
         
     },
+    setPreviousPageReturnStringData: function () {
 
+    },
     setTitle: function (rightBtnIconPath, rightBtnArr) {
         
     },

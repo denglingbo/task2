@@ -85,13 +85,12 @@ page.enter = function () {
 
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
+    // var lang = me.lang;
 
     navigation.left({
-        title: lang.back,
         click: function () {
             navigation.open(-1, {
-                title: me.lang.taskDetail
+                goBackParams: 'refesh'
             });
         }
     });
@@ -101,8 +100,12 @@ page.deviceready = function () {
             icon: me._shell.right.add,
             click: function () {
                 navigation.open('/task-new.html', {
-                    referer: '/task-list.html?rid=' + rid,
-                    title: me.lang.newTask
+                    title: me.lang.newTask,
+                    returnParams: function (prevData) {
+                        if (prevData && prevData === 'refresh') {
+                            me.refresh();
+                        }
+                    }
                 });
             }
         }
@@ -117,7 +120,12 @@ page.bindEvents = function () {
 
         if (id) {
             navigation.open('/task-detail.html?taskId=' + id, {
-                title: me.lang.taskDetail
+                title: me.lang.taskDetail,
+                returnParams: function (prevData) {
+                    if (prevData && prevData === 'refresh') {
+                        me.refresh();
+                    }
+                }
             });
         }
     });

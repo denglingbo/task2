@@ -70,7 +70,7 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
+    // var lang = me.lang;
     var data = me.data;
     if (data.attachs && data.attachs.length) {
         me.attach = AttachWrapper.initDetailAttach({
@@ -92,9 +92,10 @@ page.deviceready = function () {
 
 
     navigation.left({
-        title: lang.back,
         click: function () {
-            navigation.open(-1);
+            navigation.open(-1, {
+                goBackParams: 'refesh'
+            });
         }
     });
 

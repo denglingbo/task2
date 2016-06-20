@@ -5,15 +5,15 @@
     },
     "data": {
         "rights": {
-            "addEventRight": true,
-            "addTalkRight": true,
-            "applyRight": true,
-            "auditRight": true,
+            "addEventRight": false,
+            "addTalkRight": false,
+            "applyRight": false,
+            "auditRight": false,
             "editRight": false,
-            "receiveRight": false,
-            "recoverRight": false,
-            "refuseRight": false,
-            "revokeRight": false,
+            "receiveRight": true,
+            "recoverRight": true,
+            "refuseRight": true,
+            "revokeRight": true,
 
             "assignRight": false,
             "uploadFileRight": true,

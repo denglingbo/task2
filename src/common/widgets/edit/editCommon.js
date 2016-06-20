@@ -118,7 +118,11 @@ editCom.cancelValidate = function () {
         MidUI.alert({
             content: lang.whetherGiveUpCurrContent,
             onApply: function () {
-                navigation.open(-1);
+
+                // 编辑过，返回并刷新
+                navigation.open(-1, {
+                    goBackParams: 'refesh'
+                });
             }
         });
     }

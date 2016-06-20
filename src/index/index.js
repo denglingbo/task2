@@ -33,12 +33,6 @@ page.deviceready = function () {
 
     var lang = this.lang;
     navigation.title(lang.task);
-
-    navigation.left({
-        click: function () {
-            navigation.open(-1);
-        }
-    });
 };
 
 page.setSize = function () {
@@ -83,15 +77,24 @@ page.bindEvents = function () {
 
         if (rid !== undefined) {
             navigation.open('/task-list.html?rid=' + rid, {
-                title: ridMap[rid]
+                title: ridMap[rid],
+                returnParams: function (prevData) {
+                    if (prevData && prevData === 'refresh') {
+                        me.refresh();
+                    }
+                }
             });
         }
     });
 
     $('#add-newtask').on('click', function () {
         navigation.open('/task-new.html', {
-            referer: '/task-list.html?rid=1',
-            title: me.lang.newTask
+            title: me.lang.newTask,
+            returnParams: function (prevData) {
+                if (prevData && prevData === 'refresh') {
+                    me.refresh();
+                }
+            }
         });
     });
 

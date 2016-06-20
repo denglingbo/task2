@@ -105,36 +105,36 @@ gulp.task('test', function () {
 /**
  * 线上构建
  */
-var htmlmin = require('gulp-htmlmin');
-var clean = require('gulp-clean');
+// var htmlmin = require('gulp-htmlmin');
+// var clean = require('gulp-clean');
 
-gulp.task('build', function () {
+// gulp.task('build', function () {
 
-    config.debug = false;
+//     config.debug = false;
 
-    var webpacker = new Webpacker(config, root);
+//     var webpacker = new Webpacker(config, root);
 
-    // Run webpack
-    webpack(
+//     // Run webpack
+//     webpack(
 
-        // webpack config
-        webpacker.webpackConfig,
+//         // webpack config
+//         webpacker.webpackConfig,
 
-        function (err, stats) {
-            if (err) {
-                throw new gutil.PluginError('webpack', err);
-            }
-        }
-    );
-});
+//         function (err, stats) {
+//             if (err) {
+//                 throw new gutil.PluginError('webpack', err);
+//             }
+//         }
+//     );
+// });
 
-//清理文件
-gulp.task('clean', function() {
-    return gulp.src(['dist'], {read:false})
-        .pipe(clean());
-});
+// //清理文件
+// gulp.task('clean', function() {
+//     return gulp.src(['dist'], {read:false})
+//         .pipe(clean());
+// });
 
-//预设任务
-gulp.task('default', function () {
-    gulp.start('build');
-});
+// //预设任务
+// gulp.task('default', function () {
+//     gulp.start('build');
+// });

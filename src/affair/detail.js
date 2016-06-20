@@ -78,9 +78,10 @@ page.deviceready = function () {
     });
 
     navigation.left({
-        title: lang.back,
         click: function () {
-            navigation.open(-1);
+            navigation.open(-1, {
+                goBackParams: 'refesh'
+            });
         }
     });
 

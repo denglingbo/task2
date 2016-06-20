@@ -246,8 +246,11 @@ page.deviceready = function () {
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
-                    navigation.open('/task-detail.html?taskId=' + taskId, {
-                        title: me.lang.taskDetail
+                    // navigation.open('/task-detail.html?taskId=' + taskId, {
+                    //     title: me.lang.taskDetail
+                    // });
+                    navigation.open(-1, {
+                        goBackParams: 'refesh'
                     });
                 }
             })

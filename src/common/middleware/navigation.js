@@ -89,6 +89,8 @@ function addReferer(url, referer) {
     return path + '?referer=' + encodeURIComponent(referer);
 }
 
+var openTimerId = null;
+
 /**
  * 要跳转的 url, 同时兼容 CPNavigationBar.redirect && CPNavigationBar.returnPreviousPage
  *
@@ -103,10 +105,10 @@ navigation.open = function (url, options) {
 
     var opts = {
         // 是否需要继续在 url 上继续跟上 referer
-        keep: false,
+        // keep: false,
 
         // 指定 referer
-        referer: null,
+        // referer: null,
 
         // 下一个页面的 title
         title: '',
@@ -115,9 +117,12 @@ navigation.open = function (url, options) {
         barHidden: false,
         // navigationBarHidden: false,
 
-        // 回传传送
-        returnParams: null
+        // 回传
+        returnParams: null,
         // pageReturnParam: null
+
+        // setPreviousPageReturnStringData
+        goBackParams: null
     };
 
     $.extend(opts, options);
@@ -146,7 +151,24 @@ navigation.open = function (url, options) {
         //     CPNavigationBar.returnPreviousPage();
         // }
 
-        CPNavigationBar.returnPreviousPage();
+        // 传递参数给上一个页面
+        if (opts.goBackParams) {
+
+            // 只执行一次点击
+            if (openTimerId) {
+                return;
+            }
+
+            CPNavigationBar.setPreviousPageReturnStringData(opts.goBackParams);
+
+            openTimerId = setTimeout(function() {
+                CPNavigationBar.returnPreviousPage();
+            }, 500);
+        }
+        // 正常的返回
+        else {
+            CPNavigationBar.returnPreviousPage();
+        }
     }
 
     else {
@@ -172,7 +194,7 @@ navigation.left = function (options) {
 
     var opts = {
         icon: '',
-        title: lang.back || '',
+        title: '',
         click: null
     };
 
