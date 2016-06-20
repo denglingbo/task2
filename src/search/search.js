@@ -149,39 +149,39 @@ page.enter = function () {
 //         });
 // };
 
-page.addParallelTask(function (dfd) {
-    var me = this;
+// page.addParallelTask(function (dfd) {
+//     var me = this;
 
-    var role = util.params('role');
-    key = util.params('key');
-    key = key ? decodeURIComponent(key) : '';
-    var value = key;
-    var data = {
-        title: value,
-        role: role,
-        /* eslint-disable */
-        page: 1,
-        /* eslint-enable */
-        number: 15
-    };
-    /* eslint-enable */
-    var promise = me.get(config.API.SEARCH_TASK, data);
+//     var role = util.params('role');
+//     key = util.params('key');
+//     key = key ? decodeURIComponent(key) : '';
+//     var value = key;
+//     var data = {
+//         title: value,
+//         role: role,
+//         /* eslint-disable */
+//         page: 1,
+//         /* eslint-enable */
+//         number: 15
+//     };
+//     /* eslint-enable */
+//     var promise = me.get(config.API.SEARCH_TASK, data);
 
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                me.data = result.data;
-                dfd.resolve();
-            }
-        })
-        .fail(function (result) {
-            dfd.reject(result);
-        });
-    return dfd;
-});
+//     promise
+//         .done(function (result) {
+//             if (result.meta.code !== 200) {
+//                 dfd.reject(result);
+//             }
+//             else {
+//                 me.data = result.data;
+//                 dfd.resolve();
+//             }
+//         })
+//         .fail(function (result) {
+//             dfd.reject(result);
+//         });
+//     return dfd;
+// });
 
 $(window).on('load', function () {
     page.start();

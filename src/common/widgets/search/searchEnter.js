@@ -295,8 +295,7 @@ Search.prototype.loadList = function () {
         /* eslint-enable */
         number: 1000
     };
-    /* eslint-disable */
-    /* eslint-enable */
+
     var promise = me.page.get(me.opts.url, data);
 
     promise

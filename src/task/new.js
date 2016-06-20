@@ -89,6 +89,7 @@ page.deviceready = function () {
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
+        DATA.attendIds = editCom.unique(DATA.attendIds.push(DATA.principalUser));
         var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
 
         var promise = editCom.submit(page, DATA, url);
@@ -347,12 +348,7 @@ page.renderUser = function (originArr, dataArr) {
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
         });
-        for (var i = 0, len = partnerRaw.length; i < len; i++) {
-            if (dataRaw.principal === partnerRaw[i]) {
-                partnerRaw.splice(i, 1);
-                break;
-            }
-        }
+        partnerRaw = editCom.unique(partnerRaw);
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
     
