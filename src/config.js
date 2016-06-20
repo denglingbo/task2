@@ -7,7 +7,7 @@ var config = {
 
     VERSION: '1',
 
-    debug: false,
+    debug: true,
 
     API: {
         // 用于发送异步请求
