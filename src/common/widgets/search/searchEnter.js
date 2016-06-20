@@ -46,7 +46,7 @@ function Search(page, options) {
     $.extend(this.opts, options, {
         wrap: '#search-wrap',
         contentPage: '.search-page',
-        content: '.search-content',
+        content: '.search-content'
 
         // mainTmpl: './searchEnter.tpl'
     });

@@ -270,7 +270,6 @@ $.extend(PhoneInput.prototype, {
             }
 
             me.inputStatusChange();
-
             me.$input.triggerHandler('input');
         });
     },

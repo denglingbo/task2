@@ -196,10 +196,7 @@ page.enter = function () {
     me.phoneInput = [];
 
     $('.phone-input').each(function (i) {
-        var limits = 50;
-        if (!me.pageType && i) {
-            limits = 500;
-        }
+        var limits = 500;
 
         me.phoneInput.push(new PhoneInput({
             handler: this,
