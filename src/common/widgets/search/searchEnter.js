@@ -18,7 +18,6 @@ require('./searchEnter.scss');
  *      param {string} url config.api.xxx,
  *      param {number} taskId 任务id,
  *      param {string} pageType, task|talk|affair
- *      param {boolean} isSearchPage 搜索页面为true
  *      param {string} selector, 需要初始化搜索框的容器;
  *      param {string} inject, 搜索页的插入地方
  *      param {string} itemTpl, 搜索项模板
@@ -30,7 +29,7 @@ function Search(page, options) {
     this.opts = {
         url: '',
         role: options.role,
-        isSearchPage: false,
+        // isSearchPage: false,
         selector: '',
         inject: 'body',
         itemTpl: '{{#objList}}<li class="item" data-id="{{id}}">'
@@ -48,7 +47,8 @@ function Search(page, options) {
         wrap: '#search-wrap',
         contentPage: '.search-page',
         content: '.search-content',
-        mainTmpl: './searchEnter.tpl'
+
+        // mainTmpl: './searchEnter.tpl'
     });
 
     var opts = this.opts;
@@ -94,38 +94,12 @@ Search.prototype.loadHtml = function () {
     var me = this;
     var opts = me.opts;
 
-    var tmpl = require(opts.mainTmpl);
-    if (opts.isSearchPage) {
-        me.page.render(opts.selector,
-        {
-            lang: opts.lang,
-            isSearchPage: opts.isSearchPage
-        },
-        {
-            tmpl: tmpl
-        });
-    }
-    else {
-        $(opts.selector).addClass('search-box');
-
-        me.page.render(opts.selector,
-        {
-            lang: opts.lang
-        },
-        {
-            tmpl: opts.searchInHtml
-        });
-
-        me.page.render(opts.inject,
-        {
-            lang: opts.lang,
-            isSearchPage: opts.isSearchPage
-        },
-        {
-            tmpl: tmpl,
-            type: 'append'
-        });
-    }
+    // var tmpl = require(opts.mainTmpl);
+    me.page.render(opts.selector,
+    {
+        lang: opts.lang
+        // isSearchPage: opts.isSearchPage
+    });
 };
 
 // /**
@@ -184,9 +158,9 @@ Search.prototype.getKey = function () {
  *
  * @param {string} key, 关键字
  */
-Search.prototype.setKey = function (key) {
-    this.dom.$input.val(key);
-};
+// Search.prototype.setKey = function (key) {
+//     this.dom.$input.val(key);
+// };
 
 /**
  * 获取关键字的长度
@@ -253,16 +227,24 @@ Search.prototype.toggleWrap = function (show) {
  *
  * @param {boolean} show, 是否显示
  */
-Search.prototype.togglePage = function (show) {
-    this.toggle(this.dom.$page, show);
+// Search.prototype.togglePage = function (show) {
+//     this.toggle(this.dom.$page, show);
+// };
+
+/**
+ * 清空搜索框
+ *
+ */
+Search.prototype.clearInput = function () {
+    this.dom.$input.val('');
 };
 
 /**
  * 清空搜索框并清空搜索结果和隐藏展示区域
  *
  */
-Search.prototype.clearInput = function () {
-    this.dom.$input.val('');
+Search.prototype.clearList = function () {
+    this.dom.$content.text('');
 };
 
 /**
@@ -444,7 +426,8 @@ Search.prototype.stateChange = function () {
 Search.prototype.isNullHandler = function () {
     var me = this;
     me.toggleTip(true);
-    me.togglePage(false);
+    // me.togglePage(false);
+    me.clearList();
 };
 
 /**
@@ -454,7 +437,7 @@ Search.prototype.isNullHandler = function () {
 Search.prototype.isNotNullHandler = function () {
     var me = this;
     me.toggleTip(false);
-    me.togglePage(true);
+    // me.togglePage(true);
 };
 
 /**
@@ -466,44 +449,28 @@ Search.prototype.bindEvents = function () {
     var me = this;
     var opts = me.opts;
     var dom = me.dom;
-    if (!opts.isSearchPage) {
-        dom.$searchIn.on('click', function () {
-            me.toggleWrap(true);
-            dom.$input.focus();
-        });
+    // if (!opts.isSearchPage) {
+    //     dom.$searchIn.on('click', function () {
+    //         me.toggleWrap(true);
+    //         dom.$input.focus();
+    //     });
 
-        $(document).on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                me.redirectSearch();
-            }
-        });
-    }
+    //     $(document).on('keyup', function (e) {
+    //         if (e.keyCode === 13) {
+    //             me.redirectSearch();
+    //         }
+    //     });
+    // }
 
-    dom.$wrap.on('click', function (e) {
-        var target = e.target;
-        if (target === dom.$clear[0]) {
-            me.clearInput();
-            dom.$input.focus();
-        }
-        if (opts.isSearchPage) {
-            if (target === dom.$cancel[0]) {
-                me.redirectHistory();
-            }
-        }
-        else {
-            if (target === dom.$cancel[0]) {
-                me.clearInput();
-                me.toggleWrap(false);
-            }
-            else if (target === dom.$mask[0]) {
-                me.clearInput();
-                me.toggleWrap(false);
-            }
-        }
-
+    dom.$cancel.on('click', function () {
+        me.redirectHistory();
         me.stateChange();
     });
-
+    dom.$clear.on('click', function () {
+        me.clearInput();
+        dom.$input.focus();
+        me.stateChange();
+    });
     dom.$input.on(
     {
         input: function () {
