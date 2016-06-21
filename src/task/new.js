@@ -89,11 +89,8 @@ page.deviceready = function () {
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
-        var attends = DATA.attendIds.push(DATA.principalUser);
-        alert(DATA.attendIds);
-        alert(DATA.principalUser);
-        alert(typeof attends);
-        DATA.attendIds = editCom.unique(attends);
+        DATA.attendIds.push(DATA.principalUser);
+        DATA.attendIds = editCom.unique(DATA.attendIds);
         var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
 
         var promise = editCom.submit(page, DATA, url);
@@ -164,7 +161,6 @@ page.deviceready = function () {
                 else {
                     DATA[itemKey] = users.takeJid(contacts[0].jid);
                 }
-                alert(DATA[itemKey]);
                 // 对应的点击栏容器
                 $(id + ' .value').text(editCom.getPersonsName(contacts));
 

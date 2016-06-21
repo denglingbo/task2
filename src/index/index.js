@@ -91,7 +91,9 @@ page.bindEvents = function () {
         navigation.open('/task-new.html', {
             title: me.lang.newTask,
             transitionParam: {
-                transFlag: 1
+                transFlag: 1,
+                isClosePage: 0,
+                shareFlag: 0
             },
             returnParams: function (prevData) {
                 if (prevData && prevData === 'refresh') {
