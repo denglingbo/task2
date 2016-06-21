@@ -412,6 +412,7 @@ page.addParallelTask(function (dfd) {
  */
 page.ajaxAttach = function () {
     if (!taskId) {
+        me.loadAttach();
         return;
     }
     var me = this;
