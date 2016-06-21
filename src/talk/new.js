@@ -54,27 +54,29 @@ page.deviceready = function () {
     var lang = me.lang;
 
     // 下面为获取人员信息的配置
-    var obj = {
-        /* eslint-disable */
-        partner: DATA.userIds
-        /* eslint-enable */
-    };
-    var cid = ls.getData(config.const.PARAMS).cid;
-    var jids = users.makeArray(obj);
-    var dfdPub = users.getUserInfo(jids, cid);
+    if (!DATA.userIds.length) {
+        var obj = {
+            /* eslint-disable */
+            partner: DATA.userIds
+            /* eslint-enable */
+        };
+        var cid = ls.getData(config.const.PARAMS).cid;
+        var jids = users.makeArray(obj);
+        var dfdPub = users.getUserInfo(jids, cid);
 
-    // 查询用户信息失败
-    if (dfdPub === null) {
-        me.userInfoFail = true;
-    }
-    else {
-        dfdPub
-            .done(function (pubData) {
-                me.renderUser(pubData.contacts);
-            })
-            .fail(function () {
-                me.failUser();
-            });
+        // 查询用户信息失败
+        if (dfdPub === null) {
+            me.userInfoFail = true;
+        }
+        else {
+            dfdPub
+                .done(function (pubData) {
+                    me.renderUser(pubData.contacts);
+                })
+                .fail(function () {
+                    me.failUser();
+                });
+        }
     }
 
 

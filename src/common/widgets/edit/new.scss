@@ -40,15 +40,14 @@
     * {
         box-sizing: border-box;
     }
-}
 
-.input {
-    border: none;
-    background-color: $white;
-    outline: none;
-    font-size: rem(18px);
-    resize: none;
-    padding-right: rem(55px);
+    .input {
+        border: none;
+        background-color: $white;
+        outline: none;
+        font-size: rem(18px);
+        resize: none;
+    }
 }
 
 .edit-title-wrap,
@@ -148,6 +147,10 @@
 
 .componentAttachItem {
     @include border-1px(top, #e1e4e6);
+
+    &:last-child {
+        @include border-1px(bottom, #e1e4e6);
+    }
 }
 
 .edit-container .phone-input {

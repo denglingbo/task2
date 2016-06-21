@@ -502,6 +502,9 @@ editCom.setChoosePersonLoc = function (key, value) {
  * @return {Array} clone的数组
  */
 editCom.arrClone = function (arr) {
+    if (!$.isArray(arr1)) {
+        return [];
+    }
     var newArr = [];
     arr.forEach(function (value) {
         newArr.push(value);
@@ -517,6 +520,9 @@ editCom.arrClone = function (arr) {
  * @return {boolean} 是否相等
  */
 editCom.compareArr = function (arr1, arr2) {
+    if (!$.isArray(arr1) || !$.isArray(arr2)) {
+        return false;
+    }
     var newArr1 = this.arrClone(arr1).sort();
     var newArr2 = this.arrClone(arr2).sort();
     var isDiff = newArr1.some(function (value, index) {
@@ -533,6 +539,9 @@ editCom.compareArr = function (arr1, arr2) {
  *
  */
 editCom.getDataFromObj = function (target, source) {
+    if (!(typeof target === 'object') || !(typeof source === 'object')) {
+        return false;
+    }
     for (var key in target) {
         if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
             target[key] = source[key];
@@ -548,6 +557,9 @@ editCom.getDataFromObj = function (target, source) {
  *
  */
 editCom.getPersonsName = function (arr) {
+    if (!$.isArray(arr)) {
+        return [];
+    }
     var nameArr = [];
     arr.forEach(function (item) {
         nameArr.push(item.name);
@@ -563,14 +575,15 @@ editCom.getPersonsName = function (arr) {
  *
  */
 editCom.unique = function (arr) {
+    if (!$.isArray(arr)) {
+        return [];
+    }
     var newArr = [];
-    arr.forEach(function (item) {
-        newArr[item] = 1;
-    });
-    var newArr2 = [];
-    newArr.forEach(function (item, i) {
-        newArr2.push(i);
-    });
-    return newArr2;
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (newArr.indexOf(arr[i]) === -1) {
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
 };
 module.exports = editCom;

@@ -14,7 +14,7 @@ var Search = require('common/widgets/search/searchEnter');
 
 var page = new Page();
 
-var key = '';
+// var key = '';
 
 page.enter = function () {
     var me = this;
@@ -24,10 +24,10 @@ page.enter = function () {
         isSearchPage: true,
         selector: '#search'
     });
-    var search = me.search;
-    search.setKey(key);
-    search.stateChange();
-    search.togglePage(true);
+    // var search = me.search;
+    // search.setKey(key);
+    // search.stateChange();
+    // search.togglePage(true);
     $('.search-page').height($(window).height());
     // 初始化 scroll
     new IScroll('.search-page', {

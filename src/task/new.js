@@ -89,7 +89,8 @@ page.deviceready = function () {
     // bindevents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
-        DATA.attendIds = editCom.unique(DATA.attendIds.push(DATA.principalUser));
+        DATA.attendIds.push(DATA.principalUser);
+        DATA.attendIds = editCom.unique(DATA.attendIds);
         var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
 
         var promise = editCom.submit(page, DATA, url);
@@ -160,7 +161,6 @@ page.deviceready = function () {
                 else {
                     DATA[itemKey] = users.takeJid(contacts[0].jid);
                 }
-
                 // 对应的点击栏容器
                 $(id + ' .value').text(editCom.getPersonsName(contacts));
 
@@ -350,7 +350,9 @@ page.renderUser = function (originArr, dataArr) {
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
         });
+        console.log(partnerRaw);
         partnerRaw = editCom.unique(partnerRaw);
+        console.log(partnerRaw);
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
     
