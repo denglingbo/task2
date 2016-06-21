@@ -72,9 +72,6 @@ page.enter = function () {
         return;
     }
 
-    // 切换内容的 page 页
-    this.initPageSlider();
-
     // 设置滚动的元素的高宽
     $('.slider-container').css({
         width: $(window).width(),
@@ -83,6 +80,9 @@ page.enter = function () {
 
     // 初始化顶部的 tab
     this.initTab();
+
+    // 切换内容的 page 页
+    this.initPageSlider();
 
     this.bindEvents();
 };

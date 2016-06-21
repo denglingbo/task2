@@ -156,6 +156,9 @@ function Init(options) {
     me._reloadAllow = false;
     me._reloadFailed = false;
 
+    me._deviceTimer = null;
+    me._deviceTimeout = null;
+
     me.init();
 }
 
@@ -370,10 +373,6 @@ Init.prototype = {
                 // 用于分页提示
                 data.pagenum = this.page;
 
-                // this.render(data);
-                // var jids = getJids(data.objList);
-                // me.renderUser(jids);
-
                 me.renderMain(this, data);
 
                 me.setBasic();
@@ -474,12 +473,34 @@ Init.prototype = {
             return;
         }
 
+        var me = this;
+
         dealData(data);
 
         loader.render(data, appendType || 'html');
 
         var jids = getJids(data.objList);
-        this.renderUser(jids);
+
+        // 这里监听 设备是否就绪
+        if (!window.isDeviceready) {
+            clearInterval(me._deviceTimer);
+            clearTimeout(me._deviceTimeout);
+            me._deviceTimer = setInterval(function () {
+
+                if (window.isDeviceready) {
+                    clearInterval(me._deviceTimer);
+                    clearTimeout(me._deviceTimeout);
+                    me.renderUser(jids);
+                }
+            }, 100);
+
+            me._deviceTimeout = setTimeout(function () {
+                clearInterval(me._deviceTimer);
+            }, 2000);
+        }
+        else {
+            me.renderUser(jids);
+        }
     },
 
     /**

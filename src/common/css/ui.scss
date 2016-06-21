@@ -206,7 +206,7 @@ $star-size: rem(16px);
     text-align: center;
     background: $red;
     border-radius: 10px;
-    color: $white;
+    color: $white !important;
     font-size: rem(12px);
 }
 
