@@ -191,6 +191,9 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
+    if (!phoneInputTitle || !phoneInputContent || !attach) {
+        return;
+    }
 
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
@@ -211,7 +214,6 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             }
         }
     ]);
-
     navigation.buttonAutoEnable();
     // CPNavigationBar.setGoBackHandler(goBack,true);
 };

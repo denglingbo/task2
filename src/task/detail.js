@@ -193,6 +193,14 @@ page.deviceready = function () {
         });
     // 加载附件数据
     me.ajaxAttach();
+
+    if (data.summaryAttachs.length) {
+        AttachWrapper.initDetailAttach({
+            attachData: data.summaryAttachs,
+            container: '.summary-attach-container',
+            wrapper: '.summary-attach'
+        });
+    }
 };
 
 /**
@@ -299,7 +307,7 @@ page.loadAttach = function () {
     var attachList = me.attachData.objList;
     var total = me.attachData.total;
 
-    if (!attachList.length || typeof defaultAttachNum !== 'number') {
+    if (!attachList || !attachList.length || typeof defaultAttachNum !== 'number') {
         return;
     }
     me.initAttach(attachList);

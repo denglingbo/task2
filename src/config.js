@@ -82,7 +82,9 @@ var config = {
         GET_TASK_LIST: 'getTaskList',
         GET_TALK_LIST: 'getTalkList',
         GET_AFFAIR_LIST: 'getAffairList',
-        SEARCH_TASK: 'searchTask'
+        SEARCH_TASK: 'searchTask',
+        // 总结详情
+        GET_TASK_SUMMARY: 'getTaskSummary'
     }
 };
 
@@ -112,7 +114,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '3de27de0-d808-46a4-a505-67fb09d406aa-211129'
+    token: 'f80254a4-faa8-42e3-bd80-d018f4e2054b-211135'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 
