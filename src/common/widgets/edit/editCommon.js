@@ -183,12 +183,13 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 /**
  * 虚拟手机端提交和取消按钮
  *
+ * @param {Object} page, page对象
  * @param {Object} phoneInputTitle, title 文本框对象
  * @param {Object} phoneInputContent, content 文本框对象
  * @param {Object} attach, 附件对象
  * @param {Function} submitFn, 验证成功的提交操作
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
+editCom.subAndCancel = function (page, phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
     if (!phoneInputTitle || !phoneInputContent || !attach) {
@@ -209,7 +210,7 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         {
             title: lang.submit,
             click: function () {
-                me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+                me.setValidObj(phoneInputTitle, phoneInputContent, attach||page.attach);
                 me.submitValid(submitFn);
             }
         }

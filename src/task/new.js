@@ -247,6 +247,7 @@ page.bindTopEvent = function () {
         });
     });
 }
+
 /**
  * 加载附件
  *
@@ -257,7 +258,6 @@ page.loadAttach = function () {
     if (me.attachData && me.attachData.objList && me.attachData.objList.length) {
         attachList = me.attachData.objList;
     }
-
     me.attach = editCom.initEditAttach(attachList);
     me.bindTopEvent();
 };
