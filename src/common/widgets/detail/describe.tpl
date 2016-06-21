@@ -11,6 +11,7 @@
 </div>
 {{/auditRemark}}
 
+{{#suspend}}
 {{#suspendRemark}}
 <!-- 撤消理由 -->
 <div class="layout">
@@ -23,6 +24,7 @@
     </div>
 </div>
 {{/suspendRemark}}
+{{/suspend}}
 
 {{#isRefuse}}
 {{#refuseReason}}

@@ -43,6 +43,7 @@
         "suspend_remark": null,
         "refuse_reason": null,
         "complete_remark": null,
+        "suspendRemark": "asdfsadfasdfas",
         "attachements": [
             {
                 "deleted": false,

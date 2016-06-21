@@ -38,6 +38,7 @@ page.enter = function () {
     me.data.summaryTitleRaw = me.lang.taskSummaryTitle;
 
     me.data.rights.taskId = me.data.id;
+
     me.render('#detail-main', me.data, {
         partials: {
             title: tmplTitle,
