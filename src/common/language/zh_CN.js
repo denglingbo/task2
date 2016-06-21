@@ -45,7 +45,7 @@ module.exports = {
     noTask: '您还没有创建过任务',
     createTask: '创建任务',
     netErr: '网络出现故障',
-    tapPageReLoad: '点击页面重新加载',
+    tapPageReLoad: '点击屏幕重新加载',
     attach: '附件',
     noAttach: '无附件',
     putTaskCompleted: '提交完成',

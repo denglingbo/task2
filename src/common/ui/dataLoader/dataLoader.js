@@ -523,6 +523,10 @@ $.extend(DataLoader.prototype, {
         $cur.siblings().addClass('hide');
     },
 
+    hideMore: function () {
+        this.statusChange('more');
+    },
+
     /**
      * 加载条状态
      *
@@ -552,6 +556,8 @@ $.extend(DataLoader.prototype, {
             $bar.addClass('hide');
             return;
         }
+
+        $bar.removeClass('hide');
 
         var $cur = $bar.find(barObj[status]) || null;
 
@@ -591,10 +597,6 @@ $.extend(DataLoader.prototype, {
                 // }, outterDelay);
             }
         }
-    },
-
-    reloadStatus: function () {
-
     }
 });
 

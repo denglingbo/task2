@@ -1,5 +1,5 @@
 <!-- 存放内容的模块 -->
-<div class="list-wrapper-inner" id="list-wrapper-{{ name }}">
+<div class="list-wrapper-inner" id="list-wrapper-{{ name }}" data-contentname="{{ name }}">
     <div class="scroll-outter">
         <div class="scroll-inner">
             <!-- 用于重新加载数据 -->

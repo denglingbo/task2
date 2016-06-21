@@ -334,6 +334,7 @@ function LoadPage(info) {
                 return page.get(api, params);
             },
 
+            // 储存第一次加载的数据
             onFirstDone: function (data) {
                 pageCache[info.name].data = data;
 
@@ -341,6 +342,11 @@ function LoadPage(info) {
                     rid: rid,
                     status: params.status
                 });
+            },
+
+            // 加载失败
+            onLoadError: function () {
+                delete pageCache[info.name];
             },
 
             tpl: template,

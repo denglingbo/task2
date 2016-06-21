@@ -19,6 +19,9 @@ var Pagination = require('common/ui/pagination/pagination');
 
 var lang = require('common/lang').getData();
 
+require('common/widgets/emptyPage/netErr.scss');
+var errTpl = require('common/widgets/emptyPage/netErr.tpl');
+
 /**
  * role id
  * 1: 我派发的
@@ -166,6 +169,7 @@ Init.prototype = {
             promise: me.opts.promise,
             dataKey: 'objList',
             wrapper: me.$main,
+            errTpl: errTpl,
             lang: {
                 more: {
                     'default': lang.touchLoadMore
@@ -178,14 +182,42 @@ Init.prototype = {
 
         me.getMoreData(function (data) {
 
+            // 加载错误的情况下，渲染错误页面，并且创建一个错误信息
+            if (!data) {
+                var errData = {
+                    lang: {
+                        netErr: lang.failText,
+                        tapPageReLoad: lang.tapPageReLoad
+                    }
+                };
+
+                me.dataLoader.hideMore();
+                me.dataLoader.error(errData);
+                me.opts.onLoadError();
+
+                // 点击屏幕重载
+                me.opts.wrapper.one('click', function () {
+                    // list-wrapper-inner
+                    var $parent = $(this).parents('.list-wrapper-inner');
+                    if ($parent && $parent.data('contentname')) {
+                        var name = $parent.data('contentname');
+                        var $tab = $('.page-loader li[data-name="' + name + '"]');
+
+                        $tab && $tab.eq(0).triggerHandler('click');
+
+                        var $err = me.opts.wrapper.find('.net-err');
+                        if ($err.length > 0) {
+                            $err.addClass('hide').remove();
+                        }
+                    }
+                });
+                return;
+            }
+
             // 初始化滚动
             me.initScroll();
 
             me.opts.onFirstDone(data);
-
-            if (!data) {
-                return;
-            }
 
             // 初始化一个分页提示控件
             me.pagination = new Pagination({
@@ -212,6 +244,11 @@ Init.prototype = {
     setBasic: function () {
 
         var me = this;
+
+        var $err = me.opts.wrapper.find('.net-err');
+        if ($err.length > 0) {
+            $err.addClass('hide').remove();
+        }
 
         var height = $(window).height();
 
@@ -362,7 +399,7 @@ Init.prototype = {
 
         me.dataLoader.requestMore(function (err, data) {
 
-            if (err) {
+            if (err || !data) {
 
                 /**
                  * 离线机制

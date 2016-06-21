@@ -12,7 +12,7 @@ var ERR_MSG = {
 
 // var Listener = require('./listener');
 // var listener = new Listener();
-var listener = require('./listener')
+var listener = require('./listener');
 var util = require('./util');
 var view = require('./view');
 
@@ -89,6 +89,13 @@ function Control(opts) {
      * @type {string|*|string}
      */
     this.tpl = this.opts.tpl || '';
+
+    /**
+     * 错误模板
+     *
+     * @type {string|*|string}
+     */
+    this.errTpl = this.opts.errTpl || '';
 
     /**
      * 控件暴露的事件
@@ -206,6 +213,23 @@ Control.prototype.render = function (data, type) {
         tmpl: this.opts.tpl,
         partials: this.opts.partials,
         type: type || 'html'
+    };
+
+    return view.render(selector, data, options);
+};
+
+/**
+ * 失败渲染控件
+ *
+ * @param {Object} data 渲染所需数据
+ * @return {string}
+ */
+Control.prototype.error = function (data) {
+
+    var selector = $(this.opts.wrapper);
+    var options = {
+        tmpl: this.opts.errTpl,
+        type: 'html'
     };
 
     return view.render(selector, data, options);
