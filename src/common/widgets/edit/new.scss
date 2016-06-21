@@ -34,7 +34,7 @@
 }
 
 .edit-container {
-    font-size: 16px;
+    font-size: rem(14px);
     box-sizing: border-box;
 
     * {
@@ -92,7 +92,7 @@
         @include border-1px(bottom, #e3e4e5);
 
         height: rem(180px);
-        font-size: rem(16px);
+        font-size: rem(14px);
         position: relative;
     }
     
@@ -135,7 +135,7 @@
             .value {
                 display: block;
                 color: $black;
-                font-size: 16px;
+                font-size: rem(14px);
                 margin-right: rem(12px);
                 margin-left: rem(10px);
                 @include ellipsis(1);

@@ -362,9 +362,7 @@ page.renderUser = function (originArr, dataArr) {
         data.partner.forEach(function (item) {
             partnerRaw.push(item.name);
         });
-        console.log(partnerRaw);
         partnerRaw = editCom.unique(partnerRaw);
-        console.log(partnerRaw);
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
     
