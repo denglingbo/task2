@@ -27,7 +27,6 @@ page.deviceready = function () {
     });
 
     navigation.left({
-        title: me.lang.back,
         click: function () {
             navigation.open(-1);
         }
@@ -65,6 +64,4 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();
