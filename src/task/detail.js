@@ -81,7 +81,7 @@ page.deviceready = function () {
     var data = me.data;
 
     // 查看更多人员
-    me.$main.off('click').on('click', '.partner-more', function () {
+    me.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {

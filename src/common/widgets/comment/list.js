@@ -170,7 +170,7 @@ $.extend(list.prototype, {
         var me = this;
         var $main = $('#comments-main');
 
-        $main.off('click').on('click', '.delete', function () {
+        $main.on('click', '.delete', function () {
             var target = this;
 
             MidUI.alert({
@@ -181,7 +181,7 @@ $.extend(list.prototype, {
             });
         });
 
-        $('.send').off('click').on('click', function () {
+        $('.send').on('click', function () {
             me.addComment();
         });
         me.attach = editCom.initEditAttach();
