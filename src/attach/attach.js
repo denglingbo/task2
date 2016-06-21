@@ -11,6 +11,7 @@ var config = require('../config');
 var Page = require('common/page');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var util = require('common/util');
+var navigation = require('common/middleware/navigation');
 var page = new Page();
 
 page.enter = function () {
@@ -23,6 +24,13 @@ page.deviceready = function () {
     me.attach = AttachWrapper.initDetailAttach({
         attachData: attachList,
         container: '.attach-container'
+    });
+
+    navigation.left({
+        title: me.lang.back,
+        click: function () {
+            navigation.open(-1);
+        }
     });
 };
 
