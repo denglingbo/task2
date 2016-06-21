@@ -271,19 +271,19 @@ $.extend(list.prototype, {
                     
                     dealData(data, me.page);
 
-                me.page.render($('.comments dd').eq(0), data, {
-                    tmpl: tmplItem,
-                    type: 'before'
-                });
+                    me.page.render($('.comments dd').eq(0), data, {
+                        tmpl: tmplItem,
+                        type: 'before'
+                    });
 
-                getUserAndPhoto([result.data]);
+                    getUserAndPhoto([result.data]);
 
-                // 待优化
-                // 这里可以判断是否已经有了当前用户的信息
-                renderUser(me.$main, data.objList);
+                    // 待优化
+                    // 这里可以判断是否已经有了当前用户的信息
+                    renderUser(me.$main, data.objList);
 
                     me.page.virtualInput.reset();
-                    $('#attachList').html('');
+                    $('#attachList ul').html('');
                     me.$listNull.addClass('hide');
                 }
                 else {

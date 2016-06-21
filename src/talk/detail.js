@@ -73,10 +73,18 @@ page.deviceready = function () {
     // var lang = me.lang;
     var data = me.data;
     if (data.attachs && data.attachs.length) {
-        me.attach = AttachWrapper.initDetailAttach({
+        AttachWrapper.initDetailAttach({
             attachData: data.attachs,
             container: '.attach-container',
             wrapper: '.attach'
+        });
+    }
+
+    if (data.summaryAttachs && data.summaryAttachs.length) {
+        AttachWrapper.initDetailAttach({
+            attachData: data.summaryAttachs,
+            container: '.summary-attach-container',
+            wrapper: '.summary-attach'
         });
     }
 

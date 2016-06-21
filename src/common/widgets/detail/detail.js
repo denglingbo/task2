@@ -6,7 +6,7 @@
  * 处理 任务详情页，事件详情页，讨论详情页
  *
  */
-var users = require('common/middleware/users/users');
+// var users = require('common/middleware/users/users');
 var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
@@ -76,7 +76,7 @@ detail.dealPageData = function (data) {
 
     // 负责人到完成任务页面有备注信息填写
     // 判断这个用户点击完成任务过去的页面的展示权限
-    if (users.uid() === data.principalUser) {
+    if (data.createUser === data.principalUser) {
         data.isMaster = 1;
     }
 

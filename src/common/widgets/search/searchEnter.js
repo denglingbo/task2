@@ -487,10 +487,10 @@ Search.prototype.bindEvents = function () {
 
     $(opts.wrap + ' .search-content').off('click').on('click', 'li.item', function (e) {
         var id = +$(this).data('id');
-        var url = '/task-detail.html?taskId=' + id;
+        var url = '/task-detail.html?taskId=' + id + '&rid=' + opts.role;
         /* eslint-disable */
         if (CPNavigationBar) {
-            CPNavigationBar.redirect(url);
+            CPNavigationBar.redirect(url, opts.lang.taskDetail);
         }
         /* eslint-enable */
 

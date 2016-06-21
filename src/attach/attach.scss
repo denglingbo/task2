@@ -1,5 +1,11 @@
 @import "../common/css/global.scss";
 
 .componentAttachItem {
+	background-color: $white;
     @include border-1px(top, #e1e4e6);
+}
+
+.attach-container {
+	@include border-1px(top, #e1e4e6);
+	@include border-1px(bottom, #e1e4e6);
 }

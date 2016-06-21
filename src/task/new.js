@@ -84,12 +84,10 @@ page.deviceready = function () {
     
     // 
     // bindevents
-    editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
+    editCom.subAndCancel(me, me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
-        DATA.attendIds.push(DATA.principalUser);
-        DATA.attendIds = editCom.unique(DATA.attendIds);
+        // DATA.attendIds = editCom.unique(DATA.attendIds);
         var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
-
         var promise = editCom.submit(page, DATA, url);
 
         promise.done(function (result) {
@@ -260,7 +258,7 @@ page.loadAttach = function () {
     }
     var attachList = me.attachData.objList;
 
-    if (!attachList.length) {
+    if (!attachList || !attachList.length) {
         return;
     }
     // 初始化附件组件
