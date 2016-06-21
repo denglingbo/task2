@@ -39,7 +39,9 @@
     }
 
     .load-more {
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         line-height: rem(30px);
         height: rem(50px);
         font-size: rem(14px);
