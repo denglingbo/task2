@@ -27,6 +27,8 @@ var config = {
 
         // 任务详情
         TASK_DETAIL_URL: 'getTaskDetail',
+        // 任务附件列表
+        ATTACH_LIST: 'getDocumentList',
         // 添加关注
         TASK_FOLLOW: 'attentionTask',
         // 任务新建
@@ -110,7 +112,7 @@ config.const = {
 config.mock = {
 
     // 这个需要通过
-    token: '8501df87-478c-4fda-afac-b8b2bc2afa28-161817'
+    token: '3de27de0-d808-46a4-a505-67fb09d406aa-211129'
     // mock 代理服务不要最后的 '/'
     // proxyPrefix: '/api',
 

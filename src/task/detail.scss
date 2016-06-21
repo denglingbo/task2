@@ -30,3 +30,16 @@
         }
     }
 }
+
+.attach {
+    .componentAttachItem {
+        &:last-child {
+            @include border-1px(bottom, #e1e4e6);
+        }
+    }
+
+    .load-more {
+        text-align: center;
+        line-height: rem(30px);
+    }
+}
