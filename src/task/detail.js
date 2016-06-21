@@ -69,6 +69,7 @@ page.enter = function () {
 
     // 根据权限渲染之后修正样式
     detailUtil.fixStyles();
+
 };
 
 /**
@@ -190,8 +191,8 @@ page.deviceready = function () {
         .fail(function () {
             me.failUser();
         });
-
-    me.loadAttach();
+    // 加载附件数据
+    me.ajaxAttach();
 };
 
 /**
@@ -292,6 +293,9 @@ page.initAttach = function (attachData) {
  */
 page.loadAttach = function () {
     var me = this;
+    if (!me.attachData) {
+        return;
+    }
     var attachList = me.attachData.objList;
     var total = me.attachData.total;
 
@@ -513,7 +517,7 @@ page.addParallelTask(function (dfd) {
  * @param {deferred} dfd, deferred
  *
  */
-page.addParallelTask(function (dfd) {
+page.ajaxAttach = function () {
     var me = this;
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
@@ -523,19 +527,19 @@ page.addParallelTask(function (dfd) {
 
     promise
         .done(function (result) {
-            if (result.meta && result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
+            if (result.meta && result.meta.code === 200) {
                 me.attachData = result.data;
-                dfd.resolve(me.attachData);
+                me.data.total = me.attachData.total;
             }
         })
         .fail(function (err) {
             // console.log(err);
+        })
+        .always(function () {
+            if (me.attachData) {
+                me.loadAttach();
+            }
         });
-
-    return dfd;
-});
+};
 
 page.start();

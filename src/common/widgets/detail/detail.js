@@ -149,7 +149,7 @@ detail.formatEventTalkData = function (data, pagenum) {
 detail.bindTickEvents = function (options) {
 
     var me = this;
-
+    /* eslint-disable */
     // 完成按钮点击事件
     var map = {
         0: {
@@ -161,7 +161,7 @@ detail.bindTickEvents = function (options) {
             fail: 'untick'
         }
     };
-
+    /* eslint-enable */
     // 要改变的状态容器
     var $status = $('.detail-title-state');
 
@@ -273,7 +273,7 @@ detail.naviRight = function (page, data, pageType, getAlert) {
             editTitle: lang.editAffair
         },
         task: {
-            url: '/task-new.html?taskId=' + data.id,
+            url: '/task-new.html?taskId=' + data.id + '&total=' + data.total,
             editTitle: lang.editTask
         }
     };
