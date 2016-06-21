@@ -449,7 +449,7 @@ Page.prototype.refresh = function () {
  * @param {Object} opts, ajaxSettings
  * @return {Object} 请求配置对象
  */
-Page.prototype.getRequestConfig = function (api, data, opts) {
+var getRequestConfig = function (api, data, opts) {
 
     var r = {
         url: config.API.host + config.API.prefix + api
@@ -520,7 +520,7 @@ Page.post = function (api, data, options) {
  * @return {Deferred}
  */
 Page.ajax = function (api, data, options) {
-    var me = this;
+    // var me = this;
     var dfd = new $.Deferred();
     // var isNetwork = util.isNetwork();
 
@@ -549,7 +549,7 @@ Page.ajax = function (api, data, options) {
     // }
 
     // 获取请求配置
-    var reqConfig = me.getRequestConfig(api, data, opts);
+    var reqConfig = getRequestConfig(api, data, opts);
 
     var ajaxSettings = {
         url: reqConfig.url,
@@ -586,13 +586,6 @@ Page.ajax = function (api, data, options) {
         if (!/post/i.test(ajaxSettings.type)) {
             delete ajaxSettings.contentType;
         }
-
-        // if (config.debug) {
-            // console.log(cookies.get('JINSESSIONID'));
-            // cookies.set('JINSESSIONID', config.mock.token);
-            // cookies.set('uid', reqData.uid);
-            // cookies.set('cid', reqData.cid);
-        // }
     }
 
     ajaxSettings.success = function (result) {
@@ -676,10 +669,10 @@ function createAjaxId(ajaxSettings) {
         }
     }
     catch (ex) {
-        return null;
+        return 'CATCH-MD5-AJAXID-' + new Date().getTime();
     }
 
-    return null;
+    return 'ERROR-MD5-AJAXID-' + new Date().getTime();
 }
 
 /**
