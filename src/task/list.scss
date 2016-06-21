@@ -4,6 +4,18 @@
 @import "../common/css/global.scss";
 @import "../common/css/ui.scss";
 
+/*
+.tab {
+    width: 100%;
+    position: fixed;
+}
+#opened-main {
+    .list-wrapper-inner {
+        padding-top: rem(35px);
+    }
+}
+*/
+
 #search {
     height: rem(43px);
     position: relative;
@@ -36,6 +48,8 @@
 .scroll-outter {
     height: 100%;
 }
+
+
 .net-err {
     position: static;
     padding-top: 45%;
@@ -60,7 +74,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
+            /* overflow: auto; */
 
             .scroll-inner {
                 width: 100%;

@@ -69,7 +69,7 @@ PageSlider.prototype = {
 
         $(this.opts.outer).css({
             width: me.winWidth,
-            height: me.winHeight
+            height: me.winHeight - ($('#search').length ? $('#search').height() : 0)
         });
 
         this.$pages.each(function (i) {

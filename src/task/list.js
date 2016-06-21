@@ -78,7 +78,7 @@ page.enter = function () {
     // 设置滚动的元素的高宽
     $('.slider-container').css({
         width: $(window).width(),
-        height: $(window).height()
+        height: $(window).height() - ($('#search').length ? $('#search').height() : 0)
     });
 
     // 初始化顶部的 tab
@@ -146,10 +146,11 @@ page.bindEvents = function () {
 page.initTab = function () {
     var $tab = $('.tab');
     var $ul = $tab.find('ul');
+    var defWidth = $tab.width();
 
     $tab.width(999);
     $ul.width($ul.width());
-    $tab.width('auto');
+    $tab.width(defWidth);
 
     // 右侧可见区域
     var max = $tab.width();
