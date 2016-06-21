@@ -18,7 +18,7 @@ var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
-var doing = util.params('taskId');
+var taskId = util.params('taskId');
 
 var page = new Page();
 /* eslint-disable */
@@ -57,7 +57,7 @@ page.deviceready = function () {
     var me = this;
     var lang = me.lang;
 
-    if (doing) {
+    if (taskId) {
         // 下面为获取人员信息的配置
         var obj = {
             principal: DATA['principalUser'],
@@ -81,9 +81,6 @@ page.deviceready = function () {
                 });
         }
     }
-
-    // 初始化附件组件
-    me.attach = editCom.initEditAttach(DATA.attachements);
     
     // 
     // bindevents
@@ -196,6 +193,8 @@ page.deviceready = function () {
         }
         person(key, itemKey, id);
     });
+
+    me.ajaxAttach();
 };
 
 /**
@@ -248,6 +247,24 @@ page.loadPage = function () {
     });
 
     editCom.loadPage(me, data);
+};
+
+/**
+ * 加载附件
+ *
+ */
+page.loadAttach = function () {
+    var me = this;
+    if (!me.attachData) {
+        return;
+    }
+    var attachList = me.attachData.objList;
+
+    if (!attachList.length) {
+        return;
+    }
+    // 初始化附件组件
+    me.attach = editCom.initEditAttach(attachList);
 };
 
 page.initPlugin = function () {
@@ -372,13 +389,13 @@ page.renderUser = function (originArr, dataArr) {
 page.addParallelTask(function (dfd) {
     var me = this;
 
-    if (!doing) {
+    if (!taskId) {
         dfd.resolve();
         return dfd;
     }
 
     var promise = me.get(config.API.TASK_DETAIL_URL, {
-        taskId: util.params('taskId')
+        taskId: taskId
     });
 
     promise
@@ -393,5 +410,38 @@ page.addParallelTask(function (dfd) {
         });
     return dfd;
 });
+
+/**
+ * 请求附件列表
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+page.ajaxAttach = function () {
+    if (!taskId) {
+        return;
+    }
+    var me = this;
+    var promise = page.get(config.API.ATTACH_LIST, {
+        taskId: taskId,
+        currPage: 1,
+        number: 1000
+    });
+
+    promise
+        .done(function (result) {
+            if (result.meta && result.meta.code === 200) {
+                me.attachData = result.data;
+            }
+        })
+        .fail(function (err) {
+            // console.log(err);
+        })
+        .always(function () {
+            if (me.attachData) {
+                me.loadAttach();
+            }
+        })
+};
 
 page.start();
