@@ -150,8 +150,8 @@ Pagination.prototype = {
     },
 
     bindEvents: function () {
-        $(document).on('scroll', $.proxy(this.process, this));
-        $(window).one('scroll', $.proxy(this.process, this));
+        $(document).off('scroll').on('scroll', $.proxy(this.process, this));
+        $(window).off('scroll').one('scroll', $.proxy(this.process, this));
     },
 
     // 显示完成之后自动隐藏

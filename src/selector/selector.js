@@ -24,6 +24,4 @@ page.deviceready = function () {
     selector();
 };
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

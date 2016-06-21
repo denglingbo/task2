@@ -10,7 +10,7 @@ module.exports = function () {
     var $layout = $('body');
     var handler = '.touch-button';
 
-    $layout.on('touchstart', handler, function () {
+    $layout.off('touchstart').on('touchstart', handler, function () {
         var $touch = $(this);
 
         if (!this._opacity) {
@@ -22,7 +22,7 @@ module.exports = function () {
         });
     });
 
-    $layout.on('touchend', handler, function () {
+    $layout.off('touchend').on('touchend', handler, function () {
         $(this).css({
             opacity: this._opacity || 1
         });

@@ -298,7 +298,7 @@ page.findOwner = function (srcObject, itemObject, appendObject) {
                         appendObject[key] = [];
                     }
 
-                    appendObject[key].push(itemObject);
+                    itemObject && appendObject[key].push(itemObject);
                 }
                 // 非数组直接判断是否相等
                 else if (objIds === id) {

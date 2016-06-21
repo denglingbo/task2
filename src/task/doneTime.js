@@ -121,6 +121,4 @@ page.returnValue = function () {
     /* eslint-enable */
 };
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

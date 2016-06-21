@@ -10,8 +10,9 @@ var ERR_MSG = {
     NOT_RENDERED: 'You should render Control first'
 };
 
-var Listener = require('./listener');
-var listener = new Listener();
+// var Listener = require('./listener');
+// var listener = new Listener();
+var listener = require('./listener')
 var util = require('./util');
 var view = require('./view');
 
@@ -234,6 +235,7 @@ Control.prototype.dispose = function () {
  * 销毁事件
  */
 Control.prototype.disposeEvents = function () {
+
     for (var uuid in this.children) {
         if (this.children.hasOwnProperty(uuid)) {
             this.children[uuid].disposeEvents();
@@ -242,7 +244,7 @@ Control.prototype.disposeEvents = function () {
 
     for (var type in this._listeners) {
         if (this._listeners.hasOwnProperty(type)) {
-            this.un(type);
+            this.off(type);
         }
     }
 };

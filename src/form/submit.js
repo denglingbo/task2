@@ -275,6 +275,4 @@ page.deviceready = function () {
     // CPNavigationBar.setGoBackHandler(goBack,true);
 };
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

@@ -77,7 +77,7 @@ page.deviceready = function () {
     var data = me.data;
 
     // 查看更多人员
-    me.$main.on('click', '.partner-more', function () {
+    me.$main.off('click').on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {
@@ -93,7 +93,7 @@ page.deviceready = function () {
     };
 
     // 跳转到事件或讨论页面
-    me.$main.on('click', '.affair-talk-item', function () {
+    me.$main.off('click').on('click', '.affair-talk-item', function () {
         // affair or talk
         var pageTo = $(this).data('page');
         var type = $(this).data('type');
@@ -114,7 +114,7 @@ page.deviceready = function () {
     };
 
     // 页面底部跳转
-    me.$fixbar.find('li').on('click', function () {
+    me.$fixbar.find('li').off('click').on('click', function () {
         var target = this;
         var $click = $(target);
         var pageTo = $click.data('page');
@@ -154,7 +154,7 @@ page.deviceready = function () {
 
         // 弹出框
         MidUI.alert({
-            content: me.lang.alertRevokeContent,
+            content: me.lang.alertRecoveryContent,
             onApply: function () {
                 asyncTaskWork(null, 'revoke');
             }
@@ -211,7 +211,6 @@ function asyncTaskWork(target, ajaxKey) {
             taskId: page.data.id
         },
         done: function () {
-            // navigation.open('/task-detail.html?taskId=' + page.data.id);
             page.refresh();
         }
     };
@@ -250,12 +249,12 @@ page.bindEvents = function () {
     me.$affairTalk = $('#affair-talk');
     me.$fixbar = $('.fixbar');
 
-    $('.star').on('click', function () {
+    $('.star').off('click').on('click', function () {
         me.follow(this);
     });
 
     // 加载 事件&讨论 列表
-    me.dataLoader.on('more', function (err, data) {
+    me.dataLoader.on('more', function (event, err, data) {
 
         if (err) {
             return;
@@ -365,7 +364,7 @@ page.findOwner = function (srcObject, arr) {
             data = [];
 
             ids.forEach(function (item) {
-                data.push(obj[item]);
+                obj[item] && data.push(obj[item]);
             });
         }
         else {
@@ -375,12 +374,13 @@ page.findOwner = function (srcObject, arr) {
         return data;
     };
 
-    for (var key in srcObject) {
-        if (srcObject.hasOwnProperty(key)) {
+    // typeKey: creator, principal, partner
+    for (var typeKey in srcObject) {
+        if (srcObject.hasOwnProperty(typeKey)) {
 
-            var ids = srcObject[key];
+            var ids = srcObject[typeKey];
 
-            finder[key] = getData(ids, key);
+            finder[typeKey] = getData(ids, typeKey);
         }
     }
 
@@ -472,6 +472,4 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

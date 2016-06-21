@@ -108,7 +108,7 @@ page.bindEvents = function () {
     var me = this;
 
     // 查看更多人员
-    this.$main.on('click', '.partner-more', function () {
+    this.$main.off('click').on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 
         if (jids && jids.toString().length > 0) {

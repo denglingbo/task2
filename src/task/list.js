@@ -64,7 +64,13 @@ page.render('#opened-main', data, {
 page.enter = function () {
     // var me = this;
 
+    this.initRemindNum();
+
     // new Sticky({target: '#search', top: 0});
+    // ^.^ 这里的后面的逻辑太过于复杂，暂未提供后面功能的返回刷新功能
+    if (this.isRefresh) {
+        return;
+    }
 
     // 切换内容的 page 页
     this.initPageSlider();
@@ -79,13 +85,10 @@ page.enter = function () {
     this.initTab();
 
     this.bindEvents();
-
-    this.initRemindNum();
 };
 
 page.deviceready = function () {
     var me = this;
-    // var lang = me.lang;
 
     navigation.left({
         click: function () {
@@ -115,7 +118,7 @@ page.deviceready = function () {
 page.bindEvents = function () {
     var me = this;
 
-    $('#main').on('click', '.list-item', function () {
+    $('#main').off('click').on('click', '.list-item', function () {
         var id = $(this).data('id');
 
         if (id) {
@@ -130,7 +133,7 @@ page.bindEvents = function () {
         }
     });
 
-    $('.search-in').on('click', function () {
+    $('.search-in').off('click').on('click', function () {
         navigation.open('/search-search.html?role=' + rid, {
             title: me.lang.search
         });
@@ -148,10 +151,15 @@ page.initTab = function () {
     $ul.width($ul.width());
     $tab.width('auto');
 
+    // 右侧可见区域
+    var max = $tab.width();
+
+    var myScroll;
+
     setTimeout(function () {
 
         // 初始化 scroll
-        new IScroll('.tab', {
+        myScroll = new IScroll('.tab', {
             scrollX: true,
             scrollY: false,
             scrollbars: false,
@@ -167,6 +175,36 @@ page.initTab = function () {
             momentum: false
         });
     }, 0);
+
+    // 始终保持 tab 点击项在可视区域
+    $ul.find('li').on('click', function (event) {
+        event.stopPropagation();
+
+        var $li = $(this);
+        var curLeft = $li.offset().left;
+        var curWidth = $li.width();
+        var move = null;
+
+        if (curLeft < 0) {
+            if ($li.index() - 1 < 0) {
+                move = 0;
+            }
+            else {
+                move = $li.position().left * -1;
+            }
+
+            myScroll.scrollTo(move, 0, 100);
+        }
+
+        // 当前点击项的右侧距离滑动的位置
+        var curViewRight = curLeft + curWidth;
+        var diff = max - curViewRight;
+
+        if (curLeft > 0 && diff < 0) {
+            move = max - ($li.position().left + curWidth);
+            myScroll.scrollTo(move, 0, 100);
+        }
+    });
 };
 
 /**

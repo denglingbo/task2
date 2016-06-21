@@ -294,7 +294,7 @@ Init.prototype = {
         });
 
         // 监听一下 进入 重载界定 到 touchend 的鼠标 touch 时长
-        $(document).on('touchend', function () {
+        $(document).off('touchend').on('touchend', function () {
             me.reloadEndTime = +new Date();
 
             // 准备进行数据重载

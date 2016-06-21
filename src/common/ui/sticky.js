@@ -64,9 +64,9 @@ define(function (require) {
                 this.refresh();
                 this.process();
                 // 修改下，把scroll事件绑定到document上，否则在pc上监听不到滚动
-                $(document).on('scroll', $.proxy(this.process, this));
+                $(document).off('scroll').on('scroll', $.proxy(this.process, this));
                 // window.scrollTo()第一次进来不会触发绑定在document上的scroll事件。。。
-                $(window).one('scroll', $.proxy(this.process, this));
+                $(window).off('scroll').one('scroll', $.proxy(this.process, this));
             }
         },
 

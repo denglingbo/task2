@@ -251,7 +251,7 @@ function init() {
     // pageName && sendPv();
 
     // 绑定事件到含有 data-log的节点
-    $(document.body).on('click', '[data-log]', function (e) {
+    $(document.body).off('click').on('click', '[data-log]', function (e) {
         var params = parseLogData(this);
         params.xpath = getXpath(this);
         send(params);

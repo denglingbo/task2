@@ -75,7 +75,7 @@ $.extend(Slide.prototype, {
         var me = this;
 
         // Touch start
-        this.$elem.on('touchstart', function (event) {
+        this.$elem.off('touchstart').on('touchstart', function (event) {
             event.preventDefault();
 
             var touch = event.touches[0];
@@ -87,7 +87,7 @@ $.extend(Slide.prototype, {
         });
 
         // Touch move
-        this.$elem.on('touchmove', function (event) {
+        this.$elem.off('touchmove').on('touchmove', function (event) {
 
             var touch = event.touches[0];
 
@@ -101,7 +101,7 @@ $.extend(Slide.prototype, {
         });
 
         // Touch end
-        this.$elem.on('touchend', function (event) {
+        this.$elem.off('touchend').on('touchend', function (event) {
             event.preventDefault();
 
             if (me._dir === 0) {

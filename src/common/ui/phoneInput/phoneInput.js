@@ -258,21 +258,22 @@ $.extend(PhoneInput.prototype, {
             });
 
         // 删除按钮
-        me.elems.$delete.on('click', function (e) {
+        me.elems.$delete
+            .on('click', function (e) {
 
-            me.$input.text('');
+                me.$input.text('');
 
-            if (me.$input.html() !== me._defval) {
-                me._isEdit = true;
-            }
-            else {
-                me._isEdit = false;
-            }
+                if (me.$input.html() !== me._defval) {
+                    me._isEdit = true;
+                }
+                else {
+                    me._isEdit = false;
+                }
 
-            me.inputStatusChange();
+                me.inputStatusChange();
 
-            me.$input.triggerHandler('input');
-        });
+                me.$input.triggerHandler('input');
+            });
     },
 
     /**

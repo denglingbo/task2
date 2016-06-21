@@ -518,7 +518,7 @@ Search.prototype.bindEvents = function () {
         }
     });
 
-    $(opts.wrap + ' .search-content').on('click', 'li.item', function (e) {
+    $(opts.wrap + ' .search-content').off('click').on('click', 'li.item', function (e) {
         var id = +$(this).data('id');
         var url = '/task-detail.html?taskId=' + id;
         /* eslint-disable */

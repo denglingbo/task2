@@ -274,7 +274,7 @@ var setButtonEnable = function ($required) {
             txt = $item.val();
         }
         else {
-            txt = $item.html();
+            txt = $item.text();
         }
 
         if (txt.length === 0) {

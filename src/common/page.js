@@ -307,8 +307,6 @@ Page.prototype.devicereadyEnter = function () {
     // 虽然 deviceready 肯定比 enter 慢，但是为了避免意外，还是等待判断一下 是否 done
     if (this.isDone && window.isDeviceready) {
         this.deviceready();
-        // 检查是否全部准备就绪
-        // this.deviceAndDataListener();
     }
 };
 

@@ -183,6 +183,4 @@ page.enter = function () {
 //     return dfd;
 // });
 
-$(window).on('load', function () {
-    page.start();
-});
+page.start();

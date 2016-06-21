@@ -265,21 +265,23 @@ $.extend(DataLoader.prototype, {
         // 绑定点击加载更多
         if (me.opts.loadType === 0) {
 
-            this.$moreHandler.on('click', function (event) {
+            this.$moreHandler
+                .off('click')
+                .on('click', function (event) {
 
-                event.stopPropagation();
-                event.preventDefault();
+                    event.stopPropagation();
+                    event.preventDefault();
 
-                if (me.isAllLoaded()) {
-                    me.fire('alldone', null);
-                    return;
-                }
+                    if (me.isAllLoaded()) {
+                        me.fire('alldone', null);
+                        return;
+                    }
 
-                // 是否需求加载更多，由 requestMore 进行判断
-                me.requestMore(function (err, data) {
-                    me.fire('more', err, data);
+                    // 是否需求加载更多，由 requestMore 进行判断
+                    me.requestMore(function (err, data) {
+                        me.fire('more', err, data);
+                    });
                 });
-            });
 
             // 默认触发
             if (me.opts.initClick) {
