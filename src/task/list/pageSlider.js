@@ -100,7 +100,7 @@ PageSlider.prototype = {
     bindEvents: function () {
         var me = this;
 
-        this.$items.off('click').on('click', function (event) {
+        this.$items.on('click', function (event) {
             event.stopPropagation();
             // event.preventDefault();
 
