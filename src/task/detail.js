@@ -24,6 +24,8 @@ var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
 var requestPageNum = 10;
+var defaultAttachNum = 5;
+var taskId = util.params('taskId');
 
 page.enter = function () {
     var me = this;
@@ -188,13 +190,7 @@ page.deviceready = function () {
             me.failUser();
         });
 
-    if (data.attachements) {
-        me.attach = AttachWrapper.initDetailAttach({
-            attachData: data.attachements,
-            container: '.attach-container',
-            wrapper: '.attach'
-        });
-    }
+    me.loadAttach();
 };
 
 /**
@@ -267,6 +263,44 @@ page.bindEvents = function () {
 
         me.render('#affair-talk', data, {type: 'append'});
     });
+
+    $('.attach .load-more').on('click', function () {
+        navigation.open('/attach-attach.html?taskId=' + taskId + '&total=' + me.attachData.total, {
+            title: me.lang.attach
+        });
+    });
+};
+
+/**
+ * 添加或取消关注
+ *
+ * @param {Object} attachData, 附件数据
+ */
+page.initAttach = function (attachData) {
+    var me = this;
+    me.attach = AttachWrapper.initDetailAttach({
+        attachData: attachData,
+        container: '.attach-container',
+        wrapper: '.attach'
+    });
+};
+
+/**
+ * 添加或取消关注
+ *
+ */
+page.loadAttach = function () {
+    var me = this;
+    var attachList = me.attachData.objList;
+    var total = me.attachData.total;
+
+    if (!attachList.length || typeof defaultAttachNum !== 'number') {
+        return;
+    }
+    me.initAttach(attachList);
+    if (total > defaultAttachNum) {
+        $('.attach .load-more').removeClass('hide');
+    }
 };
 
 /**
@@ -278,7 +312,7 @@ page.follow = function (target) {
     var me = this;
     var $elem = $(target);
     var status = 0;
-
+    /* eslint-disable */
     var map = {
         0: {
             done: 'removeClass',
@@ -289,7 +323,7 @@ page.follow = function (target) {
             fail: 'removeClass'
         }
     };
-
+    /* eslint-enable */
     // 取消关注
     if ($elem.hasClass('follow')) {
         status = 0;
@@ -452,7 +486,7 @@ page.addParallelTask(function (dfd) {
     var me = this;
 
     var promise = page.get(config.API.TASK_DETAIL_URL, {
-        taskId: util.params('taskId')
+        taskId: taskId
     });
 
     promise
@@ -463,6 +497,37 @@ page.addParallelTask(function (dfd) {
             else {
                 me.data = detailUtil.dealPageData(result.data);
                 dfd.resolve(me.data);
+            }
+        })
+        .fail(function (err) {
+            // console.log(err);
+        });
+
+    return dfd;
+});
+
+/**
+ * 请求附件列表
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+page.addParallelTask(function (dfd) {
+    var me = this;
+    var promise = page.get(config.API.ATTACH_LIST, {
+        taskId: taskId,
+        currPage: 1,
+        number: defaultAttachNum
+    });
+
+    promise
+        .done(function (result) {
+            if (result.meta && result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                me.attachData = result.data;
+                dfd.resolve(me.attachData);
             }
         })
         .fail(function (err) {
