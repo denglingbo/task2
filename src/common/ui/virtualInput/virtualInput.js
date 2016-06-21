@@ -96,7 +96,9 @@ virtualInput.prototype = {
                     me.$placeholder.removeClass('hide');
                 }
             });
-
+        $(me.attachBtn).on('click', function () {
+            me.$wrap.addClass('extend');
+        });
         // 点击遮罩关闭键盘
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');

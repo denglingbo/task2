@@ -65,9 +65,8 @@
         </div>
     </div>
     <!-- 附件 -->
-    <div class="layout-list attach hide">
-        <div class="sub-title">{{lang.attach}}</div>
-        <div class="attach-container"></div>
+    <div class="layout-list summary-attach hide">
+        <div class="summary-attach-container"></div>
     </div>
 </div>
 {{/summary}}

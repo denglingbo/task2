@@ -62,22 +62,17 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-    // var lang = me.lang;
     var data = me.data;
 
     me.initCommentList();
 
-    me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.summaryAttachs,
-        container: '.attach-container',
-        wrapper: '.attach'
-    });
-
-    me.attach = AttachWrapper.initDetailAttach({
-        attachData: data.attachs,
-        container: '.attach-container',
-        wrapper: '.attach'
-    });
+    if (data.attachs.length) {
+        AttachWrapper.initDetailAttach({
+            attachData: data.attachs,
+            container: '.attach-container',
+            wrapper: '.attach'
+        });
+    }
 
     navigation.left({
         click: function () {

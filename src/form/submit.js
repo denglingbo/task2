@@ -43,7 +43,7 @@ var pages = {
         }];
 
         if (isMaster === 0) {
-            arr.unshift({
+            arr.push({
                 name: 'applyReason',
                 holder: lang.applyReasonPlaceholder
             });
@@ -171,14 +171,53 @@ page.enter = function () {
 
     var attachTpl = '';
 
+    me.phoneInput = [];
+    
+    function initInput() {
+        $('.phone-input').each(function (i) {
+            var limits = 500;
+            if (!me.pageType && i) {
+                limits = 500;
+            }
+
+            me.phoneInput.push(new PhoneInput({
+                handler: this,
+                limit: limits
+            }));
+        });
+    }
 
     var alertBox = require('common/widgets/edit/alert.tpl');
     if (me.pageType === 'summary') {
         attachTpl = require('common/middleware/attach/attach.tpl');
+        var promise = page.get(config.API.GET_TASK_SUMMARY, {
+            taskId: util.params('taskId')
+        });
+        promise.done(function (result) {
+            if (result.meta.code === 200) {
+                var res = result.data;
+                var arr = curPage(isMaster);
+                if (res.summary && res.summary.length) {
+                    arr[0].summary = res.summary;
+                    arr[0].holder = '';
+                }
+                me.render('#main', {
+                    list: arr
+                }, {
+                    partials: {
+                        attach: attachTpl,
+                        alertBox: alertBox
+                    }
+                });
+                // 总结情景下，提供上传附件功能
+                me.attach = editCom.initEditAttach(res.summaryAttachs);
+                initInput();
+            }
+        });
     }
     // 如果没有问题就渲染对应模板
-    if (curPage) {
-        this.render('#main', {
+    else if (curPage) {
+        me.render('#main', {
             list: curPage(isMaster)
         }, {
             partials: {
@@ -186,23 +225,9 @@ page.enter = function () {
                 alertBox: alertBox
             }
         });
+        initInput();
     }
 
-    // 总结情景下，提供上传附件功能
-    if (me.pageType === 'summary') {
-        this.attach = editCom.initEditAttach();
-    }
-
-    me.phoneInput = [];
-
-    $('.phone-input').each(function (i) {
-        var limits = 500;
-
-        me.phoneInput.push(new PhoneInput({
-            handler: this,
-            limit: limits
-        }));
-    });
 };
 
 function validEdited(page) {

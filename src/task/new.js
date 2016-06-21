@@ -81,28 +81,6 @@ page.deviceready = function () {
                 });
         }
     }
-    
-    // 
-    // bindevents
-    editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
-        DATA.attachements = me.attach.getModifyAttaches();
-        DATA.attendIds.push(DATA.principalUser);
-        DATA.attendIds = editCom.unique(DATA.attendIds);
-        var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
-
-        var promise = editCom.submit(page, DATA, url);
-
-        promise.done(function (result) {
-            // var taskId = result.data || DATA.id;
-            
-            // navigation.open('/task-detail.html?taskId=' + taskId, {
-            //     title: me.lang.taskDetail
-            // });
-            navigation.open(-1, {
-                goBackParams: 'refresh'
-            });
-        });
-    });
 
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
@@ -249,22 +227,39 @@ page.loadPage = function () {
     editCom.loadPage(me, data);
 };
 
+page.bindTopEvent = function () {
+    var me = this;
+    editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
+        DATA.attachements = me.attach.getModifyAttaches();
+        DATA.attendIds = editCom.unique(DATA.attendIds);
+        var url = DATA.id === 0 ? config.API.TASK_NEW_URL : config.API.TASK_EDIT_URL;
+        var promise = editCom.submit(page, DATA, url);
+
+        promise.done(function (result) {
+            // var taskId = result.data || DATA.id;
+            
+            // navigation.open('/task-detail.html?taskId=' + taskId, {
+            //     title: me.lang.taskDetail
+            // });
+            navigation.open(-1, {
+                goBackParams: 'refresh'
+            });
+        });
+    });
+}
+
 /**
  * 加载附件
  *
  */
 page.loadAttach = function () {
     var me = this;
-    if (!me.attachData) {
-        return;
+    var attachList = [];
+    if (me.attachData && me.attachData.objList && me.attachData.objList.length) {
+        attachList = me.attachData.objList;
     }
-    var attachList = me.attachData.objList;
-
-    if (!attachList.length) {
-        return;
-    }
-    // 初始化附件组件
     me.attach = editCom.initEditAttach(attachList);
+    me.bindTopEvent();
 };
 
 page.initPlugin = function () {

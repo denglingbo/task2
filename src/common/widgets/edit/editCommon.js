@@ -191,6 +191,9 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
+    if (!phoneInputTitle || !phoneInputContent || !attach) {
+        return;
+    }
 
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
@@ -206,12 +209,11 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         {
             title: lang.submit,
             click: function () {
-                me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+                me.setValidObj(phoneInputTitle, phoneInputContent, attach||page.attach);
                 me.submitValid(submitFn);
             }
         }
     ]);
-
     navigation.buttonAutoEnable();
     // CPNavigationBar.setGoBackHandler(goBack,true);
 };
