@@ -54,7 +54,7 @@ page.deviceready = function () {
     var lang = me.lang;
 
     // 下面为获取人员信息的配置
-    if (!DATA.userIds.length) {
+    if (DATA.userIds.length) {
         var obj = {
             /* eslint-disable */
             partner: DATA.userIds
