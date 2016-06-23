@@ -55,6 +55,7 @@ var pages = {
     talkSummary: function () {
         return [{
             name: 'summary',
+            required: true,
             holder: lang.talkSummaryPlaceholder
         }];
     },
@@ -206,11 +207,31 @@ page.enter = function () {
     }
 
     var alertBox = require('common/widgets/edit/alert.tpl');
-    if (me.pageType === 'summary') {
+
+    if (/summary|talkSummary/.test(me.pageType)) {
+
         attachTpl = require('common/middleware/attach/attach.tpl');
-        var promise = page.get(config.API.GET_TASK_SUMMARY, {
-            taskId: util.params('taskId')
-        });
+
+        var api;
+        var rdata = {};
+
+        // summary
+        if (me.pageType === 'summary') {
+            api = config.API.TASK_SUMMARY_GET;
+            rdata = {
+                taskId: util.params('taskId')
+            };
+        }
+        // talkSummary
+        else {
+            api = config.API.TALK_SUMMARY_GET;
+            rdata = {
+                talkId: util.params('talkId')
+            };
+        }
+
+        var promise = page.get(api, rdata);
+
         promise.done(function (result) {
             if (result.meta.code === 200) {
                 var res = result.data;

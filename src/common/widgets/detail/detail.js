@@ -14,6 +14,25 @@ var navigation = require('common/middleware/navigation');
 var detail = {};
 
 /**
+ * 处理后端的表单富文本
+ *
+ * @param {string} str, 字符串
+ * @return {string} 处理后的表单富文本
+ */
+var richForm = function (str) {
+
+    return str
+        .replace(/<table/g, '<div class="richtext-wrap"><table')
+        .replace(/<\/table>/g, '</table></div>')
+        .replace(/<colgroup>[\s\S]*<\/colgroup>/, '')
+        .replace()
+        .replace(
+            /<p><img[\s\S]*(src="[\s\S]*?")[\s\S]*?(\/)?><\/p>/g,
+            '<div class="richtext-img"><img width="100%" style="margin: 5px 0px" $1 /></div>'
+        );
+};
+
+/**
  * 初始化 Page 基本数据
  *
  * @param {Object} data, 处理详情页初始数据
@@ -24,8 +43,12 @@ detail.dealPageData = function (data) {
         return null;
     }
 
+    // 描述
     if (data.content) {
         data.content = util.decodeHTML(data.content);
+
+        // 处理表单
+        data.content = richForm(data.content);
     }
 
     data.isDone = function () {
@@ -48,6 +71,16 @@ detail.dealPageData = function (data) {
         return parseInt(taskStatus, 10) === 4;
     };
 
+    // 外层条件: !isTaskPage, 所以这里不需要再判断是不是 事件 or 讨论
+    // 事件 or 讨论
+    data.resumeOrCloseRights = function () {
+        if (!this.rights) {
+            return false;
+        }
+
+        return this.rights.resumeRight || this.rights.closeRight;
+    };
+
     // 时间展示
     data.updateDateRaw = function () {
         return raw.formatDateToNow(this.opTime);
@@ -56,6 +89,7 @@ detail.dealPageData = function (data) {
     data.statusRaw = function () {
         var status = this.status;
 
+        // 已撤销
         if (this.suspend) {
             status = 7;
         }
@@ -269,7 +303,7 @@ detail.naviRight = function (page, data, pageType, getAlert) {
                 title: lang.editTalk
             },
             summary: {
-                url: '/form-submit.html?type=talkSummary&talk=' + data.id,
+                url: '/form-submit.html?type=talkSummary&talkId=' + data.id,
                 title: lang.talkSummaryTitle
             }
         },
@@ -358,24 +392,6 @@ detail.naviRight = function (page, data, pageType, getAlert) {
 
     navigation.right(rightBar);
 };
-
-/**
- * 处理后端的表单富文本
- *
- * @param {string} str, 字符串
- * @return {string} 处理后的表单富文本
- */
-// var richForm = function (str) {
-//     return str
-//         .replace(/<table/g, '<div class="richtext-wrap"><table')
-//         .replace(/<\/table>/g, '</table></div>')
-//         .replace(/<colgroup>[\s\S]*<\/colgroup>/, '')
-//         .replace()
-//         .replace(
-//             /<p><img[\s\S]*(src="[\s\S]*?")[\s\S]*?(\/)?><\/p>/g,
-//             '<div class="richtext-img"><img width="100%" style="margin: 5px 0px" $1 /></div>'
-//         );
-// };
 
 /**
  * 富文本显示方式

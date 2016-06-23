@@ -194,6 +194,7 @@ $.extend(PhoneInput.prototype, {
 
         if (isNotNull) {
             me.displayer('delete') && me.displayer('delete').show();
+            me.displayer('placeholder').hide();
         }
 
         // 隐藏 placeholder

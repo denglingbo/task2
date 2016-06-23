@@ -26,6 +26,9 @@
 .componentAttachItem {
     @include border-1px(top, #e1e4e6);
 }
+.componentAttachContent {
+    margin-left: 0;
+}
 
 .alert-length-limit, .alert-submit-after {
     position: fixed;

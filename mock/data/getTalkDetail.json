@@ -8,7 +8,7 @@
             "seeRight": true,
             "summarizeRight": true,
             "editRight": true,
-            "resumeRight": true,
+            "resumeRight": false,
             "closeRight": true,
             "commentRight": true
         },

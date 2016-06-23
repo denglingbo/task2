@@ -1,15 +1,21 @@
 <div class="layout detail-title">
     {{^isTaskPage}}
     {{#taskDoing}}
+    {{#resumeOrCloseRights}}
     <div class="detail-title-control">
-        <div class="detail-checkbox">
+        <div class="detail-checkbox">   
             <div class="tick {{#isDone}}ticked{{/isDone}}{{^isDone}}untick{{/isDone}}"></div>
         </div>
     </div>
+    {{/resumeOrCloseRights}}
     {{/taskDoing}}
     {{/isTaskPage}}
 
-    <div class="detail-title-main {{^isTaskPage}}not-task-page{{/isTaskPage}}">
+    <div class="detail-title-main 
+        {{^isTaskPage}}{{#taskDoing}}{{#resumeOrCloseRights}}
+        not-task-page
+        {{/resumeOrCloseRights}}{{/taskDoing}}{{/isTaskPage}}
+    ">
         <p class="detail-title-top word-content">{{ title }}</p>
         <p>{{ updateDateRaw }}</p>
     </div>
