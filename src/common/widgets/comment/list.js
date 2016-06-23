@@ -16,6 +16,10 @@ function dealData(data, page) {
         return page.data.status === 6;
     };
 
+    data.isDoing = function () {
+        return page.data.status === 4;
+    };
+
     // 时间展示
     data.dataRaw = function () {
         return raw.formatDateToNow(this.opTime);

@@ -20,7 +20,7 @@
             </div>
 
             {{#deleteRights}}
-            <div class="comments-button delete {{#isDone}}hide{{/isDone}}" data-id="{{ id }}" data-uid="{{ userId }}">{{ lang.delete }}</div>
+            <div class="comments-button {{^isDoing}}hide{{/isDoing}}" data-id="{{ id }}" data-uid="{{ userId }}"><span class="delete">{{ lang.delete }}</span></div>
             {{/deleteRights}}
         </div>
     </div>
