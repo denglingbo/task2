@@ -74,6 +74,7 @@ var config = {
         TALK_RESUME: 'resumeTalk',
         TALK_COMMENT_DELETE: 'deleteTalkComment',
         TALK_COMMENT_ADD: 'addTalkComment',
+        TALK_SUMMARY: 'summaryTalk',
         // 讨论评论列表
         TALK_COMMENT_LIST: 'getTalkCommentList',
 

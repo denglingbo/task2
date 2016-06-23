@@ -33,9 +33,8 @@ var REQUEST_DATA = {
     }
 };
 
-/* eslint-disable */
 var pages = {
-    // 完成任务
+    // 完成任务 总结
     summary: function (isMaster) {
         var arr = [{
             name: 'summary',
@@ -50,6 +49,14 @@ var pages = {
         }
 
         return arr;
+    },
+
+    // 讨论总结
+    talkSummary: function () {
+        return [{
+            name: 'summary',
+            holder: lang.talkSummaryPlaceholder
+        }];
     },
 
     // 撤销
@@ -85,7 +92,6 @@ var pages = {
         }];
     }
 };
-/* eslint-ensable */
 
 /**
  * 根据传入的type不同选择不同的页面需要的上传数据
@@ -101,7 +107,7 @@ page.getData = function (type) {
     var $remark = $('[data-name=applyReason]');
     var $val = $('.phone-input-main');
 
-    switch(type) {
+    switch (type) {
 
         case 'summary':
             data = {
@@ -111,6 +117,18 @@ page.getData = function (type) {
             };
 
             api = config.API.COMPLETE_TASK;
+
+            break;
+
+        case 'talkSummary':
+            data = {
+                attachements: me.attach.getModifyAttaches(),
+                summary: $('[data-name=summary]').text(),
+                // 后端需要和 web 端保持一致
+                closeTalk: false
+            };
+
+            api = config.API.TALK_SUMMARY;
 
             break;
 
@@ -162,7 +180,7 @@ page.enter = function () {
     var me = this;
     // 页面类型
     me.pageType = util.params('type');
-    
+
     // 判断是不是 master，完成总结的 master
     var isMaster = parseInt(util.params('master'), 2);
 
@@ -172,7 +190,7 @@ page.enter = function () {
     var attachTpl = '';
 
     me.phoneInput = [];
-    
+
     function initInput() {
         $('.phone-input').each(function (i) {
             var limits = 500;
@@ -209,8 +227,10 @@ page.enter = function () {
                         alertBox: alertBox
                     }
                 });
+
                 // 总结情景下，提供上传附件功能
                 me.attach = editCom.initEditAttach(res.summaryAttachs);
+
                 initInput();
             }
         });
@@ -239,7 +259,7 @@ function validEdited(page) {
 
 function cancelValidate() {
 
-    if(valid.isEdited) {
+    if (valid.isEdited) {
         MidUI.alert({
             content: lang.whetherGiveUpCurrContent,
             onApply: function () {
@@ -250,7 +270,7 @@ function cancelValidate() {
     }
 
     navigation.open(-1);
-};
+}
 
 page.deviceready = function () {
     var me = this;
@@ -263,7 +283,7 @@ page.deviceready = function () {
     function submit() {
         var dataArg = me.getData(me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
-        var taskId = util.params('taskId');
+        // var taskId = util.params('taskId');
 
         promise
             .done(function (result) {
@@ -278,7 +298,7 @@ page.deviceready = function () {
                 }
             })
             .fail(function (result) {
-                
+
             });
     }
 

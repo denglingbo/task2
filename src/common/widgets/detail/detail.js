@@ -264,16 +264,26 @@ detail.naviRight = function (page, data, pageType, getAlert) {
 
     var pageMap = {
         talk: {
-            url: '/talk-new.html?talkId=' + data.id,
-            editTitle: lang.editTalk
+            edit: {
+                url: '/talk-new.html?talkId=' + data.id,
+                title: lang.editTalk
+            },
+            summary: {
+                url: '/form-submit.html?type=talkSummary&talk=' + data.id,
+                title: lang.talkSummaryTitle
+            }
         },
         affair: {
-            url: '/affair-new.html?affairId=' + data.id,
-            editTitle: lang.editAffair
+            edit: {
+                url: '/affair-new.html?affairId=' + data.id,
+                title: lang.editAffair
+            }
         },
         task: {
-            url: '/task-new.html?taskId=' + data.id + '&total=' + data.total,
-            editTitle: lang.editTask
+            edit: {
+                url: '/task-new.html?taskId=' + data.id + '&total=' + data.total,
+                title: lang.editTask
+            }
         }
     };
 
@@ -292,8 +302,25 @@ detail.naviRight = function (page, data, pageType, getAlert) {
         rightBar.push({
             title: lang.editButton,
             click: function () {
-                navigation.open(curPage.url, {
-                    title: curPage.editTitle,
+                navigation.open(curPage.edit.url, {
+                    title: curPage.edit.title,
+                    returnParams: function (prevData) {
+                        if (prevData && prevData === 'refresh') {
+                            page.refresh();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // 讨论下，总结放在右上方的按钮中
+    if (pageType === 'talk' && rights.summarizeRight) {
+        rightBar.push({
+            title: lang.summary,
+            click: function () {
+                navigation.open(curPage.summary.url, {
+                    title: curPage.summary.title,
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {
                             page.refresh();
