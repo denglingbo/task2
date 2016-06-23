@@ -61,7 +61,7 @@ page.deviceready = function () {
                 // 后端 result.data 返回的是对应的 id, 并非对象
                 var affairId = result.data || DATA.id;
                 /* eslint-disable */
-                CPNavigationBar.redirect('/affair-detail.html?id=' + affairId);
+                CPNavigationBar.redirect('/affair-detail.html?id=' + affairId, lang.affairDetail);
                 /* eslint-ensable */
             });
         }

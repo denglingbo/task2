@@ -40,7 +40,6 @@ function dealData(data, page) {
     // 判断是否是评论所有者
     data.deleteRights = function () {
         var uid = users.uid();
-
         if (this.userId && uid && data.taskDoing()) {
             return this.userId.toString() === uid.toString();
         }
@@ -138,7 +137,7 @@ var list = function (page, options) {
         pageNum: 10
     });
 
-    me.dataLoader.on('more', function (event, err, data) {
+    me.dataLoader.on('more', function (err, data) {
 
         if (err) {
             return;
@@ -153,12 +152,12 @@ var list = function (page, options) {
         $('.comment-total').html('(' + total + ')');
 
         this.render(data, 'append');
-
         renderUser(me.$main, data.objList);
 
         if (!me.isComments()) {
             me.$listNull.removeClass('hide');
         }
+
     });
 
     this.bindEvents();
@@ -289,6 +288,7 @@ $.extend(list.prototype, {
                     me.page.virtualInput.reset();
                     $('#attachList ul').html('');
                     me.$listNull.addClass('hide');
+                    me.attach = editCom.initEditAttach();
                 }
                 else {
 

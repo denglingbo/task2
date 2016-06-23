@@ -66,7 +66,7 @@ page.deviceready = function () {
 
     me.initCommentList();
 
-    if (data.attachs.length) {
+    if (data.attachs && data.attachs.length) {
         AttachWrapper.initDetailAttach({
             attachData: data.attachs,
             container: '.attach-container',

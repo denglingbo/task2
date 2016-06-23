@@ -94,5 +94,6 @@ module.exports = {
     'affairAndTalk': '事件與討論',
     'getMore': '獲取更多',
     'back': '返回',
-    'submit': '提交'
+    'submit': '提交',
+    'fileUploadError': '提交失敗，存在失效附件'
 };

@@ -247,7 +247,7 @@ editCom.submit = function (page, data, ajaxUrl) {
         .fail(function (result) {
             dfd.reject(result);
         })
-        .always(function () {
+        .always(function (result) {
             me.submitAlert(success);
         });
     return dfd;
@@ -502,7 +502,7 @@ editCom.setChoosePersonLoc = function (key, value) {
  * @return {Array} clone的数组
  */
 editCom.arrClone = function (arr) {
-    if (!$.isArray(arr1)) {
+    if (!$.isArray(arr)) {
         return [];
     }
     var newArr = [];
@@ -539,12 +539,11 @@ editCom.compareArr = function (arr1, arr2) {
  *
  */
 editCom.getDataFromObj = function (target, source) {
-    if (!(typeof target === 'object') || !(typeof source === 'object')) {
-        return false;
-    }
-    for (var key in target) {
-        if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
-            target[key] = source[key];
+    if ((typeof target === 'object') && (typeof source === 'object')) {
+        for (var key in target) {
+            if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
+                target[key] = source[key];
+            }
         }
     }
 };

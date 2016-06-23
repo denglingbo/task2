@@ -93,7 +93,7 @@ page.deviceready = function () {
             var talkId = result.data || DATA.id;
 
             /* eslint-disable */
-            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId);
+            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId, lang.talkDetail);
             /* eslint-enable */
         });
     });

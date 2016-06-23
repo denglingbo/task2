@@ -240,6 +240,10 @@ page.enter = function () {
                     arr[0].summary = res.summary;
                     arr[0].holder = '';
                 }
+                if (isMaster && res.completeRemark && res.completeRemark.length) {
+                    arr[1].completeRemark = res.completeRemark;
+                    arr[1].holder = '';
+                }
                 me.render('#main', {
                     list: arr
                 }, {
