@@ -23,7 +23,6 @@ var doing = util.params('talkId');
 
 var page = new Page();
 
-/* eslint-disable */
 var DATA = {
     id: 0,
     attachs: [],
@@ -39,7 +38,7 @@ var DATA = {
     title: '',
     userIds: []
 };
-/* eslint-enable */
+
 var selectKey = 'talkAttandSelectKey';
 
 page.enter = function () {
@@ -56,9 +55,7 @@ page.deviceready = function () {
     // 下面为获取人员信息的配置
     if (DATA.userIds.length) {
         var obj = {
-            /* eslint-disable */
             partner: DATA.userIds
-            /* eslint-enable */
         };
         var cid = ls.getData(config.const.PARAMS).cid;
         var jids = users.makeArray(obj);
@@ -90,22 +87,14 @@ page.deviceready = function () {
 
         var promise = editCom.submit(page, DATA, url);
         promise.done(function (result) {
-            var talkId = result.data || DATA.id;
-
-<<<<<<< 346ada556b5b233b2b73d5f11b1653510a09ec35
-            /* eslint-disable */
-            CPNavigationBar.redirect('/talk-detail.html?id=' + talkId, lang.talkDetail);
-            /* eslint-enable */
-=======
-            // CPNavigationBar.redirect('/talk-detail.html?id=' + talkId, lang.talkDetail);
-            navigation.open('/talk-detail.html?id=' + talkId, {
-                title: lang.talkDetail
+            // var talkId = result.data || DATA.id;
+            // 后端 result.data 返回的是对应的 id, 并非对象
+            navigation.open(-1, {
+                goBackParams: 'refresh'
             });
->>>>>>> 刘代春src合并
         });
     });
 
-    /* eslint-disable */
     // 选择人员跳转页面
     $('#attends').click(function () {
         var val = {
@@ -139,27 +128,7 @@ page.deviceready = function () {
                 editCom.personIsChange(oldVal, DATA.userIds);
             }
         });
-        // CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
-        //     if (!data) {
-        //         return;
-        //     }
-        //     DATA.inheritance = false;
-        //     data = JSON.parse(data);
-        //     var contacts = data.contacts;
-        //     DATA.userIds = [];
-        //     contacts.forEach(function (value, index) {
-        //         var uid = users.takeJid(value.jid);
-
-        //         // 避免重复
-        //         if ($.inArray(uid, DATA.userIds) === -1) {
-        //             DATA.userIds.push(uid);
-        //         }
-        //     });
-        //     $('#attends .value').text(editCom.getPersonsName(contacts));
-        //     editCom.personIsChange(oldVal, DATA.userIds);
-        // });
     });
-    /* eslint-enable */
 };
 
 /**
@@ -182,9 +151,7 @@ page.loadPage = function () {
             {
                 id: 'urgencyBlock',
                 title: lang.urgentLevel,
-                /* eslint-disable */
                 value: editCom.initImportValue(DATA.importanceLevel)
-                /* eslint-enable */
             },
             {
                 id: 'attends',

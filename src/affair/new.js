@@ -203,9 +203,6 @@ page.initPlugin = function () {
  * @param {deferred} dfd, deferred
  *
  */
-/* eslint-disable */
-
-
 page.addParallelTask(function (dfd) {
     var me = this;
 
@@ -231,5 +228,4 @@ page.addParallelTask(function (dfd) {
     return dfd;
 });
 
-/* eslint-enable */
 page.start();

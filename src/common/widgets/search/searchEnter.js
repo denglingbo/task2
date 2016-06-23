@@ -255,9 +255,7 @@ Search.prototype.loadList = function () {
         title: key,
         role: opts.role,
         status: 0,
-        /* eslint-disable */
         page: 1,
-        /* eslint-enable */
         number: 1000
     };
 
