@@ -56,7 +56,7 @@
 
 {{#summary}}
 <!-- 总结 -->
-<div class="layout">
+<div class="layout detail-summary">
     <div class="sub-title">{{ summaryTitleRaw }}</div>
 
     <div class="layout-section word-content rich-outter">

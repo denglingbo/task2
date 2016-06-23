@@ -146,7 +146,7 @@ editCom.submitValid = function (submitFn) {
     }
     else {
         if (!validObj.title) {
-            if (!$('#edit-title').text()) {
+            if (!$.trim($('#edit-title').text())) {
                 arr.push(lang.titleCannotNull);
             }
             else {
@@ -176,7 +176,7 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
     var validObj = this.valid;
     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     validObj.content = !!phoneInputContent.isAllowSubmit();
-    validObj.title = !!(phoneInputTitle.isAllowSubmit() && $('#edit-title').text());
+    validObj.title = !!(phoneInputTitle.isAllowSubmit() && $.trim($('#edit-title').text()));
     validObj.isAttachesReady = attach ? attach.isAttachesReady() : false;
 };
 

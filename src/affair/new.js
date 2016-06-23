@@ -13,7 +13,7 @@ var config = require('config');
 var Page = require('common/page');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
-// var navigation = require('common/middleware/navigation');
+var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
@@ -59,10 +59,9 @@ page.deviceready = function () {
             var promise = editCom.submit(page, DATA, url);
             promise.done(function (result) {
                 // 后端 result.data 返回的是对应的 id, 并非对象
-                var affairId = result.data || DATA.id;
-                /* eslint-disable */
-                CPNavigationBar.redirect('/affair-detail.html?id=' + affairId, lang.affairDetail);
-                /* eslint-ensable */
+                navigation.open(-1, {
+                    goBackParams: 'refresh'
+                });
             });
         }
     });
@@ -89,7 +88,7 @@ page.loadPage = function () {
             {
                 id: 'urgencyBlock',
                 title: lang.urgentLevel,
-                value: editCom.initImportValue(DATA['importanceLevel'])
+                value: editCom.initImportValue(DATA.importanceLevel)
             },
             {
                 id: 'affairType',
@@ -169,9 +168,7 @@ page.initPlugin = function () {
                     $type.text(text);
 
                     editCom.valid.isEdit = (
-                        oldVal !== DATA.labelId ?
-                            true :
-                            editCom.valid.isEdit
+                        oldVal !== DATA.labelId ? true : editCom.valid.isEdit
                     );
                 },
                 onInit: function (context) {
