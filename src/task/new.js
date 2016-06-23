@@ -85,11 +85,25 @@ page.deviceready = function () {
     $('#doneTime').on('click', function () {
         var oldVal = DATA['endTime'];
 
-        CPNavigationBar.redirect(
-            '/task-doneTime.html?endTime=' + DATA['endTime'],
-            lang.doneTime,
-            false,
-            function (data) {
+        // CPNavigationBar.redirect(
+        //     '/task-doneTime.html?endTime=' + DATA['endTime'],
+        //     lang.doneTime,
+        //     false,
+        //     function (data) {
+        //         if (!data) {
+        //             return;
+        //         }
+        //         data = JSON.parse(data);
+        //         DATA['endTime'] = data.endTime;
+        //         $('#doneTime .value').text(
+        //             editCom.initDoneTime(DATA['endTime'])
+        //         );
+        //         editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
+        //     }
+        // );
+        navigation.open('/task-doneTime.html?endTime=' + DATA['endTime'], {
+            title: lang.doneTime,
+            returnParams: function (data) {
                 if (!data) {
                     return;
                 }
@@ -100,15 +114,50 @@ page.deviceready = function () {
                 );
                 editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
             }
-        );
+        });
     });
 
     function person(key, itemKey, id) {
         var oldVal = DATA[itemKey];
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
-            lang.choosePerson,
-            false,
-            function (data) {
+        // CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
+        //     lang.choosePerson,
+        //     false,
+        //     function (data) {
+        //         if (!data) {
+        //             return;
+        //         }
+
+        //         data = JSON.parse(data);
+        //         var contacts = data.contacts;
+
+        //         // if ($.isArray(DATA[itemKey])) {
+        //         // 参与人
+        //         if (itemKey === 'attendIds') {
+        //             // 使用选人组件传递的新的数据
+        //             DATA[itemKey] = [];
+
+        //             contacts.forEach(function (value, index) {
+        //                 var uid = users.takeJid(value.jid);
+
+        //                 // 避免重复
+        //                 if ($.inArray(uid, DATA[itemKey]) === -1) {
+        //                     DATA[itemKey].push(uid);
+        //                 }
+        //             });
+        //         }
+        //         // 负责人
+        //         else {
+        //             DATA[itemKey] = users.takeJid(contacts[0].jid);
+        //         }
+        //         // 对应的点击栏容器
+        //         $(id + ' .value').text(editCom.getPersonsName(contacts));
+
+        //         editCom.personIsChange(oldVal, DATA[itemKey]);
+        //     }
+        // );
+        navigation.open('/selector-selector.html?paramId=' + key, {
+            title: lang.choosePerson,
+            returnParams: function (data) {
                 if (!data) {
                     return;
                 }
@@ -140,7 +189,7 @@ page.deviceready = function () {
 
                 editCom.personIsChange(oldVal, DATA[itemKey]);
             }
-        );
+        });
     }
     $('#principal, #attends').on('click', function (e) {
         var key = '';

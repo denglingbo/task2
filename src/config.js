@@ -32,9 +32,6 @@ var config = {
         TASK_RECEIVE: 'receiveTask',
         // 恢复任务
         TASK_RECOVER: 'recoverTask',
-        // 总结详情
-        TASK_SUMMARY_GET: 'getTaskSummary',
-
         // 任务完成
         COMPLETE_TASK: 'completeTask',
         // 任务撤销
@@ -70,18 +67,17 @@ var config = {
         TALK_RESUME: 'resumeTalk',
         TALK_COMMENT_DELETE: 'deleteTalkComment',
         TALK_COMMENT_ADD: 'addTalkComment',
-        TALK_SUMMARY: 'summaryTalk',
         // 讨论评论列表
         TALK_COMMENT_LIST: 'getTalkCommentList',
-        // 总结详情
-        TALK_SUMMARY_GET: 'getTalkSummary',
 
         // 列表
         // 任务列表
         GET_TASK_LIST: 'getTaskList',
         GET_TALK_LIST: 'getTalkList',
         GET_AFFAIR_LIST: 'getAffairList',
-        SEARCH_TASK: 'searchTask'
+        SEARCH_TASK: 'searchTask',
+        // 总结详情
+        GET_TASK_SUMMARY: 'getTaskSummary'
     }
 };
 

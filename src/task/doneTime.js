@@ -11,6 +11,7 @@ require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var Page = require('common/page');
 var util = require('common/util');
 var editCom = require('common/widgets/edit/editCommon');
+var navigation = require('common/middleware/navigation');
 
 var page = new Page();
 var lang = page.lang;
@@ -104,21 +105,30 @@ page.deviceready = function () {
     var lang = me.lang;
 
     /* eslint-disable */
-    CPNavigationBar.setLeftButton({
+    // CPNavigationBar.setLeftButton({
+    //     title: lang.back,
+    //     iconPath: '',
+    //     callback: function () {
+    //         me.returnValue();
+    //     }
+    // });
+    /* eslint-enable */
+    navigation.left({
         title: lang.back,
-        iconPath: '',
-        callback: function () {
+        click: function () {
             me.returnValue();
         }
     });
-    /* eslint-enable */
 };
 
 page.returnValue = function () {
     /* eslint-disable */
-    CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
-    CPNavigationBar.returnPreviousPage();
+    // CPNavigationBar.setPreviousPageReturnStringData(JSON.stringify(info));
+    // CPNavigationBar.returnPreviousPage();
     /* eslint-enable */
+    navigation.open(-1, {
+        goBackParams: JSON.stringify(info)
+    });
 };
 
 page.start();

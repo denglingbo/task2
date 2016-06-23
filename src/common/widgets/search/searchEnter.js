@@ -9,6 +9,7 @@ require('./searchEnter.scss');
 // require('dep/touch');
 // var ls = require('common/localstorage');
 // var util = require('common/util');
+var navigation = require('common/middleware/navigation');
 
 /**
  * Search
@@ -117,31 +118,12 @@ Search.prototype.loadHtml = function () {
 // };
 
 /**
- * 进入搜索页
- *
- *
- */
-Search.prototype.redirectSearch = function () {
-    var opts = this.opts;
-    // var href = location.href;
-    // ls.addData('history', href);
-
-    /* eslint-disable */
-    CPNavigationBar.redirect('/search-search.html?key=' 
-        + encodeURIComponent(this.dom.$input.val()) 
-        + '&role=' + opts.role, opts.search);
-    /* eslint-enable */
-};
-
-/**
  * 返回页面
  *
  */
 Search.prototype.redirectHistory = function () {
-    /* eslint-disable */
-    // CPNavigationBar.redirect(ls.getData('history'));
-    CPNavigationBar.returnPreviousPage();
-    /* eslint-enable */
+    // CPNavigationBar.returnPreviousPage();
+    navigation.open(-1);
 };
 
 /**
@@ -489,12 +471,9 @@ Search.prototype.bindEvents = function () {
     $(opts.wrap + ' .search-content').off('click').on('click', 'li.item', function (e) {
         var id = +$(this).data('id');
         var url = '/task-detail.html?taskId=' + id + '&rid=' + opts.role;
-        /* eslint-disable */
-        if (CPNavigationBar) {
-            CPNavigationBar.redirect(url, opts.lang.taskDetail);
-        }
-        /* eslint-enable */
-
+        navigation.open(url, {
+            title: opts.lang.taskDetail
+        });
     });
 };
 

@@ -15,7 +15,7 @@ var users = require('common/middleware/users/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var ls = require('common/localstorage');
-// var navigation = require('common/middleware/navigation');
+var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 
 // 判断是否是编辑页面
@@ -92,9 +92,16 @@ page.deviceready = function () {
         promise.done(function (result) {
             var talkId = result.data || DATA.id;
 
+<<<<<<< 346ada556b5b233b2b73d5f11b1653510a09ec35
             /* eslint-disable */
             CPNavigationBar.redirect('/talk-detail.html?id=' + talkId, lang.talkDetail);
             /* eslint-enable */
+=======
+            // CPNavigationBar.redirect('/talk-detail.html?id=' + talkId, lang.talkDetail);
+            navigation.open('/talk-detail.html?id=' + talkId, {
+                title: lang.talkDetail
+            });
+>>>>>>> 刘代春src合并
         });
     });
 
@@ -110,25 +117,47 @@ page.deviceready = function () {
         editCom.setChoosePersonLoc(selectKey, val);
 
         var oldVal = DATA.userIds;
-        CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
-            if (!data) {
-                return;
-            }
-            DATA.inheritance = false;
-            data = JSON.parse(data);
-            var contacts = data.contacts;
-            DATA.userIds = [];
-            contacts.forEach(function (value, index) {
-                var uid = users.takeJid(value.jid);
-
-                // 避免重复
-                if ($.inArray(uid, DATA.userIds) === -1) {
-                    DATA.userIds.push(uid);
+        navigation.open('/selector-selector.html?paramId=' + selectKey, {
+            title: lang.choosePerson,
+            returnParams: function (data) {
+                if (!data) {
+                    return;
                 }
-            });
-            $('#attends .value').text(editCom.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, DATA.userIds);
+                DATA.inheritance = false;
+                data = JSON.parse(data);
+                var contacts = data.contacts;
+                DATA.userIds = [];
+                contacts.forEach(function (value, index) {
+                    var uid = users.takeJid(value.jid);
+
+                    // 避免重复
+                    if ($.inArray(uid, DATA.userIds) === -1) {
+                        DATA.userIds.push(uid);
+                    }
+                });
+                $('#attends .value').text(editCom.getPersonsName(contacts));
+                editCom.personIsChange(oldVal, DATA.userIds);
+            }
         });
+        // CPNavigationBar.redirect('/selector-selector.html?paramId=' + selectKey, lang.choosePerson, false, function (data) {
+        //     if (!data) {
+        //         return;
+        //     }
+        //     DATA.inheritance = false;
+        //     data = JSON.parse(data);
+        //     var contacts = data.contacts;
+        //     DATA.userIds = [];
+        //     contacts.forEach(function (value, index) {
+        //         var uid = users.takeJid(value.jid);
+
+        //         // 避免重复
+        //         if ($.inArray(uid, DATA.userIds) === -1) {
+        //             DATA.userIds.push(uid);
+        //         }
+        //     });
+        //     $('#attends .value').text(editCom.getPersonsName(contacts));
+        //     editCom.personIsChange(oldVal, DATA.userIds);
+        // });
     });
     /* eslint-enable */
 };

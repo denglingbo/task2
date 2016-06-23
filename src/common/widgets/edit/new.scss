@@ -146,7 +146,9 @@
 }
 
 .componentAttachItem {
-    @include border-1px(top, #e1e4e6);
+    &:not(:last-child) {
+        @include border-1px(bottom, #e1e4e6);
+    }
 
     &:last-child {
         @include border-1px(bottom, #e1e4e6);

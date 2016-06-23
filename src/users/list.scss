@@ -35,8 +35,10 @@
 
                 .column-inner {
                     padding-left: rem(15px);
-                    @include ellipsis(1);
-
+                   
+                    p {
+                        @include ellipsis(1);
+                    }
                     .attach-size {
                         font-size: rem(12px);
                         color: $gray;

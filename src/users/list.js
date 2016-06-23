@@ -10,6 +10,7 @@ require('./list.scss');
 var util = require('../common/util');
 var users = require('common/middleware/users/users');
 var Page = require('common/page');
+var navigation = require('common/middleware/navigation');
 var page = new Page();
 
 // page.enter = function () {
@@ -21,15 +22,20 @@ page.deviceready = function () {
     var lang = me.lang;
 
     /* eslint-disable */
-    CPNavigationBar.setLeftButton({
+    // CPNavigationBar.setLeftButton({
+    //     title: lang.back,
+    //     iconPath: '',
+    //     callback: function () {
+    //         CPNavigationBar.returnPreviousPage();
+    //     }
+    // });
+    /* eslint-enable */
+    navigation.left({
         title: lang.back,
-        iconPath: '',
-        callback: function () {
-            CPNavigationBar.returnPreviousPage();
+        click: function () {
+            navigation.open(-1);
         }
     });
-    /* eslint-enable */
-
     var jids = util.params('jids');
 
     users.getUserAndPhoto(jids)
