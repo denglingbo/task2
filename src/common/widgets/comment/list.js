@@ -137,7 +137,7 @@ var list = function (page, options) {
         pageNum: 10
     });
 
-    me.dataLoader.on('more', function (err, data) {
+    me.dataLoader.on('more', function (event, err, data) {
 
         if (err) {
             return;

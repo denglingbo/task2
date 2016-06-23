@@ -18,13 +18,6 @@ var config = {
         HOME_URL: 'getHomeRemind',
         DOCK_REMIND: 'getDockRemind',
 
-        // 列表页，未完成
-        LIST_URL: 1001,
-        // 列表页，已完成
-        LIST_DONE_URL: 1002,
-        // 列表页，已撤销
-        LIST_CANCEL_URL: 1003,
-
         // 任务详情
         TASK_DETAIL_URL: 'getTaskDetail',
         // 任务附件列表
@@ -140,8 +133,8 @@ if (config.debug) {
     // 直接走 mock server
 
     // config.API.host = document.location.protocol + '//task2.test1.com:8015';
-    // config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
-    // config.API.prefix = '/data/';
+    config.API.host = loc.protocol + '//' + loc.hostname + ':8015';
+    config.API.prefix = '/data/';
 }
 /* eslint-enable */
 
