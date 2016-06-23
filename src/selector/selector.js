@@ -17,6 +17,13 @@ require('dep/ui/selector/js/static/mbreq');
 require('dep/touch');
 var selector = require('dep/ui/selector/js/selector');
 
+var Page = require('common/page');
+var page = new Page();
+
+page.enter = function () {
+
+};
+
 page.deviceready = function () {
     selector();
 };

@@ -411,11 +411,12 @@ page.addParallelTask(function (dfd) {
  *
  */
 page.ajaxAttach = function () {
+    var me = this;
     if (!taskId) {
         me.loadAttach();
         return;
     }
-    var me = this;
+    
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
         currPage: 1,
@@ -432,9 +433,7 @@ page.ajaxAttach = function () {
             // console.log(err);
         })
         .always(function () {
-            if (me.attachData) {
-                me.loadAttach();
-            }
+            me.loadAttach();
         })
 };
 
