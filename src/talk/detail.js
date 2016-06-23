@@ -79,7 +79,6 @@ page.deviceready = function () {
             wrapper: '.attach'
         });
     }
-
     if (data.summaryAttachs && data.summaryAttachs.length) {
         AttachWrapper.initDetailAttach({
             attachData: data.summaryAttachs,
@@ -87,7 +86,6 @@ page.deviceready = function () {
             wrapper: '.summary-attach'
         });
     }
-
     var dfdPub = users.getUserInfo(data.userIds);
 
     dfdPub

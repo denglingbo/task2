@@ -14,7 +14,7 @@
     <script id="main-tmpl" type="x-tmpl-mustache">
     {{#list}}
         <div class="phone-input">
-            <div class="phone-input-main {{ name }}" {{#required}}required="true"{{/required}} contenteditable="plaintext-only" data-name="{{ name }}" data-placeholder={{ holder }}>{{#summary}}{{& summary}}{{/summary}}</div>
+            <div class="phone-input-main {{ name }}" {{#required}}required="true"{{/required}} contenteditable="plaintext-only" data-name="{{ name }}" data-placeholder={{ holder }}>{{#summary}}{{& summary}}{{/summary}}{{#completeRemark}}{{& completeRemark}}{{/completeRemark}}</div>
         </div>
     {{/list}}
     {{> attach}}

@@ -9,14 +9,14 @@ var raw = {};
 
 // 状态显示
 var statusMap = {
-    0: lang.undoneText,
-    6: lang.doneText,
-    7: lang.cancelText,
-    4: lang.doingText,
-    1: lang.receivedText,
-    2: lang.assignmentText,
-    5: lang.reviewText,
-    3: lang.refuseText
+    '0': lang.undoneText,
+    '6': lang.doneText,
+    '7': lang.cancelText,
+    '4': lang.doingText,
+    '1': lang.receivedText,
+    '2': lang.assignmentText,
+    '5': lang.reviewText,
+    '3': lang.refuseText
 };
 
 raw.statusMap = statusMap;

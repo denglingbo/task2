@@ -81,7 +81,6 @@ page.deviceready = function () {
                 });
         }
     }
-
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
         var oldVal = DATA['endTime'];
@@ -147,9 +146,8 @@ page.deviceready = function () {
         var key = '';
         var itemKey = '';
         var id = '';
-
+        
         if ($(this).attr('id') === 'principal') {
-
             editCom.setChoosePersonLoc(principalSelectKey, {
                 selectType: 1,
                 contacts: editCom.transJid(DATA['principalUser'])
@@ -416,7 +414,6 @@ page.ajaxAttach = function () {
         me.loadAttach();
         return;
     }
-    
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
         currPage: 1,

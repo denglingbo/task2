@@ -133,8 +133,9 @@ module.exports = {
     editButton: '编辑',
     receivedButton: '接收',
     notAgreeReasonPlaceholder: '请输入不同意理由',
-    cancelButton: '撤消',
-    cancelTitle: '撤消任务',
-    revokeReason: '撤消理由',
-    touchLoadMore: '下拉刷新数据'
+    cancelButton: '撤销',
+    cancelTitle: '撤销任务',
+    revokeReason: '撤销理由',
+    touchLoadMore: '下拉刷新数据',
+    fileUploadError: '提交失败，存在失效附件'
 };

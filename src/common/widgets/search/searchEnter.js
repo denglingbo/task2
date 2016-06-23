@@ -272,6 +272,7 @@ Search.prototype.loadList = function () {
     var data = {
         title: key,
         role: opts.role,
+        status: 0,
         /* eslint-disable */
         page: 1,
         /* eslint-enable */
