@@ -9,8 +9,8 @@
     {{/taskDoing}}
     {{/isTaskPage}}
 
-    <div class="detail-title-main">
-        <p class="detail-title-top">{{ title }}</p>
+    <div class="detail-title-main {{^isTaskPage}}not-task-page{{/isTaskPage}}">
+        <p class="detail-title-top word-content">{{ title }}</p>
         <p>{{ updateDateRaw }}</p>
     </div>
 

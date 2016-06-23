@@ -11,8 +11,8 @@
             <p class="columnu-title user-name" loader="{#list.id:{{ userId }}}{name}{/list.id}">&nbsp;</p>
             <p class="columnu-date">{{ dataRaw }}</p>
 
-            <div class="comments-content">
-                <div class="comments-content-inner">{{&content}}</div>
+            <div class="comments-content rich-outter">
+                <div class="comments-content-inner rich-inner">{{&content}}</div>
             </div>
 
             <div class="comments-attach comments-attach-{{ id }}">

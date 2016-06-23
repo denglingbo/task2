@@ -286,7 +286,10 @@ $.extend(PhoneInput.prototype, {
         var $elem = this.elems['$' + selectorKey];
 
         if (!$elem.length) {
-            return;
+            return {
+                show: function () {},
+                hide: function () {}
+            };
         }
 
         return {

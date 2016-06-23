@@ -16,6 +16,10 @@
 }
 
 .rich-inner {
+
+    @extend .word-content;
+    overflow-x: auto;
+
     span {
         display: inline;
     }

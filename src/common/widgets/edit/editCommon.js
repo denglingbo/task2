@@ -177,7 +177,7 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     validObj.content = !!phoneInputContent.isAllowSubmit();
     validObj.title = !!(phoneInputTitle.isAllowSubmit() && $('#edit-title').text());
-    validObj.isAttachesReady = attach.isAttachesReady();
+    validObj.isAttachesReady = attach ? attach.isAttachesReady() : false;
 };
 
 /**
@@ -191,9 +191,6 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
-    if (!phoneInputTitle || !phoneInputContent || !attach) {
-        return;
-    }
 
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
@@ -205,6 +202,13 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         click: goBack
     });
 
+    navigation.buttonAutoEnable();
+
+    // 等小枫枫回来重新改
+    if (!phoneInputTitle || !phoneInputContent || !attach) {
+        return;
+    }
+
     navigation.right([
         {
             title: lang.submit,
@@ -214,8 +218,6 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             }
         }
     ]);
-    navigation.buttonAutoEnable();
-    // CPNavigationBar.setGoBackHandler(goBack,true);
 };
 
 /**

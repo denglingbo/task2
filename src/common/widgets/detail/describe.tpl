@@ -83,8 +83,8 @@
     </div>
     {{/content}}
 
-    <div class="layout-section">{{ lang.importance }}: {{ importanceRaw }}</div>
+    <div class="layout-section importance-content"><em>{{ lang.importance }}:</em> {{ importanceRaw }}</div>
     {{#isTaskPage}}
-    <div class="layout-section">{{ lang.doneTime }}: {{ doneTimeRaw }}</div>
+    <div class="layout-section donetime-content"><em>{{ lang.doneTime }}:</em> {{ doneTimeRaw }}</div>
     {{/isTaskPage}}
 </div>

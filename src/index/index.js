@@ -71,7 +71,7 @@ page.bindEvents = function () {
         3: me.lang.partake
     };
 
-    $('#menu li').off('click').one('click', function (event) {
+    $('#menu li').off('click').on('click', function (event) {
 
         var rid = $(this).data('rid');
 
@@ -87,7 +87,7 @@ page.bindEvents = function () {
         }
     });
 
-    $('#add-newtask').off('click').one('click', function () {
+    $('#add-newtask').off('click').on('click', function () {
         navigation.open('/task-new.html', {
             title: me.lang.newTask,
             transitionParam: {

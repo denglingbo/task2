@@ -6,7 +6,6 @@
  * 处理 任务详情页，事件详情页，讨论详情页
  *
  */
-// var users = require('common/middleware/users/users');
 var util = require('common/util');
 var lang = require('common/lang').getData();
 var raw = require('common/widgets/raw');
@@ -280,6 +279,10 @@ detail.naviRight = function (page, data, pageType, getAlert) {
 
     var rightBar = [page._shell.right.more];
     var rights = data.rights;
+
+    if (!rights) {
+        return;
+    }
 
     // 当前页面配置
     var curPage = pageMap[pageType];

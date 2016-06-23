@@ -29,54 +29,57 @@
 
 // title 部分
 .detail-title {
+    @include clearfix();
+    position: relative;
 
-    height: rem(40px);
-
-    div {
-        height: rem(40px);
+    > div {
+        // display: inline-block;
+        // vertical-align: middle;
 
         p {
             display: block;
             clear: both;
             color: $color-tips;
             font-size: rem(12px);
-            height: rem(18px);
             line-height: rem(18px);
-            overflow: hidden;
         }
     }
 
     .detail-title-control {
-        position: relative;
+        position: absolute;
+        top: 50%;
         width: rem(16px);
-        float: left;
+        height: rem(16px);
+        margin-top: rem(-8px);
         padding-right: rem(15px);
 
         .detail-checkbox {
             position: absolute;
             width: rem(16px);
             height: rem(16px);
-            top: 50%;
-            margin-top: rem(-8px);
         }
     }
 
     .detail-title-main {
         max-width: 65%;
-        float: left;
+
+        &.not-task-page {
+            margin-left: rem(40px);
+        }
 
         .detail-title-top {
             color: $black;
             font-size: rem(16px);
             margin-bottom: rem(8px);
-
-            @include ellipsis();
         }
     }
 
     .detail-title-right {
-        float: right;
         text-align: right;
+        position: absolute;
+        top: 50%;
+        right: rem(10px);
+        margin-top: rem(-20px);
 
         .star {
             display: inline-block;
@@ -98,6 +101,8 @@
 // 任务描述
 .detail-comments {
     line-height: rem(16px);
+    padding-right: 0;
+    padding-bottom: rem(8px) !important;
 
     .sub-title {
         padding-bottom: rem(10px);
@@ -109,6 +114,20 @@
         line-height: rem(18px);
         word-break: break-all;
         overflow: hidden;
+
+        &.word-content {
+            padding-right: rem(15px);
+        }
+
+        &.importance-content,
+        &.donetime-content {
+            @include border-1px(top);
+            padding-top: rem(12px);
+
+            em {
+                color: $gray;
+            }
+        }
     }
 }
 
@@ -295,10 +314,9 @@
 
         .comments-content {
             padding-right: rem(15px);
-            overflow: hidden;
 
             &-inner {
-                @extend .word-content;    
+                @extend .word-content;
             }
         }
 

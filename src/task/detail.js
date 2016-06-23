@@ -80,34 +80,34 @@ page.deviceready = function () {
     // var lang = me.lang;
     var data = me.data;
 
-    // 查看更多人员
-    me.$main.on('click', '.partner-more', function () {
-        var jids = $(this).data('jids');
-
-        if (jids && jids.toString().length > 0) {
-            navigation.open('/users-list.html?jids=' + jids, {
-                title: me.lang.usersView
-            });
-        }
-    });
-
     var titleMap = {
         affair: me.lang.affairDetail,
         talk: me.lang.talkDetail
     };
 
     // 跳转到事件或讨论页面
-    me.$main.off('click').on('click', '.affair-talk-item', function () {
-        // affair or talk
-        var pageTo = $(this).data('page');
-        var type = $(this).data('type');
+    me.$main.off('click')
+        .on('click', '.affair-talk-item', function () {
+            // affair or talk
+            var pageTo = $(this).data('page');
+            var type = $(this).data('type');
 
-        if (pageTo && pageTo.length > 0) {
-            navigation.open(pageTo, {
-                title: titleMap[type]
-            });
-        }
-    });
+            if (pageTo && pageTo.length > 0) {
+                navigation.open(pageTo, {
+                    title: titleMap[type]
+                });
+            }
+        })
+        // 查看更多人员
+        .on('click', '.partner-more', function () {
+            var jids = $(this).data('jids');
+
+            if (jids && jids.toString().length > 0) {
+                navigation.open('/users-list.html?jids=' + jids, {
+                    title: me.lang.usersView
+                });
+            }
+        });
 
     var barMap = {
         affair: me.lang.newAffair,
@@ -194,7 +194,7 @@ page.deviceready = function () {
     // 加载附件数据
     me.ajaxAttach();
 
-    if (data.summaryAttachs.length) {
+    if (data.summaryAttachs && data.summaryAttachs.length) {
         AttachWrapper.initDetailAttach({
             attachData: data.summaryAttachs,
             container: '.summary-attach-container',

@@ -121,7 +121,6 @@ html, body {
 
         .button-layout {
             position: absolute;
-            // bottom: rem(20px);
             left: 50%;
 
             .button {
@@ -133,6 +132,7 @@ html, body {
                 max-height: rem(110px);
                 border-radius: 100%;
                 background: $color-add-task;
+                margin: 0 auto;
 
                 $new-img-size: 46%;
 

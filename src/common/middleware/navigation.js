@@ -241,8 +241,9 @@ navigation.right = function (buttonArray) {
         return;
     }
 
-    // 如果只有一个下拉，则不需要菜单 icon，同时 icon 使用 第一个下拉的 icon 或者 title
-    if (arr.length === 1) {
+    // 如果只有一个下拉同时没有直接设置默认icon
+    // 则不需要菜单 icon，同时 icon 使用 第一个下拉的 icon 或者 title
+    if (arr.length === 1 && !icon) {
         icon = (arr[0].iconPath || arr[0].title);
     }
 

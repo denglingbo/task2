@@ -41,7 +41,7 @@ page.enter = function () {
     detailUtil.richContent();
 
     // 是否有评论权限
-    if (me.data.rights.commentRight) {
+    if (me.data.rights && me.data.rights.commentRight) {
         me.render('#comment-input-wrapper', {lang: me.data.lang});
     }
 
