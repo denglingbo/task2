@@ -71,6 +71,7 @@ $.extend(PhoneInput.prototype, {
         this.bindEvents();
 
         this.inputStatusChange();
+        this.displayer('delete') && this.displayer('delete').hide();
     },
 
     /**

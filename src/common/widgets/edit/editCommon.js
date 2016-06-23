@@ -202,22 +202,18 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
         click: goBack
     });
 
-    navigation.buttonAutoEnable();
-
-    // 等小枫枫回来重新改
-    if (!phoneInputTitle || !phoneInputContent || !attach) {
-        return;
-    }
-
-    navigation.right([
-        {
-            title: lang.submit,
-            click: function () {
-                me.setValidObj(phoneInputTitle, phoneInputContent, attach||page.attach);
-                me.submitValid(submitFn);
+    if (phoneInputTitle && phoneInputContent && attach) {
+        navigation.right([
+            {
+                title: lang.submit,
+                click: function () {
+                    me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+                    me.submitValid(submitFn);
+                }
             }
-        }
-    ]);
+        ]);
+    }
+    navigation.buttonAutoEnable();
 };
 
 /**

@@ -544,9 +544,7 @@ page.ajaxAttach = function () {
             // console.log(err);
         })
         .always(function () {
-            if (me.attachData) {
-                me.loadAttach();
-            }
+            me.loadAttach();
         });
 };
 
