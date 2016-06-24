@@ -178,6 +178,7 @@ Init.prototype = {
                     'default': lang.touchLoadMore
                 }
             },
+            moreNullHidden: true,
             tpl: me.opts.tpl,
             reloadHandler: me.$wrapper.find('.data-reload'),
             moreHandler: me.$wrapper.find('.data-more')
@@ -221,6 +222,10 @@ Init.prototype = {
             me.initScroll();
 
             me.opts.onFirstDone(data);
+
+            if (data.objList && data.objList.length <= 0) {
+                me.opts.onDataNull && me.opts.onDataNull(me.dataLoader);
+            }
 
             // 初始化一个分页提示控件
             me.pagination = new Pagination({

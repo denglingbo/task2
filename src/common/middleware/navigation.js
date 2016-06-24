@@ -247,6 +247,11 @@ navigation.right = function (buttonArray) {
         icon = (arr[0].iconPath || arr[0].title);
     }
 
+    // 解决 原生 安卓右上角bug，有下拉菜单的时候，第一个下拉会覆盖 setRightButton 的第一个参数的设置
+    // if (!util.isApple() && arr.length > 0 && icon) {
+    //     arr[0].iconPath = icon;
+    // }
+
     CPNavigationBar.setRightButton(icon, arr);
 };
 

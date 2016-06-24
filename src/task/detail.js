@@ -112,7 +112,8 @@ page.deviceready = function () {
     var barMap = {
         affair: me.lang.newAffair,
         talk: me.lang.startTalk,
-        summary: me.lang.summary,
+        summary: me.lang.taskDone,
+        talkSummary: me.lang.summary,
         notAgree: me.lang.notAgree,
         agree: me.lang.agree
     };

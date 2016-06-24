@@ -345,6 +345,14 @@ function LoadPage(info) {
                 });
             },
 
+            onDataNull: function (loader) {
+                // var data = {
+                //     lang: {
+                //     }
+                // }
+                // console.log(loader.render(data, tpl))
+            },
+
             // 加载失败
             onLoadError: function () {
                 delete pageCache[info.name];
