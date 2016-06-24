@@ -77,7 +77,7 @@ page.deviceready = function () {
     navigation.left({
         click: function () {
             navigation.open(-1, {
-                goBackParams: 'refresh'
+                goBackParams: 'refresh:event-talk-list'
             });
         }
     });
@@ -87,6 +87,7 @@ page.deviceready = function () {
 
 page.bindEvents = function () {
     var me = this;
+    var $comment = $('#comment-input-wrapper');
 
     // 绑定 tick 点击事件
     detailUtil.bindTickEvents.call(this, {
@@ -97,12 +98,14 @@ page.bindEvents = function () {
         // 完成状态
         tickedCallback: function () {
             navigation.button('right', false);
+            $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
             navigation.button('right', true);
             detailUtil.naviRight(me, data, 'affair');
+            $comment && $comment.removeClass('hide');
         }
     });
 };
@@ -156,6 +159,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
+                result.data.pageType = 'affair';
                 me.data = detailUtil.dealPageData(result.data);
                 dfd.resolve(me.data);
             }

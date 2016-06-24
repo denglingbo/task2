@@ -22,7 +22,7 @@ module.exports = {
     cancelText: '已撤销',
     doingText: '进行中',
     receivedText: '待接收',
-    assignmentText: '指派中',
+    assignmentText: '待分派',
     reviewText: '审核中',
     refuseText: '已拒绝',
     delayText: '已延期',

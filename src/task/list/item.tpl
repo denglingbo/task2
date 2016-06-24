@@ -20,7 +20,7 @@
 
     <div class="list-item-content">
         <div class="list-item-content-name">
-            {{ lang.principal }}：<span loader="{#list.id:{{ principalUser }}}{name}{/list.id}"></span>
+            <span>{{ lang.principal }}：</span><span class="principal-name" loader="{#list.id:{{ principalUser }}}{name}{/list.id}"></span>
         </div>
         <div class="">{{ doneTimeRaw }} {{ importanceRaw }}</div>
         <div class="time">{{ lang.updateDate }} {{ updateDateRaw }}</div>

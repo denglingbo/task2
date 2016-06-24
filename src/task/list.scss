@@ -143,7 +143,16 @@
         }
 
         &-name {
-            @include ellipsis();
+
+            span {
+                display: inline-block;
+                vertical-align: middle;
+
+                &.principal-name {
+                    @include ellipsis();
+                    width: 78%;
+                }
+            }
         }
     }
 }

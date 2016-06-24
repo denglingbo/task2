@@ -32,8 +32,6 @@ page.enter = function () {
 
     me.$main = $('.main');
 
-    me.data.isTaskPage = true;
-
     me.data.describeTitleRaw = me.lang.taskTitle;
     me.data.summaryTitleRaw = me.lang.taskSummaryTitle;
 
@@ -48,22 +46,7 @@ page.enter = function () {
 
     detailUtil.richContent();
 
-    // 初始化一个点击加载组件
-    me.dataLoader = new DataLoader({
-        wrapper: '.affair-talk-wrapper',
-        promise: function () {
-            return page.get(config.API.AFFAIR_TALK_MORE_URL, {
-                taskId: me.data.id,
-                currPage: this.page,
-                number: requestPageNum,
-                sortType: 0
-            });
-        },
-        // 后端数据节点位置
-        dataKey: 'objList',
-        loadType: 0,
-        pageNum: requestPageNum
-    });
+    me.initAffairAndTalkList();
 
     me.bindEvents();
 
@@ -94,7 +77,12 @@ page.deviceready = function () {
 
             if (pageTo && pageTo.length > 0) {
                 navigation.open(pageTo, {
-                    title: titleMap[type]
+                    title: titleMap[type],
+                    returnParams: function (prevData) {
+                        if (prevData && prevData === 'refresh:event-talk-list') {
+                            me.initAffairAndTalkList();
+                        }
+                    }
                 });
             }
         })
@@ -260,6 +248,42 @@ page.bindEvents = function () {
         me.follow(this);
     });
 
+    $('.attach .load-more').on('click', function () {
+        navigation.open('/attach-attach.html?taskId=' + taskId + '&total=' + me.attachData.total, {
+            title: me.lang.attach
+        });
+    });
+};
+
+page.initAffairAndTalkList = function () {
+    var me = this;
+
+    // 先清空
+    $('#affair-talk dd').remove('');
+
+    if (me.dataLoader) {
+        me.dataLoader = null;
+    }
+
+    // 初始化一个点击加载组件
+    me.dataLoader = new DataLoader({
+        wrapper: '.affair-talk-wrapper',
+        promise: function () {
+            return page.get(config.API.AFFAIR_TALK_MORE_URL, {
+                taskId: page.data.id,
+                currPage: this.page,
+                number: requestPageNum,
+                sortType: 0
+            });
+        },
+        // 后端数据节点位置
+        dataKey: 'objList',
+        loadType: 0,
+        pageNum: requestPageNum
+    });
+
+    me.dataLoader.off('more');
+
     // 加载 事件&讨论 列表
     me.dataLoader.on('more', function (event, err, data) {
 
@@ -269,16 +293,10 @@ page.bindEvents = function () {
 
         // 事件 & 讨论 详情需要 任务的状态
         // taskStatus
-        data.taskStatus = me.data.status;
+        data.taskStatus = page.data.status;
         detailUtil.formatEventTalkData(data, this.page);
 
-        me.render('#affair-talk', data, {type: 'append'});
-    });
-
-    $('.attach .load-more').on('click', function () {
-        navigation.open('/attach-attach.html?taskId=' + taskId + '&total=' + me.attachData.total, {
-            title: me.lang.attach
-        });
+        page.render('#affair-talk', data, {type: 'append'});
     });
 };
 
@@ -509,6 +527,8 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
+                result.data.isTaskPage = true;
+                result.data.pageType = 'task';
                 me.data = detailUtil.dealPageData(result.data);
                 dfd.resolve(me.data);
             }

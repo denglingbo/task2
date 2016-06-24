@@ -100,7 +100,7 @@ page.deviceready = function () {
     navigation.left({
         click: function () {
             navigation.open(-1, {
-                goBackParams: 'refresh'
+                goBackParams: 'refresh:event-talk-list'
             });
         }
     });
@@ -112,6 +112,7 @@ page.deviceready = function () {
 
 page.bindEvents = function () {
     var me = this;
+    var $comment = $('#comment-input-wrapper');
 
     // 查看更多人员
     this.$main.on('click', '.partner-more', function () {
@@ -131,12 +132,14 @@ page.bindEvents = function () {
         // 完成状态
         tickedCallback: function () {
             navigation.button('right', false);
+            $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
             navigation.button('right', true);
             detailUtil.naviRight(me, data, 'talk');
+            $comment && $comment.removeClass('hide');
         }
     });
 };
@@ -221,6 +224,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
+                result.data.pageType = 'talk';
                 me.data = detailUtil.dealPageData(result.data);
                 dfd.resolve(me.data);
             }

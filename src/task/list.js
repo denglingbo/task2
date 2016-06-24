@@ -24,6 +24,8 @@ var PageSlider = require('./list/pageSlider');
 var pageTpl = require('./list/page');
 var IScroll = require('dep/iscroll');
 
+var listTpl = require('./list/item');
+
 /**
  * role id
  * 1: 我派发的
@@ -149,7 +151,7 @@ page.initTab = function () {
     var defWidth = $tab.width();
 
     $tab.width(999);
-    $ul.width($ul.width());
+    $ul.width($ul.width() + 8);
     $tab.width(defWidth);
 
     // 右侧可见区域
@@ -178,7 +180,9 @@ page.initTab = function () {
     }, 0);
 
     // 始终保持 tab 点击项在可视区域
-    $ul.find('li').on('click', function (event) {
+    var $tabs = $ul.find('li');
+    $tabs.off('click');
+    $tabs.on('click', function (event) {
         event.stopPropagation();
 
         var $li = $(this);
@@ -310,58 +314,54 @@ function LoadPage(info) {
                 + (!info.index ? $tab.height() : 0)
                 + ($loader.length ? $loader.height() : 0);
 
-    require.ensure(['./list/item'], function () {
+    var api = info.api || config.API.GET_TASK_LIST;
 
-        var template = require('./list/item');
-        var api = info.api || config.API.GET_TASK_LIST;
+    var params = {};
 
-        var params = {};
+    pageCache[info.name].fn = new InitPage({
+        isApple: page._shell.apple,
+        wrapper: $wrapper.find('.scroll-outter'),
+        main: '.list-wrapper-content',
+        status: info.params.status,
 
-        pageCache[info.name].fn = new InitPage({
-            isApple: page._shell.apple,
-            wrapper: $wrapper.find('.scroll-outter'),
-            main: '.list-wrapper-content',
-            status: info.params.status,
+        // ajax request
+        promise: function () {
 
-            // ajax request
-            promise: function () {
+            params = $.extend({
+                role: rid,
+                currPage: this.page,
+                number: 10
+            }, info.params || {});
 
-                params = $.extend({
-                    role: rid,
-                    currPage: this.page,
-                    number: 10
-                }, info.params || {});
+            return page.get(api, params);
+        },
 
-                return page.get(api, params);
-            },
+        // 储存第一次加载的数据
+        onFirstDone: function (data) {
+            pageCache[info.name].data = data;
 
-            // 储存第一次加载的数据
-            onFirstDone: function (data) {
-                pageCache[info.name].data = data;
+            coll.update(data, {
+                rid: rid,
+                status: params.status
+            });
+        },
 
-                coll.update(data, {
-                    rid: rid,
-                    status: params.status
-                });
-            },
+        onDataNull: function (loader) {
+            // var data = {
+            //     lang: {
+            //     }
+            // }
+            // console.log(loader.render(data, tpl))
+        },
 
-            onDataNull: function (loader) {
-                // var data = {
-                //     lang: {
-                //     }
-                // }
-                // console.log(loader.render(data, tpl))
-            },
+        // 加载失败
+        onLoadError: function () {
+            delete pageCache[info.name];
+        },
 
-            // 加载失败
-            onLoadError: function () {
-                delete pageCache[info.name];
-            },
-
-            tpl: template,
-            offset: offset,
-            lang: page.lang
-        });
+        tpl: listTpl,
+        offset: offset,
+        lang: page.lang
     });
 }
 

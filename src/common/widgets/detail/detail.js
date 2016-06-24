@@ -78,7 +78,15 @@ detail.dealPageData = function (data) {
             return false;
         }
 
-        return this.rights.resumeRight || this.rights.closeRight;
+        if (this.pageType === 'talk') {
+            return this.rights.resumeRight || this.rights.closeRight;
+        }
+
+        else if (this.pageType === 'affair') {
+            return this.rights.doneRight || this.rights.recoverRight;
+        }
+
+        return false;
     };
 
     // 时间展示
