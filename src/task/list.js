@@ -347,11 +347,11 @@ function LoadPage(info) {
         onFirstDone: function (data) {
             pageCache[info.name].data = data;
 
-                coll.update(data, {
-                    rid: rid,
-                    status: params.status
-                });
-            },
+            coll.update(data, {
+                rid: rid,
+                status: params.status
+            });
+        },
 
         onDataNull: function (loader) {
             var data = {
@@ -371,7 +371,7 @@ function LoadPage(info) {
             delete pageCache[info.name];
         },
 
-        tpl: template,
+        tpl: listTpl,
         offset: offset,
         lang: page.lang
     });
