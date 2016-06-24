@@ -589,15 +589,6 @@ Page.ajax = function (api, data, options) {
     }
 
     ajaxSettings.success = function (result) {
-        // 存在失效附件时提醒
-        if (result && result.meta && result.meta.code !== 200) {
-            var msg;
-            if (result.meta.code === 85003) {
-                msg = lang.fileUploadError;
-            }
-            alert(msg || 'Error');
-            return;
-        }
 
         // Just debug test
         // 模拟网络延迟
