@@ -8,42 +8,7 @@
         "total": 16,
         "number": 10,
         "objList": [
-            {
-                "id": 69457,
-                "status": 4,
-                "importanceLevel": 4,
-                "suspend": true,
-                "createTime": 1442223392699,
-                "opTime": 1442288225680,
-                "createUser": 179,
-                "principalUser": 86100,
-                "endTime": 0,
-                "cid": 10,
-                "title": "ss",
-                "content": null,
-                "attaches": null,
-                "notice": 0,
-                "attention": 0,
-                "remind": 0
-            },
-            {
-                "id": 69452,
-                "status": 4,
-                "importance_level": 4,
-                "suspend": false,
-                "create_time": 1442223122641,
-                "op_time": 1442223122641,
-                "create_user": 179,
-                "principal_user": 179,
-                "end_time": 0,
-                "cid": 10,
-                "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                "content": null,
-                "attaches": null,
-                "notice": 0,
-                "attention": 0,
-                "remind": 0
-            }
+            
         ]
     }
 }
