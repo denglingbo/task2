@@ -9,11 +9,18 @@ $btn-color: #42abf8;
     right: 0;
     bottom: 0;
     display: flex;
-    flex-direction: column;
+    
     justify-content: center;
     align-items: center;
-    text-align: center;
     background-color: #f2f3f5;
+
+    &-inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: rem(-124px);
+    }
     
     i {
         margin-bottom: rem(30px);

@@ -67,12 +67,12 @@ var methodOption = {
 var attach = {};
 
 /**
- * 初始化attach
+ * 初始化上传attach
  *
  * @param {Object} options, 初始化附件参数
     // options {dom: {containerDOM: selector, addBtnDOM: selector}, operateType: '', callback: function}
-                                               添加附件按钮         upload|download
- * @param {Array} attachData, 附件数据, 需转驼峰
+                                               添加附件按钮
+ * @param {Array} attachData, 附件数据
  * @param {string} containerSelector, 添加附件的容器
  * @return {Object} 附件对象
  */
@@ -84,7 +84,7 @@ attach.initAttach = function (options, attachData) {
             containerDOM: options.container,
             addBtnDOM: options.addBtn
         },
-        operateType: options.addBtn ? 'upload' : 'download',
+        operateType: 'upload',
         callback: options.callback
     };
     $.extend(
@@ -106,7 +106,7 @@ attach.initAttach = function (options, attachData) {
 };
 
 /**
- * 初始化附件
+ * 初始化查看附件
  *
  * @param {Object} options, 配置参数
  *      // {Object} attachData, 附件数据
@@ -138,7 +138,7 @@ attach.initDetailAttach = function (options) {
             containerDOM: options.container,
             addBtnDom: options.addBtn
         },
-        operateType: options.addBtn ? 'upload' : 'download',
+        operateType: 'download',
         callback: options.callback
     };
     $.extend(

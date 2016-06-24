@@ -7,7 +7,7 @@ var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var MidUI = require('common/middleware/ui');
-var editCom = require('common/widgets/edit/editCommon');
+// var editCom = require('common/widgets/edit/editCommon');
 
 function dealData(data, page) {
 
@@ -187,7 +187,10 @@ $.extend(list.prototype, {
         $('.send').on('click', function () {
             me.addComment();
         });
-        me.attach = editCom.initEditAttach();
+        me.attach = AttachWrapper.initAttach({
+            container: '#attachList',
+            addBtn: '#addAttach'
+        });
     },
 
     /**
@@ -257,7 +260,7 @@ $.extend(list.prototype, {
             // 附件暂时为空
             attachements: attachs
         });
-        var success = false;
+
         promise
             .done(function (result) {
 
@@ -288,7 +291,13 @@ $.extend(list.prototype, {
                     me.page.virtualInput.reset();
                     $('#attachList ul').html('');
                     me.$listNull.addClass('hide');
-                    me.attach = editCom.initEditAttach();
+                    me.destroyScroll();
+                    me.attach = AttachWrapper.initAttach({
+                        container: '#attachList',
+                        addBtn: '#addAttach'
+                    });
+                    $('#goalui-fixedinput').removeClass('extend');
+                    $('#goalui-fixedinput-shadow').addClass('hide');
                 }
                 else {
 
@@ -296,13 +305,18 @@ $.extend(list.prototype, {
             })
             .fail(function (err) {
                 
-            })
-            .always(function () {
-                if (success) {
-                    $('#goalui-fixedinput').removeClass('extend');
-                    $('#goalui-fixedinput-shadow').addClass('hide');
-                }
-            })
+            });
+    },
+
+    /**
+     * 销毁附
+     *
+     */
+    destroyScroll: function () {
+        var me = this;
+        me.attach = null;
+        $('#addAttach').off();
+        $('#goalui-fixedinput .componentAttaches').off();
     }
 });
 

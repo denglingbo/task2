@@ -1,7 +1,1 @@
-{
-    "meta": {
-        "code": 200,
-        "message": "请求成功"
-    },
-    "data": {}
-}
+{"meta":{"code":200,"message":"请求成功"},"data":{"currPage":1,"total":18,"number":5,"objList":[{"id":70437,"raid":"RA10B3_70437","size":1837,"fileName":"more.png","previewUrl":"http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70437&uid=142237&cid=10&token=ec442e07-8f83-4624-8316-5338a63c1558-241707&client=mga","downloadUrl":"RA10B3_70437"},{"id":70436,"raid":"RA10B3_70436","size":1187,"fileName":"rightArrow.png","previewUrl":"http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70436&uid=142237&cid=10&token=ec442e07-8f83-4624-8316-5338a63c1558-241707&client=mga","downloadUrl":"RA10B3_70436"},{"id":70435,"raid":"RA10B3_70435","size":1288,"fileName":"add.png","previewUrl":"http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70435&uid=142237&cid=10&token=ec442e07-8f83-4624-8316-5338a63c1558-241707&client=mga","downloadUrl":"RA10B3_70435"},{"id":70434,"raid":"RA10B3_70434","size":1187,"fileName":"rightArrow.png","previewUrl":"http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70434&uid=142237&cid=10&token=ec442e07-8f83-4624-8316-5338a63c1558-241707&client=mga","downloadUrl":"RA10B3_70434"},{"id":70433,"raid":"RA10B3_70433","size":5599,"fileName":"popup_right.png","previewUrl":"http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70433&uid=142237&cid=10&token=ec442e07-8f83-4624-8316-5338a63c1558-241707&client=mga","downloadUrl":"RA10B3_70433"}]}}

@@ -153,6 +153,10 @@
     &:last-child {
         @include border-1px(bottom, #e1e4e6);
     }
+
+    .componentAttachContent {
+        margin-left: 0;
+    }
 }
 
 .edit-container .phone-input {
@@ -199,7 +203,7 @@
 }
 
 .edit-attach {
-    padding: 0 10px;
+    padding-left: 10px;
 
     .edit-add-attach {
         min-height: rem(50px);
