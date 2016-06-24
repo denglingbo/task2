@@ -10,6 +10,7 @@ require('./searchEnter.scss');
 // var ls = require('common/localstorage');
 // var util = require('common/util');
 var navigation = require('common/middleware/navigation');
+var IScroll = require('dep/iscroll');
 
 /**
  * Search
@@ -32,6 +33,7 @@ function Search(page, options) {
         role: options.role,
         // isSearchPage: false,
         selector: '',
+        itemHeight: 0,
         inject: 'body',
         itemTpl: '{{#objList}}<li class="item" data-id="{{id}}">'
                     + '<a href="javascript:void(0);">{{& title}}</a>'
@@ -46,8 +48,8 @@ function Search(page, options) {
 
     $.extend(this.opts, options, {
         wrap: '#search-wrap',
-        contentPage: '.search-page',
-        content: '.search-content'
+        page: '.search-page',
+        ul: '.search-content'
 
         // mainTmpl: './searchEnter.tpl'
     });
@@ -60,7 +62,7 @@ function Search(page, options) {
     this.loadHtml();
 
     $.extend(this.dom, this.getDom());
-
+    this.dom.$page.height($(window).height() - this.dom.$page[0].offsetTop);
     this.bindEvents();
 }
 
@@ -82,7 +84,7 @@ Search.prototype.getDom = function () {
         $tip: $wrap.find('.search-tip'),
         $clear: $wrap.find('.clear'),
         $mask: $wrap.find('.search-mask'),
-        $content: $wrap.find('.search-content'),
+        $ul: $wrap.find('.search-content'),
         $page: $wrap.find('.search-page')
     };
 };
@@ -103,19 +105,42 @@ Search.prototype.loadHtml = function () {
     });
 };
 
-// /**
-//  * 初始化搜索页
-//  *
-//  *
-//  */
-// Search.prototype.initSearchPage = function () {
-//     var me = this;
-//     var key = util.params('key');
-//     key = key ? decodeURI(key) : '';
-//     me.dom.$input.val(key);
-//     me.stateChange();
-//     me.loadList();
-// };
+/**
+ * 初始化滑动控件
+ *
+ */
+Search.prototype.initIscroll = function () {
+    var me = this;
+    var opts = me.opts;
+    me.destroyScroll();
+    // 初始化 scroll
+    me.scroll = new IScroll(opts.page, {
+        scrollX: false,
+        scrollY: true,
+        scrollbars: false,
+        click: true,
+
+        // 禁用监听鼠标和指针
+        disableMouse: true,
+        disablePointer: true,
+
+        mouseWheel: false,
+
+        // 快速触屏的势能缓冲开关
+        momentum: true
+    });
+};
+
+/**
+ * 销毁Iscroll
+ *
+ */
+Search.prototype.destroyScroll = function () {
+    if (this.scroll) {
+        this.scroll.destroy();
+        this.scroll = null;
+    }
+};
 
 /**
  * 返回页面
@@ -226,7 +251,7 @@ Search.prototype.clearInput = function () {
  *
  */
 Search.prototype.clearList = function () {
-    this.dom.$content.text('');
+    this.dom.$ul.text('');
 };
 
 /**
@@ -290,7 +315,7 @@ Search.prototype.loadList = function () {
 Search.prototype.renderNull = function () {
     var me = this;
     var opts = me.opts;
-    me.page.render(me.opts.content,
+    me.page.render(me.opts.ul,
     {
         lang: opts.lang
     },
@@ -309,13 +334,15 @@ Search.prototype.renderList = function (data) {
     var me = this;
     var opts = me.opts;
     me.setResultKey(data);
-    var selector = opts.wrap + ' ' + opts.content;
-    var ul = $(selector);
+    var $ul = me.dom.$ul;
+
     var str = me.page.render(null, data, {
         tmpl: opts.itemTpl
     });
 
-    ul.html(str);
+    $ul.html(str);
+    $ul.css({height: data.objList.length * $ul.find('li').height()});
+    me.initIscroll();
 };
 
 /**

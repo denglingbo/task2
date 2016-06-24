@@ -23,6 +23,7 @@ var virtualInput = function (selector, options) {
     this.$limit = this.$wrap.find('.limit');
     this.editor = '.editable';
     this.attachBtn = '#addAttach';
+    this.attachList = '#attachList';
     this.bindEvents();
 };
 
@@ -45,7 +46,7 @@ virtualInput.prototype = {
 
     reset: function () {
         var me = this;
-        $(me.editor).html('');
+        $(me.editor).html('').focus();
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
@@ -65,6 +66,7 @@ virtualInput.prototype = {
                 me.$shadow.removeClass('hide');
                 // me.$placeholder.addClass('hide');
                 me.$wrap.addClass('extend');
+                $(me.attachList).removeClass('hide');
             })
             // 输入
             .on('input', me.editor, function () {
@@ -98,12 +100,14 @@ virtualInput.prototype = {
             });
         $(me.attachBtn).on('click', function () {
             me.$wrap.addClass('extend');
+            $(me.attachList).removeClass('hide');
         });
         // 点击遮罩关闭键盘
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');
             if (!$.trim($(me.editor).text())) {
                 me.$wrap.removeClass('extend');
+                $(me.attachList).addClass('hide');
             }
             // me.$wrap.blur();
         });

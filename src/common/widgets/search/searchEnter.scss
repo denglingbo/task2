@@ -107,7 +107,6 @@ $search-key-color: #e51717;
     .search-page {
         z-index: 9840;
         background-color: $search-page-color;
-        overflow: scroll;
         
         .search-content {
             font-size: rem(16px);

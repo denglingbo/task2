@@ -8,43 +8,27 @@
 var config = require('config');
 var util = require('common/util');
 var Page = require('common/page');
-var IScroll = require('dep/iscroll');
+// var IScroll = require('dep/iscroll');
 
 var Search = require('common/widgets/search/searchEnter');
 
 var page = new Page();
 
 // var key = '';
-
+var itemHeight = 54;
 page.enter = function () {
     var me = this;
     me.search = new Search(me, {
         url: config.API.SEARCH_TASK,
         role: util.params('role'),
         isSearchPage: true,
-        selector: '#search'
+        selector: '#search',
+        itemHeight: itemHeight
     });
     // var search = me.search;
     // search.setKey(key);
     // search.stateChange();
     // search.togglePage(true);
-    $('.search-page').height($(window).height());
-    // 初始化 scroll
-    new IScroll('.search-page', {
-        scrollX: true,
-        scrollY: false,
-        scrollbars: false,
-        click: true,
-
-        // 禁用监听鼠标和指针
-        disableMouse: true,
-        disablePointer: true,
-
-        mouseWheel: false,
-
-        // 快速触屏的势能缓冲开关
-        momentum: false
-    });
 };
 
 /**
