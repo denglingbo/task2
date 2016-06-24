@@ -7,6 +7,7 @@
 
 require('./list.scss');
 require('common/widgets/search/searchEnter.scss');
+require('common/widgets/emptyPage/emptyTask.scss');
 
 var Page = require('common/page');
 var page = new Page();
@@ -25,6 +26,8 @@ var pageTpl = require('./list/page');
 var IScroll = require('dep/iscroll');
 
 var listTpl = require('./list/item');
+
+var emptyTaskTpl = require('common/widgets/emptyPage/emptyTask');
 
 /**
  * role id
@@ -139,6 +142,10 @@ page.bindEvents = function () {
         navigation.open('/search-search.html?role=' + rid, {
             title: me.lang.search
         });
+    });
+
+    $('.main').on('click', '.task-empty button', function () {
+        navigation.open('/task-new.html');
     });
 };
 
@@ -340,18 +347,23 @@ function LoadPage(info) {
         onFirstDone: function (data) {
             pageCache[info.name].data = data;
 
-            coll.update(data, {
-                rid: rid,
-                status: params.status
-            });
-        },
+                coll.update(data, {
+                    rid: rid,
+                    status: params.status
+                });
+            },
 
         onDataNull: function (loader) {
-            // var data = {
-            //     lang: {
-            //     }
-            // }
-            // console.log(loader.render(data, tpl))
+            var data = {
+                lang: {
+                    noTask: page.lang.noTask,
+                    createTask: page.lang.createTask
+                }
+            };
+            page.render(loader.wrapper, data, {
+                tmpl: emptyTaskTpl
+            });
+            // loader.render(data, emptyTaskTpl);
         },
 
         // 加载失败
@@ -359,7 +371,7 @@ function LoadPage(info) {
             delete pageCache[info.name];
         },
 
-        tpl: listTpl,
+        tpl: template,
         offset: offset,
         lang: page.lang
     });

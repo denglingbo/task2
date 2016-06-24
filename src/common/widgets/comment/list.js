@@ -7,7 +7,7 @@ var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var MidUI = require('common/middleware/ui');
-var editCom = require('common/widgets/edit/editCommon');
+// var editCom = require('common/widgets/edit/editCommon');
 
 function dealData(data, page) {
 

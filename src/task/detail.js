@@ -326,7 +326,7 @@ page.loadAttach = function () {
     var attachList = me.attachData.objList;
     var total = me.attachData.total;
 
-    if (!attachList || !attachList.length || typeof defaultAttachNum !== 'number') {
+    if (!attachList || !attachList.length) {
         return;
     }
     me.initAttach(attachList);
@@ -523,7 +523,7 @@ page.ajaxAttach = function () {
     promise
         .done(function (result) {
             if (result.meta && result.meta.code === 200) {
-                if (me.attachData) {
+                if (!me.attachData) {
                     me.attachData = result.data;
                 }
             }
