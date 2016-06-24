@@ -27,7 +27,13 @@
         .summary-attach-container {
             padding: 0;
             margin: 0;
-            padding-top: rem(5px);
+            padding-top: rem(10px);
+
+            li:last-child {
+                .componentAttachLine {
+                    padding-bottom: 0;
+                }
+            }
         }
 
         .summary-attach {
