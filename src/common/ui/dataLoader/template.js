@@ -33,6 +33,11 @@ exports.reload = function (classObject, lang) {
         + '<div class="' + c.done + ' hide">' + lang.done + '</div>';
 };
 
+var isApple = function () {
+    var appVersion = navigator.userAgent;
+    return appVersion && (/(iphone|ipad)/i).test(appVersion);
+};
+
 /**
  * 获取加载条的 dom 节点
  *
@@ -54,7 +59,7 @@ exports.more = function (classObject, lang) {
     return '<span class="' + c.default + ' hide">' + lang.default + '</span>'
         + '<span class="' + c.process + ' hide">'
             + '<div class="loading-status">'
-                + '<span class="loading"></span>'
+                + (isApple() ? '<span class="loading"></span>' : '')
                 + '<span class="loading-text">' + lang.process + '</span>'
             + '</div>'
         + '</span>'

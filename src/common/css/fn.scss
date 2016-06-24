@@ -307,6 +307,10 @@
     // 旋转吧漏腚君
     animation: 1.2s linear 0s normal none infinite loading-rotate;
 
+    backface-visibility: hidden;
+    perspective: 1000;
+    transform: translate3d(0, 0, 0);
+
     &:before {
         content: '';
         position: absolute;

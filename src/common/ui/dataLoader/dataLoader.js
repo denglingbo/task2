@@ -445,6 +445,7 @@ $.extend(DataLoader.prototype, {
                 me.statusChange('reload', 'fail');
                 dfd.reject(null);
             }
+
         });
 
         return dfd;
@@ -468,7 +469,7 @@ $.extend(DataLoader.prototype, {
         me.statusChange('more', 'process');
 
         me.send(function (err, data) {
-
+me.$moreHandler.find('.loading').remove();
             if (err || !data) {
                 me.statusChange('more', 'fail');
                 fn && fn.call(me, err);
