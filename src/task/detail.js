@@ -522,8 +522,6 @@ page.addParallelTask(function (dfd) {
 /**
  * 请求附件列表
  *
- * @param {deferred} dfd, deferred
- *
  */
 page.ajaxAttach = function () {
     var me = this;
