@@ -29,24 +29,32 @@ var virtualInput = function (selector, options) {
 
 virtualInput.prototype = {
 
-    // 展示发送按钮
-    // sendStatus: function (target) {
+    sendStatus: function () {
+        var me = this;
+        var text = $.trim($(me.editor).text());
 
-    //     var text = $.trim($(target).text());
+        if (text.length > me.opts.maxNum) {
+            var limitNum = me.opts.maxNum - text.length;
+            me.$limit.html(limitNum).removeClass('hide');
+            me.$send.addClass('unable').removeClass('enabled');
+        }
+        else {
+            me.$limit.html('').addClass('hide');
+            me.$send.removeClass('unable').addClass('enabled');
+        }
 
-    //     if (text.length) {
-    //         this.$button.addClass('hide');
-    //         this.$send.removeClass('hide');
-    //     }
-    //     else {
-    //         this.$button.addClass('hide');
-    //         this.$send.removeClass('hide');
-    //     }
-    // },
+        if (!text.length) {
+            me.$send.addClass('unable').removeClass('enabled');
+            me.$placeholder.removeClass('hide');
+        }
+        else {
+            me.$placeholder.addClass('hide');
+        }
+    },
 
     reset: function () {
         var me = this;
-        $(me.editor).html('').focus();
+        $(me.editor).html('');
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
@@ -67,48 +75,30 @@ virtualInput.prototype = {
                 // me.$placeholder.addClass('hide');
                 me.$wrap.addClass('extend');
                 $(me.attachList).removeClass('hide');
+                me.sendStatus();
             })
             // 输入
             .on('input', me.editor, function () {
-                var text = $.trim($(this).text());
-                // me.sendStatus(this);
-
-                if (text.length > me.opts.maxNum) {
-                    var limitNum = me.opts.maxNum - text.length;
-                    me.$limit.html(limitNum).removeClass('hide');
-                    me.$send.addClass('unable').removeClass('enabled');
-                }
-                else {
-                    me.$limit.html('').addClass('hide');
-                    me.$send.removeClass('unable').addClass('enabled');
-                }
-
-                if (!text.length) {
-                    me.$send.addClass('unable').removeClass('enabled');
-                    me.$placeholder.removeClass('hide');
-                }
-                else {
-                    me.$placeholder.addClass('hide');
-                }
+                me.sendStatus();
             })
             // 关闭
             .on('blur', me.editor, function () {
                 if (!$.trim($(this).text())) {
-                    me.$shadow.triggerHandler('click');
                     me.$placeholder.removeClass('hide');
                 }
             });
-        $(me.attachBtn).on('click', function () {
+        me.$wrap.on('click', me.attachBtn, function () {
+            me.$shadow.removeClass('hide');
             me.$wrap.addClass('extend');
             $(me.attachList).removeClass('hide');
+            me.sendStatus();
         });
         // 点击遮罩关闭键盘
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');
-            if (!$.trim($(me.editor).text())) {
-                me.$wrap.removeClass('extend');
-                $(me.attachList).addClass('hide');
-            }
+            me.$wrap.removeClass('extend');
+            $(me.attachList).addClass('hide');
+
             // me.$wrap.blur();
         });
     }

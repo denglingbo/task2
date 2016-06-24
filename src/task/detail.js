@@ -509,6 +509,34 @@ page.renderUser = function (originArr, dataArr) {
 };
 
 /**
+ * 请求附件列表
+ *
+ */
+page.ajaxAttach = function () {
+    var me = this;
+    var promise = page.get(config.API.ATTACH_LIST, {
+        taskId: taskId,
+        currPage: 1,
+        number: defaultAttachNum
+    });
+
+    promise
+        .done(function (result) {
+            if (result.meta && result.meta.code === 200) {
+                if (me.attachData) {
+                    me.attachData = result.data;
+                }
+            }
+        })
+        .fail(function (err) {
+            // console.log(err);
+        })
+        .always(function () {
+            me.loadAttach();
+        });
+};
+
+/**
  * 请求页面接口
  *
  * @param {deferred} dfd, deferred
@@ -539,32 +567,5 @@ page.addParallelTask(function (dfd) {
 
     return dfd;
 });
-
-/**
- * 请求附件列表
- *
- */
-page.ajaxAttach = function () {
-    var me = this;
-    var promise = page.get(config.API.ATTACH_LIST, {
-        taskId: taskId,
-        currPage: 1,
-        number: defaultAttachNum
-    });
-
-    promise
-        .done(function (result) {
-            if (result.meta && result.meta.code === 200) {
-                me.attachData = result.data;
-                me.data.total = me.attachData.total;
-            }
-        })
-        .fail(function (err) {
-            // console.log(err);
-        })
-        .always(function () {
-            me.loadAttach();
-        });
-};
 
 page.start();
