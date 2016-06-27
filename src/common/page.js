@@ -13,6 +13,8 @@ var lang = require('./lang');
 var log = require('./log');
 var md5 = require('dep/md5');
 
+var ajaxError = require('./ui/ajaxError');
+
 // ** 调用 jingoal 重写的 ajax 包 ** //
 require('common/mbreq');
 
@@ -590,6 +592,13 @@ Page.ajax = function (api, data, options) {
 
     ajaxSettings.success = function (result) {
 
+        // 判断是否操作错误
+        if (result && result.meta && result.meta.code !== 200) {
+            ajaxError.alert(result.meta.code, result.meta.message);
+            dfd.reject();
+            // return;
+        }
+
         // Just debug test
         // 模拟网络延迟
         if (config.debug) {
@@ -638,6 +647,15 @@ Page.ajax = function (api, data, options) {
 
     return dfd;
 };
+
+// Page.fsTokenRequest = function () {
+// CPWebView.uploadToken(function () {
+//     getFSTokensOnCreate(options);
+// }, function () {
+//     // popupTip({style: 'componentErrorIcon', text: lang['errorTip'], time:2000});
+// });
+// };
+
 
 /**
  * ajax 请求队列

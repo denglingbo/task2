@@ -172,7 +172,9 @@ $.extend(list.prototype, {
     bindEvents: function () {
         var me = this;
         var $main = $('#comments-main');
+        var $send = $('.send');
 
+        $main.off('click');
         $main.on('click', '.delete', function () {
             var target = $(this).parent();
 
@@ -184,9 +186,11 @@ $.extend(list.prototype, {
             });
         });
 
-        $('.send').on('click', function () {
+        $send.off('click');
+        $send.on('click', function () {
             me.addComment();
         });
+
         me.attach = AttachWrapper.initAttach({
             container: '#attachList',
             addBtn: '#addAttach'

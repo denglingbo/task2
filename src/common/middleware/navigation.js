@@ -263,8 +263,31 @@ navigation.title = function (title) {
     CPNavigationBar.setTitle(title);
 };
 
+// 当前按钮状态
+var currentButtonStatus = {
+    left: null,
+    right: null
+};
+
 navigation.button = function (dir, enable) {
-    CPNavigationBar.setButtonEnable(dir, enable);
+
+    var curButton = currentButtonStatus[dir];
+
+    if (!curButton) {
+        return;
+    }
+
+    // 第一次调用
+    if (curButton === null) {
+        CPNavigationBar.setButtonEnable(dir, enable);
+        currentButtonStatus[dir] = enable;
+    }
+
+    // 避免同样设置重复调用
+    if (curButton !== enable) {
+        CPNavigationBar.setButtonEnable(dir, enable);
+        currentButtonStatus[dir] = enable;
+    }
 };
 
 /**

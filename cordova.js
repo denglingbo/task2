@@ -48,7 +48,7 @@ var CPNavigationBar = {
 
 
 var randomData = function (key) {
-    return 'Name-asdfsfsafsafs发的是分身乏术发生地方撒' + key || (Math.floor(Math.random() * 1000));
+    return 'Name-' + key || (Math.floor(Math.random() * 1000));
 };
 
 /**
