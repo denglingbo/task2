@@ -302,7 +302,7 @@ page.initAffairAndTalkList = function () {
 };
 
 /**
- * 添加或取消关注
+ * 初始化附件
  *
  * @param {Object} attachData, 附件数据
  */
@@ -316,7 +316,7 @@ page.initAttach = function (attachData) {
 };
 
 /**
- * 添加或取消关注
+ * 加载附件
  *
  */
 page.loadAttach = function () {
