@@ -13,7 +13,7 @@ var util = require('common/util');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var navigation = require('common/middleware/navigation');
 var MidUI = require('common/middleware/ui');
-var editCom = require('common/widgets/edit/editCommon');
+var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var alertTpl = require('common/widgets/edit/alert.tpl');
 var attachTpl = require('common/middleware/attach/attach.tpl');
@@ -247,7 +247,10 @@ page.enter = function () {
 
                 // 等待模版渲染完毕
                 if (data && data.summaryAttachs) {
-                    editCom.initEditAttach(data.summaryAttachs);
+                    me.attach = AttachWrapper.initAttach({
+                        container: '#attachList',
+                        addBtn: '#addAttach'
+                    }, data.summaryAttachs);
                 }
 
                 me.initInput();
