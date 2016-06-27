@@ -85,7 +85,7 @@ editCom.validAlert = function (alertSentence) {
  *
  */
 editCom.submitAlert = function (isOk) {
-    var alertSentence = [lang.putTaskFailed, lang.putTaskCompleted];
+    var alertSentence = [lang.putFailed, lang.putCompleted];
     var me = this;
     var $alertDom = $('#alert-submit-after');
 

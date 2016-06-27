@@ -35,9 +35,11 @@ function Search(page, options) {
         selector: '',
         itemHeight: 0,
         inject: 'body',
-        itemTpl: '{{#objList}}<li class="item" data-id="{{id}}">'
-                    + '<a href="javascript:void(0);">{{& title}}</a>'
-                    + '</li>{{/objList}}'
+        itemTpl: '{{#objList}}'
+                   + '<li class="item" data-id="{{id}}">'
+                       + '<a href="javascript:void(0);">{{& title}}</a>'
+                   + '</li>'
+               + '{{/objList}}'
     };
 
     if (!page) {
@@ -58,7 +60,10 @@ function Search(page, options) {
     opts.lang = this.page.lang;
     // 页面上展示的搜索框
     opts.searchInHtml = '<div class="search-in"><i class="icon-search"></i>{{lang.search}}</div>';
-    opts.searchNull = '<li class="no-output"><i class="icon-search-big"></i>{{lang.noMatchResults}}</li>';
+    opts.searchNull = '<li class="no-output">'
+                        + '<div class="search-icon"><i class="icon-search-big"></i></div>'
+                        + '{{lang.noMatchResults}}'
+                    + '</li>';
     this.loadHtml();
 
     $.extend(this.dom, this.getDom());

@@ -174,7 +174,7 @@ $.extend(list.prototype, {
         var $main = $('#comments-main');
 
         $main.on('click', '.delete', function () {
-            var target = this;
+            var target = $(this).parent();
 
             MidUI.alert({
                 content: me.page.lang.alertRemoveComment,
@@ -296,8 +296,6 @@ $.extend(list.prototype, {
                         container: '#attachList',
                         addBtn: '#addAttach'
                     });
-                    $('#goalui-fixedinput').removeClass('extend');
-                    $('#goalui-fixedinput-shadow').addClass('hide');
                 }
                 else {
 

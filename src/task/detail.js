@@ -103,7 +103,8 @@ page.deviceready = function () {
         summary: me.lang.taskDone,
         talkSummary: me.lang.summary,
         notAgree: me.lang.notAgree,
-        agree: me.lang.agree
+        agree: me.lang.agree,
+        refuse: me.lang.refuse
     };
 
     // 页面底部跳转

@@ -55,6 +55,7 @@ virtualInput.prototype = {
     reset: function () {
         var me = this;
         $(me.editor).html('');
+        me.$wrap.removeClass('extend');
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
