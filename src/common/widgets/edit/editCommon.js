@@ -19,25 +19,12 @@ var alertTpl = require('common/widgets/edit/alert');
 var attachTpl = require('common/middleware/attach/attach.tpl');
 
 var editCom = {};
+
 editCom.valid = {
     isEdit: false,
     title: false,
     content: true,
     isAttachesReady: true
-};
-
-/**
- * bind 文本框获得焦点事件
- *
- */
-editCom.bindGetFocus = function () {
-    // $('.edit-title-wrap').on('click', function () {
-    //     $('#edit-title').focus();
-    // });
-
-    // $('.edit-words').on('click', function () {
-    //     $('#edit-content').focus();
-    // });
 };
 
 /**
@@ -586,4 +573,5 @@ editCom.unique = function (arr) {
     }
     return newArr;
 };
+
 module.exports = editCom;

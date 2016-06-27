@@ -21,11 +21,9 @@ var navigation = require('common/middleware/navigation');
 var taskId = util.params('taskId');
 
 var page = new Page();
-/* eslint-disable */
-// new: 默认值
-// edit: $.extend(DATA, page.data);
+
 var DATA = {
-    id : 0,
+    id: 0,
     title: '',
     content: '',
     endTime: 0,
@@ -60,8 +58,8 @@ page.deviceready = function () {
     if (taskId) {
         // 下面为获取人员信息的配置
         var obj = {
-            principal: DATA['principalUser'],
-            partner: DATA['attendIds']
+            principal: DATA.principalUser,
+            partner: DATA.attendIds
         };
         var cid = ls.getData(config.const.PARAMS).cid;
         var jids = users.makeArray(obj);
@@ -83,78 +81,27 @@ page.deviceready = function () {
     }
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
-        var oldVal = DATA['endTime'];
+        var oldVal = DATA.endTime;
 
-        // CPNavigationBar.redirect(
-        //     '/task-doneTime.html?endTime=' + DATA['endTime'],
-        //     lang.doneTime,
-        //     false,
-        //     function (data) {
-        //         if (!data) {
-        //             return;
-        //         }
-        //         data = JSON.parse(data);
-        //         DATA['endTime'] = data.endTime;
-        //         $('#doneTime .value').text(
-        //             editCom.initDoneTime(DATA['endTime'])
-        //         );
-        //         editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
-        //     }
-        // );
-        navigation.open('/task-doneTime.html?endTime=' + DATA['endTime'], {
+        navigation.open('/task-doneTime.html?endTime=' + DATA.endTime, {
             title: lang.doneTime,
             returnParams: function (data) {
                 if (!data) {
                     return;
                 }
                 data = JSON.parse(data);
-                DATA['endTime'] = data.endTime;
+                DATA.endTime = data.endTime;
                 $('#doneTime .value').text(
-                    editCom.initDoneTime(DATA['endTime'])
+                    editCom.initDoneTime(DATA.endTime)
                 );
-                editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
+                editCom.valid.isEdit = oldVal !== DATA.endTime ? true : editCom.valid.isEdit;
             }
         });
     });
 
     function person(key, itemKey, id) {
         var oldVal = DATA[itemKey];
-        // CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
-        //     lang.choosePerson,
-        //     false,
-        //     function (data) {
-        //         if (!data) {
-        //             return;
-        //         }
 
-        //         data = JSON.parse(data);
-        //         var contacts = data.contacts;
-
-        //         // if ($.isArray(DATA[itemKey])) {
-        //         // 参与人
-        //         if (itemKey === 'attendIds') {
-        //             // 使用选人组件传递的新的数据
-        //             DATA[itemKey] = [];
-
-        //             contacts.forEach(function (value, index) {
-        //                 var uid = users.takeJid(value.jid);
-
-        //                 // 避免重复
-        //                 if ($.inArray(uid, DATA[itemKey]) === -1) {
-        //                     DATA[itemKey].push(uid);
-        //                 }
-        //             });
-        //         }
-        //         // 负责人
-        //         else {
-        //             DATA[itemKey] = users.takeJid(contacts[0].jid);
-        //         }
-        //         // 对应的点击栏容器
-        //         $(id + ' .value').text(editCom.getPersonsName(contacts));
-
-        //         editCom.personIsChange(oldVal, DATA[itemKey]);
-        //     }
-        // );
         navigation.open('/selector-selector.html?paramId=' + key, {
             title: lang.choosePerson,
             returnParams: function (data) {
@@ -195,11 +142,11 @@ page.deviceready = function () {
         var key = '';
         var itemKey = '';
         var id = '';
-        
+
         if ($(this).attr('id') === 'principal') {
             editCom.setChoosePersonLoc(principalSelectKey, {
                 selectType: 1,
-                contacts: editCom.transJid(DATA['principalUser'])
+                contacts: editCom.transJid(DATA.principalUser)
             });
 
             key = principalSelectKey;
@@ -209,7 +156,7 @@ page.deviceready = function () {
         else {
             editCom.setChoosePersonLoc(attendSelectKey, {
                 selectType: 2,
-                contacts: editCom.transJid(DATA['attendIds'])
+                contacts: editCom.transJid(DATA.attendIds)
             });
 
             key = attendSelectKey;
@@ -227,8 +174,7 @@ page.deviceready = function () {
  *
  */
 page.bindEvents = function () {
-    var me = this;
-    editCom.bindGetFocus();
+
 };
 
 /**
@@ -257,12 +203,12 @@ page.loadPage = function () {
                     {
                         id: 'doneTime',
                         title: lang.doneTime,
-                        value: editCom.initDoneTime(DATA['endTime'])
+                        value: editCom.initDoneTime(DATA.endTime)
                     },
                     {
                         id: 'urgencyBlock',
                         title: lang.urgentLevel,
-                        value: editCom.initImportValue(DATA['importanceLevel'])
+                        value: editCom.initImportValue(DATA.importanceLevel)
                     }
                 ]
             }
@@ -283,17 +229,12 @@ page.bindTopEvent = function () {
         var promise = editCom.submit(page, DATA, url);
 
         promise.done(function (result) {
-            // var taskId = result.data || DATA.id;
-            
-            // navigation.open('/task-detail.html?taskId=' + taskId, {
-            //     title: me.lang.taskDetail
-            // });
             navigation.open(-1, {
                 goBackParams: 'refresh'
             });
         });
     });
-}
+};
 
 /**
  * 加载附件
@@ -412,7 +353,7 @@ page.renderUser = function (originArr, dataArr) {
         partnerRaw = editCom.unique(partnerRaw);
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
-    
+
     $('#principal .value').text(dataRaw.principal);
     $('#attends .value').text(dataRaw.partnerRaw);
 };
@@ -423,9 +364,6 @@ page.renderUser = function (originArr, dataArr) {
  * @param {deferred} dfd, deferred
  *
  */
-/* eslint-disable */
-
-
 page.addParallelTask(function (dfd) {
     var me = this;
 
@@ -480,7 +418,7 @@ page.ajaxAttach = function () {
         })
         .always(function () {
             me.loadAttach();
-        })
+        });
 };
 
 page.start();

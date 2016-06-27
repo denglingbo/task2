@@ -99,9 +99,7 @@ page.deviceready = function () {
     $('#attends').click(function () {
         var val = {
             selectType: 2,
-            /* eslint-disable */
             contacts: editCom.transJid(DATA.userIds)
-            /* eslint-enable */
         };
         editCom.setChoosePersonLoc(selectKey, val);
 
@@ -135,9 +133,7 @@ page.deviceready = function () {
  * 绑定事件
  *
  */
-page.bindEvents = function () {
-    editCom.bindGetFocus();
-};
+page.bindEvents = function () {};
 
 /**
  * 加载页面

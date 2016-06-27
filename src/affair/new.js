@@ -73,7 +73,6 @@ page.deviceready = function () {
  */
 page.bindEvents = function () {
 
-    editCom.bindGetFocus();
 };
 
 /**

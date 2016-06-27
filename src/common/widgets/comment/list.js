@@ -311,7 +311,7 @@ $.extend(list.prototype, {
     },
 
     /**
-     * 销毁附
+     * 销毁附件
      *
      */
     destroyScroll: function () {
