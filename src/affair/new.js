@@ -15,10 +15,10 @@ var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
+var page = new Page();
 
 // 判断是否是编辑页面
-var isEdit = util.params('affairId');
-var page = new Page();
+var affairId = util.params('affairId');
 
 var DATA = {
     id: 0,
@@ -71,9 +71,7 @@ page.deviceready = function () {
  * 绑定事件
  *
  */
-page.bindEvents = function () {
-
-};
+page.bindEvents = function () {};
 
 /**
  * 加载页面
@@ -142,7 +140,7 @@ page.initPlugin = function () {
             });
 
             // 新建状态，直接使用第一项作为默认选中
-            if (!isEdit) {
+            if (!affairId) {
                 var def = typeData[0];
                 currName = def.text;
                 def.selected = true;
@@ -205,13 +203,13 @@ page.initPlugin = function () {
 page.addParallelTask(function (dfd) {
     var me = this;
 
-    if (!isEdit) {
+    if (!affairId) {
         dfd.resolve();
         return dfd;
     }
 
     var promise = me.get(config.API.AFFAIR_DETAIL_URL, {
-        affairId: util.params('affairId')
+        affairId: affairId
     });
 
     promise

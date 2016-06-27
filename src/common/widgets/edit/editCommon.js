@@ -567,7 +567,7 @@ editCom.unique = function (arr) {
     }
     var newArr = [];
     for (var i = 0, len = arr.length; i < len; i++) {
-        if (newArr.indexOf(arr[i]) === -1) {
+        if ($.inArray(arr[i], newArr) === -1) {
             newArr.push(arr[i]);
         }
     }
