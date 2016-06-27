@@ -9,14 +9,14 @@ var raw = {};
 
 // 状态显示
 var statusMap = {
-    0: lang.undoneText,
-    6: lang.doneText,
-    7: lang.cancelText,
-    4: lang.doingText,
-    1: lang.receivedText,
-    2: lang.assignmentText,
-    5: lang.reviewText,
-    3: lang.refuseText
+    '0': lang.undoneText,
+    '6': lang.doneText,
+    '7': lang.cancelText,
+    '4': lang.doingText,
+    '1': lang.receivedText,
+    '2': lang.assignmentText,
+    '5': lang.reviewText,
+    '3': lang.refuseText
 };
 
 raw.statusMap = statusMap;
@@ -186,27 +186,27 @@ raw.formatDateToNow = function (date, now) {
     // }
     // 0-60s
     if (diff < 60000) {
-        return '刚刚';
+        return lang.just;
     }
     // 1-15min
     if (diff < 900000) {
-        return Math.round(diff / 60000) + '分钟前';
+        return Math.round(diff / 60000) + lang.minutesAgo;
     }
     // 16-30min
     if (diff < 1800000) {
-        return '半小时前';
+        return lang.halfHoursAgo;
     }
     // 30-60min
     if (diff < 3600000) {
-        return '1小时前';
+        return lang.anHoursAgo;
     }
     // 1-24h
     if (diff < 86400000) {
-        return Math.floor(diff / 3600000) + '小时前';
+        return Math.floor(diff / 3600000) + lang.hoursAgo;
     }
     // 1d-4d
     if (diff < 345600000) {
-        return Math.floor(diff / 86400000) + '天前';
+        return Math.floor(diff / 86400000) + lang.dayAgo;
     }
 
     // > 4d
@@ -223,7 +223,7 @@ raw.formatDateToNow = function (date, now) {
 raw.dateToDone = function (date, now) {
 
     if (date === 0) {
-        return '尽快完成';
+        return lang.earlyComplete;
     }
 
     if (!date) {

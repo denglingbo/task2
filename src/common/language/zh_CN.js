@@ -139,6 +139,12 @@ module.exports = {
     revokeReason: '撤销理由',
     touchLoadMore: '下拉刷新数据',
     fileUploadError: '提交失败，存在失效附件',
+    just: '刚刚',
+    minutesAgo: '分钟前',
+    halfHoursAgo: '半小时前',
+    anHoursAgo: '1小时前',
+    hoursAgo: '小时前',
+    dayAgo: '天前',
 
     error: {
         80010: '没有权限操作',

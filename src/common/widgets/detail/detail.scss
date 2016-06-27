@@ -8,7 +8,7 @@
 @import "../common/css/global.scss";
 @import "../common/css/ui.scss";
 @import "../common/css/rich.scss";
-@import "../common/middleware/attach/attachWrapper";
+@import "../common/middleware/attach/attachWrapper.scss";
 
 .main {
     padding-bottom: rem(44px);
@@ -224,6 +224,16 @@
             line-height: rem(20px);
             @include border-1px(top, #e1e4e6);
             @include column($partner-left-width, $partner-right-width);
+
+            .column-middle {
+                
+                .column-inner {
+
+                    &.only-one {
+                        margin-right: rem(15px)
+                    }
+                }
+            }
         }
     }
 

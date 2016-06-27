@@ -139,6 +139,12 @@ module.exports = {
     revokeReason: '撤銷理由',
     touchLoadMore: '下拉重繪數據',
     fileUploadError: '提交失敗，存在失效附件',
+    just: '剛剛',
+    minutesAgo: '分鐘前',
+    halfHoursAgo: '半小時前',
+    anHoursAgo: '1小時前',
+    hoursAgo: '小時前',
+    dayAgo: '天前',
 
     error: {
         80010: '沒有許可權操作',
