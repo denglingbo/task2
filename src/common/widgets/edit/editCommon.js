@@ -85,12 +85,12 @@ editCom.validAlert = function (alertSentence) {
  *
  */
 editCom.submitAlert = function (isOk) {
-    var alertSentence = [lang.putTaskFailed, lang.putTaskCompleted];
+    var alertSentence = [lang.putFailed, lang.putCompleted];
     var me = this;
     var $alertDom = $('#alert-submit-after');
 
     this.clearAlert();
-    $alertDom.find('i').className = isOk ? 'circle-right' : 'circle-err';
+    $alertDom.find('i')[0].className = isOk ? 'circle-right' : 'circle-err';
     $alertDom.find('.alert-words').text(alertSentence[+isOk]);
     $alertDom.removeClass('hide');
     me.timer = setTimeout(function () {
