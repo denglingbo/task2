@@ -16,7 +16,7 @@
             "recoverRight": true,
             "refuseRight": true,
             "revokeRight": false,
-            "summaryRight": false,
+            "summaryRight": true,
             "seeRight": true
         },
         "id": 66931,

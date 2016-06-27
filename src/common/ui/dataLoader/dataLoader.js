@@ -6,64 +6,22 @@
  * require dataLoader.scss
  *
  * 如果要直接调用 dataLoader.render() 请给 options.tpl 传值
+ *
+ * <待重构，功能实现完毕，暂未优化以及分包>
  */
 
 require('./dataLoader.scss');
 
 var md5 = require('dep/md5');
 var Control = require('common/control');
-
+var IScroll = require('dep/iscroll');
+var util = require('common/util');
 var template = require('./template');
+var selector = require('./selector');
+var lang = require('./lang');
 
 // 重载完成时候的占位 class，临时保持加载状态一直可见
 var placeholder = 'data-reload-place';
-
-// 必须要要实现的 选择器
-/* eslint-disable */
-var selector = {
-
-    more: {
-        default: '.data-more-default',
-        process: '.data-more-process',
-        done: '.data-more-done',
-        fail: '.data-more-fail',
-        max: '.data-more-max',
-        nodata: '.data-more-nodata'
-    },
-
-    reload: {
-        default: '.data-reload-default',
-        process: '.data-reload-process',
-        done: '.data-reload-done',
-        fail: '.data-reload-fail',
-        holder: '.data-reload-holder',
-        unchanged: '.data-reload-unchanged'
-    }
-};
-
-var lang = {
-
-    more: {
-        default: '点击加载更多',
-        process: '加载中',
-        done: '加载完成',
-        fail: '加载失败，请重试',
-        max: '内容全部加载完毕',
-        nodata: '暂无数据'
-    },
-
-    reload: {
-        default: '下拉刷新',
-        process: '加载中',
-        done: '加载完成',
-        fail: '加载失败，请重试',
-        holder: '释放刷新',
-        unchanged: '已经是最新数据'
-    }
-};
-/* eslint-enable */
-
-// var timerId = null;
 
 /**
  * 数据加载器
@@ -161,6 +119,22 @@ var DataLoader = function (options) {
     // 已经加载的数据长度
     me._length = 0;
 
+    me.scroll = null;
+
+    // 是否加载完成
+    me.load = false;
+
+    // 是否进行刷新
+    me._moring = false;
+
+    // 重载动作
+    me._reloading = false;
+    // 是否进入重载范围
+    me._reloadRange = false;
+    // 是否允许重新加载
+    me._reloadAllow = false;
+    me._reloadFailed = false;
+
     // 缓存上一次的数据，用于新请求数据的比较
     me._compare = null;
 
@@ -191,6 +165,10 @@ $.extend(DataLoader.prototype, {
         me.statusChange('more', 'default');
 
         me.bindEvents();
+
+        if (me.opts.loadType === 1) {
+            me.initScroll();
+        }
     },
 
     /**
@@ -444,6 +422,8 @@ $.extend(DataLoader.prototype, {
                 me.page = curpage;
                 me.statusChange('reload', 'fail');
                 dfd.reject(null);
+
+                me._reloadFailed = true;
             }
 
         });
@@ -469,12 +449,15 @@ $.extend(DataLoader.prototype, {
         me.statusChange('more', 'process');
 
         me.send(function (err, data) {
-me.$moreHandler.find('.loading').remove();
+
             if (err || !data) {
                 me.statusChange('more', 'fail');
                 fn && fn.call(me, err);
                 return;
             }
+
+            // 设置加载更多的标记
+            me._moring = false;
 
             // 当前数据长度
             var list = data[me.opts.dataKey] || [];
@@ -511,6 +494,9 @@ me.$moreHandler.find('.loading').remove();
             }
 
             fn && fn.call(me, null, data);
+
+
+            me.moreLoaded();
         });
     },
 
@@ -597,6 +583,170 @@ me.$moreHandler.find('.loading').remove();
                     // $bar.addClass(placeholder);
                 // }, outterDelay);
             }
+        }
+    },
+
+
+    /**
+     * 初始化 iscroll
+     */
+    initScroll: function () {
+        var me = this;
+
+        me.destroyScroll();
+        var $scrollWrapper = $(me.opts.scrollWrapper);
+
+        // setTimeout(function () {
+
+        // 初始化 scroll
+        me.scroll = new IScroll($scrollWrapper[0], {
+
+            // 为了较为准确的加载数据，这里需要设置为 3
+            probeType: 3,
+            scrollX: false,
+            scrollY: true,
+            scrollbars: false,
+            click: true,
+
+            // 禁用监听鼠标和指针
+            disableMouse: true,
+            disablePointer: true,
+
+            mouseWheel: false,
+
+            // 快速触屏的势能缓冲开关
+            // 苹果打开势能
+            momentum: util.isApple()
+        });
+
+        me.bindScrollEvents();
+        // }, 0);
+    },
+
+    bindScrollEvents: function () {
+        var me = this;
+
+        // 监听滚动
+        me.scroll.on('scroll', function () {
+            var target = this;
+            me.checkReload(target);
+            me.checkMore(target);
+
+            me.fire('scrolling', me, target);
+        });
+
+        me.scroll.on('scrollStart', function () {
+
+            // 允许重新刷新，设置滚动到指定位置，scrollEnd 必须要再进行一次设置
+            me._reloadAllow = false;
+            me._reloadFailed = false;
+        });
+
+        // 监听滚动结束
+        me.scroll.on('scrollEnd', function () {
+            // 允许重新刷新，设置滚动到指定位置，scrollEnd 必须要再进行一次设置
+            if (me._reloadFailed) {
+                me.scroll.scrollTo(0, 30);
+            }
+        });
+
+        // 监听一下 进入 重载界定 到 touchend 的鼠标 touch 时长
+        $(document).off('touchend').on('touchend', function () {
+            me.reloadEndTime = +new Date();
+
+            // 准备进行数据重载
+            if (me._reloadRange === true) {
+                me._reloadAllow = true;
+                me.statusChange('reload', 'process');
+
+                me.fire('scrollReload', me);
+            }
+        });
+    },
+
+    reloadStartTime: 0,
+    reloadEndTime: 0,
+
+    /**
+     * 检查是否需要重新加载数据
+     *
+     * @param {Element} scroll, new Scroll() 返回的scroll 实例
+     */
+    checkReload: function (scroll) {
+        var me = this;
+
+        // 如果已经允许重载，则不再进行状态设置
+        if (me._reloadAllow) {
+            scroll.scrollTo(0, 30);
+        }
+        if (me._reloadFailed) {
+            me.scroll.scrollTo(0, 30);
+        }
+
+        if (me._reloadFailed || me._reloadAllow) {
+            return;
+        }
+
+        if (scroll.y > 0 && me._reloading === false && me._reloadRange === false) {
+            me.statusChange('reload', 'default');
+        }
+
+        // 到达临界点
+        if (scroll.y >= 80 && me._reloading === false) {
+            me.statusChange('reload', 'holder');
+
+            me.reloadStartTime = +new Date();
+
+            // 允许重载
+            me._reloadRange = true;
+        }
+        // 脱离重载临界值
+        else {
+            me._reloadRange = false;
+        }
+    },
+
+    /**
+     * 检查是否需要加载更多
+     *
+     * @param {Element} scroll, new Scroll() 返回的scroll 实例
+     */
+    checkMore: function (scroll) {
+        var me = this;
+
+        if (scroll.maxScrollY - scroll.y > 60 && me._moring === false) {
+
+            me.fire('scrollMore', me);
+
+            me._moring = true;
+        }
+    },
+
+    moreLoaded: function () {
+        // 允许下次加载
+        this._moring = false;
+
+        // iscroll 刷新
+        this.scroll && this.scroll.refresh();
+    },
+
+    reset: function () {
+
+        // 重置参数
+        this._reloading = false;
+        this._reloadRange = false;
+        this._moring = false;
+    },
+
+    /**
+     * Destroy
+     *
+     */
+    destroyScroll: function () {
+
+        if (this.scroll) {
+            this.scroll.destroy();
+            this.scroll = null;
         }
     }
 });

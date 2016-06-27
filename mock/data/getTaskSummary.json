@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "code": 200,
+        "message": "请求成功"
+    },
+    "data": {
+        "summary": "<p>asdfasdfasdfasdfads</p>",
+        "summaryAttachs": [
+            {
+                "id": 70330,
+                "raid": "RA10B1_70330",
+                "size": 558693,
+                "fileName": "今目标员工手册[2015年8月].pdf",
+                "previewUrl": "http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70330&uid=136743&cid=10&token=b2c73b49-9d82-4436-87f0-0698eefcfeba-231027&client=web",
+                "downloadUrl": "RA10B1_70330"
+            },
+            {
+                "id": 70331,
+                "raid": "RA10B1_70331",
+                "size": 543232,
+                "fileName": "社区渗透测试报告-2015年3月29日.doc",
+                "previewUrl": "http://web.test1.com/webcd/common/attach/preview/mobilePreview.jsp?id=RA10_70331&uid=136743&cid=10&token=b2c73b49-9d82-4436-87f0-0698eefcfeba-231027&client=web",
+                "downloadUrl": "RA10B1_70331"
+            }
+        ]
+    }
+}

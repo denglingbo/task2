@@ -342,6 +342,7 @@ editCom.initEditAttach = function (data) {
             }
         }
     }, data);
+
     return attachObj;
 };
 

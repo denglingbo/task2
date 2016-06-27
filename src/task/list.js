@@ -188,6 +188,7 @@ page.initTab = function () {
 
     // 始终保持 tab 点击项在可视区域
     var $tabs = $ul.find('li');
+
     $tabs.off('click');
     $tabs.on('click', function (event) {
         event.stopPropagation();

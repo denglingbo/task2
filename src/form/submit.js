@@ -15,6 +15,9 @@ var navigation = require('common/middleware/navigation');
 var MidUI = require('common/middleware/ui');
 var editCom = require('common/widgets/edit/editCommon');
 
+var alertTpl = require('common/widgets/edit/alert.tpl');
+var attachTpl = require('common/middleware/attach/attach.tpl');
+
 var page = new Page();
 var lang = page.lang;
 
@@ -186,31 +189,9 @@ page.enter = function () {
     var isMaster = parseInt(util.params('master'), 2);
 
     // 获取当前页面配置
-    var curPage = pages[me.pageType];
-
-    var attachTpl = '';
-
-    me.phoneInput = [];
-
-    function initInput() {
-        $('.phone-input').each(function (i) {
-            var limits = 500;
-            if (!me.pageType && i) {
-                limits = 500;
-            }
-
-            me.phoneInput.push(new PhoneInput({
-                handler: this,
-                limit: limits
-            }));
-        });
-    }
-
-    var alertBox = require('common/widgets/edit/alert.tpl');
+    var myPage = pages[me.pageType];
 
     if (/summary|talkSummary/.test(me.pageType)) {
-
-        attachTpl = require('common/middleware/attach/attach.tpl');
 
         var api;
         var rdata = {};
@@ -230,49 +211,93 @@ page.enter = function () {
             };
         }
 
+        // 编辑状态总结
         var promise = page.get(api, rdata);
 
         promise.done(function (result) {
-            if (result.meta.code === 200) {
-                var res = result.data;
-                var arr = curPage(isMaster);
-                if (res.summary && res.summary.length) {
-                    arr[0].summary = res.summary;
-                    arr[0].holder = '';
+
+            if (result && result.meta && result.meta.code === 200) {
+
+                var data = result.data;
+                var arr = myPage(isMaster);
+
+                // 判断是否有数据
+                if (data) {
+                    if (data.summary && data.summary.length) {
+                        arr[0].summary = data.summary;
+                        arr[0].holder = '';
+                    }
+                    if (isMaster && data.completeRemark && data.completeRemark.length > 0) {
+                        arr[1].completeRemark = data.completeRemark;
+                        arr[1].holder = '';
+                    }
                 }
-                if (isMaster && res.completeRemark && res.completeRemark.length) {
-                    arr[1].completeRemark = res.completeRemark;
-                    arr[1].holder = '';
-                }
+
                 me.render('#main', {
                     list: arr
                 }, {
                     partials: {
                         attach: attachTpl,
-                        alertBox: alertBox
+                        alertBox: alertTpl
                     }
                 });
 
                 // 总结情景下，提供上传附件功能
-                me.attach = editCom.initEditAttach(res.summaryAttachs);
+                me.attach = null;
 
-                initInput();
+                // 等待模版渲染完毕
+                if (data && data.summaryAttachs) {
+                    editCom.initEditAttach(data.summaryAttachs);
+                }
+
+                me.initInput();
             }
         });
     }
-    // 如果没有问题就渲染对应模板
-    else if (curPage) {
-        me.render('#main', {
-            list: curPage(isMaster)
-        }, {
-            partials: {
-                attach: attachTpl,
-                alertBox: alertBox
-            }
-        });
-        initInput();
+    // 渲染对应模板
+    else if (myPage) {
+        me.renderNewSubmit(myPage, isMaster);
     }
+};
 
+page.initInput = function () {
+
+    var me = this;
+
+    me.phoneInput = [];
+
+    $('.phone-input').each(function (i) {
+        var limits = 500;
+        if (!me.pageType && i) {
+            limits = 500;
+        }
+
+        me.phoneInput.push(
+            new PhoneInput({
+                handler: this,
+                limit: limits
+            })
+        );
+    });
+};
+
+/**
+ * 渲染 新建提交
+ *
+ * @param {Object} myPage, 当前页面配置
+ * @param {boolean} isMaster, 如果是 2个总结的页面，传递该值
+ */
+page.renderNewSubmit = function (myPage, isMaster) {
+    this.render('#main', {
+        list: myPage(isMaster)
+    }, {
+        partials: {
+            attach: attachTpl,
+            alertBox: alertTpl
+        }
+    });
+
+    this.initInput();
 };
 
 function validEdited(page) {
@@ -308,15 +333,11 @@ page.deviceready = function () {
     function submit() {
         var dataArg = me.getData(me.pageType);
         var promise = me.post(dataArg.api, dataArg.data);
-        // var taskId = util.params('taskId');
 
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
-                    // navigation.open('/task-detail.html?taskId=' + taskId, {
-                    //     title: me.lang.taskDetail
-                    // });
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });
