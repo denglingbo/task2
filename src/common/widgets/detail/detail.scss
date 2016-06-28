@@ -294,6 +294,12 @@
 
                     .componentAttachLine {
                         background-color: #f8f8f8;
+                        padding-right: 0;
+                        margin-right: rem(10px);
+                    }
+
+                    .componentAttachLeft {
+                        display: inline;
                     }
                 }
             }
