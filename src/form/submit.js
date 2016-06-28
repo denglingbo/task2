@@ -304,6 +304,9 @@ page.renderNewSubmit = function (myPage, isMaster) {
 };
 
 function validEdited(page) {
+    if (!page || !page.phoneInput) {
+        return;
+    }
     page.phoneInput.forEach(function (item) {
         var f = item.isEdited();
         valid.isEdited = f ? f : valid.isEdited;
