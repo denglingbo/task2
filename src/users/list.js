@@ -19,23 +19,13 @@ var page = new Page();
 
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
 
-    /* eslint-disable */
-    // CPNavigationBar.setLeftButton({
-    //     title: lang.back,
-    //     iconPath: '',
-    //     callback: function () {
-    //         CPNavigationBar.returnPreviousPage();
-    //     }
-    // });
-    /* eslint-enable */
     navigation.left({
-        title: lang.back,
         click: function () {
             navigation.open(-1);
         }
     });
+
     var jids = util.params('jids');
 
     users.getUserAndPhoto(jids)
@@ -48,30 +38,5 @@ page.deviceready = function () {
 
         });
 };
-
-/**
- * 这里虽然莫有请求页面接口，但是还是按常规请求来处理
- *
- * @param {deferred} dfd, deferred
- *
- */
-// page.addParallelTask(function (dfd) {
-//     var me = this;
-//     var jids = util.params('jids');
-
-//     users.getUserAndPhoto(jids)
-//         .done(function (data) {
-//             me.data = {
-//                 list: data
-//             };
-
-//             dfd.resolve();
-//         })
-//         .fail(function () {
-//             dfd.reject();
-//         });
-
-//     return dfd;
-// });
 
 page.start();

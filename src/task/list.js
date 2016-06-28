@@ -188,23 +188,31 @@ page.initTab = function () {
 
     // 始终保持 tab 点击项在可视区域
     var $tabs = $ul.find('li');
+    var tabLength = $tabs.length;
 
     $tabs.off('click');
     $tabs.on('click', function (event) {
         event.stopPropagation();
 
         var $li = $(this);
+        var $viewLi = null;
         var curLeft = $li.offset().left;
         var curWidth = $li.width();
         var move = null;
+        var index = $li.index();
+        var viewIndex = 0;
 
         if (curLeft < 0) {
-            if ($li.index() - 1 < 0) {
-                move = 0;
+
+            // 展示点击的下一个
+            viewIndex = index - 1;
+            if (viewIndex < 0) {
+                viewIndex = 0;
             }
-            else {
-                move = $li.position().left * -1;
-            }
+
+            $viewLi = $tabs.eq(viewIndex);
+
+            move = $viewLi.position().left * -1;
 
             myScroll.scrollTo(move, 0, 100);
         }
@@ -214,7 +222,16 @@ page.initTab = function () {
         var diff = max - curViewRight;
 
         if (curLeft > 0 && diff < 0) {
-            move = max - ($li.position().left + curWidth);
+
+            // 展示点击的下一个
+            viewIndex = index + 1;
+            if (viewIndex >= tabLength) {
+                viewIndex = tabLength - 1;
+            }
+
+            $viewLi = $tabs.eq(viewIndex);
+
+            move = max - ($viewLi.position().left + curWidth);
             myScroll.scrollTo(move, 0, 100);
         }
     });

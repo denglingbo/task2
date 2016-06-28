@@ -12,7 +12,7 @@
     <script id="main-tmpl" type="x-tmpl-mustache">
     <div id="menu" class="menu">
         <ul>
-            <li class="director" data-rid="2" data-log='{"actionTag":"indexMyDuty"}'>
+            <li class="director" data-rid="2" data-log='{"actionTag":"indexMyDuty","targetTag":{"rid":2}}'>
                 <div class="touch-button">
                     <p>
                         <b>{{ lang.director }}</b>
@@ -40,7 +40,7 @@
     </div>
 
     <div id="bottom-wrapper">
-        <div id="add-newtask" class="add-task touch-button" data-log='{"actionTag":"indexNewTask"}'>
+        <div id="add-newtask" class="add-task touch-button" data-touch="touch-active" data-log='{"actionTag":"indexNewTask"}'>
             <div class="button-layout">
                 <div class="button-img button"></div>
                 <div class="button-text text">{{ lang.newTask }}</div>

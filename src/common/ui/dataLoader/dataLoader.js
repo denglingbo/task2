@@ -487,6 +487,7 @@ $.extend(DataLoader.prototype, {
             // 以下两种情况认为数据已经加载完毕
             if (me.isAllLoaded() || me._total - me._length <= 0) {
                 me.statusChange('more', 'max');
+                me.statusChange('more', null, 300);
             }
             else {
                 me.statusChange('more', 'done');

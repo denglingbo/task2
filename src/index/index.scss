@@ -73,7 +73,7 @@ html, body {
             // 我负责的
             &.director {
                 div {
-                    background: linear-gradient(to bottom, #fe5972 0%, #fe9191 100%);
+                    background: linear-gradient(to bottom, #ff7079 0%, #ff9088 100%);
                 }
 
                 &:after {
@@ -84,7 +84,7 @@ html, body {
             // 我派发的
             &.dispatch {
                 div {
-                    background: linear-gradient(to bottom, #24a8f9 0%, #0fcefe 100%);
+                    background: linear-gradient(to bottom, #5eadfe 0%, #41bdfe 100%);
                 }
 
                 &:after {
@@ -95,7 +95,7 @@ html, body {
             // 我参与的
             &.partake {
                 div {
-                    background: linear-gradient(to bottom, #1dcc0f 0%, #31e83e 100%);
+                    background: linear-gradient(to bottom, #39d424 0%, #2ee659 100%);
                 }
 
                 &:after {
@@ -115,9 +115,15 @@ html, body {
         position: absolute;
         width: 100%;
         height: 80%;
-        // left: 50%;
         bottom: 0;
-        // margin-left: rem(-40px);
+
+        &.touch-active {
+            .button-layout {
+                .button {
+                    background: linear-gradient(to bottom, #018af3 0%, #24b4ff 100%);
+                }
+            }
+        }
 
         .button-layout {
             position: absolute;

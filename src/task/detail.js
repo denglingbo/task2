@@ -117,6 +117,11 @@ page.deviceready = function () {
         if (pageTo && pageTo.length > 0) {
             navigation.open(pageTo, {
                 title: barMap[type],
+                transitionParam: {
+                    transFlag: 1,
+                    isClosePage: 0,
+                    shareFlag: 0
+                },
                 returnParams: function (prevData) {
                     if (prevData && prevData === 'refresh') {
                         me.refresh();

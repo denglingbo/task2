@@ -12,20 +12,35 @@ module.exports = function () {
 
     $layout.off('touchstart').on('touchstart', handler, function () {
         var $touch = $(this);
+        var touchClass = $touch.data('touch');
 
-        if (!this._opacity) {
-            this._opacity = $touch.css('opacity') || 1;
+        this._touch = touchClass || null;
+
+        if (this._touch) {
+            $touch.addClass(this._touch);
         }
 
-        $touch.css({
-            opacity: .8
-        });
+        else {
+            if (!this._opacity) {
+                this._opacity = $touch.css('opacity') || 1;
+            }
+
+            $touch.css({
+                opacity: .8
+            });
+        }
     });
 
     $layout.off('touchend').on('touchend', handler, function () {
-        $(this).css({
-            opacity: this._opacity || 1
-        });
+
+        if (this._touch) {
+            $(this).removeClass(this._touch);
+        }
+        else {
+            $(this).css({
+                opacity: this._opacity || 1
+            });
+        }
     });
 
 };

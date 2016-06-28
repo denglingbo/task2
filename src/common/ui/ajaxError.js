@@ -5,7 +5,7 @@
  * 错误码配置
  */
 
-var util = require('common/util');
+// var util = require('common/util');
 var lang = require('common/lang').getData();
 
 // 获取错误配置
@@ -37,7 +37,7 @@ var createAlert = function () {
 var $alert = createAlert();
 var $content = $alert.find('.ialert-inner');
 
-var isApple = util.isApple();
+// var isApple = util.isApple();
 var delayId = null;
 var delay = 1200;
 
@@ -46,13 +46,7 @@ var closeAlert = function () {
     clearTimeout(delayId);
 
     delayId = setTimeout(function () {
-        
-        if (isApple) {
-            $alert.addClass('ialert-hide-animate');
-        }
-        else {
-            $alert.addClass('hide');
-        }
+        $alert.addClass('hide');
     }, delay);
 };
 

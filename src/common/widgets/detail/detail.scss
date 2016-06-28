@@ -14,7 +14,7 @@
     padding-bottom: rem(44px);
 
     &.nofixbar {
-        padding-bottom: 0;
+        padding-bottom: rem(10px);
     }
 }
 
@@ -51,6 +51,7 @@
 // title 部分
 .detail-title {
     @include clearfix();
+    @include border-1px(bottom);
     position: relative;
 
     > div {
@@ -280,7 +281,7 @@
 
                 .column-inner {
                     @include clearfix();
-                    padding: rem(17px) 0 rem(11px) 0;
+                    padding: rem(14px) 0 rem(11px) 0;
 
                     .comments-button {
                         position: relative;
@@ -362,8 +363,13 @@
 
 }
 
+/**
+ * 底部按钮
+ */
 .fixbar {
     @include fixbar(3);
+
+    font-size: rem(16px);
 
     position: fixed;
     z-index: 10;

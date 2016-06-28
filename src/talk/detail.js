@@ -115,6 +115,7 @@ page.bindEvents = function () {
     var $comment = $('#comment-input-wrapper');
 
     // 查看更多人员
+    this.$main.off('click');
     this.$main.on('click', '.partner-more', function () {
         var jids = $(this).data('jids');
 

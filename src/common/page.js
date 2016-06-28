@@ -356,6 +356,9 @@ Page.prototype.done = function () {
     this.isDone = true;
 
     log.init();
+
+    // 把 log 的相关操作放到 page 上
+    this.log = log;
 };
 
 /**
@@ -595,19 +598,29 @@ Page.ajax = function (api, data, options) {
         // 判断是否操作错误
         if (result && result.meta && result.meta.code !== 200) {
             ajaxError.alert(result.meta.code, result.meta.message);
-            dfd.reject();
-            // return;
-        }
 
-        // Just debug test
-        // 模拟网络延迟
-        if (config.debug) {
-            setTimeout(function () {
-                dfd.resolve(result);
-            }, 100);
+            // Just debug test
+            // 模拟网络延迟
+            if (config.debug) {
+                setTimeout(function () {
+                    dfd.reject();
+                }, 500);
+            }
+            else {
+                dfd.reject();
+            }
         }
         else {
-            dfd.resolve(result);
+            // Just debug test
+            // 模拟网络延迟
+            if (config.debug) {
+                setTimeout(function () {
+                    dfd.resolve(result);
+                }, 100);
+            }
+            else {
+                dfd.resolve(result);
+            }
         }
     };
 

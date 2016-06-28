@@ -135,11 +135,14 @@
     &-content {
         position: relative;
         padding: rem(5px) rem(10px);
+        color: $drak-gray;
 
         > div {
             margin-top: rem(8px);
 
-            &.time {}
+            &.time {
+                margin-top: rem(10px);
+            }
         }
 
         &-name {
@@ -155,6 +158,11 @@
             }
         }
     }
+}
+
+/* 为了让加载条默认定在页面中部 */
+.list-wrapper-content {
+    min-height: 40%;
 }
 
 /* 底部按钮条 */

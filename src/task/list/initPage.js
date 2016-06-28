@@ -327,6 +327,11 @@ Init.prototype = {
     getMoreData: function (callback) {
         var me = this;
 
+        var $err = me.opts.wrapper.find('.net-err');
+        if ($err.length > 0) {
+            $err.addClass('hide').remove();
+        }
+
         me.dataLoader.requestMore(function (err, data) {
 
             if (err || !data) {
