@@ -300,6 +300,12 @@ page.initAffairAndTalkList = function () {
         // 事件 & 讨论 详情需要 任务的状态
         // taskStatus
         data.taskStatus = page.data.status;
+
+        // 已撤销 由该字段控制
+        if (page.data.suspend) {
+            data.taskStatus = 7;
+        }
+
         detailUtil.formatEventTalkData(data, this.page);
 
         page.render('#affair-talk', data, {type: 'append'});

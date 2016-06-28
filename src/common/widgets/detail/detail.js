@@ -62,8 +62,10 @@ detail.dealPageData = function (data) {
     // 只有［任务］在进行中，才可以对事件 & 讨论进行操作
     // 判断任务是否在进行中
     // 用于 事件 & 讨论 页面从 url 参数中 获取 task 是否完成
+    // 此处是 task page 跳转 url 上的，所以不需要判断 data.suspend
     var taskStatus = util.params('taskStatus');
     data.taskDoing = function () {
+
         if (!taskStatus) {
             return true;
         }
