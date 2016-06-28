@@ -122,6 +122,9 @@ var list = function (page, options) {
     me.data = me.opts.data;
     me.$main = $(me.opts.wrapper);
 
+    // 避免 page.refresh 继续创建进来
+    me.$main.find('dd').not('.list-null').remove();
+
     me.$listNull = $('.list-null');
 
     // 初始化一个点击加载组件

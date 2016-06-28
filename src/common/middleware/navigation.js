@@ -273,7 +273,7 @@ navigation.button = function (dir, enable) {
 
     var curButton = currentButtonStatus[dir];
 
-    if (!curButton) {
+    if (curButton === undefined) {
         return;
     }
 
@@ -281,6 +281,7 @@ navigation.button = function (dir, enable) {
     if (curButton === null) {
         CPNavigationBar.setButtonEnable(dir, enable);
         currentButtonStatus[dir] = enable;
+        return;
     }
 
     // 避免同样设置重复调用
