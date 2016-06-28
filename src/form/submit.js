@@ -28,7 +28,7 @@ var valid = {
 
 // 提交的数据
 var REQUEST_DATA = {
-    taskId: util.params('taskId'),
+    taskId: util.params('taskId') || 0,
     message: {
         sentEmai: false,
         sentEim: true,
@@ -366,7 +366,9 @@ page.deviceready = function () {
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
-                    me.log.store({actionTag: actions[me.pageType]});
+                    if (actions[me.pageType]) {
+                        me.log.store({actionTag: actions[me.pageType]});
+                    }
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });

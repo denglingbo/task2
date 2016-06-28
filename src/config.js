@@ -73,6 +73,7 @@ var config = {
         TALK_COMMENT_LIST: 'getTalkCommentList',
         // 总结详情
         TALK_SUMMARY_GET: 'getTalkSummary',
+        TALK_SUMMARY: 'summaryTalk',
 
         // 列表
         // 任务列表
