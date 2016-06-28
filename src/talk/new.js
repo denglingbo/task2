@@ -96,6 +96,7 @@ page.deviceready = function () {
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachs);
 
+    var action = talkId ? 'editTalkSubmit' : 'newTalkSubmit';
     // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachs = me.attach.getModifyAttaches();
@@ -107,7 +108,7 @@ page.deviceready = function () {
                 goBackParams: 'refresh'
             });
         });
-    }, 'talk');
+    }, action, me);
 
     // 选择人员跳转页面
     $('#attends').click(function () {

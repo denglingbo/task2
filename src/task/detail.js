@@ -150,7 +150,7 @@ page.deviceready = function () {
     });
 
     detailUtil.naviRight(me, me.data, 'task', function () {
-
+        me.log.store({actionTag: 'taskRecover'});
         // 弹出框
         MidUI.alert({
             content: me.lang.alertRecoveryContent,

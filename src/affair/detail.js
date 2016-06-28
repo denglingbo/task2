@@ -97,12 +97,14 @@ page.bindEvents = function () {
 
         // 完成状态
         tickedCallback: function () {
+            me.log.store({actionTag: 'affairDone'});
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
+            me.log.store({actionTag: 'affairRecover'});
             navigation.button('right', true);
             detailUtil.naviRight(me, data, 'affair');
             $comment && $comment.removeClass('hide');

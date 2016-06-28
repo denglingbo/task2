@@ -232,6 +232,7 @@ page.loadPage = function () {
 
 page.bindTopEvent = function () {
     var me = this;
+    var action = taskId ? 'editTaskSubmit' : 'newTaskSubmit';
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
         DATA.attendIds = editCom.unique(DATA.attendIds);
@@ -243,7 +244,7 @@ page.bindTopEvent = function () {
                 goBackParams: 'refresh'
             });
         });
-    }, 'task');
+    }, action, me);
 };
 
 /**
