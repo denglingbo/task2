@@ -249,7 +249,12 @@ page.enter = function () {
                 if (data && data.summaryAttachs) {
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
-                        addBtn: '#addAttach'
+                        addBtn: '#addAttach',
+                        callback: function () {
+                            if (me.attach.getModifyAttaches().length > 0) {
+                                valid.isEdit = true;
+                            }
+                        }
                     }, data.summaryAttachs);
                 }
 
@@ -271,9 +276,6 @@ page.initInput = function () {
 
     $('.phone-input').each(function (i) {
         var limits = 500;
-        if (!me.pageType && i) {
-            limits = 500;
-        }
 
         me.phoneInput.push(
             new PhoneInput({
@@ -365,8 +367,6 @@ page.deviceready = function () {
             click: submit
         }
     ]);
-
-    // CPNavigationBar.setGoBackHandler(goBack,true);
 };
 
 page.start();

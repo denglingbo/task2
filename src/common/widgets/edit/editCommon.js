@@ -128,7 +128,7 @@ editCom.submitValid = function (submitFn) {
     var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
 
-    if (flag) {
+    if (flag && submitFn && $.isFunction(submitFn)) {
         submitFn();
     }
     else {
@@ -160,6 +160,9 @@ editCom.submitValid = function (submitFn) {
  * @param {Object} attach, 附件对象
  */
 editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
+    if (!phoneInputTitle || !phoneInputContent || !attach) {
+        return;
+    }
     var validObj = this.valid;
     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     validObj.content = !!phoneInputContent.isAllowSubmit();
@@ -168,7 +171,7 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 };
 
 /**
- * 虚拟手机端提交和取消按钮
+ * 提交和取消按钮
  *
  * @param {Object} phoneInputTitle, title 文本框对象
  * @param {Object} phoneInputContent, content 文本框对象
@@ -214,8 +217,12 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
 editCom.submit = function (page, data, ajaxUrl) {
     var me = this;
     var dfd = new $.Deferred();
-    // var data = page.data;
+    if (!page || !ajaxUrl) {
+        dfd.reject();
+        return dfd;
+    }
 
+    data = data || {};
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').html();
 
@@ -245,8 +252,12 @@ editCom.submit = function (page, data, ajaxUrl) {
  *
  * @param {string} selector, 选择器字符串
  * @param {Object} data, 页面数据
+ * @return {boolean} 参数错误
  */
 editCom.initImportanceLevel = function (selector, data) {
+    if (!selector || !data) {
+        return false;
+    }
     var infoData = data;
     var validObj = this.valid;
     var importData = [
@@ -296,8 +307,12 @@ editCom.initImportanceLevel = function (selector, data) {
  * @param {string} method, 初始化mobiscroll的种类
  * @param {string} selector, 选择器字符串
  * @param {Object} data, 初始化参数
+ * @return {boolean} 参数错误
  */
 editCom.initMobiscroll = function (method, selector, data) {
+    if (!method || !selector || !data) {
+        return false;
+    }
     // mobiscroll 公共参数
     var mobiOptions = {
         theme: 'android-holo-light',
@@ -320,6 +335,7 @@ editCom.initMobiscroll = function (method, selector, data) {
  */
 editCom.initEditAttach = function (data) {
     var me = this;
+    data = data || {};
     var attachObj = attachWrapper.initAttach({
         container: '#attachList',
         addBtn: '#addAttach',
@@ -350,7 +366,7 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    return raw.importanceMap[level];
+    return level && raw.importanceMap[level];
 };
 
 /**
@@ -376,9 +392,12 @@ editCom.personIsChange = function (oldValue, newValue) {
  * @param {Object} data, 渲染数据
  */
 editCom.loadPage = function (page, data) {
-    page.render('#edit-container', data, {
-        partials: {editMain: newTemplate, alertBox: alertTpl, attach: attachTpl}
-    });
+    data = data || {};
+    if (page) {
+        page.render('#edit-container', data, {
+            partials: {editMain: newTemplate, alertBox: alertTpl, attach: attachTpl}
+        });
+    }
 };
 
 /**
@@ -396,12 +415,10 @@ editCom.transJid = function (id) {
     }
 
     if (!$.isArray(id)) {
-        // return [{jid: users.makeJid(id, cid)}];
         jid = [users.makeJid(id, cid)];
     }
     else {
         id.forEach(function (itemId) {
-            // jid.push({jid: users.makeJid(itemId, cid)});
             jid.push(users.makeJid(itemId, cid));
         });
     }
@@ -430,9 +447,13 @@ editCom.getClientMsg = function () {
  *
  * @param {string} key, 存储的key
  * @param {Object} value, 存储的数据
+ * @return {boolean} 参数错误
  */
 editCom.setChoosePersonLoc = function (key, value) {
     var me = this;
+    if (!key || !value) {
+        return false;
+    }
     var selectValue = {
         clientMsg: me.getClientMsg(),
         selector: {
@@ -490,13 +511,12 @@ editCom.setChoosePersonLoc = function (key, value) {
  * @return {Array} clone的数组
  */
 editCom.arrClone = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var newArr = [];
-    arr.forEach(function (value) {
-        newArr.push(value);
-    });
+    if (arr && $.isArray(arr)) {
+        arr.forEach(function (value) {
+            newArr.push(value);
+        });
+    }
     return newArr;
 };
 
@@ -508,7 +528,7 @@ editCom.arrClone = function (arr) {
  * @return {boolean} 是否相等
  */
 editCom.compareArr = function (arr1, arr2) {
-    if (!$.isArray(arr1) || !$.isArray(arr2)) {
+    if (!arr1 || !arr2 || !$.isArray(arr1) || !$.isArray(arr2)) {
         return false;
     }
     var newArr1 = this.arrClone(arr1).sort();
@@ -527,7 +547,7 @@ editCom.compareArr = function (arr1, arr2) {
  *
  */
 editCom.getDataFromObj = function (target, source) {
-    if ((typeof target === 'object') && (typeof source === 'object')) {
+    if (target && (typeof target === 'object') && source && (typeof source === 'object')) {
         for (var key in target) {
             if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
                 target[key] = source[key];
@@ -544,13 +564,12 @@ editCom.getDataFromObj = function (target, source) {
  *
  */
 editCom.getPersonsName = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var nameArr = [];
-    arr.forEach(function (item) {
-        nameArr.push(item.name);
-    });
+    if (arr && $.isArray(arr)) {
+        arr.forEach(function (item) {
+            nameArr.push(item.name);
+        });
+    }
     return nameArr.join('、');
 };
 
@@ -562,13 +581,12 @@ editCom.getPersonsName = function (arr) {
  *
  */
 editCom.unique = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var newArr = [];
-    for (var i = 0, len = arr.length; i < len; i++) {
-        if ($.inArray(arr[i], newArr) === -1) {
-            newArr.push(arr[i]);
+    if (arr && $.isArray(arr)) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if ($.inArray(arr[i], newArr) === -1) {
+                newArr.push(arr[i]);
+            }
         }
     }
     return newArr;
