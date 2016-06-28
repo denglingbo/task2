@@ -107,6 +107,7 @@ page.deviceready = function () {
         {
             icon: me._shell.right.add,
             click: function () {
+                me.log.store({actionTag: 'taskListNativeNewTask'});
                 navigation.open('/task-new.html', {
                     title: me.lang.newTask,
                     returnParams: function (prevData) {
@@ -372,6 +373,8 @@ function LoadPage(info) {
         },
 
         onDataNull: function (loader) {
+            // TODO
+            // 添加未完成或其他的空页面提示
             var data = {
                 lang: {
                     noTask: page.lang.noTask,

@@ -32,7 +32,7 @@ var DATA = {
         sentEmai: false,
         sentSms: false
     },
-    taskId: util.params('taskId') || 0,
+    taskId: util.params('taskId'),
     title: '',
     userIds: []
 };
@@ -107,7 +107,7 @@ page.deviceready = function () {
                 goBackParams: 'refresh'
             });
         });
-    });
+    }, 'talk');
 
     // 选择人员跳转页面
     $('#attends').click(function () {
@@ -205,6 +205,22 @@ page.getRequestData = function (talkId) {
 };
 
 /**
+ * 处理新建讨论参与人数据，需要把创建人和负责人加入参与人中。
+ *
+ * @param {Object} data, 任务详情数据
+ * @return {Array} 参与人
+ */
+page.dealData = function (data) {
+    var obj = {
+        createUser: data.createUser,
+        principalUser: data.principalUser,
+        userIds: data.attendIds
+    };
+    var userIds = users.makeArray(obj);
+    return userIds;
+};
+
+/**
  * 请求页面接口
  *
  * @param {deferred} dfd, deferred
@@ -222,7 +238,7 @@ page.addParallelTask(function (dfd) {
             }
             else {
                 if (!talkId) {
-                    DATA.userIds = result.data.attendIds;
+                    DATA.userIds = editCom.unique(me.dealData(result.data));
                 }
                 else {
                     editCom.getDataFromObj(DATA, result.data);

@@ -97,6 +97,26 @@ var pages = {
     }
 };
 
+var actions = {
+    // 完成任务 总结
+    summary: 'summarySubmit',
+
+    // 讨论总结
+    talkSummary: 'talkSummarySubmit',
+
+    // 撤销
+    revoke: 'revokeSubmit',
+
+    // 拒绝
+    refuse: 'refuseSubmit',
+
+    // 同意
+    agree: 'auditSubmit',
+
+    // 不同意
+    notAgree: 'auditSubmit'
+};
+
 /**
  * 根据传入的type不同选择不同的页面需要的上传数据
  *
@@ -346,6 +366,7 @@ page.deviceready = function () {
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
+                    me.log.store({actionTag: actions[me.pageType]});
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });

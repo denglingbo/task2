@@ -28,7 +28,7 @@ var DATA = {
         sentEmai: false,
         sentSms: false
     },
-    taskId: util.params('taskId') || 0,
+    taskId: util.params('taskId'),
     title: '',
     content: '',
     importanceLevel: 4,
@@ -64,7 +64,7 @@ page.deviceready = function () {
                 });
             });
         }
-    });
+    }, 'affair');
 };
 
 /**

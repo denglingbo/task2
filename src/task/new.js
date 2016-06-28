@@ -243,7 +243,7 @@ page.bindTopEvent = function () {
                 goBackParams: 'refresh'
             });
         });
-    });
+    }, 'task');
 };
 
 /**

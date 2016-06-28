@@ -177,10 +177,16 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
  * @param {Object} phoneInputContent, content 文本框对象
  * @param {Object} attach, 附件对象
  * @param {Function} submitFn, 验证成功的提交操作
+ * @param {string} pageType, 页面类型，埋点需要
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
+editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn, pageType) {
     var me = this;
     var validObj = me.valid;
+    var actionValue = {
+        task: 'newTaskSubmit',
+        talk: 'newTalkSubmit',
+        affair: 'newAffairSubmit'
+    };
 
     function goBack() {
         validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
@@ -197,6 +203,9 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             {
                 title: lang.submit,
                 click: function () {
+                    if (pageType && actionValue[pageType]) {
+                        me.log.store({actionTag: actionValue[pageType]});
+                    }
                     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
                     me.submitValid(submitFn);
                 }
