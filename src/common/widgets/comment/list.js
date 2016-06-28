@@ -7,7 +7,6 @@ var raw = require('common/widgets/raw');
 var AttachWrapper = require('common/middleware/attach/attachWrapper');
 var DataLoader = require('common/ui/dataLoader/dataLoader');
 var MidUI = require('common/middleware/ui');
-// var editCom = require('common/widgets/edit/editCommon');
 
 function dealData(data, page) {
 
@@ -311,7 +310,7 @@ $.extend(list.prototype, {
     },
 
     /**
-     * 销毁附
+     * 销毁附件
      *
      */
     destroyScroll: function () {

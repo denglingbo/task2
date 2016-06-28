@@ -17,11 +17,9 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
-
-// 判断是否是编辑页面
-var doing = util.params('talkId');
-
 var page = new Page();
+
+var talkId = util.params('talkId');
 
 var DATA = {
     id: 0,
@@ -48,17 +46,11 @@ page.enter = function () {
     me.bindEvents();
 };
 
-page.deviceready = function () {
+page.renderPersonInfo = function () {
     var me = this;
-    var lang = me.lang;
-
-    // 下面为获取人员信息的配置
-    if (DATA.userIds.length) {
-        var obj = {
-            partner: DATA.userIds
-        };
+    if (DATA.userIds && DATA.userIds.length) {
         var cid = ls.getData(config.const.PARAMS).cid;
-        var jids = users.makeArray(obj);
+        var jids = DATA.userIds;
         var dfdPub = users.getUserInfo(jids, cid);
 
         // 查询用户信息失败
@@ -75,7 +67,14 @@ page.deviceready = function () {
                 });
         }
     }
+};
 
+page.deviceready = function () {
+    var me = this;
+    var lang = me.lang;
+
+    // 下面为渲染人员信息
+    me.renderPersonInfo();
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachs);
@@ -87,8 +86,6 @@ page.deviceready = function () {
 
         var promise = editCom.submit(page, DATA, url);
         promise.done(function (result) {
-            // var talkId = result.data || DATA.id;
-            // 后端 result.data 返回的是对应的 id, 并非对象
             navigation.open(-1, {
                 goBackParams: 'refresh'
             });
@@ -99,9 +96,7 @@ page.deviceready = function () {
     $('#attends').click(function () {
         var val = {
             selectType: 2,
-            /* eslint-disable */
             contacts: editCom.transJid(DATA.userIds)
-            /* eslint-enable */
         };
         editCom.setChoosePersonLoc(selectKey, val);
 
@@ -112,9 +107,9 @@ page.deviceready = function () {
                 if (!data) {
                     return;
                 }
-                DATA.inheritance = false;
                 data = JSON.parse(data);
                 var contacts = data.contacts;
+                DATA.inheritance = false;
                 DATA.userIds = [];
                 contacts.forEach(function (value, index) {
                     var uid = users.takeJid(value.jid);
@@ -135,9 +130,7 @@ page.deviceready = function () {
  * 绑定事件
  *
  */
-page.bindEvents = function () {
-    editCom.bindGetFocus();
-};
+page.bindEvents = function () {};
 
 /**
  * 加载页面
@@ -192,8 +185,7 @@ page.initPlugin = function () {
  */
 page.failUser = function () {
     var me = this;
-    var lang = me.lang;
-    $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
+    $('#attends .value').html(me.lang.dataLoadFailPleaseReLoad);
 };
 
 /**
@@ -220,6 +212,29 @@ page.renderUser = function (dataArr) {
 };
 
 /**
+ * 获取请求配置
+ *
+ * @param {number} talkId, 讨论id
+ * @return {Object} 请求信息
+ */
+page.getRequestData = function (talkId) {
+    var requestData = {};
+    if (talkId) {
+        requestData.api = config.API.TALK_DETAIL_URL;
+        requestData.data = {
+            talkId: talkId
+        };
+    }
+    else {
+        requestData.api = config.API.TASK_DETAIL_URL;
+        requestData.data = {
+            taskId: util.params('taskId')
+        };
+    }
+    return requestData;
+};
+
+/**
  * 请求页面接口
  *
  * @param {deferred} dfd, deferred
@@ -227,17 +242,8 @@ page.renderUser = function (dataArr) {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-    var promise;
-    if (!doing) {
-        promise = me.get(config.API.TASK_DETAIL_URL, {
-            taskId: util.params('taskId')
-        });
-    }
-    else {
-        promise = me.get(config.API.TALK_DETAIL_URL, {
-            talkId: util.params('talkId')
-        });
-    }
+    var request = me.getRequestData(talkId);
+    var promise = me.get(request.api, request.data);
 
     promise
         .done(function (result) {
@@ -245,7 +251,7 @@ page.addParallelTask(function (dfd) {
                 dfd.reject(result);
             }
             else {
-                if (!doing) {
+                if (!talkId) {
                     DATA.userIds = result.data.attendIds;
                 }
                 else {

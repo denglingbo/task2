@@ -16,26 +16,21 @@ var util = require('common/util');
 var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
+var page = new Page();
 
 // 判断是否是编辑页面
 var taskId = util.params('taskId');
 
-var page = new Page();
-/* eslint-disable */
-// new: 默认值
-// edit: $.extend(DATA, page.data);
 var DATA = {
-    id : 0,
+    id: 0,
     title: '',
     content: '',
     endTime: 0,
     importanceLevel: 4,
     notice: 0,
     attachements: [],
-
     attendIds: [],
     principalUser: 0,
-
     message: {
         sentEim: true,
         sentEmai: false,
@@ -45,6 +40,117 @@ var DATA = {
 
 var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
+
+var choosePersonData = {
+    principal: function () {
+        return {
+            key: principalSelectKey,
+            itemKey: 'principalUser',
+            id: '#principal',
+            setOptions: function () {
+                var me = this;
+                editCom.setChoosePersonLoc(me.key, {
+                    selectType: 1,
+                    contacts: editCom.transJid(DATA[me.itemKey])
+                });
+            }
+        };
+    },
+    attends: function () {
+        return {
+            key: attendSelectKey,
+            itemKey: 'attendIds',
+            id: '#attends',
+            setOptions: function () {
+                var me = this;
+                editCom.setChoosePersonLoc(me.key, {
+                    selectType: 2,
+                    contacts: editCom.transJid(DATA[me.itemKey])
+                });
+            }
+        };
+    }
+};
+
+/**
+ * 选择人员
+ *
+ * @param {Object} chooseData, 选择人员
+ */
+page.choosePerson = function (chooseData) {
+    var me = this;
+    var oldVal = DATA[chooseData.itemKey];
+
+    navigation.open('/selector-selector.html?paramId=' + chooseData.key, {
+        title: me.lang.choosePerson,
+        returnParams: function (data) {
+            if (!data) {
+                return;
+            }
+
+            data = JSON.parse(data);
+            var contacts = data.contacts;
+
+            // 参与人
+            if (chooseData.itemKey === 'attendIds') {
+                // 使用选人组件传递的新的数据
+                DATA[chooseData.itemKey] = [];
+
+                contacts.forEach(function (value, index) {
+                    var uid = users.takeJid(value.jid);
+
+                    // 避免重复
+                    if ($.inArray(uid, DATA[chooseData.itemKey]) === -1) {
+                        DATA[chooseData.itemKey].push(uid);
+                    }
+                });
+            }
+            // 负责人
+            else {
+                DATA[chooseData.itemKey] = users.takeJid(contacts[0].jid);
+            }
+            // 对应的点击栏容器
+            $(chooseData.id + ' .value').text(editCom.getPersonsName(contacts));
+
+            editCom.personIsChange(oldVal, DATA[chooseData.itemKey]);
+        }
+    });
+};
+
+/**
+ * 渲染人员信息
+ *
+ * @param {number} taskId, 任务id
+ */
+page.renderPersonInfo = function (taskId) {
+    var me = this;
+    if (!taskId) {
+        return;
+    }
+
+    // 下面为获取人员信息的配置
+    var obj = {
+        principal: DATA.principalUser,
+        partner: DATA.attendIds
+    };
+    var cid = ls.getData(config.const.PARAMS).cid;
+    var jids = users.makeArray(obj);
+    var dfdPub = users.getUserInfo(jids, cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        me.userInfoFail = true;
+    }
+    else {
+        dfdPub
+            .done(function (pubData) {
+                me.renderUser(obj, pubData.contacts);
+            })
+            .fail(function () {
+                me.failUser();
+            });
+    }
+};
 
 page.enter = function () {
     var me = this;
@@ -56,169 +162,37 @@ page.enter = function () {
 page.deviceready = function () {
     var me = this;
     var lang = me.lang;
+    me.renderPersonInfo(taskId);
 
-    if (taskId) {
-        // 下面为获取人员信息的配置
-        var obj = {
-            principal: DATA['principalUser'],
-            partner: DATA['attendIds']
-        };
-        var cid = ls.getData(config.const.PARAMS).cid;
-        var jids = users.makeArray(obj);
-        var dfdPub = users.getUserInfo(jids, cid);
-
-        // 查询用户信息失败
-        if (dfdPub === null) {
-            me.userInfoFail = true;
-        }
-        else {
-            dfdPub
-                .done(function (pubData) {
-                    me.renderUser(obj, pubData.contacts);
-                })
-                .fail(function () {
-                    me.failUser();
-                });
-        }
-    }
     // 完成时间跳转页面
     $('#doneTime').on('click', function () {
-        var oldVal = DATA['endTime'];
+        var oldVal = DATA.endTime;
 
-        // CPNavigationBar.redirect(
-        //     '/task-doneTime.html?endTime=' + DATA['endTime'],
-        //     lang.doneTime,
-        //     false,
-        //     function (data) {
-        //         if (!data) {
-        //             return;
-        //         }
-        //         data = JSON.parse(data);
-        //         DATA['endTime'] = data.endTime;
-        //         $('#doneTime .value').text(
-        //             editCom.initDoneTime(DATA['endTime'])
-        //         );
-        //         editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
-        //     }
-        // );
-        navigation.open('/task-doneTime.html?endTime=' + DATA['endTime'], {
+        navigation.open('/task-doneTime.html?endTime=' + DATA.endTime, {
             title: lang.doneTime,
             returnParams: function (data) {
                 if (!data) {
                     return;
                 }
                 data = JSON.parse(data);
-                DATA['endTime'] = data.endTime;
+                DATA.endTime = data.endTime;
                 $('#doneTime .value').text(
-                    editCom.initDoneTime(DATA['endTime'])
+                    editCom.initDoneTime(DATA.endTime)
                 );
-                editCom.valid.isEdit = oldVal !== DATA['endTime'] ? true : editCom.valid.isEdit;
+                editCom.valid.isEdit = oldVal !== DATA.endTime ? true : editCom.valid.isEdit;
             }
         });
     });
 
-    function person(key, itemKey, id) {
-        var oldVal = DATA[itemKey];
-        // CPNavigationBar.redirect('/selector-selector.html?paramId=' + key,
-        //     lang.choosePerson,
-        //     false,
-        //     function (data) {
-        //         if (!data) {
-        //             return;
-        //         }
-
-        //         data = JSON.parse(data);
-        //         var contacts = data.contacts;
-
-        //         // if ($.isArray(DATA[itemKey])) {
-        //         // 参与人
-        //         if (itemKey === 'attendIds') {
-        //             // 使用选人组件传递的新的数据
-        //             DATA[itemKey] = [];
-
-        //             contacts.forEach(function (value, index) {
-        //                 var uid = users.takeJid(value.jid);
-
-        //                 // 避免重复
-        //                 if ($.inArray(uid, DATA[itemKey]) === -1) {
-        //                     DATA[itemKey].push(uid);
-        //                 }
-        //             });
-        //         }
-        //         // 负责人
-        //         else {
-        //             DATA[itemKey] = users.takeJid(contacts[0].jid);
-        //         }
-        //         // 对应的点击栏容器
-        //         $(id + ' .value').text(editCom.getPersonsName(contacts));
-
-        //         editCom.personIsChange(oldVal, DATA[itemKey]);
-        //     }
-        // );
-        navigation.open('/selector-selector.html?paramId=' + key, {
-            title: lang.choosePerson,
-            returnParams: function (data) {
-                if (!data) {
-                    return;
-                }
-
-                data = JSON.parse(data);
-                var contacts = data.contacts;
-
-                // if ($.isArray(DATA[itemKey])) {
-                // 参与人
-                if (itemKey === 'attendIds') {
-                    // 使用选人组件传递的新的数据
-                    DATA[itemKey] = [];
-
-                    contacts.forEach(function (value, index) {
-                        var uid = users.takeJid(value.jid);
-
-                        // 避免重复
-                        if ($.inArray(uid, DATA[itemKey]) === -1) {
-                            DATA[itemKey].push(uid);
-                        }
-                    });
-                }
-                // 负责人
-                else {
-                    DATA[itemKey] = users.takeJid(contacts[0].jid);
-                }
-                // 对应的点击栏容器
-                $(id + ' .value').text(editCom.getPersonsName(contacts));
-
-                editCom.personIsChange(oldVal, DATA[itemKey]);
-            }
-        });
-    }
+    // 选择人员
     $('#principal, #attends').on('click', function (e) {
-        var key = '';
-        var itemKey = '';
-        var id = '';
-        
-        if ($(this).attr('id') === 'principal') {
-            editCom.setChoosePersonLoc(principalSelectKey, {
-                selectType: 1,
-                contacts: editCom.transJid(DATA['principalUser'])
-            });
-
-            key = principalSelectKey;
-            itemKey = 'principalUser';
-            id = '#principal';
-        }
-        else {
-            editCom.setChoosePersonLoc(attendSelectKey, {
-                selectType: 2,
-                contacts: editCom.transJid(DATA['attendIds'])
-            });
-
-            key = attendSelectKey;
-            itemKey = 'attendIds';
-            id = '#attends';
-        }
-        person(key, itemKey, id);
+        var id = $(this).attr('id');
+        var chooseData = choosePersonData[id]();
+        chooseData.setOptions();
+        me.choosePerson(chooseData);
     });
 
+    // 请求附件
     me.ajaxAttach();
 };
 
@@ -226,10 +200,7 @@ page.deviceready = function () {
  * 绑定事件
  *
  */
-page.bindEvents = function () {
-    var me = this;
-    editCom.bindGetFocus();
-};
+page.bindEvents = function () {};
 
 /**
  * 加载页面
@@ -257,12 +228,12 @@ page.loadPage = function () {
                     {
                         id: 'doneTime',
                         title: lang.doneTime,
-                        value: editCom.initDoneTime(DATA['endTime'])
+                        value: editCom.initDoneTime(DATA.endTime)
                     },
                     {
                         id: 'urgencyBlock',
                         title: lang.urgentLevel,
-                        value: editCom.initImportValue(DATA['importanceLevel'])
+                        value: editCom.initImportValue(DATA.importanceLevel)
                     }
                 ]
             }
@@ -283,17 +254,12 @@ page.bindTopEvent = function () {
         var promise = editCom.submit(page, DATA, url);
 
         promise.done(function (result) {
-            // var taskId = result.data || DATA.id;
-            
-            // navigation.open('/task-detail.html?taskId=' + taskId, {
-            //     title: me.lang.taskDetail
-            // });
             navigation.open(-1, {
                 goBackParams: 'refresh'
             });
         });
     });
-}
+};
 
 /**
  * 加载附件
@@ -412,44 +378,10 @@ page.renderUser = function (originArr, dataArr) {
         partnerRaw = editCom.unique(partnerRaw);
         dataRaw.partnerRaw = partnerRaw.join('、');
     }
-    
+
     $('#principal .value').text(dataRaw.principal);
     $('#attends .value').text(dataRaw.partnerRaw);
 };
-
-/**
- * 请求页面接口
- *
- * @param {deferred} dfd, deferred
- *
- */
-/* eslint-disable */
-
-
-page.addParallelTask(function (dfd) {
-    var me = this;
-
-    if (!taskId) {
-        dfd.resolve();
-        return dfd;
-    }
-
-    var promise = me.get(config.API.TASK_DETAIL_URL, {
-        taskId: taskId
-    });
-
-    promise
-        .done(function (result) {
-            if (result.meta.code !== 200) {
-                dfd.reject(result);
-            }
-            else {
-                editCom.getDataFromObj(DATA, result.data);
-                dfd.resolve();
-            }
-        });
-    return dfd;
-});
 
 /**
  * 请求附件列表
@@ -480,7 +412,38 @@ page.ajaxAttach = function () {
         })
         .always(function () {
             me.loadAttach();
-        })
+        });
 };
+
+/**
+ * 请求页面接口
+ *
+ * @param {deferred} dfd, deferred
+ *
+ */
+page.addParallelTask(function (dfd) {
+    var me = this;
+
+    if (!taskId) {
+        dfd.resolve();
+        return dfd;
+    }
+
+    var promise = me.get(config.API.TASK_DETAIL_URL, {
+        taskId: taskId
+    });
+
+    promise
+        .done(function (result) {
+            if (result.meta.code !== 200) {
+                dfd.reject(result);
+            }
+            else {
+                editCom.getDataFromObj(DATA, result.data);
+                dfd.resolve();
+            }
+        });
+    return dfd;
+});
 
 page.start();

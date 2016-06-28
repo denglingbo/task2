@@ -353,7 +353,6 @@
 
 	  	// 获取前端支持的类型
 	  	CPAttachment.getAttachmentType(function(data){
-
 	    	supportType =  data.rel.supportType;
 	    	// 遍历用户提供的附件类型参数
 	    	for(var i = 0, len = typeOption.length; i < len; i++){
@@ -744,7 +743,7 @@
 		if(this.operateType == 'upload'){
 			// 为添加附件按钮绑定函数
 			$(this.addBtn).on('tap', function(e){
-				e.stopPropagation();
+				e.stopPropagation();console.log(that);
 				if(getAttachesCount(that) < that.attachesCount){
 					getAttachmentType(that.supportType, that);
 				}else{
