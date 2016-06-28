@@ -14,7 +14,7 @@ var Page = require('common/page');
 var users = require('common/middleware/users/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
-var ls = require('common/localstorage');
+// var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 var page = new Page();
@@ -47,31 +47,48 @@ page.enter = function () {
 };
 
 page.renderPersonInfo = function () {
-    var me = this;
     if (DATA.userIds && DATA.userIds.length) {
-        var cid = ls.getData(config.const.PARAMS).cid;
-        var jids = DATA.userIds;
-        var dfdPub = users.getUserInfo(jids, cid);
-
-        // 查询用户信息失败
-        if (dfdPub === null) {
-            me.userInfoFail = true;
-        }
-        else {
-            dfdPub
-                .done(function (pubData) {
-                    me.renderUser(pubData.contacts);
-                })
-                .fail(function () {
-                    me.failUser();
-                });
-        }
+        var obj = {
+            partner: DATA.userIds
+        };
+        editCom.renderPerson(obj);
     }
+};
+
+/**
+ * 选择人员
+ *
+ * @param {Object} chooseData, 选择人员配置
+ */
+page.choosePerson = function (chooseData) {
+    var me = this;
+    var oldVal = DATA[chooseData.itemKey];
+    navigation.open('/selector-selector.html?paramId=' + chooseData.key, {
+        title: me.lang.choosePerson,
+        returnParams: function (data) {
+            if (!data) {
+                return;
+            }
+            data = JSON.parse(data);
+            var contacts = data.contacts;
+            DATA.inheritance = false;
+            DATA[chooseData.itemKey] = [];
+            contacts.forEach(function (value, index) {
+                var uid = users.takeJid(value.jid);
+
+                // 避免重复
+                if ($.inArray(uid, DATA[chooseData.itemKey]) === -1) {
+                    DATA[chooseData.itemKey].push(uid);
+                }
+            });
+            $(chooseData.id + ' .value').text(editCom.getPersonsName(contacts));
+            editCom.personIsChange(oldVal, DATA[chooseData.itemKey]);
+        }
+    });
 };
 
 page.deviceready = function () {
     var me = this;
-    var lang = me.lang;
 
     // 下面为渲染人员信息
     me.renderPersonInfo();
@@ -100,29 +117,14 @@ page.deviceready = function () {
         };
         editCom.setChoosePersonLoc(selectKey, val);
 
-        var oldVal = DATA.userIds;
-        navigation.open('/selector-selector.html?paramId=' + selectKey, {
-            title: lang.choosePerson,
-            returnParams: function (data) {
-                if (!data) {
-                    return;
-                }
-                data = JSON.parse(data);
-                var contacts = data.contacts;
-                DATA.inheritance = false;
-                DATA.userIds = [];
-                contacts.forEach(function (value, index) {
-                    var uid = users.takeJid(value.jid);
+        var options = {
+            name: 'attends',
+            key: selectKey,
+            itemKey: 'userIds',
+            id: '#attends'
+        };
 
-                    // 避免重复
-                    if ($.inArray(uid, DATA.userIds) === -1) {
-                        DATA.userIds.push(uid);
-                    }
-                });
-                $('#attends .value').text(editCom.getPersonsName(contacts));
-                editCom.personIsChange(oldVal, DATA.userIds);
-            }
-        });
+        me.choosePerson(options);
     });
 };
 
@@ -177,38 +179,6 @@ page.initPlugin = function () {
         'limit': 5000,
         'delete': true
     });
-};
-
-/**
- * 成员获取失败
- *
- */
-page.failUser = function () {
-    var me = this;
-    $('#attends .value').html(me.lang.dataLoadFailPleaseReLoad);
-};
-
-/**
- * 渲染成员数据
- *
- * @param {Array} dataArr, 匹配到的数据
- *
- */
-page.renderUser = function (dataArr) {
-
-    var dataRaw = {};
-
-    // 成员数据
-    if (dataArr.length) {
-        var partnerRaw = [];
-        dataArr.forEach(function (item) {
-            partnerRaw.push(item.name);
-        });
-
-        dataRaw.partnerRaw = partnerRaw.join('、');
-    }
-
-    $('#attends .value').text(dataRaw.partnerRaw);
 };
 
 /**

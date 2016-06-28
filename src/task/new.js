@@ -13,7 +13,7 @@ var Page = require('common/page');
 var users = require('common/middleware/users/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
-var ls = require('common/localstorage');
+// var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 var page = new Page();
@@ -44,6 +44,7 @@ var attendSelectKey = 'taskAttandSelectKey';
 var choosePersonData = {
     principal: function () {
         return {
+            name: 'principal',
             key: principalSelectKey,
             itemKey: 'principalUser',
             id: '#principal',
@@ -58,6 +59,7 @@ var choosePersonData = {
     },
     attends: function () {
         return {
+            name: 'attends',
             key: attendSelectKey,
             itemKey: 'attendIds',
             id: '#attends',
@@ -75,7 +77,7 @@ var choosePersonData = {
 /**
  * 选择人员
  *
- * @param {Object} chooseData, 选择人员
+ * @param {Object} chooseData, 选择人员配置
  */
 page.choosePerson = function (chooseData) {
     var me = this;
@@ -92,7 +94,7 @@ page.choosePerson = function (chooseData) {
             var contacts = data.contacts;
 
             // 参与人
-            if (chooseData.itemKey === 'attendIds') {
+            if (chooseData.name === 'attends') {
                 // 使用选人组件传递的新的数据
                 DATA[chooseData.itemKey] = [];
 
@@ -123,7 +125,6 @@ page.choosePerson = function (chooseData) {
  * @param {number} taskId, 任务id
  */
 page.renderPersonInfo = function (taskId) {
-    var me = this;
     if (!taskId) {
         return;
     }
@@ -133,23 +134,7 @@ page.renderPersonInfo = function (taskId) {
         principal: DATA.principalUser,
         partner: DATA.attendIds
     };
-    var cid = ls.getData(config.const.PARAMS).cid;
-    var jids = users.makeArray(obj);
-    var dfdPub = users.getUserInfo(jids, cid);
-
-    // 查询用户信息失败
-    if (dfdPub === null) {
-        me.userInfoFail = true;
-    }
-    else {
-        dfdPub
-            .done(function (pubData) {
-                me.renderUser(obj, pubData.contacts);
-            })
-            .fail(function () {
-                me.failUser();
-            });
-    }
+    editCom.renderPerson(obj);
 };
 
 page.enter = function () {
@@ -294,93 +279,6 @@ page.initPlugin = function () {
         'limit': 5000,
         'delete': true
     });
-};
-
-// 来自于deo, 获取人员信息
-/**
- * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
- *
- * @param {Object} srcObject, 源数据对象
- * @param {Object} itemObject, 子对象
- * @param {Object} appendObject, 匹配到某对象上
- *
- */
-page.findOwner = function (srcObject, itemObject, appendObject) {
-
-    if (itemObject && itemObject.jid) {
-
-        var id = parseInt(users.takeJid(itemObject.jid), 10);
-
-        for (var key in srcObject) {
-            if (srcObject.hasOwnProperty(key)) {
-
-                var objIds = srcObject[key];
-
-                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
-
-                    var appender = appendObject[key];
-                    if (!$.isArray(appender)) {
-                        appendObject[key] = [];
-                    }
-
-                    itemObject && appendObject[key].push(itemObject);
-                }
-                // 非数组直接判断是否相等
-                else if (objIds === id) {
-                    appendObject[key] = itemObject;
-                }
-
-            }
-        }
-    }
-};
-
-/**
- * 成员获取失败
- *
- */
-page.failUser = function () {
-    var me = this;
-    $('#attends .value').html(me.lang.dataLoadFailPleaseReLoad);
-};
-
-/**
- * 渲染成员数据
- *
- * @param {Array} originArr, 原始数组数据 jids，未merge 过的数组
- * @param {Array} dataArr, 匹配到的数据
- *
- */
-page.renderUser = function (originArr, dataArr) {
-    var me = this;
-    var data = {
-        principal: null,
-        partner: null
-    };
-
-    dataArr.forEach(function (item) {
-        me.findOwner(originArr, item, data);
-    });
-
-    var dataRaw = {};
-
-    // 负责人数据
-    if (data.principal && data.principal.name) {
-        dataRaw.principal = data.principal.name;
-    }
-
-    // 成员数据
-    if (data.partner) {
-        var partnerRaw = [];
-        data.partner.forEach(function (item) {
-            partnerRaw.push(item.name);
-        });
-        partnerRaw = editCom.unique(partnerRaw);
-        dataRaw.partnerRaw = partnerRaw.join('、');
-    }
-
-    $('#principal .value').text(dataRaw.principal);
-    $('#attends .value').text(dataRaw.partnerRaw);
 };
 
 /**

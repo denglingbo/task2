@@ -592,4 +592,127 @@ editCom.unique = function (arr) {
     return newArr;
 };
 
+/**
+ * 人员渲染
+ *
+ * @param {Object} obj, 渲染人员的数据
+ */
+editCom.renderPerson = function (obj) {
+    var me = this;
+    obj = obj || {};
+
+    // 下面为获取人员信息的配置
+    var cid = localStorage.getData(config.const.PARAMS).cid;
+    var jids = users.makeArray(obj);
+    if (!jids.length) {
+        return;
+    }
+
+    var dfdPub = users.getUserInfo(jids, cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        me.userInfoFail = true;
+    }
+    else {
+        dfdPub
+            .done(function (pubData) {
+                me.renderUser(obj, pubData.contacts);
+            })
+            .fail(function () {
+                me.failUser();
+            });
+    }
+}
+
+// 来自于deo, 获取人员信息
+/**
+ * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
+ *
+ * @param {Object} srcObject, 源数据对象
+ * @param {Object} itemObject, 子对象
+ * @param {Object} appendObject, 匹配到某对象上
+ *
+ */
+editCom.findOwner = function (srcObject, itemObject, appendObject) {
+
+    if (itemObject && itemObject.jid) {
+
+        var id = parseInt(users.takeJid(itemObject.jid), 10);
+
+        for (var key in srcObject) {
+            if (srcObject.hasOwnProperty(key)) {
+
+                var objIds = srcObject[key];
+
+                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+
+                    var appender = appendObject[key];
+                    if (!$.isArray(appender)) {
+                        appendObject[key] = [];
+                    }
+
+                    itemObject && appendObject[key].push(itemObject);
+                }
+                // 非数组直接判断是否相等
+                else if (objIds === id) {
+                    appendObject[key] = itemObject;
+                }
+
+            }
+        }
+    }
+};
+
+/**
+ * 成员获取失败
+ *
+ */
+editCom.failUser = function () {
+    var me = this;
+    $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
+};
+
+/**
+ * 渲染成员数据
+ *
+ * @param {Array} originArr, 原始数组数据 jids，未merge 过的数组
+ * @param {Array} dataArr, 匹配到的数据
+ *
+ */
+editCom.renderUser = function (originArr, dataArr) {
+    var me = this;
+    var data = {
+        principal: null,
+        partner: null
+    };
+
+    dataArr.forEach(function (item) {
+        me.findOwner(originArr, item, data);
+    });
+
+    var dataRaw = {};
+
+    // 负责人数据
+    if (data.principal && data.principal.name) {
+        dataRaw.principal = data.principal.name;
+    }
+
+    // 成员数据
+    if (data.partner) {
+        var partnerRaw = [];
+        data.partner.forEach(function (item) {
+            partnerRaw.push(item.name);
+        });
+        partnerRaw = me.unique(partnerRaw);
+        dataRaw.partnerRaw = partnerRaw.join('、');
+    }
+    if (dataRaw.principal) {
+        $('#principal .value').text(dataRaw.principal);
+    }
+    if (dataRaw.partnerRaw) {
+        $('#attends .value').text(dataRaw.partnerRaw);
+    }
+};
+
 module.exports = editCom;
