@@ -167,6 +167,10 @@ editCom.validAlert = function (alertSentence) {
 editCom.submitAlert = function (isOk) {
     var alertSentence = [lang.putFailed, lang.putCompleted];
     var me = this;
+    if (window.isAjaxErrorAlert) {
+        me.clearAlert();
+        return;
+    }
     var $alertDom = $('#alert-submit-after');
 
     this.clearAlert();

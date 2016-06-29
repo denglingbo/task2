@@ -171,6 +171,12 @@ $.extend(list.prototype, {
         return this.$main.find('dd').not('.list-null').length;
     },
 
+    scrollCommentsTop: function () {
+        var $main = $('.comments-outter');
+        var top = $main[0].offsetTop;
+        $(window).scrollTop(top);
+    },
+
     bindEvents: function () {
         var me = this;
         var $main = $('#comments-main');
@@ -297,11 +303,15 @@ $.extend(list.prototype, {
                     me.page.virtualInput.reset();
                     $('#attachList ul').html('');
                     me.$listNull.addClass('hide');
+
                     me.destroyScroll();
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
                         addBtn: '#addAttach'
                     });
+
+                    // 滚动到comments顶部
+                    me.scrollCommentsTop();
                 }
                 else {
 

@@ -4,8 +4,8 @@
  * 新建任务页
  *
  */
-require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/css/mobiscroll-2.17.0.css');
+require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
