@@ -45,6 +45,7 @@ function Search(page, options) {
     if (!page) {
         return;
     }
+    this.timer = null;
     this.dom = {};
     this.page = page;
 
@@ -277,6 +278,7 @@ Search.prototype.loadList = function () {
     var me = this;
     var opts = me.opts;
     var key = me.dom.$input.val().trim();
+    clearTimeout(me.timer);
     if (key === '') {
         return;
     }
@@ -288,12 +290,10 @@ Search.prototype.loadList = function () {
         page: 1,
         number: 1000
     };
-
-    var promise = me.page.get(me.opts.url, data);
-
-    promise
-        .done(function (result) {
-            setTimeout(function () {
+    me.timer = setTimeout(function () {
+        var promise = me.page.get(me.opts.url, data);
+        promise
+            .done(function (result) {
                 if (result.meta.code === 200) {
                     me.data = result.data;
                     me.renderOutput(me.data);
@@ -301,16 +301,16 @@ Search.prototype.loadList = function () {
                 else {
                     me.renderNull();
                 }
-            }, 200);
-        })
-        .fail(function (result) {
-            me.renderNull();
-        })
-        .always(function () {
-            if (me.isNull()) {
-                me.isNullHandler();
-            }
-        });
+            })
+            .fail(function (result) {
+                me.renderNull();
+            })
+            .always(function () {
+                if (me.isNull()) {
+                    me.isNullHandler();
+                }
+            });
+    }, 200);
 };
 
 /**
