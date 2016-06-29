@@ -379,7 +379,7 @@
 .fixbar {
     @include fixbar(3);
     font-size: rem(16px);
-    position: fixed;
+    position: relative;
     z-index: 10;
 
     ul {
