@@ -33,12 +33,14 @@ editCom.aTag = {
     attachIsNull:true
 };
 
+// 埋点数据
 editCom.actions = {
     task: function () {
         var me = editCom;
         var taskId = util.params('taskId');
         var $content = $('#edit-content');
         var action = {};
+        var targetTag = {};
         if (taskId) {
             action.actionTag = 'editTaskSubmit';
             action.targetTag = {
@@ -47,7 +49,7 @@ editCom.actions = {
         }
         else {
             action.actionTag = 'newTaskSubmit';
-            var targetTag = {};
+            
             if ($content && $.trim($content.text())) {
                 targetTag.content = true;
             }
@@ -69,6 +71,7 @@ editCom.actions = {
         var talkId = util.params('id');
         var $content = $('#edit-content');
         var action = {};
+        var targetTag = {};
         if (talkId) {
             action.actionTag = 'editTalkSubmit';
             action.targetTag = {
@@ -77,12 +80,8 @@ editCom.actions = {
         }
         else {
             action.actionTag = 'newTalkSubmit';
-            var targetTag = {};
             if ($content && $.trim($content.text())) {
                 targetTag.content = true;
-            }
-            if (!me.aTag.attendsIsNull) {
-                targetTag.attends = true;
             }
             if (!me.aTag.attachIsNull) {
                 targetTag.attachs = true;
@@ -96,6 +95,7 @@ editCom.actions = {
         var affairId = util.params('id');
         var $content = $('#edit-content');
         var action = {};
+        var targetTag = {};
         if (affairId) {
             action.actionTag = 'editAffairSubmit';
             action.targetTag = {
@@ -104,7 +104,6 @@ editCom.actions = {
         }
         else {
             action.actionTag = 'newAffairSubmit';
-            var targetTag = {};
             if ($content && $.trim($content.text())) {
                 targetTag.content = true;
             }
@@ -118,27 +117,6 @@ editCom.actions = {
 }
 
 /**
- * 埋点验证
- *
- */
-editCom.validAction = function () {
-    var targetTag = {};
-    if ($.trim($('#edit-content').text())) {
-        targetTag.content = true;
-    }
-    if (!me.aTag.principalIsNull) {
-        targetTag.principal = true;
-    }
-    if (!me.aTag.attendsIsNull) {
-        targetTag.attends = true;
-    }
-    if (!me.aTag.attachIsNull) {
-        targetTag.attachs = true;
-    }
-    return targetTag;
-};
-
-/**
  * 验证不通过弹窗
  *
  * @param {Array|string} alertSentence, 需要弹窗提示的提示语
@@ -146,6 +124,10 @@ editCom.validAction = function () {
  */
 editCom.validAlert = function (alertSentence) {
     var me = this;
+    if (window.isAjaxErrorAlert) {
+        me.clearAlert();
+        return;
+    }
     var $alertDom = $('#alert-length-limit');
     if (typeof alertSentence === 'string') {
         var str = alertSentence;
