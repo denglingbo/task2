@@ -378,9 +378,8 @@
  */
 .fixbar {
     @include fixbar(3);
-
+    height: auto;
     font-size: rem(16px);
-
     position: relative;
     z-index: 10;
 

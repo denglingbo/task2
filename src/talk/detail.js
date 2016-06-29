@@ -132,14 +132,14 @@ page.bindEvents = function () {
 
         // 完成状态
         tickedCallback: function () {
-            me.log.store({actionTag: 'talkDone'});
+            me.log.store({actionTag: 'talkDone', targetTag: {talkId: util.params('id')}});
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
-            me.log.store({actionTag: 'talkRecover'});
+            me.log.store({actionTag: 'talkRecover', targetTag: {talkId: util.params('id')}});
             navigation.button('right', true);
             detailUtil.naviRight(me, data, 'talk');
             $comment && $comment.removeClass('hide');

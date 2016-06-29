@@ -24,7 +24,118 @@ editCom.valid = {
     isEdit: false,
     title: false,
     content: true,
-    isAttachesReady: true
+    isAttachesReady: true,
+};
+
+editCom.aTag = {
+    principalIsNull: true,
+    attendsIsNull: true,
+    attachIsNull:true
+};
+
+editCom.actions = {
+    task: function () {
+        var me = editCom;
+        var taskId = util.params('taskId');
+        var $content = $('#edit-content');
+        var action = {};
+        if (taskId) {
+            action.actionTag = 'editTaskSubmit';
+            action.targetTag = {
+                taskId: taskId
+            }
+        }
+        else {
+            action.actionTag = 'newTaskSubmit';
+            var targetTag = {};
+            if ($content && $.trim($content.text())) {
+                targetTag.content = true;
+            }
+            if (!me.aTag.principalIsNull) {
+                targetTag.principal = true;
+            }
+            if (!me.aTag.attendsIsNull) {
+                targetTag.attends = true;
+            }
+            if (!me.aTag.attachIsNull) {
+                targetTag.attachs = true;
+            }
+            action.targetTag = targetTag;
+        }
+        return action;
+    },
+    talk: function () {
+        var me = editCom;
+        var talkId = util.params('id');
+        var $content = $('#edit-content');
+        var action = {};
+        if (talkId) {
+            action.actionTag = 'editTalkSubmit';
+            action.targetTag = {
+                talkId: talkId
+            }
+        }
+        else {
+            action.actionTag = 'newTalkSubmit';
+            var targetTag = {};
+            if ($content && $.trim($content.text())) {
+                targetTag.content = true;
+            }
+            if (!me.aTag.attendsIsNull) {
+                targetTag.attends = true;
+            }
+            if (!me.aTag.attachIsNull) {
+                targetTag.attachs = true;
+            }
+            action.targetTag = targetTag;
+        }
+        return action;
+    },
+    affair: function () {
+        var me = editCom;
+        var affairId = util.params('id');
+        var $content = $('#edit-content');
+        var action = {};
+        if (affairId) {
+            action.actionTag = 'editAffairSubmit';
+            action.targetTag = {
+                affairId: affairId
+            }
+        }
+        else {
+            action.actionTag = 'newAffairSubmit';
+            var targetTag = {};
+            if ($content && $.trim($content.text())) {
+                targetTag.content = true;
+            }
+            if (!me.aTag.attachIsNull) {
+                targetTag.attachs = true;
+            }
+            action.targetTag = targetTag;
+        }
+        return action;
+    }
+}
+
+/**
+ * 埋点验证
+ *
+ */
+editCom.validAction = function () {
+    var targetTag = {};
+    if ($.trim($('#edit-content').text())) {
+        targetTag.content = true;
+    }
+    if (!me.aTag.principalIsNull) {
+        targetTag.principal = true;
+    }
+    if (!me.aTag.attendsIsNull) {
+        targetTag.attends = true;
+    }
+    if (!me.aTag.attachIsNull) {
+        targetTag.attachs = true;
+    }
+    return targetTag;
 };
 
 /**
@@ -177,10 +288,10 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
  * @param {Object} phoneInputContent, content 文本框对象
  * @param {Object} attach, 附件对象
  * @param {Function} submitFn, 验证成功的提交操作
- * @param {string} actionTag, 埋点需要
+ * @param {Object} pageType, 页面
  * @param {Object} page, 页面对象
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn, actionTag, page) {
+editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn, pageType, page) {
     var me = this;
     var validObj = me.valid;
 
@@ -199,10 +310,9 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             {
                 title: lang.submit,
                 click: function () {
-                    if (actionTag) {
-                        page.log.store({actionTag: actionTag});
-                    }
+
                     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
+                    page.log.store(me.actions[pageType]());
                     me.submitValid(submitFn);
                 }
             }
@@ -347,6 +457,10 @@ editCom.initEditAttach = function (data) {
         callback: function () {
             if (attachObj.getModifyAttaches().length > 0) {
                 me.valid.isEdit = true;
+                me.aTag.attachIsNull = false;
+            }
+            else {
+                me.aTag.attachIsNull = true;
             }
         }
     }, data);
@@ -379,16 +493,38 @@ editCom.initImportValue = function (level) {
  *
  * @param {Array|number} oldValue, 修改之前的数据
  * @param {Array|number} newValue, 修改之后的数据
+ * @param {string} key, 参与人或负责人
  */
-editCom.personIsChange = function (oldValue, newValue) {
-    var validObj = this.valid;
+editCom.personIsChange = function (oldValue, newValue, key) {
+    var me = this;
+    var validObj = me.valid;
     if ($.isArray(oldValue) && $.isArray(newValue)) {
         validObj.isEdit = this.compareArr(oldValue, newValue) ? true : validObj.isEdit;
     }
     else {
         validObj.isEdit = oldValue !== newValue ? true : validObj.isEdit;
     }
+    me.personIsNull(newValue, key);
 };
+
+/**
+ * 选择人员是否为空
+ *
+ * @param {Array|number} value, 修改之后的数据
+ * @param {string} key, 参与人或负责人
+ */
+editCom.personIsNull = function (value, key) {
+    var me = this;
+    var isNull = true;
+    if ($.isArray(value) && value.length) {
+        isNull = false;
+    }
+    else if ((typeof value === 'string') && value) {
+        isNull = false;
+    }
+    me.aTag.principalIsNull = key === 'principal' ? isNull : me.aTag.principalIsNull;
+    me.aTag.attendsIsNull = key === 'attends' ? isNull : me.aTag.attendsIsNull;
+}
 
 /**
  * 渲染页面

@@ -389,7 +389,7 @@ detail.naviRight = function (page, data, pageType, getAlert) {
             title: lang.cancelButton,
             click: function () {
                 if (pageType === 'task') {
-                    page.log.store({actionTag: 'taskRevoke'});
+                    page.log.store({actionTag: 'taskRevoke', targetTag: {taskId: util.params('taskId')}});
                 }
                 navigation.open('/form-submit.html?type=revoke&taskId=' + data.id, {
                     title: lang.cancelTitle,

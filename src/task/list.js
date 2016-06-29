@@ -146,7 +146,9 @@ page.bindEvents = function () {
     });
 
     $('.main').on('click', '.task-empty button', function () {
-        navigation.open('/task-new.html');
+        navigation.open('/task-new.html', {
+            title: me.lang.newTask
+        });
     });
 };
 
