@@ -514,6 +514,76 @@ Page.post = function (api, data, options) {
     return this.ajax(api, data, $.extend(options || {}, {type: 'POST'}));
 };
 
+// token 的监听计数器，为了避免在成功情况对 tokenRetryCount 的重置，同时重新获取的 token 却依旧失败造成重试死循环
+var tokenListenerCount = 0;
+// 当前重试次数
+var tokenRetryCount = 0;
+// 允许最大重试次数
+var tokenRetryMax = 2;
+// 重试中
+var tokenRetryProcess = false;
+
+/**
+ * token 失效重新尝试
+ *
+ * @param {number} status, 错误码
+ * @param {Object} options
+ *  options.onRetry 重试成功、重试失败
+ *  options.onReject 重试超限、非 401 不重试
+ */
+function tokenFailedRetry(status, options) {
+
+    // 如果正在重试，则先等待之前的完成
+    if (!options || tokenRetryProcess === true) {
+        return;
+    }
+
+    if (tokenRetryCount >= tokenRetryMax) {
+        options.onReject && options.onReject();
+        return;
+    }
+
+    if (tokenListenerCount >= tokenRetryMax) {
+        tokenListenerCount = 0;
+        options.onReject && options.onReject();
+        return;
+    }
+
+    if (status === 401) {
+
+        // 设置重试标记
+        tokenRetryProcess = true;
+
+        // 失败重试次数
+        tokenRetryCount++;
+        // token 次数监听
+        tokenListenerCount++;
+
+        /* token 失效重试，此处调用原生方法获取 */
+        /* eslint-disable */
+        if (CPWebView) {
+            CPWebView.uploadToken(
+                function () {
+                    tokenRetryProcess = false;
+                    tokenRetryCount = 0;
+                    options.onRetry && options.onRetry();
+                },
+                function () {
+                    tokenRetryProcess = false;
+                    options.onRetry && options.onRetry();
+                }
+            );
+        }
+        else {
+            options.onReject && options.onReject();
+        }
+        /* eslint-enable */
+    }
+    else {
+        options.onReject && options.onReject();
+    }
+}
+
 /**
  * Ajax 请求数据
  * 注意 此处在请求前添加了防一个请求重复提交的过滤
@@ -522,12 +592,12 @@ Page.post = function (api, data, options) {
  * @param {Object} data 请求数据
  * @param {Object} options 选项
  *      @param {string} options.url 请求的host
+ * @param {Derfered} retryDfd, 如果存在 token 获取失败重试，需要使用上一次的 dfd
  * @return {Deferred}
  */
-Page.ajax = function (api, data, options) {
-    // var me = this;
-    var dfd = new $.Deferred();
-    // var isNetwork = util.isNetwork();
+Page.ajax = function (api, data, options, retryDfd) {
+
+    var dfd = retryDfd || new $.Deferred();
 
     var opts = {
         type: 'POST',
@@ -535,23 +605,6 @@ Page.ajax = function (api, data, options) {
     };
 
     $.extend(opts, options);
-
-    // 暂时不用，isNetwork 中的判断是通过 cordova 的 Connecion
-    // 没有网络的状态
-    // 根据配置判断如何展示错误信息
-    // if (!isNetwork) {
-    //     var err = {
-    //         code: 1,
-    //         msg: 'Offline'
-    //     };
-
-    //     // if (/get/i.test(opts.type)) {
-    //     //     me.failed(err);
-    //     // }
-
-    //     dfd.reject(err);
-    //     return dfd;
-    // }
 
     // 获取请求配置
     var reqConfig = getRequestConfig(api, data, opts);
@@ -597,18 +650,20 @@ Page.ajax = function (api, data, options) {
 
         // 判断是否操作错误
         if (result && result.meta && result.meta.code !== 200) {
-            ajaxError.alert(result.meta.code, result.meta.message);
 
-            // Just debug test
-            // 模拟网络延迟
-            if (config.debug) {
-                setTimeout(function () {
-                    dfd.reject();
-                }, 500);
-            }
-            else {
-                dfd.reject();
-            }
+            // 进行 token 重新获取
+            tokenFailedRetry(result.meta.code, {
+                // 重试
+                onRetry: function () {
+                    Page.ajax(api, data, options, dfd);
+                },
+                // dfd.reject
+                onReject: function () {
+                    ajaxError.alert(result.meta.code, result.meta.message);
+                    dfd.reject(result);
+                }
+            });
+
         }
         else {
             // Just debug test
@@ -624,8 +679,20 @@ Page.ajax = function (api, data, options) {
         }
     };
 
-    ajaxSettings.error = function (err) {
-        dfd.reject(err);
+    ajaxSettings.error = function (xhr) {
+
+        tokenFailedRetry(xhr.status, {
+
+            // 重试成功、重试失败 重新发送请求
+            // 失败重试为 2 次
+            onRetry: function () {
+                Page.ajax(api, data, options, dfd);
+            },
+            // 非 401、重试次数超限 不进行重试，则直接 reject
+            onReject: function () {
+                dfd.reject(xhr);
+            }
+        });
     };
 
     // 移除该请求

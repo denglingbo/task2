@@ -5,8 +5,10 @@
  * 错误码配置
  */
 
-// var util = require('common/util');
 var lang = require('common/lang').getData();
+
+// 是否进行了 ajax 通用错误提示的弹窗
+window.isAjaxErrorAlert = false;
 
 // 获取错误配置
 var err = {};
@@ -22,6 +24,8 @@ if (lang && lang.error) {
 
 /**
  * 创建弹出框
+ *
+ * @return {Element}
  */
 var createAlert = function () {
 
@@ -37,7 +41,6 @@ var createAlert = function () {
 var $alert = createAlert();
 var $content = $alert.find('.ialert-inner');
 
-// var isApple = util.isApple();
 var delayId = null;
 var delay = 1200;
 
@@ -47,6 +50,9 @@ var closeAlert = function () {
 
     delayId = setTimeout(function () {
         $alert.addClass('hide');
+
+        // 添加标记
+        window.isAjaxErrorAlert = false;
     }, delay);
 };
 
@@ -57,14 +63,13 @@ module.exports = {
     },
 
     alert: function (code, msg) {
+        // 添加标记
+        window.isAjaxErrorAlert = true;
+
         msg = err[code] || msg;
 
         $content.html(msg);
         $alert.removeClass('hide');
-        
-        // if (isApple) {
-        //     $alert.addClass('ialert-show-animate');
-        // }
 
         closeAlert();
     }

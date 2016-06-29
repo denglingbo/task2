@@ -125,3 +125,64 @@ div[contenteditable], div[contenteditable] * {
 }
 
 @import "layout.scss";
+
+
+/**
+ * 公共错误弹框
+ */
+@keyframes hideAnimate {
+    from {
+        opacity: 1;
+        transform: translate3d(0%, 0px, 0px);
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(0%, -60px, 0px);
+    }
+}
+
+@keyframes showAnimate {
+    from {
+        opacity: 0;
+        transform: translate3d(0%, 60px, 0px);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0%, 0px, 0px);
+    }
+}
+
+$cubic: cubic-bezier(0.42, 0, 0.58, 1.0);
+
+.ialert-outter {
+    @extend .box-center;
+
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    &.ialert-show-animate {
+        animation: showAnimate 0.3s $cubic;
+        animation-fill-mode: forwards;
+    }
+
+    &.ialert-hide-animate {
+        animation: hideAnimate 0.3s $cubic;
+        animation-fill-mode: forwards;
+    }
+
+    .ialert-inner {
+        @extend .box-center;
+
+        min-width: 100px;
+        min-height: 40px;
+        padding: rem(20px);
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: rem(4px);
+        text-align: center;
+        color: $white;
+    }
+}

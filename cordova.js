@@ -17,6 +17,17 @@ setTimeout(function () {
 
 
 
+var CPWebView = {
+    uploadToken: function (onSuccess, onFailed) {
+        if (1 === 1) {
+            onSuccess();
+        }
+        else {
+            onFailed();
+        }
+    }
+};
+
 var CPNavigationBar = {
     redirect: function (url, data) {
         window.location.href = url;

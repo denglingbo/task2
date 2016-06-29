@@ -390,6 +390,8 @@ page.deviceready = function () {
             click: submit
         }
     ]);
+
+    navigation.buttonAutoEnable();
 };
 
 page.start();
