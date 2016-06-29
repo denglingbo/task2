@@ -140,9 +140,7 @@ $search-key-color: #e51717;
             .no-output {
                 height: 100%;
                 width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                text-align: center;
                 padding-top: rem(133px);
                 color: #5c6166;
                 font-size: rem(16px);

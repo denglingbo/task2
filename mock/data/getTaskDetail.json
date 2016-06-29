@@ -5,8 +5,8 @@
     },
     "data": {
         "rights": {
-            "addEventRight": false,
-            "addTalkRight": false,
+            "addEventRight": true,
+            "addTalkRight": true,
             "applyRight": false,
             "assignRight": false,
             "auditRight": false,

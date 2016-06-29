@@ -42,7 +42,7 @@ module.exports = {
     confirm: '确认',
     noMatchResults: '暂无匹配结果',
     commentNotFound: '暂无评论',
-    noTask: '您还没有创建过任务',
+    noTask: '当前没有未完成的任务，快来创建个任务吧',
     createTask: '创建任务',
     netErr: '网络出现故障',
     tapPageReLoad: '点击屏幕重新加载',

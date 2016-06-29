@@ -28,7 +28,7 @@ var valid = {
 
 // 提交的数据
 var REQUEST_DATA = {
-    taskId: util.params('taskId'),
+    taskId: util.params('taskId') || 0,
     message: {
         sentEmai: false,
         sentEim: true,
@@ -95,6 +95,26 @@ var pages = {
             holder: lang.notAgreeReasonPlaceholder
         }];
     }
+};
+
+var actions = {
+    // 完成任务 总结
+    summary: 'summarySubmit',
+
+    // 讨论总结
+    talkSummary: 'talkSummarySubmit',
+
+    // 撤销
+    revoke: 'revokeSubmit',
+
+    // 拒绝
+    refuse: 'refuseSubmit',
+
+    // 同意
+    agree: 'auditSubmit',
+
+    // 不同意
+    notAgree: 'auditSubmit'
 };
 
 /**
@@ -249,7 +269,12 @@ page.enter = function () {
                 if (data && data.summaryAttachs) {
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
-                        addBtn: '#addAttach'
+                        addBtn: '#addAttach',
+                        callback: function () {
+                            if (me.attach.getModifyAttaches().length > 0) {
+                                valid.isEdit = true;
+                            }
+                        }
                     }, data.summaryAttachs);
                 }
 
@@ -271,9 +296,6 @@ page.initInput = function () {
 
     $('.phone-input').each(function (i) {
         var limits = 500;
-        if (!me.pageType && i) {
-            limits = 500;
-        }
 
         me.phoneInput.push(
             new PhoneInput({
@@ -344,6 +366,9 @@ page.deviceready = function () {
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
+                    if (actions[me.pageType]) {
+                        me.log.store({actionTag: actions[me.pageType]});
+                    }
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });
@@ -365,8 +390,6 @@ page.deviceready = function () {
             click: submit
         }
     ]);
-
-    // CPNavigationBar.setGoBackHandler(goBack,true);
 };
 
 page.start();

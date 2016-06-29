@@ -291,6 +291,16 @@
                         right: rem(15px);
                         color: $blue;
                     }
+
+                    .componentAttachLine {
+                        background-color: #f8f8f8;
+                        padding-right: 0;
+                        margin-right: rem(10px);
+                    }
+
+                    .componentAttachLeft {
+                        display: inline;
+                    }
                 }
             }
         }
@@ -371,7 +381,7 @@
 
     font-size: rem(16px);
 
-    position: fixed;
+    position: relative;
     z-index: 10;
 
     ul {

@@ -128,7 +128,7 @@ editCom.submitValid = function (submitFn) {
     var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
 
-    if (flag) {
+    if (flag && submitFn && $.isFunction(submitFn)) {
         submitFn();
     }
     else {
@@ -160,6 +160,9 @@ editCom.submitValid = function (submitFn) {
  * @param {Object} attach, 附件对象
  */
 editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
+    if (!phoneInputTitle || !phoneInputContent || !attach) {
+        return;
+    }
     var validObj = this.valid;
     validObj.isEdit = phoneInputTitle.isEdited() || phoneInputContent.isEdited() || validObj.isEdit;
     validObj.content = !!phoneInputContent.isAllowSubmit();
@@ -168,14 +171,16 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
 };
 
 /**
- * 虚拟手机端提交和取消按钮
+ * 提交和取消按钮
  *
  * @param {Object} phoneInputTitle, title 文本框对象
  * @param {Object} phoneInputContent, content 文本框对象
  * @param {Object} attach, 附件对象
  * @param {Function} submitFn, 验证成功的提交操作
+ * @param {string} actionTag, 埋点需要
+ * @param {Object} page, 页面对象
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
+editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn, actionTag, page) {
     var me = this;
     var validObj = me.valid;
 
@@ -194,6 +199,9 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             {
                 title: lang.submit,
                 click: function () {
+                    if (actionTag) {
+                        page.log.store({actionTag: actionTag});
+                    }
                     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
                     me.submitValid(submitFn);
                 }
@@ -214,8 +222,12 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
 editCom.submit = function (page, data, ajaxUrl) {
     var me = this;
     var dfd = new $.Deferred();
-    // var data = page.data;
+    if (!page || !ajaxUrl) {
+        dfd.reject();
+        return dfd;
+    }
 
+    data = data || {};
     data.title = $('#edit-title').text();
     data.content = $('#edit-content').html();
 
@@ -245,8 +257,12 @@ editCom.submit = function (page, data, ajaxUrl) {
  *
  * @param {string} selector, 选择器字符串
  * @param {Object} data, 页面数据
+ * @return {boolean} 参数错误
  */
 editCom.initImportanceLevel = function (selector, data) {
+    if (!selector || !data) {
+        return false;
+    }
     var infoData = data;
     var validObj = this.valid;
     var importData = [
@@ -296,8 +312,12 @@ editCom.initImportanceLevel = function (selector, data) {
  * @param {string} method, 初始化mobiscroll的种类
  * @param {string} selector, 选择器字符串
  * @param {Object} data, 初始化参数
+ * @return {boolean} 参数错误
  */
 editCom.initMobiscroll = function (method, selector, data) {
+    if (!method || !selector || !data) {
+        return false;
+    }
     // mobiscroll 公共参数
     var mobiOptions = {
         theme: 'android-holo-light',
@@ -320,6 +340,7 @@ editCom.initMobiscroll = function (method, selector, data) {
  */
 editCom.initEditAttach = function (data) {
     var me = this;
+    data = data || {};
     var attachObj = attachWrapper.initAttach({
         container: '#attachList',
         addBtn: '#addAttach',
@@ -350,7 +371,7 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    return raw.importanceMap[level];
+    return level && raw.importanceMap[level];
 };
 
 /**
@@ -376,9 +397,12 @@ editCom.personIsChange = function (oldValue, newValue) {
  * @param {Object} data, 渲染数据
  */
 editCom.loadPage = function (page, data) {
-    page.render('#edit-container', data, {
-        partials: {editMain: newTemplate, alertBox: alertTpl, attach: attachTpl}
-    });
+    data = data || {};
+    if (page) {
+        page.render('#edit-container', data, {
+            partials: {editMain: newTemplate, alertBox: alertTpl, attach: attachTpl}
+        });
+    }
 };
 
 /**
@@ -396,12 +420,10 @@ editCom.transJid = function (id) {
     }
 
     if (!$.isArray(id)) {
-        // return [{jid: users.makeJid(id, cid)}];
         jid = [users.makeJid(id, cid)];
     }
     else {
         id.forEach(function (itemId) {
-            // jid.push({jid: users.makeJid(itemId, cid)});
             jid.push(users.makeJid(itemId, cid));
         });
     }
@@ -430,9 +452,13 @@ editCom.getClientMsg = function () {
  *
  * @param {string} key, 存储的key
  * @param {Object} value, 存储的数据
+ * @return {boolean} 参数错误
  */
 editCom.setChoosePersonLoc = function (key, value) {
     var me = this;
+    if (!key || !value) {
+        return false;
+    }
     var selectValue = {
         clientMsg: me.getClientMsg(),
         selector: {
@@ -490,13 +516,12 @@ editCom.setChoosePersonLoc = function (key, value) {
  * @return {Array} clone的数组
  */
 editCom.arrClone = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var newArr = [];
-    arr.forEach(function (value) {
-        newArr.push(value);
-    });
+    if (arr && $.isArray(arr)) {
+        arr.forEach(function (value) {
+            newArr.push(value);
+        });
+    }
     return newArr;
 };
 
@@ -508,7 +533,7 @@ editCom.arrClone = function (arr) {
  * @return {boolean} 是否相等
  */
 editCom.compareArr = function (arr1, arr2) {
-    if (!$.isArray(arr1) || !$.isArray(arr2)) {
+    if (!arr1 || !arr2 || !$.isArray(arr1) || !$.isArray(arr2)) {
         return false;
     }
     var newArr1 = this.arrClone(arr1).sort();
@@ -527,7 +552,7 @@ editCom.compareArr = function (arr1, arr2) {
  *
  */
 editCom.getDataFromObj = function (target, source) {
-    if ((typeof target === 'object') && (typeof source === 'object')) {
+    if (target && (typeof target === 'object') && source && (typeof source === 'object')) {
         for (var key in target) {
             if (target.hasOwnProperty(key) && source.hasOwnProperty(key)) {
                 target[key] = source[key];
@@ -544,13 +569,12 @@ editCom.getDataFromObj = function (target, source) {
  *
  */
 editCom.getPersonsName = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var nameArr = [];
-    arr.forEach(function (item) {
-        nameArr.push(item.name);
-    });
+    if (arr && $.isArray(arr)) {
+        arr.forEach(function (item) {
+            nameArr.push(item.name);
+        });
+    }
     return nameArr.join('、');
 };
 
@@ -562,16 +586,138 @@ editCom.getPersonsName = function (arr) {
  *
  */
 editCom.unique = function (arr) {
-    if (!$.isArray(arr)) {
-        return [];
-    }
     var newArr = [];
-    for (var i = 0, len = arr.length; i < len; i++) {
-        if ($.inArray(arr[i], newArr) === -1) {
-            newArr.push(arr[i]);
+    if (arr && $.isArray(arr)) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if ($.inArray(arr[i], newArr) === -1) {
+                newArr.push(arr[i]);
+            }
         }
     }
     return newArr;
+};
+
+/**
+ * 人员渲染
+ *
+ * @param {Object} obj, 渲染人员的数据
+ */
+editCom.renderPerson = function (obj) {
+    var me = this;
+    obj = obj || {};
+
+    // 下面为获取人员信息的配置
+    var cid = localStorage.getData(config.const.PARAMS).cid;
+    var jids = users.makeArray(obj);
+    if (!jids.length) {
+        return;
+    }
+
+    var dfdPub = users.getUserInfo(jids, cid);
+
+    // 查询用户信息失败
+    if (dfdPub === null) {
+        me.userInfoFail = true;
+    }
+    else {
+        dfdPub
+            .done(function (pubData) {
+                me.renderUser(obj, pubData.contacts);
+            })
+            .fail(function () {
+                me.failUser();
+            });
+    }
+}
+
+// 来自于deo, 获取人员信息
+/**
+ * 查找某子对象是否属于源数据对象，同时把对应的数据附加到 appendObject 上
+ *
+ * @param {Object} srcObject, 源数据对象
+ * @param {Object} itemObject, 子对象
+ * @param {Object} appendObject, 匹配到某对象上
+ *
+ */
+editCom.findOwner = function (srcObject, itemObject, appendObject) {
+
+    if (itemObject && itemObject.jid) {
+
+        var id = parseInt(users.takeJid(itemObject.jid), 10);
+
+        for (var key in srcObject) {
+            if (srcObject.hasOwnProperty(key)) {
+
+                var objIds = srcObject[key];
+
+                if ($.isArray(objIds) && $.inArray(id, objIds) !== -1) {
+
+                    var appender = appendObject[key];
+                    if (!$.isArray(appender)) {
+                        appendObject[key] = [];
+                    }
+
+                    itemObject && appendObject[key].push(itemObject);
+                }
+                // 非数组直接判断是否相等
+                else if (objIds === id) {
+                    appendObject[key] = itemObject;
+                }
+
+            }
+        }
+    }
+};
+
+/**
+ * 成员获取失败
+ *
+ */
+editCom.failUser = function () {
+    var me = this;
+    $('#attends .value').html(lang.dataLoadFailPleaseReLoad);
+};
+
+/**
+ * 渲染成员数据
+ *
+ * @param {Array} originArr, 原始数组数据 jids，未merge 过的数组
+ * @param {Array} dataArr, 匹配到的数据
+ *
+ */
+editCom.renderUser = function (originArr, dataArr) {
+    var me = this;
+    var data = {
+        principal: null,
+        partner: null
+    };
+
+    dataArr.forEach(function (item) {
+        me.findOwner(originArr, item, data);
+    });
+
+    var dataRaw = {};
+
+    // 负责人数据
+    if (data.principal && data.principal.name) {
+        dataRaw.principal = data.principal.name;
+    }
+
+    // 成员数据
+    if (data.partner) {
+        var partnerRaw = [];
+        data.partner.forEach(function (item) {
+            partnerRaw.push(item.name);
+        });
+        partnerRaw = me.unique(partnerRaw);
+        dataRaw.partnerRaw = partnerRaw.join('、');
+    }
+    if (dataRaw.principal) {
+        $('#principal .value').text(dataRaw.principal);
+    }
+    if (dataRaw.partnerRaw) {
+        $('#attends .value').text(dataRaw.partnerRaw);
+    }
 };
 
 module.exports = editCom;
