@@ -97,7 +97,7 @@ var pages = {
     }
 };
 
-var actions = {
+var actionsTag = {
     // 完成任务 总结
     summary: 'summarySubmit',
 
@@ -207,7 +207,6 @@ page.enter = function () {
 
     // 判断是不是 master，完成总结的 master
     var isMaster = parseInt(util.params('master'), 2);
-
     // 获取当前页面配置
     var myPage = pages[me.pageType];
 
@@ -247,7 +246,7 @@ page.enter = function () {
                         arr[0].summary = data.summary;
                         arr[0].holder = '';
                     }
-                    if (isMaster && data.completeRemark && data.completeRemark.length > 0) {
+                    if (isMaster === 0 && data.completeRemark && data.completeRemark.length) {
                         arr[1].completeRemark = data.completeRemark;
                         arr[1].holder = '';
                     }
@@ -317,7 +316,6 @@ page.renderNewSubmit = function (myPage, isMaster) {
         list: myPage(isMaster)
     }, {
         partials: {
-            attach: attachTpl,
             alertBox: alertTpl
         }
     });
@@ -350,6 +348,53 @@ function cancelValidate() {
     navigation.open(-1);
 }
 
+ // summary: 'summarySubmit',
+
+ //    // 讨论总结
+ //    talkSummary: 'talkSummarySubmit',
+
+ //    // 撤销
+ //    revoke: 'revokeSubmit',
+
+ //    // 拒绝
+ //    refuse: 'refuseSubmit',
+
+ //    // 同意
+ //    agree: 'auditSubmit',
+
+ //    // 不同意
+ //    notAgree: 'auditSubmit'
+
+page.getTargetTag = function () {
+    var me = this;
+    var pageType = me.pageType;
+    var targetTag = {};
+    var $summary = $('[data-name=summary]');
+    var $remark = $('[data-name=applyReason]');
+    if (me.pageType === 'talkSummary') {
+        targetTag.talkId = util.params('talkId');
+    }
+    else {
+        targetTag.taskId = util.params('taskId');
+    }
+
+    if (pageType === 'summary') {
+        if ($summary && $summary.length && $.trim($summary.text())) {
+            targetTag.summary = true;
+        }
+        if ($remark && $remark.length && $.trim($remark.text())) {
+            targetTag.applyReason = true;
+        }
+        if (me.attach) {
+            targetTag.attaches = !!me.attach.getModifyAttaches().length;
+        }
+    }
+
+    if (pageType === 'talkSummary') {
+
+    }
+};
+
 page.deviceready = function () {
     var me = this;
 
@@ -359,23 +404,27 @@ page.deviceready = function () {
     }
 
     function submit() {
+        if (me.attach && !me.attach.isAttachesReady()) {
+            var $alertDom = $('#alert-length-limit');
+            $alertDom.text(me.lang.attachNoReady).removeClass('hide');
+            me.timer = setTimeout(function () {
+                $alertDom.addClass('hide');
+            },
+            3000);
+            return;
+        }
         var dataArg = me.getData(me.pageType);
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
         var targetTag = {};
+        if (actionsTag[me.pageType]) {
+            targetTag = me.getTargetTag();
+            me.log.store({actionTag: actionsTag[me.pageType], targetTag: targetTag});
+        }
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
-                    if (actions[me.pageType]) {
-                        if (me.pageType === 'talkSummary') {
-                            targetTag.talkId = util.params('talkId');
-                        }
-                        else {
-                            targetTag.taskId = util.params('taskId');
-                        }
-                        me.log.store({actionTag: actions[me.pageType], targetTag: targetTag});
-                    }
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });

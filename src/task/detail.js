@@ -26,6 +26,7 @@ var tmplDescribe = require('common/widgets/detail/describe');
 var requestPageNum = 10;
 var defaultAttachNum = 5;
 var taskId = util.params('taskId');
+var role = util.params('role');
 
 page.enter = function () {
     var me = this;
@@ -293,6 +294,7 @@ page.initAffairAndTalkList = function () {
             return page.get(config.API.AFFAIR_TALK_MORE_URL, {
                 taskId: page.data.id,
                 currPage: this.page,
+                role: role,
                 number: requestPageNum,
                 sortType: 0
             });
