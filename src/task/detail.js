@@ -125,6 +125,7 @@ page.deviceready = function () {
                 returnParams: function (prevData) {
                     if (prevData && prevData === 'refresh') {
                         me.refresh();
+                        me.setNavigation();
                     }
                 }
             });
@@ -135,30 +136,14 @@ page.deviceready = function () {
             MidUI.alert({
                 content: me.lang.alertReceivedContent,
                 onApply: function () {
+                    me.log.store({actionTag: 'taskReceived'});
                     asyncTaskWork(target, type);
                 }
             });
         }
     });
 
-    navigation.left({
-        click: function () {
-            navigation.open(-1, {
-                goBackParams: 'refresh'
-            });
-        }
-    });
-
-    detailUtil.naviRight(me, me.data, 'task', function () {
-        me.log.store({actionTag: 'taskRecover'});
-        // 弹出框
-        MidUI.alert({
-            content: me.lang.alertRecoveryContent,
-            onApply: function () {
-                asyncTaskWork(null, 'revoke');
-            }
-        });
-    });
+    me.setNavigation();
 
     // 下面为获取人员信息的配置
     var obj = {
@@ -199,6 +184,32 @@ page.deviceready = function () {
 };
 
 /**
+ * 设置框外按钮
+ */
+page.setNavigation = function () {
+    var me = this;
+
+    navigation.left({
+        click: function () {
+            navigation.open(-1, {
+                goBackParams: 'refresh'
+            });
+        }
+    });
+
+    detailUtil.naviRight(me, me.data, 'task', function () {
+        // 弹出框
+        MidUI.alert({
+            content: me.lang.alertRecoveryContent,
+            onApply: function () {
+                me.log.store({actionTag: 'taskRecover'});
+                asyncTaskWork(null, 'revoke');
+            }
+        });
+    });
+};
+
+/**
  * 异步处理任务相关事务
  *
  * @param {Element} target, 点击项
@@ -213,6 +224,7 @@ function asyncTaskWork(target, ajaxKey) {
         },
         done: function () {
             page.refresh();
+            page.setNavigation();
         }
     };
 

@@ -87,4 +87,9 @@
     {{#isTaskPage}}
     <div class="layout-section donetime-content"><em>{{ lang.doneTime }}:</em> {{ doneTimeRaw }}</div>
     {{/isTaskPage}}
+
+    {{#taskTagName}}
+    <!-- 事件类型 -->
+    <div class="layout-section affair-tagname-content"><em>{{ lang.affairType }}:</em> {{ taskTagName }}</div>
+    {{/taskTagName}}
 </div>

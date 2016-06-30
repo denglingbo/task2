@@ -69,18 +69,30 @@ page.render('#opened-main', data, {
 page.enter = function () {
     // var me = this;
 
+    // pageCache = {};
+
     this.initRemindNum();
 
     // new Sticky({target: '#search', top: 0});
     // ^.^ 这里的后面的逻辑太过于复杂，暂未提供后面功能的返回刷新功能
     if (this.isRefresh) {
+        var info = data.list[0];
+        var myCache = pageCache[info.name];
+        var $tab = $('.tab li[data-name="opened"]');
+
+        if (myCache && myCache.fn && myCache.fn.dataLoader && $tab) {
+            $tab.triggerHandler('click');
+            myCache.fn.dataLoader.fire('scrollReload', null, true);
+        }
         return;
     }
+
+    var viewHeight = $(window).height() - ($('#search').length ? $('#search').height() : 0);
 
     // 设置滚动的元素的高宽
     $('.slider-container').css({
         width: $(window).width(),
-        height: $(window).height() - ($('#search').length ? $('#search').height() : 0)
+        height: viewHeight
     });
 
     // 初始化顶部的 tab
@@ -253,7 +265,7 @@ page.initPageSlider = function () {
 
             switchPage(target, info);
 
-            new LoadPage(info);
+            target.loadPage = new LoadPage(info);
         }
     });
 };
@@ -286,15 +298,8 @@ function switchPage(target, info) {
 
     if (myPage) {
 
-        // myPage.fn && myPage.fn.pagination.show();
-
-        // 点击已有数据的未完成，要特殊处理下
+        // 点击已有数据的未完成按钮，要特殊处理下，tab 不进行切换
         if (myPage.name === 'opened' && filter) {
-
-            // var $second = $('.tab .selected');
-            // var selectedName = $second.data('name');
-            // pageCache[selectedName].fn.pagination.show();
-
             return;
         }
     }
@@ -343,6 +348,12 @@ function LoadPage(info) {
     var api = info.api || config.API.GET_TASK_LIST;
 
     var params = {};
+
+    var $items = $wrapper.find('.list-wrapper-content .list-item');
+
+    if ($items && $items.length > 0) {
+        $items.remove();
+    }
 
     pageCache[info.name].fn = new InitPage({
         isApple: page._shell.apple,

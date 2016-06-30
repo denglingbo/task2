@@ -142,7 +142,8 @@
         }
 
         &.importance-content,
-        &.donetime-content {
+        &.donetime-content,
+        &.affair-tagname-content {
             @include border-1px(top);
             padding-top: rem(12px);
 
@@ -381,7 +382,7 @@
 
     font-size: rem(16px);
 
-    position: relative;
+    position: fixed;
     z-index: 10;
 
     ul {

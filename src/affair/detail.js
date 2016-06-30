@@ -74,6 +74,15 @@ page.deviceready = function () {
         });
     }
 
+    me.setNavigation();
+};
+
+/**
+ * 设置框外按钮
+ */
+page.setNavigation = function () {
+    var me = this;
+
     navigation.left({
         click: function () {
             navigation.open(-1, {

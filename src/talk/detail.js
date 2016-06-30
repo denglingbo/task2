@@ -96,6 +96,16 @@ page.deviceready = function () {
             me.renderUser(null);
         });
 
+    me.setNavigation();
+
+    me.initCommentList();
+};
+
+/**
+ * 设置框外按钮
+ */
+page.setNavigation = function () {
+    var me = this;
 
     navigation.left({
         click: function () {
@@ -106,8 +116,6 @@ page.deviceready = function () {
     });
 
     detailUtil.naviRight(me, me.data, 'talk');
-
-    me.initCommentList();
 };
 
 page.bindEvents = function () {

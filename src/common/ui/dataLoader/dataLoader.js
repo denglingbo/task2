@@ -597,8 +597,6 @@ $.extend(DataLoader.prototype, {
         me.destroyScroll();
         var $scrollWrapper = $(me.opts.scrollWrapper);
 
-        // setTimeout(function () {
-
         // 初始化 scroll
         me.scroll = new IScroll($scrollWrapper[0], {
 
@@ -621,20 +619,25 @@ $.extend(DataLoader.prototype, {
         });
 
         me.bindScrollEvents();
-        // }, 0);
     },
 
     bindScrollEvents: function () {
         var me = this;
 
         // 监听滚动
-        me.scroll.on('scroll', function () {
+        var scrollFn = function () {
             var target = this;
             me.checkReload(target);
             me.checkMore(target);
 
             me.fire('scrolling', me, target);
-        });
+        };
+
+        // me.scroll.off('scrollStart');
+        // me.scroll.off('scrollEnd');
+        // $(document).off('touchend.dataLoader');
+
+        me.scroll.on('scroll', scrollFn);
 
         me.scroll.on('scrollStart', function () {
 
@@ -652,7 +655,7 @@ $.extend(DataLoader.prototype, {
         });
 
         // 监听一下 进入 重载界定 到 touchend 的鼠标 touch 时长
-        $(document).off('touchend').on('touchend', function () {
+        $(document).on('touchend.dataLoader', function () {
             me.reloadEndTime = +new Date();
 
             // 准备进行数据重载
@@ -746,9 +749,10 @@ $.extend(DataLoader.prototype, {
     destroyScroll: function () {
 
         if (this.scroll) {
-            this.scroll.destroy();
-            this.scroll = null;
+            this.scroll.destroy();   
         }
+        
+        this.scroll = null;
     }
 });
 

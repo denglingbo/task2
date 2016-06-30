@@ -139,6 +139,9 @@ function Init(options) {
     me.$wrapper = $(me.opts.wrapper);
     me.$main = me.$wrapper.find(me.opts.main);
 
+    me.$loader = me.$wrapper.find('.data-more');
+    me._loaderHeight = me.$loader.height();
+
     me._deviceTimer = null;
     me._deviceTimeout = null;
 
@@ -172,8 +175,8 @@ Init.prototype = {
             me.getMoreData();
         });
 
-        me.dataLoader.on('scrollReload', function () {
-            me.getReloadData();
+        me.dataLoader.on('scrollReload', function (event, loader, refresh) {
+            me.getReloadData(loader, refresh);
         });
 
         me.getFirst();
@@ -273,6 +276,11 @@ Init.prototype = {
         // 这里要先获取高度
         var objHeight = me.$main.height() + me.opts.offset;
 
+        if (me.$loader.hasClass('hide')) {
+            // 如果加载条被隐藏，这里要减去加载条的高度，同时 + 需要漏出的边距
+            objHeight = objHeight - me._loaderHeight + 15;
+        }
+
         // 保证页面的最小高度
         if (objHeight < height) {
             objHeight = height;
@@ -289,16 +297,19 @@ Init.prototype = {
     /**
      * 重新加载数据
      *
-     * @param {Function} callback, 回调
+     * @param {Function} loader, dataLoader
+     * @param {boolean} refresh, 是否直接刷新，不通过 unchanged 的判断
      */
-    getReloadData: function (callback) {
+    getReloadData: function (loader, refresh) {
         var me = this;
 
         me.dataLoader.requestReload()
             .done(function (data, unchanged) {
 
                 // 最新数据没有变化，不进行后面的 dom 操作
-                if (unchanged) {
+                // 如果不需要强制刷新，同时数据没有变化
+                // 重载页面之后 task/list.js 会直接调用 dataLoader.fire('scrollReload', null, true);
+                if (!refresh && unchanged) {
                     return;
                 }
 
@@ -309,14 +320,9 @@ Init.prototype = {
 
                 me.setBasic();
                 me.dataLoader.scroll.refresh();
-                me.reset();
             })
-            .fail(function () {
-                me.reset();
-            })
-            .always(function () {
-                callback && callback();
-            });
+            .fail(function () {})
+            .always(function () {});
     },
 
     /**
