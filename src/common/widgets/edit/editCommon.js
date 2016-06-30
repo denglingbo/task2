@@ -298,7 +298,9 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
                 click: function () {
 
                     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-                    page.log.store(me.actions[pageType]());
+                    if (pageType) {
+                        page.log.store(me.actions[pageType]());
+                    }
                     me.submitValid(submitFn);
                 }
             }

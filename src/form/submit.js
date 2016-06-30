@@ -97,7 +97,7 @@ var pages = {
     }
 };
 
-var actions = {
+var actionsTag = {
     // 完成任务 总结
     summary: 'summarySubmit',
 
@@ -350,6 +350,53 @@ function cancelValidate() {
     navigation.open(-1);
 }
 
+ // summary: 'summarySubmit',
+
+ //    // 讨论总结
+ //    talkSummary: 'talkSummarySubmit',
+
+ //    // 撤销
+ //    revoke: 'revokeSubmit',
+
+ //    // 拒绝
+ //    refuse: 'refuseSubmit',
+
+ //    // 同意
+ //    agree: 'auditSubmit',
+
+ //    // 不同意
+ //    notAgree: 'auditSubmit'
+
+page.getTargetTag = function () {
+    var me = this;
+    var pageType = me.pageType;
+    var targetTag = {};
+    var $summary = $('[data-name=summary]');
+    var $remark = $('[data-name=applyReason]');
+    if (me.pageType === 'talkSummary') {
+        targetTag.talkId = util.params('talkId');
+    }
+    else {
+        targetTag.taskId = util.params('taskId');
+    }
+
+    if (pageType === 'summary') {
+        if ($summary && $summary.length && $.trim($summary.text())) {
+            targetTag.summary = true;
+        }
+        if ($remark && $remark.length && $.trim($remark.text())) {
+            targetTag.applyReason = true;
+        }
+        if (me.attach) {
+            targetTag.attaches = !!me.attach.getModifyAttaches().length;
+        }
+    }
+
+    if (pageType === 'talkSummary') {
+
+    }
+};
+
 page.deviceready = function () {
     var me = this;
 
@@ -363,19 +410,14 @@ page.deviceready = function () {
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
         var targetTag = {};
+        if (actionsTag[me.pageType]) {
+            targetTag = me.getTargetTag();
+            me.log.store({actionTag: actionsTag[me.pageType], targetTag: targetTag});
+        }
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
-                    if (actions[me.pageType]) {
-                        if (me.pageType === 'talkSummary') {
-                            targetTag.talkId = util.params('talkId');
-                        }
-                        else {
-                            targetTag.taskId = util.params('taskId');
-                        }
-                        me.log.store({actionTag: actions[me.pageType], targetTag: targetTag});
-                    }
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });
