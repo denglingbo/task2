@@ -71,6 +71,9 @@ page.choosePerson = function (chooseData) {
             }
             data = JSON.parse(data);
             var contacts = data.contacts;
+            if (!contacts.length) {
+                return;
+            }
             DATA.inheritance = false;
             DATA[chooseData.itemKey] = [];
             contacts.forEach(function (value, index) {

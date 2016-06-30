@@ -86,13 +86,13 @@ page.choosePerson = function (chooseData) {
     navigation.open('/selector-selector.html?paramId=' + chooseData.key, {
         title: me.lang.choosePerson,
         returnParams: function (data) {
-            alert(data);
             if (!data) {
                 return;
             }
 
             data = JSON.parse(data);
             var contacts = data.contacts;
+            var jid = 0;
 
             // 参与人
             if (chooseData.name === 'attends') {
@@ -110,11 +110,13 @@ page.choosePerson = function (chooseData) {
             }
             // 负责人
             else {
-                DATA[chooseData.itemKey] = users.takeJid(contacts[0].jid);
+                if (taskId && !contacts.length) {
+                    return;
+                }
+                jid = contacts[0] ? contacts[0].jid : 0;
+                DATA[chooseData.itemKey] = users.takeJid(jid);
             }
-            // 对应的点击栏容器
             $(chooseData.id + ' .value').text(editCom.getPersonsName(contacts));
-
             editCom.personIsChange(oldVal, DATA[chooseData.itemKey], chooseData.name);
         }
     });
