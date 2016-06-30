@@ -49,15 +49,15 @@ virtualInput.prototype = {
             me.$placeholder.removeClass('hide');
             if (me.$send.data('attach')){
                 me.$send.removeClass('unable');
-                me.$send.data({notNull: true});
             }
             else {
                 me.$send.addClass('unable');
             }
+            me.$send.data({notNull: false});
         }
         else {
             me.$placeholder.addClass('hide');
-            me.$send.data({notNull: false});
+            me.$send.data({notNull: true});
         }
     },
 

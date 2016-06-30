@@ -222,31 +222,30 @@ $.extend(list.prototype, {
             });
         });
 
-        // $('#goalui-fixedinput').on('click', '.componentDeleteAttach', function () {
-        //     alert(me.attach.getModifyAttaches().length);
-        //     alert(!$send.data('notNull'));
-        //     if (!me.attach.getModifyAttaches().length && !$send.data('notNull')) {
-        //         $send.addClass('unable');
-        //     }
-        // })
-
         $send.off('click');
         $send.on('click', function () {
-            if ($(this).hasClass('unable')) {
-                return;
+            if (!$send.hasClass('unable')) {
+                me.addComment();
             }
-            me.addComment();
         });
 
         me.attach = AttachWrapper.initAttach({
             container: '#attachList',
             addBtn: '#addAttach',
             callback: function () {
-                if (me.attach.getModifyAttaches().length) {
+                var hasAttach = !!me.attach.getModifyAttaches().length;
+                var words = $send.data('notNull');
+                if (hasAttach) {
                     if (!$send.data('toLong')) {
                         $send.removeClass('unable');
                     }
                     $send.data({attach: true});
+                }
+                else {
+                    $send.data({attach: false});
+                }
+                if (!hasAttach && !words) {
+                    $send.addClass('unable');
                 }
             }
         });
@@ -358,11 +357,19 @@ $.extend(list.prototype, {
                         container: '#attachList',
                         addBtn: '#addAttach',
                         callback: function () {
-                            if (me.attach.getModifyAttaches().length) {
+                            var hasAttach = !!me.attach.getModifyAttaches().length;
+                            var words = $send.data('notNull');
+                            if (hasAttach) {
                                 if (!$send.data('toLong')) {
                                     $send.removeClass('unable');
                                 }
                                 $send.data({attach: true});
+                            }
+                            else {
+                                $send.data({attach: false});
+                            }
+                            if (!hasAttach && !words) {
+                                $send.addClass('unable');
                             }
                         }
                     });
