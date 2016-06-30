@@ -224,12 +224,20 @@ $.extend(list.prototype, {
 
         $send.off('click');
         $send.on('click', function () {
+            if ($(this).hasClass('unable')) {
+                return;
+            }
             me.addComment();
         });
 
         me.attach = AttachWrapper.initAttach({
             container: '#attachList',
-            addBtn: '#addAttach'
+            addBtn: '#addAttach',
+            callback: function () {
+                if (me.attach.getModifyAttaches().length) {
+                    $send.data({attach: true});
+                }
+            }
         });
     },
 
@@ -286,6 +294,7 @@ $.extend(list.prototype, {
         var $content = $('.editable');
         var text = $content.text();
         var $null = $('.list-null');
+        var $send = $('.send');
         var attachs = me.attach.getModifyAttaches();
         var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
@@ -326,16 +335,22 @@ $.extend(list.prototype, {
                     // 待优化
                     // 这里可以判断是否已经有了当前用户的信息
                     renderUser(me.$main, data.objList);
-
+                    $send.data({attach: false});
                     me.page.virtualInput.reset();
                     $('#attachList ul').remove();
                     me.$listNull.addClass('hide');
                     var p = $('#addAttach').parent();
                     $('#addAttach').off().remove();
                     p.prepend('<span class="button" id="addAttach"></span>');
+
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
-                        addBtn: '#addAttach'
+                        addBtn: '#addAttach',
+                        callback: function () {
+                            if (me.attach.getModifyAttaches().length) {
+                                $send.data({attach: true});
+                            }
+                        }
                     });
 
                     // 滚动到comments顶部

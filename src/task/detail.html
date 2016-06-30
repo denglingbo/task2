@@ -49,7 +49,7 @@
             <div class="data-more"></div>
         </div>
     </div>
-    
+    </script>
     <!-- 事件和讨论 -->
     <script id="affair-talk-tmpl" type="x-tmpl-mustache">
     {{#objList}}
@@ -58,7 +58,7 @@
         class="affair-talk-item {{#isDone}}item-done{{/isDone}} {{#num}}new-msg{{/num}}" 
         data-type="{{ pageType }}" 
         data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}&taskStatus={{ taskStatus }}" 
-        data-log='{"actionTag":"taskDetailEnter{{ pageType }}Detail", targetTag: {taskId: {{ taskId }}}}'
+        data-log='{"actionTag":"taskDetailEnter{{ pageType }}Detail", "targetTag": {"taskId": {{ taskId }}}}'
     >
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
@@ -175,7 +175,7 @@
             <li 
                 data-type="summary" 
                 data-page="/form-submit.html?type=summary&master={{ isMaster }}&taskId={{ taskId }}" 
-                data-log='{"actionTag":"taskDetailCompleteTask"}'
+                data-log='{"actionTag":"taskDetailCompleteTask", targetTag: {taskId: {{ taskId }}}}'
             >{{ lang.taskDone }}</li>
             {{/applyRight}}
         </ul>

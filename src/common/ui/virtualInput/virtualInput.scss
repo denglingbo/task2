@@ -80,17 +80,13 @@
                 width: 60px;
                 height: 30px;
                 border-radius: 4px;
-                background-color: #dcdcdc;
+                background-color: #29e;
                 color: #fff;
                 float: right;
                 margin-top: 10px;
                 text-align: center;
                 padding-left: 0;
                 line-height: 30px;
-
-                &.enabled {
-                    background-color: #29e;
-                }
             }
         }
     }
@@ -183,6 +179,7 @@
 
         .send.unable, .send.unable:active {
             color: #aaa;
+            background-color: #fcfcfc;
         }
     }
 }

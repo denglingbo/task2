@@ -36,16 +36,21 @@ virtualInput.prototype = {
         if (text.length > me.opts.maxNum) {
             var limitNum = me.opts.maxNum - text.length;
             me.$limit.html(limitNum).removeClass('hide');
-            me.$send.addClass('unable').removeClass('enabled');
+            me.$send.addClass('unable');
         }
         else {
             me.$limit.html('').addClass('hide');
-            me.$send.removeClass('unable').addClass('enabled');
+            me.$send.removeClass('unable');
         }
 
         if (!text.length) {
-            me.$send.addClass('unable').removeClass('enabled');
             me.$placeholder.removeClass('hide');
+            if (me.$send.data('attach')){
+                me.$send.removeClass('unable');
+            }
+            else {
+                me.$send.addClass('unable');
+            }
         }
         else {
             me.$placeholder.addClass('hide');
@@ -59,7 +64,7 @@ virtualInput.prototype = {
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
-        me.$send.removeClass('unable');
+        // me.$send.removeClass('unable');
         me.$wrap.blur();
     },
 

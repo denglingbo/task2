@@ -10,7 +10,6 @@ require('./searchEnter.scss');
 // var ls = require('common/localstorage');
 // var util = require('common/util');
 var navigation = require('common/middleware/navigation');
-var IScroll = require('dep/iscroll');
 
 /**
  * Search
@@ -105,43 +104,6 @@ Search.prototype.loadHtml = function () {
     {
         lang: opts.lang
     });
-};
-
-/**
- * 初始化滑动控件
- *
- */
-Search.prototype.initIscroll = function () {
-    var me = this;
-    var opts = me.opts;
-    me.destroyScroll();
-    // 初始化 scroll
-    me.scroll = new IScroll(opts.page, {
-        scrollX: false,
-        scrollY: true,
-        scrollbars: false,
-        click: true,
-
-        // 禁用监听鼠标和指针
-        disableMouse: true,
-        disablePointer: true,
-
-        mouseWheel: false,
-
-        // 快速触屏的势能缓冲开关
-        momentum: true
-    });
-};
-
-/**
- * 销毁Iscroll
- *
- */
-Search.prototype.destroyScroll = function () {
-    if (this.scroll) {
-        this.scroll.destroy();
-        this.scroll = null;
-    }
 };
 
 /**
@@ -323,8 +285,6 @@ Search.prototype.renderList = function (data) {
     });
 
     $ul.html(str);
-    $ul.css({height: data.objList.length * $ul.find('li').height()});
-    me.initIscroll();
 };
 
 /**
