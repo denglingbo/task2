@@ -233,6 +233,40 @@ page.loadPage = function () {
     editCom.loadPage(me, data);
 };
 
+page.getActionsData = function (errCode) {
+    var $content = $('#edit-content');
+    var action = {};
+    var targetTag = {};
+    if (taskId) {
+        action.actionTag = 'editTaskSubmit';
+        action.targetTag = {
+            taskId: taskId
+        };
+    }
+    else {
+        action.actionTag = 'newTaskSubmit';
+
+        if ($content && $content.length && $.trim($content.text())) {
+            targetTag.content = true;
+        }
+        if (!editCom.aTag.principalIsNull) {
+            targetTag.principal = true;
+        }
+        if (!editCom.aTag.attendsIsNull) {
+            targetTag.attends = true;
+        }
+        if (!editCom.aTag.attachIsNull) {
+            targetTag.attachs = true;
+        }
+        action.targetTag = targetTag;
+    }
+
+    if (errCode) {
+        action.targetTag.err = errCode;
+    }
+    return action;
+};
+
 page.bindTopEvent = function () {
     var me = this;
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
@@ -245,8 +279,13 @@ page.bindTopEvent = function () {
             navigation.open(-1, {
                 goBackParams: 'refresh'
             });
+        })
+        .always(function (result) {
+            var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+            var action = me.getActionsData(errCode);
+            me.log.store(action);
         });
-    }, 'task', me);
+    });
 };
 
 /**

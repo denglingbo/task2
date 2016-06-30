@@ -101,6 +101,33 @@ var renderUser = function ($layout, objList) {
 };
 
 /**
+ * 评论发送 log 记录
+ *
+ * @param {Object} page, new Page()
+ * @param {string} name, 页面名称
+ * @param {number} id, id
+ * @param {number|null} error, 错误码，可为空
+ */
+function sendCommentLog(page, name, id, error) {
+    if (!page || !name || !id) {
+        return;
+    }
+
+    var data = {
+        actionTag: name + 'CommentSend',
+        targetTag: {
+            taskId: id
+        }
+    };
+
+    if (error && data.targetTag) {
+        data.targetTag.error = error;
+    }
+
+    page.log.store(data);
+};
+
+/**
  * 初始化 评论数据
  *
  * @param {Page} page, new Page
@@ -113,7 +140,8 @@ var list = function (page, options) {
         dataKey: 'objList',
         wrapper: '#comments-main',
         API: {},
-        data: null
+        data: null,
+        name: ''
     };
 
     $.extend(me.opts, options);
@@ -281,7 +309,6 @@ $.extend(list.prototype, {
                 }
                 // 添加成功
                 if (result.meta.code === 200) {
-                    success = true;
                     // 共用 ./item.tpl
                     var data = {
                         objList: [result.data]
@@ -301,10 +328,11 @@ $.extend(list.prototype, {
                     renderUser(me.$main, data.objList);
 
                     me.page.virtualInput.reset();
-                    $('#attachList ul').html('');
+                    $('#attachList ul').remove();
                     me.$listNull.addClass('hide');
-
-                    me.destroyScroll();
+                    var p = $('#addAttach').parent();
+                    $('#addAttach').off().remove();
+                    p.prepend('<span class="button" id="addAttach"></span>');
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
                         addBtn: '#addAttach'
@@ -319,18 +347,11 @@ $.extend(list.prototype, {
             })
             .fail(function (err) {
                 
-            });
-    },
-
-    /**
-     * 销毁附件
-     *
-     */
-    destroyScroll: function () {
-        var me = this;
-        me.attach = null;
-        $('#addAttach').off();
-        $('#goalui-fixedinput .componentAttaches').off();
+            })
+            .always(function (result) {
+                var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+                sendCommentLog(me.page, me.opts.name, me.data.id, errCode);
+            })
     }
 });
 

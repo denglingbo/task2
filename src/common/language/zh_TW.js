@@ -43,6 +43,7 @@ module.exports = {
     noMatchResults: '暫無匹配結果',
     commentNotFound: '暫無評論',
     noTask: '當前狀態下沒有任務，快來創建吧',
+    noTaskNotCreate: '當前狀態暫無任務',
     createTask: '創建任務',
     netErr: '網絡出現故障',
     tapPageReLoad: '點擊頁面重新加載',

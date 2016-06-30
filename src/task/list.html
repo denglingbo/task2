@@ -33,11 +33,11 @@
                     <div class="tab page-loader">
                         <ul>
                             <li class="selected" data-name="opened" data-lang="all">全部</li>
-                            <li data-name="doing" data-lang="doingText" data-log='{"actionTag":"taskListDoing"}'>进行中</li>
-                            <li data-name="received" data-lang="receivedText" data-log='{"actionTag":"taskListReceived"}'>待接收</li>
-                            <li data-name="review" data-lang="reviewText" data-log='{"actionTag":"taskListReview"}'>审核中</li>
-                            <li data-name="refuse" data-lang="refuseText" data-log='{"actionTag":"taskListRefuse"}'>已拒绝</li>
-                            <li data-name="assignment" data-lang="assignmentText" data-log='{"actionTag":"taskListAssignment"}'>待分派</li>
+                            <li data-name="doing" data-lang="doingText" data-log='{"actionTag":"openedTaskListDoing"}'>进行中</li>
+                            <li data-name="received" data-lang="receivedText" data-log='{"actionTag":"openedTaskListReceived"}'>待接收</li>
+                            <li data-name="review" data-lang="reviewText" data-log='{"actionTag":"openedTaskListAduiting"}'>审核中</li>
+                            <li data-name="refuse" data-lang="refuseText" data-log='{"actionTag":"openedTaskListRefused"}'>已拒绝</li>
+                            <li data-name="assignment" data-lang="assignmentText" data-log='{"actionTag":"openedTaskListAssignment"}'>待分派</li>
                         </ul>
                     </div>
 
@@ -96,7 +96,7 @@
                 <div class="fixbar-text" data-lang="doneText"></div>
                 <div loader="{#finish}{this}{/finish}" class="dock-remind count hide"></div>
             </li>
-            <li class="page-cancel" data-name="cancel" data-log='{"actionTag":"taskListCancel"}'>
+            <li class="page-cancel" data-name="cancel" data-log='{"actionTag":"taskListCanceled"}'>
                 <div class="fixbar-img"></div>
                 <div class="fixbar-text" data-lang="cancelText"></div>
                 <div loader="{#revocation}{this}{/revocation}" class="dock-remind count hide"></div>

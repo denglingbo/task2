@@ -111,10 +111,10 @@ var actionsTag = {
     refuse: 'refuseSubmit',
 
     // 同意
-    agree: 'auditSubmit',
+    agree: 'auditAgreeSubmit',
 
     // 不同意
-    notAgree: 'auditSubmit'
+    notAgree: 'auditNotAgreeSubmit'
 };
 
 /**
@@ -348,37 +348,12 @@ function cancelValidate() {
     navigation.open(-1);
 }
 
- // summary: 'summarySubmit',
-
- //    // 讨论总结
- //    talkSummary: 'talkSummarySubmit',
-
- //    // 撤销
- //    revoke: 'revokeSubmit',
-
- //    // 拒绝
- //    refuse: 'refuseSubmit',
-
- //    // 同意
- //    agree: 'auditSubmit',
-
- //    // 不同意
- //    notAgree: 'auditSubmit'
-
-page.getTargetTag = function () {
-    var me = this;
-    var pageType = me.pageType;
-    var targetTag = {};
-    var $summary = $('[data-name=summary]');
-    var $remark = $('[data-name=applyReason]');
-    if (me.pageType === 'talkSummary') {
-        targetTag.talkId = util.params('talkId');
-    }
-    else {
-        targetTag.taskId = util.params('taskId');
-    }
-
-    if (pageType === 'summary') {
+page.getTagDetail = {
+    summary: function (me, targetTag) {
+        var $summary = $('[data-name=summary]');
+        var $remark = $('[data-name=applyReason]');
+        var $attachItem = $('.componentAttachItem');
+        var isMaster = parseInt(util.params('master'), 2);
         if ($summary && $summary.length && $.trim($summary.text())) {
             targetTag.summary = true;
         }
@@ -386,13 +361,66 @@ page.getTargetTag = function () {
             targetTag.applyReason = true;
         }
         if (me.attach) {
-            targetTag.attaches = !!me.attach.getModifyAttaches().length;
+            targetTag.attaches = !!$attachItem.length;
+        }
+        if (isMaster) {
+            targetTag.isMaster = !!isMaster;
+        }
+    },
+    talkSummary: function (me, targetTag) {
+        var $summary = $('[data-name=summary]');
+        var $attachItem = $('.componentAttachItem');
+        if ($summary && $summary.length && $.trim($summary.text())) {
+            targetTag.talkSummary = true;
+        }
+        if (me.attach) {
+            targetTag.attaches = !!$attachItem.length;
+        }
+    },
+    // 撤销
+    revoke: function (me, targetTag) {
+        var $val = $('.phone-input-main');
+        if ($val && $val.length && $.trim($val.text())) {
+            targetTag.revokeReason = true;
+        }
+    },
+    // 拒绝
+    refuse: function (me, targetTag) {
+        var $val = $('.phone-input-main');
+        if ($val && $val.length && $.trim($val.text())) {
+            targetTag.refuseReason = true;
+        }
+    },
+    agree: function (me, targetTag) {
+        var $val = $('.phone-input-main');
+        if ($val && $val.length && $.trim($val.text())) {
+            targetTag.aduitAgreeReason = true;
+        }
+    },
+    notAgree: function (me, targetTag) {
+        var $val = $('.phone-input-main');
+        if ($val && $val.length && $.trim($val.text())) {
+            targetTag.aduitNotAgreeReason = true;
         }
     }
+};
+
+page.getTargetTag = function (errCode) {
+    var me = this;
+    var pageType = me.pageType;
+    var targetTag = {};
 
     if (pageType === 'talkSummary') {
-
+        targetTag.talkId = util.params('talkId');
     }
+    else {
+        targetTag.taskId = util.params('taskId');
+    }
+    me.getTagDetail[pageType](me, targetTag);
+    if (errCode) {
+        targetTag.err = errCode;
+    }
+    return targetTag;
 };
 
 page.deviceready = function () {
@@ -416,11 +444,7 @@ page.deviceready = function () {
         var dataArg = me.getData(me.pageType);
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
-        var targetTag = {};
-        if (actionsTag[me.pageType]) {
-            targetTag = me.getTargetTag();
-            me.log.store({actionTag: actionsTag[me.pageType], targetTag: targetTag});
-        }
+
         promise
             .done(function (result) {
 
@@ -432,6 +456,14 @@ page.deviceready = function () {
             })
             .fail(function (result) {
 
+            })
+            .always(function (result) {
+                var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+                var targetTag = {};
+                if (actionsTag[me.pageType]) {
+                    targetTag = me.getTargetTag(errCode);
+                    me.log.store({actionTag: actionsTag[me.pageType], targetTag: targetTag});
+                }
             });
     }
 

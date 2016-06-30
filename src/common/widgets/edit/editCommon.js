@@ -30,91 +30,10 @@ editCom.valid = {
 editCom.aTag = {
     principalIsNull: true,
     attendsIsNull: true,
-    attachIsNull:true
+    attachIsNull: true,
+    // 参与人是否改变
+    attendsIsChange: false
 };
-
-// 埋点数据
-editCom.actions = {
-    task: function () {
-        var me = editCom;
-        var taskId = util.params('taskId');
-        var $content = $('#edit-content');
-        var action = {};
-        var targetTag = {};
-        if (taskId) {
-            action.actionTag = 'editTaskSubmit';
-            action.targetTag = {
-                taskId: taskId
-            }
-        }
-        else {
-            action.actionTag = 'newTaskSubmit';
-            
-            if ($content && $.trim($content.text())) {
-                targetTag.content = true;
-            }
-            if (!me.aTag.principalIsNull) {
-                targetTag.principal = true;
-            }
-            if (!me.aTag.attendsIsNull) {
-                targetTag.attends = true;
-            }
-            if (!me.aTag.attachIsNull) {
-                targetTag.attachs = true;
-            }
-            action.targetTag = targetTag;
-        }
-        return action;
-    },
-    talk: function () {
-        var me = editCom;
-        var talkId = util.params('id');
-        var $content = $('#edit-content');
-        var action = {};
-        var targetTag = {};
-        if (talkId) {
-            action.actionTag = 'editTalkSubmit';
-            action.targetTag = {
-                talkId: talkId
-            }
-        }
-        else {
-            action.actionTag = 'newTalkSubmit';
-            if ($content && $.trim($content.text())) {
-                targetTag.content = true;
-            }
-            if (!me.aTag.attachIsNull) {
-                targetTag.attachs = true;
-            }
-            action.targetTag = targetTag;
-        }
-        return action;
-    },
-    affair: function () {
-        var me = editCom;
-        var affairId = util.params('id');
-        var $content = $('#edit-content');
-        var action = {};
-        var targetTag = {};
-        if (affairId) {
-            action.actionTag = 'editAffairSubmit';
-            action.targetTag = {
-                affairId: affairId
-            }
-        }
-        else {
-            action.actionTag = 'newAffairSubmit';
-            if ($content && $.trim($content.text())) {
-                targetTag.content = true;
-            }
-            if (!me.aTag.attachIsNull) {
-                targetTag.attachs = true;
-            }
-            action.targetTag = targetTag;
-        }
-        return action;
-    }
-}
 
 /**
  * 验证不通过弹窗
@@ -272,10 +191,8 @@ editCom.setValidObj = function (phoneInputTitle, phoneInputContent, attach) {
  * @param {Object} phoneInputContent, content 文本框对象
  * @param {Object} attach, 附件对象
  * @param {Function} submitFn, 验证成功的提交操作
- * @param {Object} pageType, 页面
- * @param {Object} page, 页面对象
  */
-editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn, pageType, page) {
+editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, submitFn) {
     var me = this;
     var validObj = me.valid;
 
@@ -294,11 +211,7 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
             {
                 title: lang.submit,
                 click: function () {
-
                     me.setValidObj(phoneInputTitle, phoneInputContent, attach);
-                    if (pageType) {
-                        page.log.store(me.actions[pageType]());
-                    }
                     me.submitValid(submitFn);
                 }
             }
@@ -484,11 +397,15 @@ editCom.initImportValue = function (level) {
 editCom.personIsChange = function (oldValue, newValue, key) {
     var me = this;
     var validObj = me.valid;
+    var isChange = false;
     if ($.isArray(oldValue) && $.isArray(newValue)) {
-        validObj.isEdit = this.compareArr(oldValue, newValue) ? true : validObj.isEdit;
+        isChange = me.compareArr(oldValue, newValue);
+        validObj.isEdit = isChange ? true : validObj.isEdit;
+        me.aTag.attendsIsChange = isChange;
     }
     else {
-        validObj.isEdit = oldValue !== newValue ? true : validObj.isEdit;
+        isChange = oldValue !== newValue;
+        validObj.isEdit = isChange ? true : validObj.isEdit;
     }
     me.personIsNull(newValue, key);
 };
@@ -502,10 +419,10 @@ editCom.personIsChange = function (oldValue, newValue, key) {
 editCom.personIsNull = function (value, key) {
     var me = this;
     var isNull = true;
-    if ($.isArray(value) && value.length) {
+    if (value && $.isArray(value) && value.length) {
         isNull = false;
     }
-    else if ((typeof value === 'string') && value) {
+    else if (value && (typeof value === 'string')) {
         isNull = false;
     }
     me.aTag.principalIsNull = key === 'principal' ? isNull : me.aTag.principalIsNull;

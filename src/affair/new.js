@@ -42,6 +42,32 @@ page.enter = function () {
     me.bindEvents();
 };
 
+page.getActionsData = function (errCode) {
+    var $content = $('#edit-content');
+    var action = {};
+    var targetTag = {};
+    if (affairId) {
+        action.actionTag = 'editAffairSubmit';
+        action.targetTag = {
+            affairId: affairId
+        };
+    }
+    else {
+        action.actionTag = 'newAffairSubmit';
+        if ($content && $content.length && $.trim($content.text())) {
+            targetTag.content = true;
+        }
+        if (!editCom.aTag.attachIsNull) {
+            targetTag.attachs = true;
+        }
+        action.targetTag = targetTag;
+    }
+    if (errCode) {
+        action.targetTag.err = errCode;
+    }
+    return action;
+};
+
 page.deviceready = function () {
     var me = this;
 
@@ -54,16 +80,19 @@ page.deviceready = function () {
 
         // 事件类型必填
         if (DATA.labelId) {
-
             var promise = editCom.submit(page, DATA, url);
             promise.done(function (result) {
-                // 后端 result.data 返回的是对应的 id, 并非对象
                 navigation.open(-1, {
                     goBackParams: 'refresh'
                 });
+            })
+            .always(function (result) {
+                var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+                var action = me.getActionsData(errCode);
+                me.log.store(action);
             });
         }
-    }, 'affair', me);
+    });
 };
 
 /**

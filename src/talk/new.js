@@ -90,6 +90,36 @@ page.choosePerson = function (chooseData) {
     });
 };
 
+page.getActionsData = function (errCode) {
+    var $content = $('#edit-content');
+    var action = {};
+    var targetTag = {};
+    if (talkId) {
+        action.actionTag = 'editTalkSubmit';
+        action.targetTag = {
+            talkId: talkId
+        };
+    }
+    else {
+        action.actionTag = 'newTalkSubmit';
+        if ($content && $content.length && $.trim($content.text())) {
+            targetTag.content = true;
+        }
+        if (!editCom.aTag.attachIsNull) {
+            targetTag.attachs = true;
+        }
+        if (editCom.aTag.attendsIsChange) {
+            targetTag.attendsIsChange = true;
+        }
+        action.targetTag = targetTag;
+    }
+
+    if (errCode) {
+        action.targetTag.err = errCode;
+    }
+    return action;
+};
+
 page.deviceready = function () {
     var me = this;
 
@@ -108,8 +138,13 @@ page.deviceready = function () {
             navigation.open(-1, {
                 goBackParams: 'refresh'
             });
+        })
+        .always(function (result) {
+            var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+            var action = me.getActionsData(errCode);
+            me.log.store(action);
         });
-    }, 'talk', me);
+    });
 
     // 选择人员跳转页面
     $('#attends').click(function () {

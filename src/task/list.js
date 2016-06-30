@@ -154,7 +154,7 @@ page.bindEvents = function () {
         });
     });
 
-    $('.main').on('click', '.task-empty button', function () {
+    $('.main').on('click', '.task-empty[data-type=all] button', function () {
         navigation.open('/task-new.html', {
             title: me.lang.newTask
         });
@@ -388,16 +388,20 @@ function LoadPage(info) {
         onDataNull: function (loader) {
             // TODO
             // 添加未完成或其他的空页面提示
+            var name = info.name;
             var data = {
                 lang: {
                     noTask: page.lang.noTask,
-                    createTask: page.lang.createTask
+                    createTask: page.lang.createTask,
+                    noTaskNotCreate: page.lang.noTaskNotCreate
                 }
             };
+            if (name === 'opened' || name === 'doing' || name === 'done' || name === 'cancel') {
+                data.all = true;
+            }
             page.render(loader.wrapper, data, {
                 tmpl: emptyTaskTpl
             });
-            // loader.render(data, emptyTaskTpl);
         },
 
         // 加载失败

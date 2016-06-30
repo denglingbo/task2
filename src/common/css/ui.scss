@@ -178,6 +178,22 @@ $flag-height-size: rem(71px);
 }
 
 /**
+ * 旗帜图标
+ *
+ */
+$flag-null-size: rem(70px);
+
+.icon-flag-null {
+    display: inline-block;
+    padding: 0;
+    width: $flag-null-size;
+    height: $flag-null-size;
+    background-image: url('../img/list_null.png');
+    background-repeat: no-repeat;
+    background-size: $flag-null-size;
+}
+
+/**
  * 五角星
  */
 $star-size: rem(16px);

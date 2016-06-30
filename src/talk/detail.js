@@ -213,7 +213,7 @@ page.initCommentList = function () {
     var me = this;
 
     new WidgetCommentList(me, {
-
+        name: 'talk',
         data: me.data,
         moreNullHidden: true,
 
