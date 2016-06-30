@@ -128,7 +128,7 @@ page.bindEvents = function () {
         var id = $(this).data('id');
 
         if (id) {
-            navigation.open('/task-detail.html?taskId=' + id, {
+            navigation.open('/task-detail.html?taskId=' + id + '&role=' + rid, {
                 title: me.lang.taskDetail,
                 returnParams: function (prevData) {
                     if (prevData && prevData === 'refresh') {

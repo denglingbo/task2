@@ -207,7 +207,6 @@ page.enter = function () {
 
     // 判断是不是 master，完成总结的 master
     var isMaster = parseInt(util.params('master'), 2);
-
     // 获取当前页面配置
     var myPage = pages[me.pageType];
 
@@ -247,7 +246,7 @@ page.enter = function () {
                         arr[0].summary = data.summary;
                         arr[0].holder = '';
                     }
-                    if (isMaster && data.completeRemark && data.completeRemark.length > 0) {
+                    if (isMaster === 0 && data.completeRemark && data.completeRemark.length) {
                         arr[1].completeRemark = data.completeRemark;
                         arr[1].holder = '';
                     }
@@ -317,7 +316,6 @@ page.renderNewSubmit = function (myPage, isMaster) {
         list: myPage(isMaster)
     }, {
         partials: {
-            attach: attachTpl,
             alertBox: alertTpl
         }
     });
@@ -406,6 +404,15 @@ page.deviceready = function () {
     }
 
     function submit() {
+        if (me.attach && !me.attach.isAttachesReady()) {
+            var $alertDom = $('#alert-length-limit');
+            $alertDom.text(me.lang.attachNoReady).removeClass('hide');
+            me.timer = setTimeout(function () {
+                $alertDom.addClass('hide');
+            },
+            3000);
+            return;
+        }
         var dataArg = me.getData(me.pageType);
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
