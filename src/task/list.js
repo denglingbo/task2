@@ -74,7 +74,7 @@ page.enter = function () {
     if (this.isRefresh) {
         var openPageName = pageCurrentName || data.list[0];
         var myCache = pageCache[openPageName];
-        var $tab = $('.tab li[data-name="' + openPageName + '"]');
+        var $tab = $('.page-loader li[data-name="' + openPageName + '"]');
 
         if (myCache && myCache.fn && myCache.fn.dataLoader && $tab) {
             $tab.triggerHandler('click');
