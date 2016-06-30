@@ -52,7 +52,10 @@ page.enter = function () {
     detailUtil.richContent();
 
     me.initAffairAndTalkList();
-    me.bindEvents();
+
+    if (!this.isRefresh) {
+        me.bindEvents();
+    }
 
     // 根据权限渲染之后修正样式
     detailUtil.fixStyles();
@@ -112,7 +115,9 @@ page.deviceready = function () {
     };
 
     // 页面底部跳转
-    me.$fixbar.find('li').off('click').on('click', function () {
+    // $('body').on('click', '#fixbar li', function () {
+    me.$fixbar.find('li').off('click');
+    me.$fixbar.find('li').on('click', function () {
         var target = this;
         var $click = $(target);
         var pageTo = $click.data('page');
@@ -129,7 +134,6 @@ page.deviceready = function () {
                 returnParams: function (prevData) {
                     if (prevData && prevData === 'refresh') {
                         me.refresh();
-                        me.setNavigation();
                     }
                 }
             });
@@ -229,7 +233,6 @@ function asyncTaskWork(target, ajaxKey) {
         },
         done: function () {
             page.refresh();
-            page.setNavigation();
         }
     };
 

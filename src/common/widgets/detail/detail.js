@@ -352,7 +352,6 @@ detail.naviRight = function (page, data, pageType, getAlert) {
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {
                             page.refresh();
-                            page.setNavigation();
                         }
                     }
                 });
@@ -370,7 +369,6 @@ detail.naviRight = function (page, data, pageType, getAlert) {
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {
                             page.refresh();
-                            page.setNavigation();
                         }
                     }
                 });
@@ -399,7 +397,6 @@ detail.naviRight = function (page, data, pageType, getAlert) {
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {
                             page.refresh();
-                            page.setNavigation();
                         }
                     }
                 });
