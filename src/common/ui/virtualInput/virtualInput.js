@@ -37,16 +37,19 @@ virtualInput.prototype = {
             var limitNum = me.opts.maxNum - text.length;
             me.$limit.html(limitNum).removeClass('hide');
             me.$send.addClass('unable');
+            me.$send.data({toLong: true});
         }
         else {
             me.$limit.html('').addClass('hide');
             me.$send.removeClass('unable');
+            me.$send.data({toLong: false});
         }
 
         if (!text.length) {
             me.$placeholder.removeClass('hide');
             if (me.$send.data('attach')){
                 me.$send.removeClass('unable');
+                me.$send.data({notNull: true});
             }
             else {
                 me.$send.addClass('unable');
@@ -54,6 +57,7 @@ virtualInput.prototype = {
         }
         else {
             me.$placeholder.addClass('hide');
+            me.$send.data({notNull: false});
         }
     },
 
@@ -64,7 +68,7 @@ virtualInput.prototype = {
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
-        // me.$send.removeClass('unable');
+        // me.$send.addClass('hide');
         me.$wrap.blur();
     },
 

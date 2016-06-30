@@ -115,9 +115,9 @@ page.deviceready = function () {
     };
 
     // 页面底部跳转
-    // $('body').on('click', '#fixbar li', function () {
-    me.$fixbar.find('li').off('click');
-    me.$fixbar.find('li').on('click', function () {
+    $('body').on('click', '#fixbar li', function () {
+    // me.$fixbar.find('li').off('click');
+    // me.$fixbar.find('li').on('click', function () {
         var target = this;
         var $click = $(target);
         var pageTo = $click.data('page');

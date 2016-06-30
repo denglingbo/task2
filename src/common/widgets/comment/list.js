@@ -222,6 +222,14 @@ $.extend(list.prototype, {
             });
         });
 
+        // $('#goalui-fixedinput').on('click', '.componentDeleteAttach', function () {
+        //     alert(me.attach.getModifyAttaches().length);
+        //     alert(!$send.data('notNull'));
+        //     if (!me.attach.getModifyAttaches().length && !$send.data('notNull')) {
+        //         $send.addClass('unable');
+        //     }
+        // })
+
         $send.off('click');
         $send.on('click', function () {
             if ($(this).hasClass('unable')) {
@@ -235,6 +243,9 @@ $.extend(list.prototype, {
             addBtn: '#addAttach',
             callback: function () {
                 if (me.attach.getModifyAttaches().length) {
+                    if (!$send.data('toLong')) {
+                        $send.removeClass('unable');
+                    }
                     $send.data({attach: true});
                 }
             }
@@ -348,6 +359,9 @@ $.extend(list.prototype, {
                         addBtn: '#addAttach',
                         callback: function () {
                             if (me.attach.getModifyAttaches().length) {
+                                if (!$send.data('toLong')) {
+                                    $send.removeClass('unable');
+                                }
                                 $send.data({attach: true});
                             }
                         }
