@@ -248,6 +248,7 @@ detail.bindTickEvents = function (options) {
     /**
      * 更改状态之后 需要设置 框外右边的按钮状态
      */
+    me.ticker.off('tick');
     me.ticker.on('tick', function (event, isCurTicked) {
         var myTicker = this;
         // 0: 取消

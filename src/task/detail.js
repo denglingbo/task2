@@ -47,7 +47,6 @@ page.enter = function () {
     detailUtil.richContent();
 
     me.initAffairAndTalkList();
-
     me.bindEvents();
 
     // 根据权限渲染之后修正样式
@@ -261,12 +260,16 @@ page.bindEvents = function () {
     me.$more = $('#affair-talk-more-handler');
     me.$affairTalk = $('#affair-talk');
     me.$fixbar = $('.fixbar');
+    var $star = $('.star');
+    var $attachMore = $('.attach .load-more');
 
-    $('.star').off('click').on('click', function () {
+    $star.off('click');
+    $star.on('click', function () {
         me.follow(this);
     });
 
-    $('.attach .load-more').on('click', function () {
+    $attachMore.off('click');
+    $attachMore.on('click', function () {
         navigation.open('/attach-attach.html?taskId=' + taskId + '&total=' + me.attachData.total, {
             title: me.lang.attach
         });
@@ -396,7 +399,6 @@ page.follow = function (target) {
         level: status
     });
 
-
     promise
         .done(function (result) {
             if (result && result.meta.code === 200) {
@@ -408,7 +410,35 @@ page.follow = function (target) {
         })
         .fail(function () {
             $elem[type.fail]('follow');
+        })
+        .always(function (result) {
+            var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+            var type = status === 1 ? 'follow' : 'cancel';
+            me.followLog(type, errCode);
         });
+};
+
+/**
+ * 关注 log 记录
+ *
+ * @param {string} type, 类型
+ * @param {number|null} error, 错误码，可为空
+ */
+page.followLog = function (type, error) {
+
+    var data = {
+        actionTag: 'taskDetailFollow',
+        targetTag: {
+            taskId: this.data.id,
+            type: type
+        }
+    };
+
+    if (error && data.targetTag) {
+        data.targetTag.error = error;
+    }
+
+    this.log.store(data);
 };
 
 /**
