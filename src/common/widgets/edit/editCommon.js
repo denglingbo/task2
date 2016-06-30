@@ -204,9 +204,7 @@ editCom.cancelValidate = function () {
             onApply: function () {
 
                 // 编辑过，返回并刷新
-                navigation.open(-1, {
-                    goBackParams: 'refresh'
-                });
+                navigation.open(-1);
             }
         });
     }
