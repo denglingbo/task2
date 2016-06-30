@@ -41,9 +41,9 @@ var Localdb = require('common/ui/localdb');
 var coll = new Localdb(config.const.DATABASE_NAME, 'LIST');
 
 
-/**
- * 缓存请求的 tab 页面数据
- */
+// 当前打开的 tab 页面
+var pageCurrentName = null;
+// 缓存请求的 tab 页面数据
 var pageCache = {};
 
 var pages = require('./list/config');
@@ -67,21 +67,18 @@ page.render('#opened-main', data, {
 });
 
 page.enter = function () {
-    // var me = this;
-
-    // pageCache = {};
 
     this.initRemindNum();
 
-    // new Sticky({target: '#search', top: 0});
-    // ^.^ 这里的后面的逻辑太过于复杂，暂未提供后面功能的返回刷新功能
+    // 返回刷新操作，只进行下列操作
     if (this.isRefresh) {
-        var info = data.list[0];
-        var myCache = pageCache[info.name];
-        var $tab = $('.tab li[data-name="opened"]');
+        var openPageName = pageCurrentName || data.list[0];
+        var myCache = pageCache[openPageName];
+        var $tab = $('.tab li[data-name="' + openPageName + '"]');
 
         if (myCache && myCache.fn && myCache.fn.dataLoader && $tab) {
             $tab.triggerHandler('click');
+            // 点击tab 并不能直接加载数据
             myCache.fn.dataLoader.fire('scrollReload', null, true);
         }
         return;
@@ -297,6 +294,9 @@ function switchPage(target, info) {
 
     // 如果有数据的情况下，重新切换回 opened tab，则不触发opened 的 z 改变
     var myPage = pageCache[info.name];
+
+    // 当前打开的 tab 页
+    pageCurrentName = info.name;
 
     if (myPage) {
 
