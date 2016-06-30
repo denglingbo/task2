@@ -31,9 +31,7 @@ function Search(page, options) {
     this.opts = {
         url: '',
         role: options.role,
-        // isSearchPage: false,
         selector: '',
-        itemHeight: 0,
         inject: 'body',
         itemTpl: '{{#objList}}'
                    + '<li class="item" data-id="{{id}}">'
@@ -103,11 +101,9 @@ Search.prototype.loadHtml = function () {
     var me = this;
     var opts = me.opts;
 
-    // var tmpl = require(opts.mainTmpl);
     me.page.render(opts.selector,
     {
         lang: opts.lang
-        // isSearchPage: opts.isSearchPage
     });
 };
 
@@ -153,7 +149,6 @@ Search.prototype.destroyScroll = function () {
  *
  */
 Search.prototype.redirectHistory = function () {
-    // CPNavigationBar.returnPreviousPage();
     navigation.open(-1);
 };
 
@@ -165,15 +160,6 @@ Search.prototype.redirectHistory = function () {
 Search.prototype.getKey = function () {
     return this.dom.$input.val().trim();
 };
-
-/**
- * 填充输入的关键字
- *
- * @param {string} key, 关键字
- */
-// Search.prototype.setKey = function (key) {
-//     this.dom.$input.val(key);
-// };
 
 /**
  * 获取关键字的长度
@@ -234,15 +220,6 @@ Search.prototype.toggleClear = function (show) {
 Search.prototype.toggleWrap = function (show) {
     this.toggle(this.dom.$wrap, show);
 };
-
-/**
- * 切换显示内容区域的显示与隐藏
- *
- * @param {boolean} show, 是否显示
- */
-// Search.prototype.togglePage = function (show) {
-//     this.toggle(this.dom.$page, show);
-// };
 
 /**
  * 清空搜索框
@@ -439,7 +416,6 @@ Search.prototype.stateChange = function () {
 Search.prototype.isNullHandler = function () {
     var me = this;
     me.toggleTip(true);
-    // me.togglePage(false);
     me.clearList();
 };
 
@@ -450,7 +426,6 @@ Search.prototype.isNullHandler = function () {
 Search.prototype.isNotNullHandler = function () {
     var me = this;
     me.toggleTip(false);
-    // me.togglePage(true);
 };
 
 /**
@@ -462,18 +437,6 @@ Search.prototype.bindEvents = function () {
     var me = this;
     var opts = me.opts;
     var dom = me.dom;
-    // if (!opts.isSearchPage) {
-    //     dom.$searchIn.on('click', function () {
-    //         me.toggleWrap(true);
-    //         dom.$input.focus();
-    //     });
-
-    //     $(document).on('keyup', function (e) {
-    //         if (e.keyCode === 13) {
-    //             me.redirectSearch();
-    //         }
-    //     });
-    // }
 
     dom.$cancel.on('click', function () {
         me.redirectHistory();
@@ -490,9 +453,6 @@ Search.prototype.bindEvents = function () {
             me.stateChange();
             me.loadList();
         },
-        // blur: function () {
-        //     me.toggleClear(false);
-        // },
         focus: function () {
             me.toggleClear(true);
         }

@@ -4,8 +4,8 @@
  * 新建任务页
  *
  */
-require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/css/mobiscroll-2.17.0.css');
+require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
@@ -114,7 +114,7 @@ page.choosePerson = function (chooseData) {
             // 对应的点击栏容器
             $(chooseData.id + ' .value').text(editCom.getPersonsName(contacts));
 
-            editCom.personIsChange(oldVal, DATA[chooseData.itemKey]);
+            editCom.personIsChange(oldVal, DATA[chooseData.itemKey], chooseData.name);
         }
     });
 };
@@ -232,7 +232,6 @@ page.loadPage = function () {
 
 page.bindTopEvent = function () {
     var me = this;
-    var action = taskId ? 'editTaskSubmit' : 'newTaskSubmit';
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachements = me.attach.getModifyAttaches();
         DATA.attendIds = editCom.unique(DATA.attendIds);
@@ -244,7 +243,7 @@ page.bindTopEvent = function () {
                 goBackParams: 'refresh'
             });
         });
-    }, action, me);
+    }, 'task', me);
 };
 
 /**

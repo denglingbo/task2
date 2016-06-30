@@ -300,7 +300,7 @@
                     }
 
                     .componentAttachLeft {
-                        display: inline;
+                        display: initial;
                     }
                 }
             }
@@ -379,9 +379,8 @@
  */
 .fixbar {
     @include fixbar(3);
-
+    height: auto;
     font-size: rem(16px);
-
     position: fixed;
     z-index: 10;
 

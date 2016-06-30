@@ -5,8 +5,8 @@
  *
  */
 
-require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/css/mobiscroll-2.17.0.css');
+require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
@@ -47,8 +47,6 @@ page.deviceready = function () {
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachs);
-
-    var action = affairId ? 'editAffairSubmit' : 'newAffairSubmit';
     // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachs = me.attach.getModifyAttaches();
@@ -65,7 +63,7 @@ page.deviceready = function () {
                 });
             });
         }
-    }, action, me);
+    }, 'affair', me);
 };
 
 /**

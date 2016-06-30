@@ -97,7 +97,7 @@ page.setNavigation = function () {
 page.bindEvents = function () {
     var me = this;
     var $comment = $('#comment-input-wrapper');
-
+    var affairId = util.params('id');
     // 绑定 tick 点击事件
     detailUtil.bindTickEvents.call(this, {
         pageKey: 'affairId',
@@ -106,14 +106,14 @@ page.bindEvents = function () {
 
         // 完成状态
         tickedCallback: function () {
-            me.log.store({actionTag: 'affairDone'});
+            me.log.store({actionTag: 'affairDone', targetTag: {affairId: affairId}});
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
-            me.log.store({actionTag: 'affairRecover'});
+            me.log.store({actionTag: 'affairRecover', targetTag: {affairId: affairId}});
             navigation.button('right', true);
             detailUtil.naviRight(me, data, 'affair');
             $comment && $comment.removeClass('hide');

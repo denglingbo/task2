@@ -360,14 +360,21 @@ page.deviceready = function () {
 
     function submit() {
         var dataArg = me.getData(me.pageType);
+        (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
-
+        var targetTag = {};
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
                     if (actions[me.pageType]) {
-                        me.log.store({actionTag: actions[me.pageType]});
+                        if (me.pageType === 'talkSummary') {
+                            targetTag.talkId = util.params('talkId');
+                        }
+                        else {
+                            targetTag.taskId = util.params('taskId');
+                        }
+                        me.log.store({actionTag: actions[me.pageType], targetTag: targetTag});
                     }
                     navigation.open(-1, {
                         goBackParams: 'refresh'

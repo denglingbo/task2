@@ -136,7 +136,7 @@ page.deviceready = function () {
             MidUI.alert({
                 content: me.lang.alertReceivedContent,
                 onApply: function () {
-                    me.log.store({actionTag: 'taskReceived'});
+                    me.log.store({actionTag: 'taskReceived', targetTag: {taskId: taskId}});
                     asyncTaskWork(target, type);
                 }
             });
@@ -202,7 +202,7 @@ page.setNavigation = function () {
         MidUI.alert({
             content: me.lang.alertRecoveryContent,
             onApply: function () {
-                me.log.store({actionTag: 'taskRecover'});
+                me.log.store({actionTag: 'taskRecover', targetTag: {taskId: taskId}});
                 asyncTaskWork(null, 'revoke');
             }
         });

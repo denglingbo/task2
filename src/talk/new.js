@@ -5,8 +5,8 @@
  *
  */
 
-require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/css/mobiscroll-2.17.0.css');
+require('common/widgets/edit/new.scss');
 require('dep/ui/mobiscroll/js/mobiscroll-2.17.0.js');
 var editCom = require('common/widgets/edit/editCommon');
 var config = require('config');
@@ -82,7 +82,7 @@ page.choosePerson = function (chooseData) {
                 }
             });
             $(chooseData.id + ' .value').text(editCom.getPersonsName(contacts));
-            editCom.personIsChange(oldVal, DATA[chooseData.itemKey]);
+            editCom.personIsChange(oldVal, DATA[chooseData.itemKey], chooseData.name);
         }
     });
 };
@@ -95,8 +95,6 @@ page.deviceready = function () {
 
     // 初始化附件组件
     me.attach = editCom.initEditAttach(DATA.attachs);
-
-    var action = talkId ? 'editTalkSubmit' : 'newTalkSubmit';
     // bindEvents
     editCom.subAndCancel(me.phoneInputTitle, me.phoneInputContent, me.attach, function () {
         DATA.attachs = me.attach.getModifyAttaches();
@@ -108,7 +106,7 @@ page.deviceready = function () {
                 goBackParams: 'refresh'
             });
         });
-    }, action, me);
+    }, 'talk', me);
 
     // 选择人员跳转页面
     $('#attends').click(function () {
