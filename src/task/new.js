@@ -86,6 +86,7 @@ page.choosePerson = function (chooseData) {
     navigation.open('/selector-selector.html?paramId=' + chooseData.key, {
         title: me.lang.choosePerson,
         returnParams: function (data) {
+            alert(data);
             if (!data) {
                 return;
             }
