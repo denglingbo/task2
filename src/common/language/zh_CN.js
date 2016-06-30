@@ -145,6 +145,8 @@ module.exports = {
     anHoursAgo: '1小时前',
     hoursAgo: '小时前',
     dayAgo: '天前',
+    createOn: '创建于',
+    updateOn: '更新于',
 
     error: {
         80010: '没有权限操作',

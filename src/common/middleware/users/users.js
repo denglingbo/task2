@@ -62,6 +62,10 @@ middleware.companyId = function (cid) {
  *
  */
 middleware.makeJid = function (id, cid) {
+    if (!id) {
+        return null;
+    }
+
     cid = cid || this.companyId(cid);
 
     if (cid === null) {
@@ -240,7 +244,9 @@ middleware.getUserInfo = function (jids, cid, dataFlag) {
 
     // 按原生需求拼接字符串
     jids.forEach(function (item) {
-        jidArr.push(me.makeJid(item, cid));
+        if (item) {
+            jidArr.push(me.makeJid(item, cid));
+        }
     });
 
     if (dataFlag !== undefined) {

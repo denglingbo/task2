@@ -17,7 +17,7 @@
         {{/resumeOrCloseRights}}{{/taskDoing}}{{/isTaskPage}}
     ">
         <p class="detail-title-top word-content">{{ title }}</p>
-        <p>{{ updateDateRaw }}</p>
+        <p><span class="create-user"></span><span>{{ updateDateRaw }}</span></p>
     </div>
 
     <div class="detail-title-right">

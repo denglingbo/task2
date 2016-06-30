@@ -45,6 +45,10 @@ page.enter = function () {
         }
     });
 
+    if (me.data && me.data.rights) {
+        me.render('#fixbar', me.data);
+    }
+
     detailUtil.richContent();
 
     me.initAffairAndTalkList();
@@ -171,6 +175,7 @@ page.deviceready = function () {
         .fail(function () {
             me.failUser();
         });
+
     // 加载附件数据
     me.ajaxAttach();
 

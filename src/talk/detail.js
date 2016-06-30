@@ -86,6 +86,7 @@ page.deviceready = function () {
             wrapper: '.summary-attach'
         });
     }
+
     var dfdPub = users.getUserInfo(data.userIds);
 
     dfdPub
@@ -94,6 +95,23 @@ page.deviceready = function () {
         })
         .fail(function () {
             me.renderUser(null);
+        });
+
+    // 讨论 & 事件 创建人显示在 创建时间之前
+    users.getUserInfo([data.createUser])
+        .done(function (pubData) {
+            if (pubData && pubData.contacts) {
+                var info = pubData.contacts[0];
+
+                var timeText = (data.createTime === data.opTime) ? me.lang.createOn : me.lang.updateOn;
+
+                if (info && info.name) {
+                    $('.create-user').html(
+                        '<em>' + info.name + '</em>'
+                        + '<em>' + timeText + '</em>'
+                    );
+                }
+            }
         });
 
     me.setNavigation();

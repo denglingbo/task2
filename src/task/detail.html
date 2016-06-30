@@ -48,67 +48,6 @@
             <!-- 用于加载更多数据 -->
             <div class="data-more"></div>
         </div>
-
-
-        <!-- 底部按钮条 -->
-        {{#rights}}
-        <div class="fixbar border">
-            <ul>
-                {{#auditRight}}
-                <li 
-                    data-type="notAgree" 
-                    data-page="/form-submit.html?type=notAgree&taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailAudit"}'
-                >{{ lang.notAgree }}</li>
-                <li 
-                    data-type="agree" 
-                    data-page="/form-submit.html?type=agree&taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailAudit"}'
-                >{{ lang.agree }}</li>
-                {{/auditRight}}
-
-                {{#refuseRight}}
-                <li 
-                    data-type="refuse" 
-                    data-page="/form-submit.html?type=refuse&taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailRefuse"}'
-                >{{ lang.refuse }}</li>
-                {{/refuseRight}}
-
-                {{#receiveRight}}
-                <li 
-                    data-type="receive"
-                    data-log='{"actionTag":"taskDetailReceive"}'
-                >{{ lang.receivedButton }}</li>
-                {{/receiveRight}}
-
-                {{#addEventRight}}
-                <li 
-                    data-type="affair" 
-                    data-page="/affair-new.html?taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailNewAffair"}'
-                >{{ lang.newAffair }}</li>
-                {{/addEventRight}}
-
-                {{#addTalkRight}}
-                <li 
-                    data-type="talk" 
-                    data-page="/talk-new.html?taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailNewTalk"}'
-                >{{ lang.startTalk }}</li>
-                {{/addTalkRight}}
-
-                {{#applyRight}}
-                <li 
-                    data-type="summary" 
-                    data-page="/form-submit.html?type=summary&master={{ isMaster }}&taskId={{ taskId }}" 
-                    data-log='{"actionTag":"taskDetailCompleteTask"}'
-                >{{ lang.taskDone }}</li>
-                {{/applyRight}}
-            </ul>
-        </div>
-        {{/rights}}
-
         </script>
 
     </div>
@@ -181,6 +120,67 @@
         </div>
     </dd>
     {{/partnerLength}}
+    </script>
+
+
+    <div id="fixbar" class="fixbar border"></div>
+    <script id="fixbar-tmpl" type="x-tmpl-mustache">
+    <!-- 底部按钮条 -->
+    {{#rights}}
+    <ul>
+        {{#auditRight}}
+        <li 
+            data-type="notAgree" 
+            data-page="/form-submit.html?type=notAgree&taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailAudit"}'
+        >{{ lang.notAgree }}</li>
+        <li 
+            data-type="agree" 
+            data-page="/form-submit.html?type=agree&taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailAudit"}'
+        >{{ lang.agree }}</li>
+        {{/auditRight}}
+
+        {{#refuseRight}}
+        <li 
+            data-type="refuse" 
+            data-page="/form-submit.html?type=refuse&taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailRefuse"}'
+        >{{ lang.refuse }}</li>
+        {{/refuseRight}}
+
+        {{#receiveRight}}
+        <li 
+            data-type="receive"
+            data-log='{"actionTag":"taskDetailReceive"}'
+        >{{ lang.receivedButton }}</li>
+        {{/receiveRight}}
+
+        {{#addEventRight}}
+        <li 
+            data-type="affair" 
+            data-page="/affair-new.html?taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailNewAffair"}'
+        >{{ lang.newAffair }}</li>
+        {{/addEventRight}}
+
+        {{#addTalkRight}}
+        <li 
+            data-type="talk" 
+            data-page="/talk-new.html?taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailNewTalk"}'
+        >{{ lang.startTalk }}</li>
+        {{/addTalkRight}}
+
+        {{#applyRight}}
+        <li 
+            data-type="summary" 
+            data-page="/form-submit.html?type=summary&master={{ isMaster }}&taskId={{ taskId }}" 
+            data-log='{"actionTag":"taskDetailCompleteTask"}'
+        >{{ lang.taskDone }}</li>
+        {{/applyRight}}
+    </ul>
+    {{/rights}}
     </script>
 
     <script type="text/javascript" src="./cordova.js"></script>

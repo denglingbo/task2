@@ -67,6 +67,16 @@
         }
     }
 
+    .create-user {
+
+        em {
+            @include ellipsis();
+
+            max-width: rem(100px);
+            display: inline-block;
+        }
+    }
+
     .detail-title-control {
         position: absolute;
         top: 50%;
@@ -381,7 +391,7 @@
     @include fixbar(3);
     height: auto;
     font-size: rem(16px);
-    position: fixed;
+    position: relative;
     z-index: 10;
 
     ul {
