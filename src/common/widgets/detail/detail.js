@@ -365,19 +365,19 @@ detail.naviRight = function (page, data, pageType, getAlert) {
 
     // 讨论下，总结放在右上方的按钮中
     if (pageType === 'talk' && rights.summarizeRight) {
-        rightBar.push({
-            title: lang.summary,
-            click: function () {
-                navigation.open(curPage.summary.url, {
-                    title: curPage.summary.title,
-                    returnParams: function (prevData) {
-                        if (prevData && prevData === 'refresh') {
-                            page.refresh();
-                        }
-                    }
-                });
-            }
-        });
+        // rightBar.push({
+        //     title: lang.summary,
+        //     click: function () {
+        //         navigation.open(curPage.summary.url, {
+        //             title: curPage.summary.title,
+        //             returnParams: function (prevData) {
+        //                 if (prevData && prevData === 'refresh') {
+        //                     page.refresh();
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
     }
 
     // 恢复权限

@@ -5,7 +5,12 @@
     },
     "data" : {
         "rights": {
-            
+            "seeRight": false,
+            "summarizeRight": false,
+            "editRight": true,
+            "resumeRight": false,
+            "closeRight": false,
+            "commentRight": false
         }
     }
 }

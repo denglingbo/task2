@@ -250,6 +250,10 @@ navigation.right = function (buttonArray) {
 
     // 如果没有下拉菜单，则 return
     if (arr.length === 0) {
+        // 原生这里不能对已经有菜单的再清空，代码放在这里留个纪念，这样只能选择禁用按钮了
+        // CPNavigationBar.setRightButton('', []);
+        // 这只是一个折中的统一处理方案，该情况出现的情况是某下返回刷新需要操作右上角的按钮的情况
+        this.button('right', false);
         return;
     }
 
