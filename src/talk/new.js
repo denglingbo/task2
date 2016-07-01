@@ -14,7 +14,6 @@ var Page = require('common/page');
 var users = require('common/middleware/users/users');
 var PhoneInput = require('common/ui/phoneInput/phoneInput');
 var util = require('common/util');
-// var ls = require('common/localstorage');
 var navigation = require('common/middleware/navigation');
 // var MidUI = require('common/middleware/ui');
 var page = new Page();
