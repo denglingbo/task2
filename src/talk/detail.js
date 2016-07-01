@@ -139,6 +139,7 @@ page.setNavigation = function () {
 page.bindEvents = function () {
     var me = this;
     var $comment = $('#comment-input-wrapper');
+    var talkId = util.params('id');
 
     // 查看更多人员
     this.$main.off('click');
@@ -158,15 +159,16 @@ page.bindEvents = function () {
 
         // 完成状态
         tickedCallback: function () {
-            me.log.store({actionTag: 'talkDone', targetTag: {talkId: util.params('id')}});
+            me.log.store({actionTag: 'talkDone', targetTag: {talkId: talkId}});
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
         },
 
         // 恢复状态
         untickCallback: function (data) {
-            me.log.store({actionTag: 'talkRecover', targetTag: {talkId: util.params('id')}});
+            me.log.store({actionTag: 'talkRecover', targetTag: {talkId: talkId}});
             navigation.button('right', true);
+            data.id = talkId;
             detailUtil.naviRight(me, data, 'talk');
             $comment && $comment.removeClass('hide');
         }

@@ -352,7 +352,6 @@ $.extend(list.prototype, {
                     var p = $('#addAttach').parent();
                     $('#addAttach').off().remove();
                     p.prepend('<span class="button" id="addAttach"></span>');
-
                     me.attach = AttachWrapper.initAttach({
                         container: '#attachList',
                         addBtn: '#addAttach',

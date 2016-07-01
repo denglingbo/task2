@@ -420,7 +420,7 @@ Search.prototype.bindEvents = function () {
 
     $(opts.wrap + ' .search-content').off('click').on('click', 'li.item', function (e) {
         var id = +$(this).data('id');
-        var url = '/task-detail.html?taskId=' + id + '&rid=' + opts.role;
+        var url = '/task-detail.html?taskId=' + id + '&role=' + opts.role;
         navigation.open(url, {
             title: opts.lang.taskDetail
         });

@@ -127,6 +127,7 @@ page.bindEvents = function () {
                 }
             });
             navigation.button('right', true);
+            data.id = affairId;
             detailUtil.naviRight(me, data, 'affair');
             $comment && $comment.removeClass('hide');
         }
@@ -171,7 +172,6 @@ page.initCommentList = function () {
  */
 page.addParallelTask(function (dfd) {
     var me = this;
-
     var promise = page.get(config.API.AFFAIR_DETAIL_URL, {
         affairId: util.params('id')
     });
