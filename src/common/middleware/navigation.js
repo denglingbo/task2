@@ -231,12 +231,13 @@ navigation.right = function (buttonArray) {
     }
 
     var icon = '';
+    var arrIcon = '';
     var arr = [];
 
     buttonArray.forEach(function (item) {
 
         if (typeof item === 'string') {
-            icon = item;
+            arrIcon = item;
         }
         else {
             arr.push({
@@ -253,8 +254,11 @@ navigation.right = function (buttonArray) {
     }
 
     // 下拉数量只有一个，同时如果有 右上角 默认图，则强行去掉默认图，使用下拉的第一个配置
-    if (arr.length === 1 && icon) {
+    if (arr.length === 1) {
         icon = (arr[0].iconPath || arr[0].title);
+    }
+    else {
+        icon = arrIcon;
     }
 
     // 解决 原生 安卓右上角bug，有下拉菜单的时候，第一个下拉会覆盖 setRightButton 的第一个参数的设置
