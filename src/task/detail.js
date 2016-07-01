@@ -144,8 +144,13 @@ page.deviceready = function () {
             MidUI.alert({
                 content: me.lang.alertReceivedContent,
                 onApply: function () {
-                    me.log.store({actionTag: 'taskReceived', targetTag: {taskId: taskId}});
-                    asyncTaskWork(target, type);
+                    var actions = {
+                        actionTag: 'taskReceived',
+                        targetTag: {
+                            taskId: taskId
+                        }
+                    };
+                    asyncTaskWork(target, type, actions);
                 }
             });
         }
@@ -211,8 +216,13 @@ page.setNavigation = function () {
         MidUI.alert({
             content: me.lang.alertRecoveryContent,
             onApply: function () {
-                me.log.store({actionTag: 'taskRecover', targetTag: {taskId: taskId}});
-                asyncTaskWork(null, 'revoke');
+                var actions = {
+                    actionTag: 'taskRecover',
+                    targetTag: {
+                        taskId: taskId
+                    }
+                };
+                asyncTaskWork(null, 'revoke', actions);
             }
         });
     });
@@ -223,8 +233,9 @@ page.setNavigation = function () {
  *
  * @param {Element} target, 点击项
  * @param {string} ajaxKey, 对应 receive, revoke
+ * @param {Object} actionObj, 埋点数据
  */
-function asyncTaskWork(target, ajaxKey) {
+function asyncTaskWork(target, ajaxKey, actionObj) {
 
     // 默认配置
     var defMap = {
@@ -233,6 +244,7 @@ function asyncTaskWork(target, ajaxKey) {
         },
         done: function () {
             page.refresh();
+            $('.main').removeClass('nofixbar');
         }
     };
 
@@ -258,6 +270,13 @@ function asyncTaskWork(target, ajaxKey) {
     page.post(taskWorker.api, taskWorker.params)
         .done(function (data) {
             taskWorker.done();
+        })
+        .always(function (result) {
+            if (!actionObj) {
+                return;
+            }
+            var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
+            page.sendLog(actionObj, errCode);
         });
 
     target && $(target).off('click');
@@ -424,31 +443,32 @@ page.follow = function (target) {
         .always(function (result) {
             var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
             var type = status === 1 ? 'follow' : 'cancel';
-            me.followLog(type, errCode);
+            var data = {
+                actionTag: 'taskDetailFollow',
+                targetTag: {
+                    taskId: me.data.id,
+                    type: type
+                }
+            };
+            me.sendLog(data, errCode);
         });
 };
 
 /**
- * 关注 log 记录
+ * log 记录
  *
- * @param {string} type, 类型
+ * @param {Object} obj, 埋点数据
  * @param {number|null} error, 错误码，可为空
  */
-page.followLog = function (type, error) {
-
-    var data = {
-        actionTag: 'taskDetailFollow',
-        targetTag: {
-            taskId: this.data.id,
-            type: type
-        }
-    };
-
-    if (error && data.targetTag) {
-        data.targetTag.error = error;
+page.sendLog = function (obj, error) {
+    if (!obj) {
+        return;
+    }
+    if (error && obj.targetTag) {
+        obj.targetTag.error = error;
     }
 
-    this.log.store(data);
+    this.log.store(obj);
 };
 
 /**

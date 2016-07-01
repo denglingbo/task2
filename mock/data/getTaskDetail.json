@@ -5,8 +5,8 @@
     },
     "data": {
         "rights": {
-            "addEventRight": true,
-            "addTalkRight": true,
+            "addEventRight": false,
+            "addTalkRight": false,
             "applyRight": false,
             "assignRight": false,
             "auditRight": false,
@@ -22,7 +22,7 @@
         "id": 66931,
         "status": 6,
         "importanceLevel": 4,
-        "suspend": false,
+        "suspend": true,
         "createTime": 1275466957042,
         "createUser": 1091,
         "principalUser": 1091,
