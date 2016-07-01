@@ -31,6 +31,12 @@
             padding-top: rem(10px);
         }
 
+        &.detail-summary-onlyattach {
+            .summary-attach-container {
+                padding-top: 0;
+            }
+        }
+
         .summary-attach {
             padding: 0;
             margin: 0;
@@ -111,7 +117,8 @@
         .star {
             display: inline-block;
             position: relative;
-            margin-top: rem(2px);
+            margin-top: rem(2px) auto 0 auto;
+            margin-right: rem(10px);
         }
 
         .detail-title-state {

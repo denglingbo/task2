@@ -73,6 +73,10 @@ detail.dealPageData = function (data) {
         return parseInt(taskStatus, 10) === 4;
     };
 
+    data.isSummaryAttachs = function () {
+        return this.summaryAttachs && this.summaryAttachs.length;
+    };
+
     // 外层条件: !isTaskPage, 所以这里不需要再判断是不是 事件 or 讨论
     // 事件 or 讨论
     data.resumeOrCloseRights = function () {

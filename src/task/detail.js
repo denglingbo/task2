@@ -1,8 +1,8 @@
 /**
  * @file detail.js
  * @author deo
- * 任务详情页
  *
+ * 任务详情页
  */
 
 require('./detail.scss');
@@ -23,10 +23,16 @@ require('common/widgets/emptyPage/netErr.scss');
 var tmplTitle = require('common/widgets/detail/title');
 var tmplDescribe = require('common/widgets/detail/describe');
 
+// 事件&讨论的分页请求 每页条数
 var requestPageNum = 10;
+
+// 附件默认展示的最大数量
 var defaultAttachNum = 5;
+
 var taskId = util.params('taskId');
-var role = util.params('role');
+
+// 正常条件下不可能为空，只有在错误情况下为空，默认会给 0
+var role = util.params('role') || 0;
 
 page.enter = function () {
     var me = this;
@@ -53,7 +59,8 @@ page.enter = function () {
 
     me.initAffairAndTalkList();
 
-    if (!this.isRefresh) {
+    // 如果返回刷新，不再绑定事件
+    if (!me.isRefresh) {
         me.bindEvents();
     }
 
@@ -67,7 +74,6 @@ page.enter = function () {
  */
 page.deviceready = function () {
     var me = this;
-    // var lang = me.lang;
     var data = me.data;
 
     var titleMap = {
@@ -104,6 +110,7 @@ page.deviceready = function () {
             }
         });
 
+    // 底部 按钮的语言包对应关系
     var barMap = {
         affair: me.lang.newAffair,
         talk: me.lang.startTalk,
@@ -121,6 +128,7 @@ page.deviceready = function () {
         var pageTo = $click.data('page');
         var type = $click.data('type');
 
+        // 跳转到新页面的
         if (pageTo && pageTo.length > 0) {
             navigation.open(pageTo, {
                 title: barMap[type],
@@ -136,6 +144,8 @@ page.deviceready = function () {
                 }
             });
         }
+
+        // 这里是异步操作由 asyncTaskWork 来做异步事务同时刷新当前页面
         else {
             // 弹出框
             // 实际这里是接收 ^.^
@@ -148,6 +158,7 @@ page.deviceready = function () {
                             taskId: taskId
                         }
                     };
+
                     asyncTaskWork(target, type, actions);
                 }
             });
@@ -272,6 +283,9 @@ function asyncTaskWork(target, ajaxKey, actionObj) {
     page.post(taskWorker.api, taskWorker.params)
         .done(function (data) {
             taskWorker.done();
+
+            // 这些按钮点击之后 当前任务刷新后不会再具备该功能
+            target && $(target).off('click');
         })
         .always(function (result) {
             if (!actionObj) {
@@ -280,8 +294,6 @@ function asyncTaskWork(target, ajaxKey, actionObj) {
             var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
             page.sendLog(actionObj, errCode);
         });
-
-    target && $(target).off('click');
 }
 
 page.bindEvents = function () {
@@ -308,11 +320,14 @@ page.bindEvents = function () {
     });
 };
 
+/**
+ * 初始化事件&讨论列表
+ */
 page.initAffairAndTalkList = function () {
     var me = this;
 
     // 先清空
-    $('#affair-talk dd').remove('');
+    $('#affair-talk dd').remove();
 
     if (me.dataLoader) {
         me.dataLoader = null;

@@ -192,8 +192,10 @@ page.bindEvents = function () {
         untick: config.API.TALK_RESUME,
 
         // 完成状态
-        tickedCallback: function () {
+        tickedCallback: function (data) {
             me.log.store({actionTag: 'talkDone', targetTag: {talkId: talkId}});
+            // 暂时只做右侧禁用处理，先不判断权限
+            // detailUtil.naviRight(me, data, 'talk');
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
         },

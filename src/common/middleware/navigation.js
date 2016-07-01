@@ -231,12 +231,13 @@ navigation.right = function (buttonArray) {
     }
 
     var icon = '';
+    var arrIcon = '';
     var arr = [];
 
     buttonArray.forEach(function (item) {
 
         if (typeof item === 'string') {
-            icon = item;
+            arrIcon = item;
         }
         else {
             arr.push({
@@ -249,13 +250,19 @@ navigation.right = function (buttonArray) {
 
     // 如果没有下拉菜单，则 return
     if (arr.length === 0) {
+        // 原生这里不能对已经有菜单的再清空，代码放在这里留个纪念，这样只能选择禁用按钮了
+        // CPNavigationBar.setRightButton('', []);
+        // 这只是一个折中的统一处理方案，该情况出现的情况是某下返回刷新需要操作右上角的按钮的情况
+        this.button('right', false);
         return;
     }
 
-    // 如果只有一个下拉同时没有直接设置默认icon
-    // 则不需要菜单 icon，同时 icon 使用 第一个下拉的 icon 或者 title
-    if (arr.length === 1 && !icon) {
+    // 下拉数量只有一个，同时如果有 右上角 默认图，则强行去掉默认图，使用下拉的第一个配置
+    if (arr.length === 1) {
         icon = (arr[0].iconPath || arr[0].title);
+    }
+    else {
+        icon = arrIcon;
     }
 
     // 解决 原生 安卓右上角bug，有下拉菜单的时候，第一个下拉会覆盖 setRightButton 的第一个参数的设置
