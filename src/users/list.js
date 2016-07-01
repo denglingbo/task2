@@ -13,10 +13,6 @@ var Page = require('common/page');
 var navigation = require('common/middleware/navigation');
 var page = new Page();
 
-// page.enter = function () {
-//     this.render('#users-list', this.data);
-// };
-
 page.deviceready = function () {
     var me = this;
 

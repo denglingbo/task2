@@ -36,6 +36,12 @@
             }
         }
 
+        &.detail-summary-onlyattach {
+            .summary-attach-container {
+                padding-top: 0;
+            }
+        }
+
         .summary-attach {
             padding: 0;
             margin: 0;

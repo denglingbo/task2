@@ -1,8 +1,8 @@
 /**
  * @file list.js
  * @author deo
- * 任务列表页
  *
+ * 任务列表页
  */
 
 require('./list.scss');
@@ -15,7 +15,7 @@ var page = new Page();
 var config = require('../config');
 var util = require('common/util');
 var navigation = require('common/middleware/navigation');
-// var Sticky = require('common/ui/sticky');
+
 var Pharos = require('common/ui/pharos');
 
 // 初始化 单页
@@ -48,7 +48,6 @@ var pageCache = {};
 
 var pages = require('./list/config');
 
-// 提前渲染模版
 var data = {
     list: [
         {name: 'opened'},
@@ -60,6 +59,7 @@ var data = {
     ]
 };
 
+// 提前渲染模版
 page.render('#opened-main', data, {
     partials: {
         page: pageTpl
@@ -266,7 +266,7 @@ page.initPageSlider = function () {
 
             switchPage(target, info);
 
-            target.loadPage = new LoadPage(info);
+            new LoadPage(info);
         }
     });
 };
@@ -350,9 +350,7 @@ function LoadPage(info) {
                 + ($loader.length ? $loader.height() : 0);
 
     var api = info.api || config.API.GET_TASK_LIST;
-
     var params = {};
-
     var $items = $wrapper.find('.list-wrapper-content .list-item');
 
     if ($items && $items.length > 0) {
@@ -418,7 +416,7 @@ function LoadPage(info) {
 }
 
 /**
- * 设置计数器
+ * 设置计数器，不做失败的处理
  */
 page.initRemindNum = function () {
 

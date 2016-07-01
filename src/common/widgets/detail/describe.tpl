@@ -55,7 +55,7 @@
 {{/completeRemark}}
 
 {{#summary}}
-<!-- 总结 -->
+<!-- 总结-有内容&附件 -->
 <div class="layout detail-summary">
     <div class="sub-title">{{ summaryTitleRaw }}</div>
 
@@ -64,11 +64,25 @@
         {{& summary }}
         </div>
     </div>
+
     <!-- 附件 -->
     <div class="layout-list summary-attach hide">
         <div class="summary-attach-container"></div>
     </div>
 </div>
+{{/summary}}
+
+{{^summary}}
+{{#isSummaryAttachs}}
+<!-- 总结-仅有附件 -->
+<div class="layout detail-summary detail-summary-onlyattach">
+    <div class="sub-title">{{ summaryTitleRaw }}</div>
+    <!-- 附件 -->
+    <div class="layout-list summary-attach hide">
+        <div class="summary-attach-container"></div>
+    </div>
+</div>
+{{/isSummaryAttachs}}
 {{/summary}}
 
 <!-- 描述 -->
