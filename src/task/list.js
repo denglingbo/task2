@@ -388,7 +388,6 @@ function LoadPage(info) {
         },
 
         onDataNull: function (loader) {
-            // TODO
             // 添加未完成或其他的空页面提示
             var name = info.name;
             var data = {
@@ -398,8 +397,9 @@ function LoadPage(info) {
                     noTaskNotCreate: page.lang.noTaskNotCreate
                 }
             };
+            // 不同页面的空页面不同 在未完成、进行中、已完成、已撤销页面有新建按钮
             if (name === 'opened' || name === 'doing' || name === 'done' || name === 'cancel') {
-                data.all = true;
+                data.hasNewTaskBtn = true;
             }
             page.render(loader.wrapper, data, {
                 tmpl: emptyTaskTpl

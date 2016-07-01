@@ -132,6 +132,16 @@ editCom.cancelValidate = function () {
 };
 
 /**
+ * enabled right原生按钮
+ *
+ */
+// editCom.rightEnabled = function () {
+//     if ((result && result.meta && result.meta.code !== 200) || !result) {
+//         navigation.button('right', true);
+//     }
+// };
+
+/**
  * 提交前验证
  *
  * @param {Function} submitFn, 提交到后端的函数
@@ -142,6 +152,7 @@ editCom.submitValid = function (submitFn) {
     var arr = [];
 
     if (flag && submitFn && $.isFunction(submitFn)) {
+        navigation.button('right', false);
         submitFn();
     }
     else {
@@ -254,6 +265,9 @@ editCom.submit = function (page, data, ajaxUrl) {
             dfd.reject(result);
         })
         .always(function (result) {
+            if (!success) {
+                navigation.button('right', true);
+            }
             me.submitAlert(success);
         });
     return dfd;

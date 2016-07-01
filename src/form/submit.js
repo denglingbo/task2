@@ -444,11 +444,13 @@ page.deviceready = function () {
         var dataArg = me.getData(me.pageType);
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
-
+        navigation.button('right', false);
+        var success = false;
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
+                    success = true;
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });
@@ -458,6 +460,9 @@ page.deviceready = function () {
 
             })
             .always(function (result) {
+                if (!success) {
+                    navigation.button('right', true);
+                }
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
                 var targetTag = {};
                 if (actionsTag[me.pageType]) {

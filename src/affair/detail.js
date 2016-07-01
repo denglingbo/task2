@@ -67,13 +67,8 @@ page.deviceready = function () {
 
     me.initCommentList();
 
-    if (data.attachs && data.attachs.length) {
-        AttachWrapper.initDetailAttach({
-            attachData: data.attachs,
-            container: '.attach-container',
-            wrapper: '.attach'
-        });
-    }
+    // 加载附件
+    me.setAttach();
 
     me.setNavigation();
 
@@ -93,6 +88,29 @@ page.deviceready = function () {
                 }
             }
         });
+};
+
+/**
+ * 设置附件
+ *
+ */
+page.setAttach = function () {
+    var me = this;
+    var data = me.data;
+    if (!data || !data.attachs || !data.attachs.length) {
+        return;
+    }
+
+    var length = data.attachs.length;
+    var attachData = length > 5 ? data.attachs.splice(0, 5) : data.attachs;
+    AttachWrapper.initDetailAttach({
+        attachData: attachData,
+        container: '.attach-container',
+        wrapper: '.attach'
+    });
+    if (length > 5) {
+        $('.attach .load-more').removeClass('hide');
+    }
 };
 
 /**
@@ -149,6 +167,15 @@ page.bindEvents = function () {
             detailUtil.naviRight(me, data, 'affair');
             $comment && $comment.removeClass('hide');
         }
+    });
+
+    // bind 附件加载更多
+    $('.attach').off('click');
+    $('.attach').on('click', '.load-more', function () {
+        var type = $(this).attr('data-type');
+        navigation.open('/attach-attach.html?affairId=' + affairId + '&page=affair&type=' + type, {
+            title: me.lang.attach
+        });
     });
 };
 
