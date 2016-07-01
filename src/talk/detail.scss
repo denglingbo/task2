@@ -30,6 +30,11 @@
 }
 .goalui-fixedinput {
     position: relative !important;
+
+    .attach-list {
+        max-height: rem(125px);
+        overflow: auto;
+    }
 }
 
 .componentAttachItem {
