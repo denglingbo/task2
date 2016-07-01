@@ -127,6 +127,9 @@ function sendCommentLog(page, name, id, error) {
     page.log.store(data);
 };
 
+// 总数
+var total = 0;
+
 /**
  * 初始化 评论数据
  *
@@ -149,7 +152,7 @@ var list = function (page, options) {
     me.page = page;
     me.data = me.opts.data;
     me.$main = $(me.opts.wrapper);
-
+    me.$total = $('.comment-total');
     // 避免 page.refresh 继续创建进来
     me.$main.find('dd').not('.list-null').remove();
 
@@ -178,8 +181,7 @@ var list = function (page, options) {
 
         dealData(data, me.page);
 
-        var total = data.total || 0;
-        $('.comment-total').html('(' + total + ')');
+        me.refreshTotal(data.total);
 
         this.render(data, 'append');
         renderUser(me.$main, data.objList);
@@ -194,6 +196,16 @@ var list = function (page, options) {
 };
 
 $.extend(list.prototype, {
+
+    refreshTotal: function (num) {
+        total = num;
+
+        if (!total || total < 0) {
+            total = 0;
+        }
+
+        this.$total.html('(' + total + ')');
+    },
 
     isComments: function () {
         return this.$main.find('dd').not('.list-null').length;
@@ -262,6 +274,8 @@ $.extend(list.prototype, {
         var id = $target.data('id');
         // var uid = $target.data('uid');
 
+        me.refreshTotal(total - 1);
+
         var promise = this.page.post(this.opts.API.delete, {
             commentId: id
         });
@@ -306,6 +320,9 @@ $.extend(list.prototype, {
         var $null = $('.list-null');
         var $send = $('.send');
         var attachs = me.attach.getModifyAttaches();
+
+        me.refreshTotal(total + 1);
+
         var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
             id: 0,

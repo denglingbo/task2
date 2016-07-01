@@ -62,7 +62,7 @@ module.exports = {
     titleCannotMore50: '標題不能超過50字',
     contentCannotMore5000: '輸入內容不能超過5千字',
     attachNoReady: '附件尚未傳輸完畢',
-    whetherGiveUpCurrContent: '確認放弃當前添加的內容',
+    whetherGiveUpCurrContent: '確認放弃當前編輯的內容',
     choosePerson: '選人',
     creator: '創建人',
     principal: '負責人',

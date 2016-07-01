@@ -122,7 +122,6 @@ editCom.cancelValidate = function () {
             content: lang.whetherGiveUpCurrContent,
             onApply: function () {
 
-                // 编辑过，返回并刷新
                 navigation.open(-1);
             }
         });

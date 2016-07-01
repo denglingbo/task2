@@ -11,6 +11,7 @@ require('common/ui/virtualInput/virtualInput.scss');
 
 var config = require('../config');
 var util = require('../common/util');
+var users = require('common/middleware/users/users');
 var detailUtil = require('common/widgets/detail/detail');
 var VirtualInput = require('common/ui/virtualInput/virtualInput');
 
@@ -75,6 +76,23 @@ page.deviceready = function () {
     }
 
     me.setNavigation();
+
+    // 讨论 & 事件 创建人显示在 创建时间之前
+    users.getUserInfo([data.createUser])
+        .done(function (pubData) {
+            if (pubData && pubData.contacts) {
+                var info = pubData.contacts[0];
+
+                var timeText = (data.createTime === data.opTime) ? me.lang.createOn : me.lang.updateOn;
+
+                if (info && info.name) {
+                    $('.create-user').html(
+                        '<em>' + info.name + '</em>'
+                        + '<em>' + timeText + '</em>'
+                    );
+                }
+            }
+        });
 };
 
 /**

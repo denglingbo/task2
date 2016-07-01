@@ -98,7 +98,9 @@ page.enter = function () {
     // 切换内容的 page 页
     this.initPageSlider();
 
-    this.bindEvents();
+    if (!this.isRefresh) {
+        this.bindEvents();
+    }
 };
 
 page.deviceready = function () {
@@ -133,7 +135,7 @@ page.deviceready = function () {
 page.bindEvents = function () {
     var me = this;
 
-    $('#main').off('click').on('click', '.list-item', function () {
+    $('.main').on('click', '.list-item', function () {
         var id = $(this).data('id');
 
         if (id) {

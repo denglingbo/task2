@@ -28,6 +28,12 @@ var CPWebView = {
     }
 };
 
+var CPUtils = {
+    showAlertView: function (title, content, myCancel, myApply) {
+        myApply && myApply.callback();
+    }
+};
+
 var CPNavigationBar = {
     redirect: function (url, data) {
         window.location.href = url;

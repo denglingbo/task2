@@ -45,7 +45,7 @@ detail.dealPageData = function (data) {
 
     // 描述
     if (data.content) {
-        data.content = util.decodeHTML(data.content);
+        // data.content = util.decodeHTML(data.content);
 
         // 处理表单
         data.content = richForm(data.content);

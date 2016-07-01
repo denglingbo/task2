@@ -116,8 +116,6 @@ page.deviceready = function () {
 
     // 页面底部跳转
     $('body').on('click', '#fixbar li', function () {
-    // me.$fixbar.find('li').off('click');
-    // me.$fixbar.find('li').on('click', function () {
         var target = this;
         var $click = $(target);
         var pageTo = $click.data('page');
@@ -321,7 +319,8 @@ page.initAffairAndTalkList = function () {
             return page.get(config.API.AFFAIR_TALK_MORE_URL, {
                 taskId: page.data.id,
                 currPage: this.page,
-                role: role,
+                // 事件&讨论列表 讨论参与人权限问题，需要该字段
+                role: role || 0,
                 number: requestPageNum,
                 sortType: 0
             });
