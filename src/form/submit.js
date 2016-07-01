@@ -468,7 +468,6 @@ page.deviceready = function () {
     }
 
     navigation.left({
-        title: me.lang.cancel,
         click: goBack
     });
 

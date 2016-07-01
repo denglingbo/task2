@@ -202,7 +202,6 @@ editCom.subAndCancel = function (phoneInputTitle, phoneInputContent, attach, sub
     }
 
     navigation.left({
-        title: lang.cancel,
         click: goBack
     });
 
