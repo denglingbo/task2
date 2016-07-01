@@ -124,7 +124,7 @@ config.mock = {
 // 如果 mock.proxyPrefix 和 API.prefix 指向同一个 路由，则代表需要进行转发
 // prefix = '/data/' 为前端本地开发调试使用
 
-config.debug = true;
+// config.debug = true;
 
 if (config.debug) {
     var loc = window.location;

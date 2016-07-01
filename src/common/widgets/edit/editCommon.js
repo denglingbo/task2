@@ -132,16 +132,6 @@ editCom.cancelValidate = function () {
 };
 
 /**
- * enabled right原生按钮
- *
- */
-// editCom.rightEnabled = function () {
-//     if ((result && result.meta && result.meta.code !== 200) || !result) {
-//         navigation.button('right', true);
-//     }
-// };
-
-/**
  * 提交前验证
  *
  * @param {Function} submitFn, 提交到后端的函数
