@@ -21,6 +21,8 @@ var virtualInput = function (selector, options) {
     this.$button = this.$wrap.find('.button');
     this.$send = this.$wrap.find('.send');
     this.$limit = this.$wrap.find('.limit');
+    // this.$cancel = this.$wrap.find('.cancel-text');
+    // this.cancel = '.cancel-text';
     this.editor = '.editable';
     this.attachBtn = '#addAttach';
     this.attachList = '#attachList';
@@ -54,10 +56,12 @@ virtualInput.prototype = {
                 me.$send.addClass('unable');
             }
             me.$send.data({notNull: false});
+            // me.$send.addClass('no-words');
         }
         else {
             me.$placeholder.addClass('hide');
             me.$send.data({notNull: true});
+            // me.$send.removeClass('no-words');
         }
     },
 
@@ -68,6 +72,7 @@ virtualInput.prototype = {
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
+        // me.$cancel.addClass('no-words');
         // me.$send.addClass('hide');
         me.$wrap.blur();
     },
@@ -97,6 +102,10 @@ virtualInput.prototype = {
                     me.$placeholder.removeClass('hide');
                 }
             });
+            // .on('click', me.cancel, function () {
+            //     $(me.editor).html('');
+            //     me.sendStatus();
+            // });
         me.$wrap.on('click', me.attachBtn, function () {
             me.$shadow.removeClass('hide');
             me.$wrap.addClass('extend');
