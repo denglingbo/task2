@@ -1,4 +1,6 @@
-/*表格处理*/
+/**
+ * 表格处理
+ */
 .richtext-wrap {
     overflow-x: auto;
     display: block;
@@ -19,6 +21,7 @@
 
     @extend .word-content;
     overflow-x: auto;
+    line-height: 18px;
 
     span {
         display: inline;

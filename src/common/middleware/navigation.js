@@ -90,6 +90,8 @@ function addReferer(url, referer) {
 }
 
 var openTimerId = null;
+// 避免跳转被多次绑定执行，为了更加正常的去调用原生的跳转接口进行一个入口控制
+var clickTimerId = null;
 
 /**
  * 要跳转的 url, 同时兼容 CPNavigationBar.redirect && CPNavigationBar.returnPreviousPage
@@ -129,6 +131,9 @@ navigation.open = function (url, options) {
     };
 
     $.extend(opts, options);
+    
+    clearTimeout(clickTimerId);
+    clearTimeout(openTimerId);
 
     // url params 的 referer
     // var urlReferer = getUrlReferer();
@@ -157,7 +162,7 @@ navigation.open = function (url, options) {
         // 传递参数给上一个页面
         if (opts.goBackParams) {
 
-            // 只执行一次点击
+            // 只执行一次
             if (openTimerId) {
                 return;
             }
@@ -166,11 +171,15 @@ navigation.open = function (url, options) {
 
             openTimerId = setTimeout(function() {
                 CPNavigationBar.returnPreviousPage();
+                openTimerId = null;
             }, 500);
         }
         // 正常的返回
         else {
-            CPNavigationBar.returnPreviousPage();
+
+            clickTimerId = setTimeout(function () {
+                CPNavigationBar.returnPreviousPage();
+            }, 0);
         }
     }
 
@@ -186,7 +195,9 @@ navigation.open = function (url, options) {
         // }
 
         // 跳转
-        CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams, opts.transitionParam);
+        clickTimerId = setTimeout(function () {
+            CPNavigationBar.redirect(url, opts.title, opts.barHidden, opts.returnParams, opts.transitionParam);
+        }, 0);
     }
 };
 
