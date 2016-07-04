@@ -60,9 +60,9 @@ page.enter = function () {
     me.initAffairAndTalkList();
 
     // 如果返回刷新，不再绑定事件
-    if (!me.isRefresh) {
-        me.bindEvents();
-    }
+    // if (!me.isRefresh) {
+    me.bindEvents();
+    // }
 
     // 根据权限渲染之后修正样式
     detailUtil.fixStyles();
@@ -313,7 +313,11 @@ page.bindEvents = function () {
     $('.attach, .summary-attach').off('click');
     $('.attach, .summary-attach').on('click', '.load-more', function () {
         var type = $(this).attr('data-type');
-        var url = '/attach-attach.html?taskId=' + taskId + '&page=task&type=' + type + '&total=' + me.attachData.total;
+        var total = 0;
+        if (me.attachData && me.attachData.total) {
+            total = me.attachData.total;
+        }
+        var url = '/attach-attach.html?taskId=' + taskId + '&page=task&type=' + type + '&total=' + total;
         navigation.open(url, {
             title: me.lang.attach
         });
