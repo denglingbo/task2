@@ -218,6 +218,10 @@ page.bindEvents = function () {
             title: me.lang.attach
         });
     });
+    // $(window).on('scroll', function () {
+    //     var $main = $('#goalui-fixedinput');
+    //     $main.css("top", $(window).scrollTop() + $(window).height() - $main.height());
+    // })
 };
 
 /**

@@ -236,7 +236,7 @@ $.extend(list.prototype, {
 
         $send.off('click');
         $send.on('click', function () {
-            if (!$send.hasClass('unable')) {
+            if (!$send.hasClass('unable') && me.attach.isAttachesReady()) {
                 me.addComment();
             }
         });

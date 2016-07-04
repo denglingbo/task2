@@ -20,16 +20,25 @@
 
 .main {
     padding-bottom: rem(40px);
+
+    &.ios-fixed {
+        position: fixed;
+        bottom: 0;
+        top: 0;
+        overflow: auto;
+        width: 100%;
+        -weblit-overflow-scrolling: touch;
+    }
 }
 
 
-#comment-input-wrapper {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
+// #comment-input-wrapper {
+//     position: fixed;
+//     bottom: 0;
+//     width: 100%;
+// }
 .goalui-fixedinput {
-    position: relative !important;
+    position: fixed !important;
 
     .attach-list {
         max-height: rem(125px);

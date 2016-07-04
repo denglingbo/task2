@@ -46,7 +46,6 @@ function setCurr(currClass) {
 page.enter = function () {
     var me = this;
     me.render('#done-container', {lang: me.lang});
-
     me.initValue();
     me.bindEvents();
     me.initPlugin();
@@ -66,8 +65,8 @@ page.bindEvents = function () {
 page.initPlugin = function (initTime) {
     var defaultTime = info.endTime ? new Date(info.endTime) : new Date();
     editCom.initMobiscroll('datetime', '.custom-time', {
-        headerText: '<span class="dw-tab-data dw-tab-selected">'
-            + lang.date + '</span><span class="dw-tab-time">' + lang.time + '</span>',
+        headerText: '<span class="dw-tab-data dw-tab-selected">' + lang.date + '</span>'
+                  + '<span class="dw-tab-time">' + lang.time + '</span>',
         minDate: new Date(date.y - 50, 0, 1),
         maxDate: new Date(date.y + 50, 11, 31, 23, 59, 59),
         defaultValue: defaultTime,
