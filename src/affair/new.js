@@ -192,7 +192,7 @@ page.initPlugin = function () {
                     var oldVal = DATA.labelId;
                     DATA.labelId = inst.getVal();
 
-                    $type.text(text);
+                    $type.html(text);
 
                     editCom.valid.isEdit = (
                         oldVal !== DATA.labelId ? true : editCom.valid.isEdit

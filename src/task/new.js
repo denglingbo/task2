@@ -337,10 +337,11 @@ page.ajaxAttach = function () {
         me.loadAttach();
         return;
     }
+    var total = util.params('total') || 1000;
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
         currPage: 1,
-        number: 1000
+        number: total
     });
 
     promise

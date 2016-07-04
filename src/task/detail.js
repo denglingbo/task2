@@ -644,6 +644,7 @@ page.ajaxAttach = function () {
         .done(function (result) {
             if (result.meta && result.meta.code === 200) {
                 me.attachData = result.data;
+                me.attachTotal = me.attachData.total;
             }
         })
         .fail(function (err) {
