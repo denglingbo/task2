@@ -52,8 +52,6 @@ page.enter = function () {
     me.initPlugin();
 };
 
-
-
 /**
  * 绑定事件
  *

@@ -104,11 +104,13 @@ page.getActionsData = function (errCode) {
         if ($content && $content.length && $.trim($content.text())) {
             targetTag.content = true;
         }
-        if (!editCom.aTag.attachIsNull) {
-            targetTag.attachs = true;
-        }
-        if (editCom.aTag.attendsIsChange) {
-            targetTag.attendsIsChange = true;
+        if (editCom && editCom.aTag) {
+            if (!editCom.aTag.attachIsNull) {
+                targetTag.attachs = true;
+            }
+            if (editCom.aTag.attendsIsChange) {
+                targetTag.attendsIsChange = true;
+            }
         }
         action.targetTag = targetTag;
     }

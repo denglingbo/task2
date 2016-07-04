@@ -42,35 +42,29 @@ var principalSelectKey = 'taskPrincipalSelector';
 var attendSelectKey = 'taskAttandSelectKey';
 
 var choosePersonData = {
-    principal: function () {
-        return {
-            name: 'principal',
-            key: principalSelectKey,
-            itemKey: 'principalUser',
-            id: '#principal',
-            setOptions: function () {
-                var me = this;
-                editCom.setChoosePersonLoc(me.key, {
-                    selectType: 1,
-                    contacts: editCom.transJid(DATA[me.itemKey])
-                });
-            }
-        };
+    principal: {
+        name: 'principal',
+        key: principalSelectKey,
+        itemKey: 'principalUser',
+        id: '#principal',
+        setOptions: function (options) {
+            editCom.setChoosePersonLoc(options.key, {
+                selectType: 1,
+                contacts: editCom.transJid(DATA[options.itemKey])
+            });
+        }
     },
-    attends: function () {
-        return {
-            name: 'attends',
-            key: attendSelectKey,
-            itemKey: 'attendIds',
-            id: '#attends',
-            setOptions: function () {
-                var me = this;
-                editCom.setChoosePersonLoc(me.key, {
-                    selectType: 2,
-                    contacts: editCom.transJid(DATA[me.itemKey])
-                });
-            }
-        };
+    attends: {
+        name: 'attends',
+        key: attendSelectKey,
+        itemKey: 'attendIds',
+        id: '#attends',
+        setOptions: function (options) {
+            editCom.setChoosePersonLoc(options.key, {
+                selectType: 2,
+                contacts: editCom.transJid(DATA[options.itemKey])
+            });
+        }
     }
 };
 
@@ -175,8 +169,8 @@ page.deviceready = function () {
     // 选择人员
     $('#principal, #attends').on('click', function (e) {
         var id = $(this).attr('id');
-        var chooseData = choosePersonData[id]();
-        chooseData.setOptions();
+        var chooseData = choosePersonData[id];
+        chooseData.setOptions(chooseData);
         me.choosePerson(chooseData);
     });
 
@@ -337,7 +331,7 @@ page.ajaxAttach = function () {
         me.loadAttach();
         return;
     }
-    var total = util.params('total') || 1000;
+    var total = +util.params('total') || 1000;
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
         currPage: 1,
