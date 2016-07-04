@@ -35,6 +35,8 @@ editCom.aTag = {
     attendsIsChange: false
 };
 
+editCom.isCanSubmit = true;
+
 /**
  * 验证不通过弹窗
  *
@@ -137,12 +139,16 @@ editCom.cancelValidate = function () {
  * @param {Function} submitFn, 提交到后端的函数
  */
 editCom.submitValid = function (submitFn) {
-    var validObj = this.valid;
+    var me = this;
+    var validObj = me.valid;
     var flag = validObj.title && validObj.content && validObj.isAttachesReady;
     var arr = [];
 
-    if (flag && submitFn && $.isFunction(submitFn)) {
-        navigation.button('right', false);
+    if (flag && submitFn && $.isFunction(submitFn) && me.isCanSubmit) {
+        me.isCanSubmit = false;
+        setTimeout(function () {
+            navigation.button('right', false);
+        }, 250);
         submitFn();
     }
     else {
@@ -163,7 +169,7 @@ editCom.submitValid = function (submitFn) {
             arr.push(lang.attachNoReady);
         }
     }
-    this.validAlert(arr);
+    me.validAlert(arr);
 };
 
 /**
@@ -256,7 +262,10 @@ editCom.submit = function (page, data, ajaxUrl) {
         })
         .always(function (result) {
             if (!success) {
-                navigation.button('right', true);
+                me.isCanSubmit = true;
+                setTimeout(function () {
+                    navigation.button('right', true);
+                }, 250);
             }
             me.submitAlert(success);
         });

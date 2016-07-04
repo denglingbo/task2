@@ -643,9 +643,7 @@ page.ajaxAttach = function () {
     promise
         .done(function (result) {
             if (result.meta && result.meta.code === 200) {
-                if (!me.attachData) {
-                    me.attachData = result.data;
-                }
+                me.attachData = result.data;
             }
         })
         .fail(function (err) {
