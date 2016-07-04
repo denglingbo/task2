@@ -249,14 +249,16 @@ page.getActionsData = function (errCode) {
         if ($content && $content.length && $.trim($content.text())) {
             targetTag.content = true;
         }
-        if (!editCom.aTag.principalIsNull) {
-            targetTag.principal = true;
-        }
-        if (!editCom.aTag.attendsIsNull) {
-            targetTag.attends = true;
-        }
-        if (!editCom.aTag.attachIsNull) {
-            targetTag.attachs = true;
+        if (editCom && editCom.aTag) {
+            if (!editCom.aTag.principalIsNull) {
+                targetTag.principal = true;
+            }
+            if (!editCom.aTag.attendsIsNull) {
+                targetTag.attends = true;
+            }
+            if (!editCom.aTag.attachIsNull) {
+                targetTag.attachs = true;
+            }
         }
         action.targetTag = targetTag;
     }
@@ -335,10 +337,11 @@ page.ajaxAttach = function () {
         me.loadAttach();
         return;
     }
+    var total = util.params('total') || 1000;
     var promise = page.get(config.API.ATTACH_LIST, {
         taskId: taskId,
         currPage: 1,
-        number: 1000
+        number: total
     });
 
     promise

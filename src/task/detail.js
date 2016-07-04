@@ -60,9 +60,9 @@ page.enter = function () {
     me.initAffairAndTalkList();
 
     // 如果返回刷新，不再绑定事件
-    if (!me.isRefresh) {
-        me.bindEvents();
-    }
+    // if (!me.isRefresh) {
+    me.bindEvents();
+    // }
 
     // 根据权限渲染之后修正样式
     detailUtil.fixStyles();
@@ -197,12 +197,16 @@ page.deviceready = function () {
     // 加载附件数据
     me.ajaxAttach();
 
+    // 设置总结附件
+    var summaryAttachsLength = 0;
+    var summaryAttachsData = [];
     if (data.summaryAttachs && data.summaryAttachs.length) {
-        AttachWrapper.initDetailAttach({
-            attachData: data.summaryAttachs,
-            container: '.summary-attach-container',
-            wrapper: '.summary-attach'
-        });
+        summaryAttachsLength = data.summaryAttachs.length;
+        summaryAttachsData = summaryAttachsLength > 5 ? data.summaryAttachs.slice(0, 5) : data.summaryAttachs;
+        me.initAttach(summaryAttachsData, 'summaryAttachs');
+        if (summaryAttachsLength > 5) {
+            $('.summary-attach .load-more').removeClass('hide');
+        }
     }
 };
 
@@ -299,16 +303,22 @@ page.bindEvents = function () {
     me.$affairTalk = $('#affair-talk');
     me.$fixbar = $('.fixbar');
     var $star = $('.star');
-    var $attachMore = $('.attach .load-more');
 
     $star.off('click');
     $star.on('click', function () {
         me.follow(this);
     });
 
-    $attachMore.off('click');
-    $attachMore.on('click', function () {
-        navigation.open('/attach-attach.html?taskId=' + taskId + '&total=' + me.attachData.total, {
+    // bind 附件加载更多
+    $('.attach, .summary-attach').off('click');
+    $('.attach, .summary-attach').on('click', '.load-more', function () {
+        var type = $(this).attr('data-type');
+        var total = 0;
+        if (me.attachData && me.attachData.total) {
+            total = me.attachData.total;
+        }
+        var url = '/attach-attach.html?taskId=' + taskId + '&page=task&type=' + type + '&total=' + total;
+        navigation.open(url, {
             title: me.lang.attach
         });
     });
@@ -372,17 +382,29 @@ page.initAffairAndTalkList = function () {
     });
 };
 
+var attachDom = {
+    attachs: {
+        container: '.attach-container',
+        wrapper: '.attach'
+    },
+    summaryAttachs: {
+        container: '.summary-attach-container',
+        wrapper: '.summary-attach'
+    }
+};
+
 /**
  * 初始化附件
  *
  * @param {Object} attachData, 附件数据
+ * @param {string} type, 附件类型
  */
-page.initAttach = function (attachData) {
-    var me = this;
-    me.attach = AttachWrapper.initDetailAttach({
+page.initAttach = function (attachData, type) {
+    var dom = attachDom[type];
+    AttachWrapper.initDetailAttach({
         attachData: attachData,
-        container: '.attach-container',
-        wrapper: '.attach'
+        container: dom.container,
+        wrapper: dom.wrapper
     });
 };
 
@@ -401,7 +423,7 @@ page.loadAttach = function () {
     if (!attachList || !attachList.length) {
         return;
     }
-    me.initAttach(attachList);
+    me.initAttach(attachList, 'attachs');
     if (total > defaultAttachNum) {
         $('.attach .load-more').removeClass('hide');
     }
@@ -623,9 +645,8 @@ page.ajaxAttach = function () {
     promise
         .done(function (result) {
             if (result.meta && result.meta.code === 200) {
-                if (!me.attachData) {
-                    me.attachData = result.data;
-                }
+                me.attachData = result.data;
+                me.attachTotal = me.attachData.total;
             }
         })
         .fail(function (err) {

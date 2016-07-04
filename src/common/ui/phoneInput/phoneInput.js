@@ -254,9 +254,10 @@ $.extend(PhoneInput.prototype, {
                 if (me.isNull()) {
                     me.displayer('placeholder').show();
                 }
+                // 保证当点击删除按钮时能正常删除
                 setTimeout(function () {
                     me.displayer('delete').hide();
-                }, 100);
+                }, 0);
             });
 
         // 删除按钮

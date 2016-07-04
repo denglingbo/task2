@@ -68,7 +68,6 @@ virtualInput.prototype = {
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
-        // me.$send.addClass('hide');
         me.$wrap.blur();
     },
 
@@ -82,7 +81,6 @@ virtualInput.prototype = {
                 event.stopPropagation();
 
                 me.$shadow.removeClass('hide');
-                // me.$placeholder.addClass('hide');
                 me.$wrap.addClass('extend');
                 $(me.attachList).removeClass('hide');
                 me.sendStatus();
@@ -108,8 +106,6 @@ virtualInput.prototype = {
             me.$shadow.addClass('hide');
             me.$wrap.removeClass('extend');
             $(me.attachList).addClass('hide');
-
-            // me.$wrap.blur();
         });
     }
 };

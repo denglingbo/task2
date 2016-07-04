@@ -72,20 +72,12 @@ page.deviceready = function () {
     var me = this;
     // var lang = me.lang;
     var data = me.data;
-    if (data.attachs && data.attachs.length) {
-        AttachWrapper.initDetailAttach({
-            attachData: data.attachs,
-            container: '.attach-container',
-            wrapper: '.attach'
-        });
-    }
-    if (data.summaryAttachs && data.summaryAttachs.length) {
-        AttachWrapper.initDetailAttach({
-            attachData: data.summaryAttachs,
-            container: '.summary-attach-container',
-            wrapper: '.summary-attach'
-        });
-    }
+
+    // 加载附件
+    me.setAttach('attachs');
+
+    // 加载总结附件
+    me.setAttach('summaryAttachs');
 
     var dfdPub = users.getUserInfo(data.userIds);
 
@@ -117,6 +109,48 @@ page.deviceready = function () {
     me.setNavigation();
 
     me.initCommentList();
+};
+
+// 获取init附件数据
+var getAttachData = {
+    attachs: function (data) {
+        return {
+            length: data.attachs.length,
+            data: {
+                attachData: data.attachs.length > 5 ? data.attachs.splice(0, 5) : data.attachs,
+                container: '.attach-container',
+                wrapper: '.attach'
+            }
+        };
+    },
+    summaryAttachs: function (data) {
+        return {
+            length: data.summaryAttachs.length,
+            data: {
+                attachData: data.summaryAttachs.length > 5 ? data.summaryAttachs.splice(0, 5) : data.summaryAttachs,
+                container: '.summary-attach-container',
+                wrapper: '.summary-attach'
+            }
+        };
+    }
+};
+
+/**
+ * 设置附件
+ *
+ * @param {string} type, 附件类型, 也是附件在数据中的key
+ */
+page.setAttach = function (type) {
+    var me = this;
+    var data = me.data;
+    if (!type || !data || !data[type] || !data[type].length) {
+        return;
+    }
+    var initData = getAttachData[type](data);
+    AttachWrapper.initDetailAttach(initData.data);
+    if (initData.length > 5) {
+        $(initData.data.wrapper + ' .load-more').removeClass('hide');
+    }
 };
 
 /**
@@ -174,6 +208,15 @@ page.bindEvents = function () {
             detailUtil.naviRight(me, data, 'talk');
             $comment && $comment.removeClass('hide');
         }
+    });
+
+    // bind 附件加载更多
+    $('.attach, .summary-attach').off('click');
+    $('.attach, .summary-attach').on('click', '.load-more', function () {
+        var type = $(this).attr('data-type');
+        navigation.open('/attach-attach.html?talkId=' + talkId + '&page=talk&type=' + type, {
+            title: me.lang.attach
+        });
     });
 };
 

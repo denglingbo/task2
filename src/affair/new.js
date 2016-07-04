@@ -151,17 +151,19 @@ page.initPlugin = function () {
             var currName = '';
             var typeData = [];
 
+            var ltReg = new RegExp(/</g);
+            var gtReg = new RegExp(/>/g);
             me.affairType.forEach(function (item) {
 
                 var selected = false;
 
                 if (item.subId === DATA.labelId) {
-                    currName = item.name;
+                    currName = item.name.replace(ltReg, '&lt;').replace(gtReg, '&gt;');
                     selected = true;
                 }
 
                 typeData.push({
-                    text: item.name,
+                    text: item.name.replace(ltReg, '&lt;').replace(gtReg, '&gt;'),
                     value: item.subId,
                     selected: selected
                 });
@@ -190,7 +192,7 @@ page.initPlugin = function () {
                     var oldVal = DATA.labelId;
                     DATA.labelId = inst.getVal();
 
-                    $type.text(text);
+                    $type.html(text);
 
                     editCom.valid.isEdit = (
                         oldVal !== DATA.labelId ? true : editCom.valid.isEdit

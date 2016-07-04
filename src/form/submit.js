@@ -20,6 +20,7 @@ var attachTpl = require('common/middleware/attach/attach.tpl');
 
 var page = new Page();
 var lang = page.lang;
+var isCanSubmit = true;
 
 // 验证参数
 var valid = {
@@ -432,6 +433,9 @@ page.deviceready = function () {
     }
 
     function submit() {
+        if (!isCanSubmit) {
+            return;
+        }
         if (me.attach && !me.attach.isAttachesReady()) {
             var $alertDom = $('#alert-length-limit');
             $alertDom.text(me.lang.attachNoReady).removeClass('hide');
@@ -444,11 +448,16 @@ page.deviceready = function () {
         var dataArg = me.getData(me.pageType);
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
-
+        setTimeout(function () {
+            navigation.button('right', false);
+        }, 250);
+        isCanSubmit = false;
+        var success = false;
         promise
             .done(function (result) {
 
                 if (result && result.meta && result.meta.code === 200) {
+                    success = true;
                     navigation.open(-1, {
                         goBackParams: 'refresh'
                     });
@@ -458,6 +467,12 @@ page.deviceready = function () {
 
             })
             .always(function (result) {
+                if (!success) {
+                    setTimeout(function () {
+                        navigation.button('right', true);
+                    }, 250);
+                    isCanSubmit = true;
+                }
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
                 var targetTag = {};
                 if (actionsTag[me.pageType]) {

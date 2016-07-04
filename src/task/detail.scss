@@ -30,26 +30,3 @@
         }
     }
 }
-
-.attach {
-    .componentAttachItem {
-        &:last-child {
-            @include border-1px(bottom, #e1e4e6);
-        }
-    }
-
-    .load-more {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: rem(30px);
-        height: rem(50px);
-        font-size: rem(14px);
-        line-height: rem(50px);
-        color: $blue;
-
-        i {
-            margin-left: rem(4px);
-        }
-    }
-}

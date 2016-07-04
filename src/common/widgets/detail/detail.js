@@ -330,7 +330,7 @@ detail.naviRight = function (page, data, pageType, getAlert) {
         },
         task: {
             edit: {
-                url: '/task-new.html?taskId=' + data.id + '&total=' + data.total,
+                url: '/task-new.html?taskId=' + data.id,
                 title: lang.editTask
             }
         }
@@ -351,7 +351,9 @@ detail.naviRight = function (page, data, pageType, getAlert) {
         rightBar.push({
             title: lang.editButton,
             click: function () {
-                navigation.open(curPage.edit.url, {
+                var total = page.attachTotal || 1000;
+                var url = pageType === 'task' ? (curPage.edit.url + '&total=' + total) : curPage.edit.url;
+                navigation.open(url, {
                     title: curPage.edit.title,
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {

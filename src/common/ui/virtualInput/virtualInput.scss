@@ -71,24 +71,21 @@
             width: auto;
 
             .button {
-                position: absolute;
                 top: -42px;
-                right: 10px;
             }
 
             .send {
-                width: 60px;
-                height: 30px;
-                border-radius: 4px;
-                background-color: #29e;
-                color: #fff;
-                float: right;
-                margin-top: 10px;
-                text-align: center;
-                padding-left: 0;
-                line-height: 30px;
                 display: initial;
+
+                // &.no-words + .cancel-text {
+                //     display: none;
+                // }
             }
+
+            // .cancel-text {
+            //     top: -110px;
+            //     display: initial;
+            // }
         }
     }
 
@@ -151,6 +148,8 @@
         width: 50px;
 
         .button {
+            position: absolute;
+            right: 10px;
             width: 32px;
             height: 32px;
             margin: 0 0 0 6px;
@@ -160,13 +159,25 @@
         }
 
         .send {
+            width: 60px;
+            height: 30px;
+            border-radius: 4px;
+            background-color: #29e;
+            color: #fff;
+            float: right;
+            margin-top: 10px;
+            text-align: center;
+            padding-left: 0;
+            line-height: 30px;
             font-size: 16px;
-            line-height:32px;
-            padding-left: 8px;
-            color: #29e;
-            text-indent: right;
             display: none;
         }
+
+        // .cancel-text {
+        //     position: absolute;
+        //     right: 5px;
+        //     display: none;
+        // }
     }
 
     .button-wrap {
