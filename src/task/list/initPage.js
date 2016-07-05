@@ -152,6 +152,7 @@ Init.prototype = {
 
     init: function () {
         var me = this;
+        var lang = me.opts.lang;
 
         // 这里的分页请求由 dataLoader 来处理
         me.dataLoader = new DataLoader({
@@ -162,7 +163,20 @@ Init.prototype = {
             errTpl: errTpl,
             lang: {
                 more: {
-                    'default': lang.touchLoadMore
+                    'default': lang.touchLoadMore,
+                    'process': lang.loading,
+                    'done': lang.dataDone,
+                    'fail': lang.loadFailTryAgain,
+                    'max': lang.contentLoadAllReadey,
+                    'nodata': lang.nowNowData
+                },
+                reload: {
+                    'default': lang.dropDownRefresh,
+                    'process': lang.loading,
+                    'done': lang.dataDone,
+                    'fail': lang.loadFailTryAgain,
+                    'holder': lang.releaseRefresh,
+                    'unchanged': lang.alreadyLastestData
                 }
             },
             moreNullHidden: true,

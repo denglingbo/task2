@@ -49,11 +49,14 @@ page.enter = function () {
 
     detailUtil.richContent();
 
+    me.render('#comment-input-wrapper', {lang: me.data.lang});
     // 是否有评论权限
-    if (me.data.rights && me.data.rights.commentRight) {
-        me.render('#comment-input-wrapper', {lang: me.data.lang});
-        me.virtualInput = new VirtualInput('.goalui-fixedinput');
+    if (!me.data.rights || !me.data.rights.commentRight) {
+        $('#comment-input-wrapper').addClass('hide');
+        $('.main').addClass('nofixbar');
     }
+
+    me.virtualInput = new VirtualInput('.goalui-fixedinput');
 
     me.ticker = new Ticker('.tick', {
         async: true
@@ -173,6 +176,7 @@ page.setNavigation = function () {
 page.bindEvents = function () {
     var me = this;
     var $comment = $('#comment-input-wrapper');
+    var $htmlMain = $('.main');
     var talkId = util.params('id');
 
     // 查看更多人员
@@ -198,6 +202,7 @@ page.bindEvents = function () {
             // detailUtil.naviRight(me, data, 'talk');
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
+            $htmlMain.addClass('nofixbar');
         },
 
         // 恢复状态
@@ -207,6 +212,7 @@ page.bindEvents = function () {
             data.id = talkId;
             detailUtil.naviRight(me, data, 'talk');
             $comment && $comment.removeClass('hide');
+            $htmlMain.removeClass('nofixbar');
         }
     });
 
@@ -218,10 +224,6 @@ page.bindEvents = function () {
             title: me.lang.attach
         });
     });
-    // $(window).on('scroll', function () {
-    //     var $main = $('#goalui-fixedinput');
-    //     $main.css("top", $(window).scrollTop() + $(window).height() - $main.height());
-    // })
 };
 
 /**

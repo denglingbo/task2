@@ -124,9 +124,9 @@
                 "raCode": "RA10B3"
             }
         ],
-        "summary": null,
+        "summary": "",
         "summary_op_time": 1461657522213,
-        "summary_attachs": [
+        "summaryAttachs": [
             {
                 "id": 170398,
                 "parentId": "69402",

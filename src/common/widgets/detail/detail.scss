@@ -28,7 +28,10 @@
         .summary-attach-container {
             padding: 0;
             margin: 0;
-            padding-top: rem(10px);
+        }
+
+        .layout-section {
+            padding-bottom: rem(10px);
         }
 
         &.detail-summary-onlyattach {

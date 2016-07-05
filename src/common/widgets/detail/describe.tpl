@@ -68,7 +68,7 @@
     <!-- 附件 -->
     <div class="layout-list summary-attach hide">
         <div class="summary-attach-container"></div>
-        <div class="hide load-more" data-type="summary-attachs">更多总结附件<i class="more-attach"></i></div>
+        <div class="hide load-more" data-type="summary-attachs">{{lang.moreSummaryAttach}}<i class="more-attach"></i></div>
     </div>
 </div>
 {{/summary}}
@@ -81,7 +81,7 @@
     <!-- 附件 -->
     <div class="layout-list summary-attach hide">
         <div class="summary-attach-container"></div>
-        <div class="hide load-more" data-type="summary-attachs">更多总结附件<i class="more-attach"></i></div>
+        <div class="hide load-more" data-type="summary-attachs">{{lang.moreSummaryAttach}}<i class="more-attach"></i></div>
     </div>
 </div>
 {{/isSummaryAttachs}}

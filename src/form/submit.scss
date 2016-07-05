@@ -18,6 +18,8 @@
         @include border-1px(top);
 
         >i {
+            display: block;
+            margin-top: rem(-2px);
         	margin-right: rem(6px);
         }
     }

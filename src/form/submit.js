@@ -59,7 +59,6 @@ var pages = {
     talkSummary: function () {
         return [{
             name: 'summary',
-            required: true,
             holder: lang.talkSummaryPlaceholder
         }];
     },
@@ -296,7 +295,9 @@ page.initInput = function () {
 
     $('.phone-input').each(function (i) {
         var limits = 500;
-
+        if (/summary|talkSummary/.test(me.pageType)) {
+            limits = 5000;
+        }
         me.phoneInput.push(
             new PhoneInput({
                 handler: this,

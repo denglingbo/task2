@@ -25,6 +25,8 @@ $search-key-color: #e51717;
         justify-content: center;
 
         >i {
+            display: block;
+            margin-top: rem(-2px);
             margin-right: rem(7px);
         }
     }

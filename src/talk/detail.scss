@@ -21,10 +21,14 @@
 .main {
     padding-bottom: rem(40px);
 
+    &.nofixbar {
+        padding-bottom: 0;
+    }
+
     &.ios-fixed {
-        position: fixed;
-        bottom: 0;
+        position: absolute;
         top: 0;
+        bottom: 0;
         overflow: auto;
         width: 100%;
         -weblit-overflow-scrolling: touch;

@@ -65,7 +65,7 @@ virtualInput.prototype = {
         var me = this;
         $(me.editor).html('');
         me.$wrap.removeClass('extend');
-        // $('.main').removeClass('ios-fixed');
+        $('.main').removeClass('ios-fixed');
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
@@ -83,7 +83,9 @@ virtualInput.prototype = {
 
                 me.$shadow.removeClass('hide');
                 me.$wrap.addClass('extend');
-                // $('.main').addClass('ios-fixed');
+                setTimeout(function () {
+                    $('.main').addClass('ios-fixed');
+                }, 1000);
                 $(me.attachList).removeClass('hide');
                 me.sendStatus();
             })
@@ -100,7 +102,9 @@ virtualInput.prototype = {
         me.$wrap.on('click', me.attachBtn, function () {
             me.$shadow.removeClass('hide');
             me.$wrap.addClass('extend');
-            // $('.main').addClass('ios-fixed');
+            setTimeout(function () {
+                $('.main').addClass('ios-fixed');
+            }, 1000);
             $(me.attachList).removeClass('hide');
             me.sendStatus();
         });
@@ -108,7 +112,7 @@ virtualInput.prototype = {
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');
             me.$wrap.removeClass('extend');
-            // $('.main').removeClass('ios-fixed');
+            $('.main').removeClass('ios-fixed');
             $(me.attachList).addClass('hide');
         });
     }

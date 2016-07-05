@@ -345,7 +345,6 @@ detail.naviRight = function (page, data, pageType, getAlert) {
 
     // 当前页面配置
     var curPage = pageMap[pageType];
-
     // 编辑权限
     if (rights.editRight) {
         rightBar.push({
