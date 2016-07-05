@@ -42,13 +42,12 @@ page.enter = function () {
     detailUtil.richContent();
 
     me.render('#comment-input-wrapper', {lang: me.data.lang});
+    me.virtualInput = new VirtualInput('.goalui-fixedinput');
     // 是否有评论权限
     if (!me.data.rights || !me.data.rights.commentRight) {
         $('#comment-input-wrapper').addClass('hide');
         $('.main').addClass('nofixbar');
     }
-
-    this.virtualInput = new VirtualInput('.goalui-fixedinput');
 
     me.ticker = new Ticker('.tick', {
         async: true

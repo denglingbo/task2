@@ -25,24 +25,24 @@
         padding-bottom: 0;
     }
 
-    &.ios-fixed {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        overflow: auto;
-        width: 100%;
-        -weblit-overflow-scrolling: touch;
-    }
+    // &.ios-fixed {
+    //     position: absolute;
+    //     top: 0;
+    //     bottom: 0;
+    //     overflow: auto;
+    //     width: 100%;
+    //     -weblit-overflow-scrolling: touch;
+    // }
 }
 
 
-// #comment-input-wrapper {
-//     position: fixed;
-//     bottom: 0;
-//     width: 100%;
-// }
+#comment-input-wrapper {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 .goalui-fixedinput {
-    position: fixed !important;
+    position: relative !important;
 
     .attach-list {
         max-height: rem(125px);
