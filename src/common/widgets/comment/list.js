@@ -138,7 +138,7 @@ var total = 0;
  */
 var list = function (page, options) {
     var me = this;
-
+    var lang = page.lang;
     me.opts = {
         dataKey: 'objList',
         wrapper: '#comments-main',
@@ -167,7 +167,25 @@ var list = function (page, options) {
         promise: me.opts.promise,
         // 后端数据节点位置
         dataKey: me.opts.dataKey,
-        pageNum: 10
+        pageNum: 10,
+        lang: {
+            more: {
+                default: lang.touchLoadMore,
+                process: lang.loading,
+                done: lang.dataDone,
+                fail: lang.loadFailTryAgain,
+                max: lang.contentLoadAllReadey,
+                nodata: lang.nowNowData
+            },
+            reload: {
+                default: lang.dropDownRefresh,
+                process: lang.loading,
+                done: lang.dataDone,
+                fail: lang.loadFailTryAgain,
+                holder: lang.releaseRefresh,
+                unchanged: lang.alreadyLastestData
+            }
+        }
     });
 
     me.dataLoader.on('more', function (event, err, data) {
@@ -191,7 +209,6 @@ var list = function (page, options) {
         }
 
     });
-
     this.bindEvents();
 };
 
@@ -236,7 +253,7 @@ $.extend(list.prototype, {
 
         $send.off('click');
         $send.on('click', function () {
-            if (!$send.hasClass('unable')) {
+            if (!$send.hasClass('unable') && me.attach.isAttachesReady()) {
                 me.addComment();
             }
         });
@@ -405,6 +422,29 @@ $.extend(list.prototype, {
                 sendCommentLog(me.page, me.opts.name, me.data.id, errCode);
             })
     }
+    // initScroll: function () {
+    //     var me = this;
+    //     if (me.scroll) {
+    //         me.scroll.destroy();   
+    //     }
+        
+    //     me.scroll = null;
+    //     setTimeout(function () {
+    //         me.myScroll = new IScroll('.main', {
+    //             scrollX: false,
+    //             scrollY: true,
+    //             scrollbars: false,
+    //             click: true,
+
+    //             // 禁用监听鼠标和指针
+    //             disableMouse: true,
+    //             disablePointer: true,
+
+    //             mouseWheel: false,
+    //             momentum: false
+    //         });
+    //     }, 1000);
+    // }
 });
 
 /**

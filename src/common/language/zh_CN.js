@@ -149,6 +149,16 @@ module.exports = {
     createOn: '创建于',
     updateOn: '更新于',
 
+    moreAttach: '更多附件',
+    moreSummaryAttach: '更多总结附件',
+    contentLoadAllReadey: '内容全部加载完毕',
+    clickLoadMore: '点击加载更多',
+    loadFailTryAgain: '加载失败，请重试',
+    nowNowData: '暂无数据',
+    dropDownRefresh: '下拉刷新',
+    releaseRefresh: '释放刷新',
+    alreadyLastestData: '已经是最新数据',
+
     error: {
         80010: '没有权限操作',
         80004: '任务负责人不能为空',

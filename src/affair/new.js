@@ -57,7 +57,7 @@ page.getActionsData = function (errCode) {
         if ($content && $content.length && $.trim($content.text())) {
             targetTag.content = true;
         }
-        if (!editCom.aTag.attachIsNull) {
+        if (editCom && editCom.aTag && !editCom.aTag.attachIsNull) {
             targetTag.attachs = true;
         }
         action.targetTag = targetTag;
@@ -172,11 +172,12 @@ page.initPlugin = function () {
             // 新建状态，直接使用第一项作为默认选中
             if (!affairId) {
                 var def = typeData[0];
+                DATA.labelId = def.value;
                 currName = def.text;
                 def.selected = true;
             }
 
-            $type.text(currName);
+            $type.html(currName);
 
             if (typeData.length <= 0) {
                 return;
@@ -197,12 +198,6 @@ page.initPlugin = function () {
                     editCom.valid.isEdit = (
                         oldVal !== DATA.labelId ? true : editCom.valid.isEdit
                     );
-                },
-                onInit: function (context) {
-                    var sData = context.settings.data;
-                    var first = sData[0];
-
-                    DATA.labelId = first.value;
                 }
             });
 

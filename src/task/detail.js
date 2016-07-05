@@ -329,6 +329,7 @@ page.bindEvents = function () {
  */
 page.initAffairAndTalkList = function () {
     var me = this;
+    var lang = me.lang;
 
     // 先清空
     $('#affair-talk dd').remove();
@@ -353,7 +354,25 @@ page.initAffairAndTalkList = function () {
         // 后端数据节点位置
         dataKey: 'objList',
         loadType: 0,
-        pageNum: requestPageNum
+        pageNum: requestPageNum,
+        lang: {
+            more: {
+                'default': lang.touchLoadMore,
+                'process': lang.loading,
+                'done': lang.dataDone,
+                'fail': lang.loadFailTryAgain,
+                'max': lang.contentLoadAllReadey,
+                'nodata': lang.nowNowData
+            },
+            reload: {
+                'default': lang.dropDownRefresh,
+                'process': lang.loading,
+                'done': lang.dataDone,
+                'fail': lang.loadFailTryAgain,
+                'holder': lang.releaseRefresh,
+                'unchanged': lang.alreadyLastestData
+            }
+        }
     });
 
     me.dataLoader.off('more');

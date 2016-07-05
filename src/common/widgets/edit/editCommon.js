@@ -35,6 +35,7 @@ editCom.aTag = {
     attendsIsChange: false
 };
 
+// 是否能提交，防重复提交
 editCom.isCanSubmit = true;
 
 /**
@@ -123,7 +124,6 @@ editCom.cancelValidate = function () {
         MidUI.alert({
             content: lang.whetherGiveUpCurrContent,
             onApply: function () {
-
                 navigation.open(-1);
             }
         });
@@ -276,14 +276,13 @@ editCom.submit = function (page, data, ajaxUrl) {
  * 初始化紧急程度mobiscroll
  *
  * @param {string} selector, 选择器字符串
- * @param {Object} data, 页面数据
+ * @param {Object} infoData, 页面数据
  * @return {boolean} 参数错误
  */
-editCom.initImportanceLevel = function (selector, data) {
-    if (!selector || !data) {
-        return false;
+editCom.initImportanceLevel = function (selector, infoData) {
+    if (!selector || !infoData) {
+        return;
     }
-    var infoData = data;
     var validObj = this.valid;
     var importData = [
         {
@@ -336,7 +335,7 @@ editCom.initImportanceLevel = function (selector, data) {
  */
 editCom.initMobiscroll = function (method, selector, data) {
     if (!method || !selector || !data) {
-        return false;
+        return;
     }
     // mobiscroll 公共参数
     var mobiOptions = {
@@ -395,7 +394,12 @@ editCom.initDoneTime = function (time) {
  * @return {string} 重要程度字符串表示
  */
 editCom.initImportValue = function (level) {
-    return level && raw.importanceMap[level];
+    var str = '';
+    level = +level;
+    if ((typeof level === 'number') && !isNaN(level)) {
+        str = raw.importanceMap[level];
+    }
+    return str;
 };
 
 /**
@@ -507,7 +511,7 @@ editCom.getClientMsg = function () {
 editCom.setChoosePersonLoc = function (key, value) {
     var me = this;
     if (!key || !value) {
-        return false;
+        return;
     }
     var selectValue = {
         clientMsg: me.getClientMsg(),

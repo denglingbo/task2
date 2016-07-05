@@ -257,6 +257,9 @@ navigation.right = function (buttonArray) {
         return;
     }
 
+    // 任务接受后允许编辑
+    this.button('right', true);
+
     // 下拉数量只有一个，同时如果有 右上角 默认图，则强行去掉默认图，使用下拉的第一个配置
     if (arr.length === 1) {
         icon = (arr[0].iconPath || arr[0].title);

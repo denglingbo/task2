@@ -41,9 +41,11 @@ page.enter = function () {
 
     detailUtil.richContent();
 
+    me.render('#comment-input-wrapper', {lang: me.data.lang});
     // 是否有评论权限
-    if (me.data.rights && me.data.rights.commentRight) {
-        me.render('#comment-input-wrapper', {lang: me.data.lang});
+    if (!me.data.rights || !me.data.rights.commentRight) {
+        $('#comment-input-wrapper').addClass('hide');
+        $('.main').addClass('nofixbar');
     }
 
     this.virtualInput = new VirtualInput('.goalui-fixedinput');
@@ -133,6 +135,7 @@ page.setNavigation = function () {
 page.bindEvents = function () {
     var me = this;
     var $comment = $('#comment-input-wrapper');
+    var $htmlMain = $('.main');
     var affairId = util.params('id');
     // 绑定 tick 点击事件
     detailUtil.bindTickEvents.call(this, {
@@ -151,6 +154,7 @@ page.bindEvents = function () {
             });
             navigation.button('right', false);
             $comment && $comment.addClass('hide');
+            $htmlMain.addClass('nofixbar');
         },
 
         // 恢复状态
@@ -166,6 +170,7 @@ page.bindEvents = function () {
             data.id = affairId;
             detailUtil.naviRight(me, data, 'affair');
             $comment && $comment.removeClass('hide');
+            $htmlMain.removeClass('nofixbar');
         }
     });
 

@@ -149,6 +149,16 @@ module.exports = {
     createOn: '創建於',
     updateOn: '更新於',
 
+    moreAttach: '更多附件',
+    moreSummaryAttach: '更多總結附件',
+    contentLoadAllReadey: '內容全部加載完畢',
+    clickLoadMore: '點擊加載更多',
+    loadFailTryAgain: '加載失敗，請重試',
+    nowNowData: '暫無數據',
+    dropDownRefresh: '下拉刷新',
+    releaseRefresh: '釋放刷新',
+    alreadyLastestData: '已經是最新數據',
+
     error: {
         80010: '沒有許可權操作',
         80004: '任務負責人不能為空',
