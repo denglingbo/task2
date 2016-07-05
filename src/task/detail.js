@@ -323,9 +323,7 @@ page.bindEvents = function () {
         });
     });
 };
-// setTimeout(function () {
-//     page.refresh();
-// }, 3000);
+
 /**
  * 初始化事件&讨论列表
  */
@@ -362,7 +360,7 @@ page.initAffairAndTalkList = function () {
 
     // 加载 事件&讨论 列表
     me.dataLoader.on('more', function (event, err, data) {
-// alert(JSON.stringify(data));
+
         if (err) {
             return;
         }

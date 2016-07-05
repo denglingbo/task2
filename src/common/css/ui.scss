@@ -232,7 +232,7 @@ $star-size: rem(16px);
 $loading-size: 20px;
 
 .loading {
-    @include loading($loading-size, 2px, $body-bg);
+    /* @include loading($loading-size, 2px, $body-bg); */
 }
 
 .loading-status {
@@ -263,7 +263,7 @@ $loading-size: 20px;
         padding: rem(12px) 0;
 
         .loading {
-            @include loading($loading-size, 2px);
+            /* @include loading($loading-size, 2px); */
         }
     }
 }

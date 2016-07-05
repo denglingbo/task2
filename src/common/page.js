@@ -621,6 +621,10 @@ Page.ajax = function (api, data, options, retryDfd) {
         contentType: 'application/json; charset=utf-8'
     };
 
+    if (/get/i.test(opts.type)) {
+        ajaxSettings.cache = false;
+    }
+
     if (reqConfig.data) {
         ajaxSettings.data = reqConfig.data;
     }

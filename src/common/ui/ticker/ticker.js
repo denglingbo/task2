@@ -36,7 +36,7 @@ var Ticker = function (target, options) {
 
     me.opts = {
         async: false,
-        animate: true
+        animate: false
     };
 
     this.$elem = $(target);
