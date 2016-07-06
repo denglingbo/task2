@@ -30,7 +30,6 @@ var AttachWrapper = require('common/middleware/attach/attachWrapper');
 
 var WidgetCommentList = require('common/widgets/comment/list');
 var navigation = require('common/middleware/navigation');
-// var IScroll = require('dep/iscroll');
 
 page.enter = function () {
 
@@ -75,25 +74,6 @@ page.enter = function () {
 
     // 根据权限渲染之后修正样式
     detailUtil.fixStyles();
-
-    // $('.main').height($(window).height() - $('#goalui-fixedinput').height());
-    // setTimeout(function () {
-    //     new IScroll('.main', {
-    //         scrollX: false,
-    //         scrollY: true,
-    //         scrollbars: false,
-    //         click: true,
-
-    //         // 禁用监听鼠标和指针
-    //         disableMouse: true,
-    //         disablePointer: true,
-
-    //         mouseWheel: false,
-
-    //         // 快速触屏的势能缓冲开关
-    //         momentum: false
-    //     });
-    // }, 1000);
 };
 
 /**

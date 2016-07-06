@@ -44,8 +44,7 @@ var attachOption = {
             url: config.API.ATTACH_RESUMEURL,
             mothod: 'POST'
         }
-    },
-    attachesCount: 10
+    }
 };
 
 var methodOption = {
@@ -77,6 +76,10 @@ var attach = {};
  * @return {Object} 附件对象
  */
 attach.initAttach = function (options, attachData) {
+    var attachLength = 10;
+    if (attachData && $.isArrary(attachData)) {
+        attachLength += attachData.length;
+    }
     var attachOptions = {
         originAttaches: (attachData || []),
         dom: {
@@ -85,6 +88,7 @@ attach.initAttach = function (options, attachData) {
             addBtnDOM: options.addBtn
         },
         operateType: 'upload',
+        attachesCount: attachLength,
         callback: options.callback
     };
     $.extend(

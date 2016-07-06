@@ -20,6 +20,7 @@
 
 .main {
     padding-bottom: rem(40px);
+    overflow: hidden;
 
     position: absolute;
     width: 100%;
@@ -31,11 +32,12 @@
     }
 
     // &.ios-fixed {
-    //     position: absolute;
+    //     position: fixed;
     //     top: 0;
+    //     left: 0;
+    //     right: 0;
     //     bottom: 0;
-    //     overflow: auto;
-    //     width: 100%;
+    //     overflow: hidden;
     //     -weblit-overflow-scrolling: touch;
     // }
 }
