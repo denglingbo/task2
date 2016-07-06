@@ -57,8 +57,7 @@
         tid="{{ targetId }}" 
         class="affair-talk-item {{#isDone}}item-done{{/isDone}} {{#num}}new-msg{{/num}}" 
         data-type="{{ pageType }}" 
-        data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}&taskStatus={{ taskStatus }}" 
-        data-log='{"actionTag":"taskDetailEnter{{ pageType }}Detail", "targetTag": {"taskId": {{ taskId }}}}'
+        data-page="/{{ pageType }}-detail.html?id={{ targetId }}&taskId={{ taskId }}&taskStatus={{ taskStatus }}"
     >
         <div class="column-left">
             [{{ typeRaw }}] {{ title }}
@@ -131,12 +130,10 @@
             <li 
                 data-type="notAgree" 
                 data-page="/form-submit.html?type=notAgree&taskId={{ taskId }}" 
-                data-log='{"actionTag":"taskDetailAgreeAudit", targetTag: {taskId:{{ taskId }}}}'
             >{{ lang.notAgree }}</li>
             <li 
                 data-type="agree" 
                 data-page="/form-submit.html?type=agree&taskId={{ taskId }}" 
-                data-log='{"actionTag":"taskDetailNotAgreeAudit", targetTag: {taskId:{{ taskId }}}}'
             >{{ lang.agree }}</li>
             {{/auditRight}}
 
@@ -151,7 +148,6 @@
             {{#receiveRight}}
             <li 
                 data-type="receive"
-                data-log='{"actionTag":"taskDetailReceive", targetTag: {taskId: {{ taskId }}}}'
             >{{ lang.receivedButton }}</li>
             {{/receiveRight}}
 
@@ -159,7 +155,6 @@
             <li 
                 data-type="affair" 
                 data-page="/affair-new.html?taskId={{ taskId }}" 
-                data-log='{"actionTag":"taskDetailNewAffair", targetTag: {taskId: {{ taskId }}}}'
             >{{ lang.newAffair }}</li>
             {{/addEventRight}}
 
@@ -167,7 +162,6 @@
             <li 
                 data-type="talk" 
                 data-page="/talk-new.html?taskId={{ taskId }}" 
-                data-log='{"actionTag":"taskDetailNewTalk", targetTag: {taskId: {{ taskId }}}}'
             >{{ lang.startTalk }}</li>
             {{/addTalkRight}}
 

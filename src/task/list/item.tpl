@@ -1,6 +1,5 @@
 {{#objList}}
-<div class="list-item" data-id={{ id }} data-pagenum="{{ pagenum }}" data-log='{"actionTag":"taskListEnterDetail", targetTag: {taskId:{{ id }}}}'>
-
+<div class="list-item" data-id={{ id }} data-pagenum="{{ pagenum }}">
     {{#isRemindUpdate}}
     <div class="icon icon-point"></div>
     {{/isRemindUpdate}}

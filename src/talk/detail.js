@@ -227,7 +227,13 @@ page.bindEvents = function () {
 
         // 完成状态
         tickedCallback: function (data) {
-            me.log.store({actionTag: 'talkDone', targetTag: {talkId: talkId}});
+            me.log.store({
+                actionTag: 'talkTick',
+                targetTag: {
+                    talkId: talkId,
+                    type: 'done'
+                }
+            });
             // 暂时只做右侧禁用处理，先不判断权限
             // detailUtil.naviRight(me, data, 'talk');
             navigation.button('right', false);
@@ -237,7 +243,13 @@ page.bindEvents = function () {
 
         // 恢复状态
         untickCallback: function (data) {
-            me.log.store({actionTag: 'talkRecover', targetTag: {talkId: talkId}});
+            me.log.store({
+                actionTag: 'talkTick',
+                targetTag: {
+                    talkId: talkId,
+                    type: 'recover'
+                }
+            });
             navigation.button('right', true);
             data.id = talkId;
             detailUtil.naviRight(me, data, 'talk');

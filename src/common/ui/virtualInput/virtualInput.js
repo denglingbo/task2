@@ -107,9 +107,10 @@ virtualInput.prototype = {
         var height = me.winHeight - nowWinHeight;
         var boxHeight = me.$wrap.height();
         height += boxHeight;
+        alert(height)
         if (me.isIOS4) {
-            // me.$wrap.css({marginTop: -height - 90});
-            $(window).scrollTop(-height);
+            me.$wrap.css({marginTop: -height});
+            // $(window).scrollTop(-height);
         }
     },
 

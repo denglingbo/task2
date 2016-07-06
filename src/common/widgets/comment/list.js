@@ -106,18 +106,28 @@ var renderUser = function ($layout, objList) {
  * @param {Object} page, new Page()
  * @param {string} name, 页面名称
  * @param {number} id, id
+ * @param {boolean} attachNotNull, 附件是否为空
  * @param {number|null} error, 错误码，可为空
  */
-function sendCommentLog(page, name, id, error) {
+function sendCommentLog(page, name, id, attachNotNull, error) {
     if (!page || !name || !id) {
         return;
     }
+    // TODO
+    var targetTag = {};
+    if (name === 'affair') {
+        targetTag.affairId = id;
+    }
+    else {
+        targetTag.talkId = id;
+    }
 
+    if (attachIsNull) {
+        targetTag.attach = attachNotNull;
+    }
     var data = {
         actionTag: name + 'CommentSend',
-        targetTag: {
-            taskId: id
-        }
+        targetTag: targetTag
     };
 
     if (error && data.targetTag) {
@@ -424,7 +434,8 @@ $.extend(list.prototype, {
             .always(function (result) {
                 me.isCanSubmit = true;
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
-                sendCommentLog(me.page, me.opts.name, me.data.id, errCode);
+                var attachNotNull = !!attachs;
+                sendCommentLog(me.page, me.opts.name, me.data.id, attachNotNull, errCode);
             })
     }
     // initScroll: function () {

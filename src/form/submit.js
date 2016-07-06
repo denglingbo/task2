@@ -113,10 +113,10 @@ var actionsTag = {
     refuse: 'refuseSubmit',
 
     // 同意
-    agree: 'auditAgreeSubmit',
+    agree: 'auditSubmit',
 
     // 不同意
-    notAgree: 'auditNotAgreeSubmit'
+    notAgree: 'auditSubmit'
 };
 
 /**
