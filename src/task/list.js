@@ -124,6 +124,7 @@ page.deviceready = function () {
                     title: me.lang.newTask,
                     returnParams: function (prevData) {
                         if (prevData && prevData === 'refresh') {
+                            pageCurrentName = 'opened';
                             me.refresh();
                         }
                     }

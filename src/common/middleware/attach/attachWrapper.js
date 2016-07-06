@@ -77,7 +77,7 @@ var attach = {};
  */
 attach.initAttach = function (options, attachData) {
     var attachLength = 10;
-    if (attachData && $.isArrary(attachData)) {
+    if (attachData && $.isArray(attachData)) {
         attachLength += attachData.length;
     }
     var attachOptions = {

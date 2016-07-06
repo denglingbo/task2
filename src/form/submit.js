@@ -21,6 +21,8 @@ var attachTpl = require('common/middleware/attach/attach.tpl');
 var page = new Page();
 var lang = page.lang;
 var isCanSubmit = true;
+var $attachList = null;
+var rightTimmer = null;
 
 // 验证参数
 var valid = {
@@ -261,6 +263,8 @@ page.enter = function () {
                     }
                 });
 
+                // 附件列表容器
+                $attachList = $('#attachList');
                 // 总结情景下，提供上传附件功能
                 me.attach = null;
 
@@ -407,6 +411,23 @@ page.getTagDetail = {
     }
 };
 
+/**
+ * 设置按钮的状态
+ *
+ * @param {boolean} isCan, 是否能提交，设置状态
+ */
+function setCanSubmit(isCan) {
+    if (typeof isCan !== 'boolean') {
+        return;
+    }
+    clearTimeout(rightTimmer);
+
+    // ios必须延迟250ms才能设置成功
+    rightTimmer = setTimeout(function () {
+        navigation.button('right', isCan);
+    }, 250);
+}
+
 page.getTargetTag = function (errCode) {
     var me = this;
     var pageType = me.pageType;
@@ -447,12 +468,20 @@ page.deviceready = function () {
             return;
         }
         var dataArg = me.getData(me.pageType);
+
+        // 总结和附件不能同时为空
+        if (/summary|talkSummary/.test(me.pageType)) {
+            var $attachLi = $attachList.find('.componentAttachItem');
+            var length = $attachLi.length;
+            if (!dataArg.data.summary && !length) {
+                return;
+            }
+        }
+
         (me.pageType === 'talkSummary') && (dataArg.data.talkId = util.params('talkId'));
         var promise = me.post(dataArg.api, dataArg.data);
-        setTimeout(function () {
-            navigation.button('right', false);
-        }, 250);
         isCanSubmit = false;
+        setCanSubmit(isCanSubmit);
         var success = false;
         promise
             .done(function (result) {
@@ -469,10 +498,8 @@ page.deviceready = function () {
             })
             .always(function (result) {
                 if (!success) {
-                    setTimeout(function () {
-                        navigation.button('right', true);
-                    }, 250);
                     isCanSubmit = true;
+                    setCanSubmit(isCanSubmit);
                 }
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
                 var targetTag = {};

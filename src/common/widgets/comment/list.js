@@ -158,6 +158,10 @@ var list = function (page, options) {
 
     me.$listNull = $('.list-null');
 
+
+    // 防重复提交 @hefeng
+    me.isCanSubmit = true;
+
     // 初始化一个点击加载组件
     me.dataLoader = new DataLoader({
         loadType: 0,
@@ -253,7 +257,8 @@ $.extend(list.prototype, {
 
         $send.off('click');
         $send.on('click', function () {
-            if (!$send.hasClass('unable') && me.attach.isAttachesReady()) {
+            if (!$send.hasClass('unable') && me.attach.isAttachesReady() && me.isCanSubmit) {
+                me.isCanSubmit = false;
                 me.addComment();
             }
         });
@@ -418,6 +423,7 @@ $.extend(list.prototype, {
                 
             })
             .always(function (result) {
+                me.isCanSubmit = true;
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
                 sendCommentLog(me.page, me.opts.name, me.data.id, errCode);
             })

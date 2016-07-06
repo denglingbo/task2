@@ -5,9 +5,22 @@
  * 虚拟输入框
  * 将被废弃，暂用
  */
-/* eslint-disable */
+
+/**
+ * 检查是否是 ios5一下的手机版本
+ *
+ * @return {boolean} 是否是ios5一下的手机版本
+ */
+function ltios4() {
+    var isTrue = false;
+    // 判断是否 iPhone 或者 iPod
+    if (navigator.userAgent.match(/iPhone/i)) {
+        isTrue = Boolean(navigator.userAgent.match(/OS [5-9]_\d[_\d]* like Mac OS X/i));
+    }
+    return isTrue;
+}
+
 var virtualInput = function (selector, options) {
-    var me = this;
 
     this.opts = {
         maxNum: 6000
@@ -16,6 +29,7 @@ var virtualInput = function (selector, options) {
     $.extend(this.opts, options);
 
     this.$wrap = $(selector);
+    this.$parent = $('#comment-input-wrapper');
     this.$shadow = $('#goalui-fixedinput-shadow');
     this.$placeholder = this.$wrap.find('.placeholder');
     this.$button = this.$wrap.find('.button');
@@ -24,6 +38,8 @@ var virtualInput = function (selector, options) {
     this.editor = '.editable';
     this.attachBtn = '#addAttach';
     this.attachList = '#attachList';
+    this.isIOS4 = ltios4();
+    this.winHeight = $(window).height();
     this.bindEvents();
 };
 
@@ -47,7 +63,7 @@ virtualInput.prototype = {
 
         if (!text.length) {
             me.$placeholder.removeClass('hide');
-            if (me.$send.data('attach')){
+            if (me.$send.data('attach')) {
                 me.$send.removeClass('unable');
             }
             else {
@@ -65,6 +81,7 @@ virtualInput.prototype = {
         var me = this;
         $(me.editor).html('');
         me.$wrap.removeClass('extend');
+        me.$wrap.removeAttr('style');
         me.$placeholder.removeClass('hide');
         me.$shadow.addClass('hide');
         me.$limit.addClass('hide');
@@ -84,9 +101,21 @@ virtualInput.prototype = {
         });
     },
 
+    fixIOS4: function () {
+        var me = this;
+        var nowWinHeight = $(window).height();
+        var height = me.winHeight - nowWinHeight;
+        var boxHeight = me.$wrap.height();
+        height += boxHeight;
+        if (me.isIOS4) {
+            // me.$wrap.css({marginTop: -height - 90});
+            $(window).scrollTop(-height);
+        }
+    },
+
     bindEvents: function () {
         var me = this;
-        var $outter = $('#comment-input-wrapper');
+        // var $outter = $('#comment-input-wrapper');
         var $btnBox = $('#comment-input-wrapper .button-wrap');
 
         me.stopScroll();
@@ -99,6 +128,7 @@ virtualInput.prototype = {
 
                 me.$shadow.removeClass('hide');
                 me.$wrap.addClass('extend');
+
                 $(me.attachList).removeClass('hide');
                 me.sendStatus();
             })
@@ -111,6 +141,11 @@ virtualInput.prototype = {
                 if (!$.trim($(this).text())) {
                     me.$placeholder.removeClass('hide');
                 }
+            })
+            .on('focus', me.editor, function () {
+                setTimeout(function () {
+                    me.fixIOS4();
+                }, 1000);
             });
 
         me.$wrap.on('click', me.attachBtn, function () {
@@ -124,6 +159,7 @@ virtualInput.prototype = {
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');
             me.$wrap.removeClass('extend');
+            me.$wrap.removeAttr('style');
             $(me.attachList).addClass('hide');
         });
 
@@ -134,8 +170,9 @@ virtualInput.prototype = {
             }
             me.$shadow.addClass('hide');
             me.$wrap.removeClass('extend');
+            me.$wrap.removeAttr('style');
             $(me.attachList).addClass('hide');
-        })
+        });
     }
 };
 
