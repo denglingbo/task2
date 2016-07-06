@@ -29,8 +29,11 @@
 
 #comment-input-wrapper {
     position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
     width: 100%;
+    z-index: 99;
 }
 .goalui-fixedinput {
     position: relative !important;
@@ -38,5 +41,11 @@
     .attach-list {
         max-height: rem(125px);
         overflow: auto;
+    }
+}
+
+.componentAttachItem {
+    span {
+        display: inline;
     }
 }

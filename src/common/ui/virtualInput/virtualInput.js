@@ -87,6 +87,7 @@ virtualInput.prototype = {
     bindEvents: function () {
         var me = this;
         var $outter = $('#comment-input-wrapper');
+        var $btnBox = $('#comment-input-wrapper .button-wrap');
 
         me.stopScroll();
 
@@ -125,6 +126,16 @@ virtualInput.prototype = {
             me.$wrap.removeClass('extend');
             $(me.attachList).addClass('hide');
         });
+
+        $btnBox.on('click', function (e) {
+            var target = e.target;
+            if (target !== this) {
+                return;
+            }
+            me.$shadow.addClass('hide');
+            me.$wrap.removeClass('extend');
+            $(me.attachList).addClass('hide');
+        })
     }
 };
 
