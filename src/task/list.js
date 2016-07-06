@@ -81,6 +81,7 @@ page.enter = function () {
             // 点击tab 并不能直接加载数据
             myCache.fn.dataLoader.fire('scrollReload', null, true);
         }
+
         return;
     }
 
@@ -207,6 +208,8 @@ page.initTab = function () {
     $tabs.off('click');
     $tabs.on('click', function (event) {
         event.stopPropagation();
+
+        this._scroll = myScroll;
 
         var $li = $(this);
         var $viewLi = null;

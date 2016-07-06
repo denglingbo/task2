@@ -14,16 +14,16 @@
     text-align: center;
     word-break: break-all;
     overflow: hidden;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
     display: block;
 }
 
 /*固定输入框*/
 .goalui-fixedinput {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    position: relative;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
     z-index: 99;
     padding: 6px 12px;
     background: #e8e8e8;

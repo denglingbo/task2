@@ -21,33 +21,47 @@
 .main {
     padding-bottom: rem(40px);
 
+    position: absolute;
+    width: 100%;
+    height: 2000px;
+    overflow-y: scroll;
+
     &.nofixbar {
         padding-bottom: 0;
     }
 
-    &.ios-fixed {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        overflow: auto;
-        width: 100%;
-        -weblit-overflow-scrolling: touch;
-    }
+    // &.ios-fixed {
+    //     position: absolute;
+    //     top: 0;
+    //     bottom: 0;
+    //     overflow: auto;
+    //     width: 100%;
+    //     -weblit-overflow-scrolling: touch;
+    // }
+
+    // &.ios-fixed {
+    //     /* 增加该属性，可以增加弹性 */
+    //     -webkit-overflow-scrolling: touch;
+    // }
 }
 
 
-// #comment-input-wrapper {
-//     position: fixed;
-//     bottom: 0;
-//     width: 100%;
-// }
-.goalui-fixedinput {
-    position: fixed !important;
+#comment-input-wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 99;
+}
 
-    .attach-list {
-        max-height: rem(125px);
-        overflow: auto;
-    }
+.goalui-fixedinput {
+    // position: fixed !important;
+
+    // .attach-list {
+    //     max-height: rem(125px);
+    //     overflow: auto;
+    // }
 }
 
 .componentAttachItem {

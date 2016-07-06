@@ -280,6 +280,15 @@ Init.prototype = {
 
         var me = this;
 
+        // 设置下高度
+        var viewHeight = $(window).height() - ($('#search').length ? $('#search').height() : 0);
+
+        // 设置滚动的元素的高宽
+        $('.slider-container').css({
+            width: $(window).width(),
+            height: viewHeight
+        });
+
         var $err = me.opts.wrapper.find('.net-err');
         if ($err.length > 0) {
             $err.addClass('hide').remove();
@@ -317,7 +326,7 @@ Init.prototype = {
     getReloadData: function (loader, refresh) {
         var me = this;
 
-        me.dataLoader.requestReload()
+        me.dataLoader.requestReload(refresh)
             .done(function (data, unchanged) {
 
                 // 最新数据没有变化，不进行后面的 dom 操作
@@ -334,6 +343,13 @@ Init.prototype = {
 
                 me.setBasic();
                 me.dataLoader.scroll.refresh();
+
+                // 返回刷新
+                if (refresh) {
+                    setTimeout(function () {
+                        me.dataLoader.scroll.scrollTo(0, 0, 100);
+                    }, 100);
+                }
             })
             .fail(function () {})
             .always(function () {});
@@ -432,6 +448,13 @@ Init.prototype = {
         var me = this;
 
         dealData(data);
+
+        // 去掉 content wrapper 的min-height
+        if (data.total < 3) {
+            me.$wrapper.find('.list-wrapper-content').css({
+                'min-height': 'auto'
+            });
+        }
 
         loader.render(data, appendType || 'html');
 

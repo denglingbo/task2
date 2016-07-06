@@ -7,6 +7,7 @@
 require('./phoneInput.scss');
 
 var Control = require('common/control');
+var util = require('common/util');
 
 /**
  * 模拟输入框
@@ -137,7 +138,9 @@ $.extend(PhoneInput.prototype, {
      * @return {number}
      */
     getLength: function () {
-        return this.$input.text().length;
+        var contont = this.$input.html();
+        contont = $.trim(util.formatRichText(contont));
+        return contont.length;
     },
 
     /**

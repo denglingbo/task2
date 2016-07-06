@@ -371,9 +371,10 @@ $.extend(DataLoader.prototype, {
     /**
      * 重载数据 接口
      *
+     * @param {boolean} 强制刷新
      * @return {Deferred}
      */
-    requestReload: function () {
+    requestReload: function (refresh) {
         var me = this;
         var dfd = new $.Deferred();
 
@@ -392,24 +393,30 @@ $.extend(DataLoader.prototype, {
 
         // 重置 page
         me.page = 1;
+        me._length = 0;
+        me._moring = false;
 
         me.send(function (err, data) {
 
             if (data) {
 
-                var unChanged = me.dataUnChanged(data);
+                // var unChanged = false;
 
-                // 最新数据没有变化，不进行后面的操作
-                if (unChanged) {
-                    // 如果没有重载整个 dom 区，则恢复 me.page
-                    me.page = curPageNum;
-                    me.statusChange('reload', 'unchanged');
-                    dfd.resolve.call(me, data, unChanged);
-                    return;
-                }
+                // if (refresh) {
+                //     unChanged = me.dataUnChanged(data);
+
+                //     // 最新数据没有变化，不进行后面的操作
+                //     if (unChanged) {
+                //         // 如果没有重载整个 dom 区，则恢复 me.page
+                //         me.page = curPageNum;
+                //         me.statusChange('reload', 'unchanged');
+                //         dfd.resolve.call(me, data, unChanged);
+                //         return;
+                //     }
+                // }
 
                 // 每次重载之后，都需要保存 md5 数据
-                me.storeMD5Data(data);
+                // me.storeMD5Data(data);
 
                 // 设置length
                 me._length = me.opts.pageNum;

@@ -72,9 +72,25 @@ virtualInput.prototype = {
         me.$wrap.blur();
     },
 
+    stopScroll: function () {
+
+        // 解决弹出键盘后，遮罩被拖动导致输入位置移位
+        $('#comment-input-wrapper').on('touchmove.virtual', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        $('#goalui-fixedinput-shadow').on('touchmove.virtual', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+    },
+
     bindEvents: function () {
         var me = this;
         var $outter = $('#comment-input-wrapper');
+
+        me.stopScroll();
+
         me.$wrap
             // 弹出输入框
             .on('click', me.editor, function (event) {
@@ -83,9 +99,7 @@ virtualInput.prototype = {
 
                 me.$shadow.removeClass('hide');
                 me.$wrap.addClass('extend');
-                setTimeout(function () {
-                    $('.main').addClass('ios-fixed');
-                }, 1000);
+                // $('.main').addClass('ios-fixed');
                 $(me.attachList).removeClass('hide');
                 me.sendStatus();
             })
@@ -99,20 +113,22 @@ virtualInput.prototype = {
                     me.$placeholder.removeClass('hide');
                 }
             });
+
         me.$wrap.on('click', me.attachBtn, function () {
             me.$shadow.removeClass('hide');
             me.$wrap.addClass('extend');
-            setTimeout(function () {
-                $('.main').addClass('ios-fixed');
-            }, 1000);
+            // setTimeout(function () {
+            //     $('.main').addClass('ios-fixed');
+            // }, 1000);
             $(me.attachList).removeClass('hide');
             me.sendStatus();
         });
+
         // 点击遮罩关闭键盘
         me.$shadow.on('click', function () {
             me.$shadow.addClass('hide');
             me.$wrap.removeClass('extend');
-            $('.main').removeClass('ios-fixed');
+            // $('.main').removeClass('ios-fixed');
             $(me.attachList).addClass('hide');
         });
     }
