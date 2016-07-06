@@ -296,8 +296,6 @@ $.extend(list.prototype, {
         var id = $target.data('id');
         // var uid = $target.data('uid');
 
-        me.refreshTotal(total - 1);
-
         var promise = this.page.post(this.opts.API.delete, {
             commentId: id
         });
@@ -311,6 +309,7 @@ $.extend(list.prototype, {
 
                 if (result.meta.code === 200) {
                     $('#item-' + id).addClass('hide').remove();
+                    me.refreshTotal(total - 1);
                 }
                 else {
 
@@ -342,8 +341,6 @@ $.extend(list.prototype, {
         var $null = $('.list-null');
         var $send = $('.send');
         var attachs = me.attach.getModifyAttaches();
-
-        me.refreshTotal(total + 1);
 
         var promise = me.page.post(me.opts.API.add, {
             // 0 代表新增评论
@@ -378,6 +375,8 @@ $.extend(list.prototype, {
                         tmpl: tmplItem,
                         type: 'before'
                     });
+
+                    me.refreshTotal(total + 1);
 
                     getUserAndPhoto([result.data]);
 

@@ -399,8 +399,8 @@ function LoadPage(info) {
                     noTaskNotCreate: page.lang.noTaskNotCreate
                 }
             };
-            // 不同页面的空页面不同 在未完成、进行中、已完成、已撤销页面有新建按钮
-            if (name === 'opened' || name === 'doing' || name === 'done' || name === 'cancel') {
+            // 不同页面的空页面不同 在未完成页面有新建按钮
+            if (name === 'opened') {
                 data.hasNewTaskBtn = true;
             }
             page.render(loader.wrapper, data, {
