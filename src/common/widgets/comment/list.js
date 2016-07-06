@@ -113,7 +113,7 @@ function sendCommentLog(page, name, id, attachNotNull, error) {
     if (!page || !name || !id) {
         return;
     }
-    // TODO
+
     var targetTag = {};
     if (name === 'affair') {
         targetTag.affairId = id;
@@ -434,9 +434,9 @@ $.extend(list.prototype, {
             .always(function (result) {
                 me.isCanSubmit = true;
                 var errCode = (result && result.meta && result.meta.code !== 200) ? result.meta.code : '';
-                var attachNotNull = !!attachs;
+                var attachNotNull = !!attachs.length;
                 sendCommentLog(me.page, me.opts.name, me.data.id, attachNotNull, errCode);
-            })
+            });
     }
     // initScroll: function () {
     //     var me = this;

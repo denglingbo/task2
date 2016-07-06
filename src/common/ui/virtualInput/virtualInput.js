@@ -101,14 +101,20 @@ virtualInput.prototype = {
         });
     },
 
+    /**
+     * 解决低版本ios的弹出键盘，fixed的评论框不能上浮的问题
+     *
+     */
     fixIOS4: function () {
         var me = this;
-        var nowWinHeight = $(window).height();
-        var height = me.winHeight - nowWinHeight;
-        var boxHeight = me.$wrap.height();
-        height += boxHeight;
-        alert(height)
+        var nowWinHeight = 0;
+        var height = 0;
+        var boxHeight = 0;
         if (me.isIOS4) {
+            nowWinHeight = $(window).height();
+            height = me.winHeight - nowWinHeight;
+            boxHeight = me.$wrap.height();
+            height += boxHeight;
             me.$wrap.css({marginTop: -height});
             // $(window).scrollTop(-height);
         }
