@@ -50,12 +50,21 @@ page.enter = function () {
 
     detailUtil.richContent();
 
-    me.render('#comment-input-wrapper', {lang: me.data.lang});
+    var $comment = $('#comment-input-wrapper');
+    var $main = $('.main');
+    me.render($comment, {lang: me.data.lang});
+
     me.virtualInput = new VirtualInput('.goalui-fixedinput');
-    // 是否有评论权限
-    if (!me.data.rights || !me.data.rights.commentRight) {
-        $('#comment-input-wrapper').addClass('hide');
-        $('.main').addClass('nofixbar');
+
+    // 无评论权限
+    // 1. 无权限，2. 无评论权限，3. 所属的任务已经不是进行中，4. 当前讨论或事件不是进行中
+    if (!me.data.rights || !me.data.rights.commentRight || !me.data.taskDoing() || !me.data.isDoing()) {
+        $comment.addClass('hide');
+        $main.addClass('nofixbar');
+    }
+    else {
+        $comment.removeClass('hide');
+        $main.removeClass('nofixbar');
     }
 
     me.ticker = new Ticker('.tick', {

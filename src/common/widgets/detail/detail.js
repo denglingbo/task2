@@ -51,6 +51,15 @@ detail.dealPageData = function (data) {
         data.content = richForm(data.content);
     }
 
+    data.isDoing = function () {
+        // 已撤销
+        if (this.suspend) {
+            return false;
+        }
+
+        return this.status === 4;
+    };
+
     data.isDone = function () {
         return this.status === 6;
     };

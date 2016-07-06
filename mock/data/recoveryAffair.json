@@ -3,5 +3,14 @@
         "code": 200,
         "message" : "请求成功"
     },
-    "data": null
+    "data": {
+        "rights": {
+            "seeRight": false,
+            "summarizeRight": false,
+            "editRight": false,
+            "resumeRight": false,
+            "closeRight": false,
+            "commentRight": false
+        }
+    }
 }
