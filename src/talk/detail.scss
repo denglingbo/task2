@@ -38,11 +38,6 @@
     //     width: 100%;
     //     -weblit-overflow-scrolling: touch;
     // }
-
-    // &.ios-fixed {
-    //     /* 增加该属性，可以增加弹性 */
-    //     -webkit-overflow-scrolling: touch;
-    // }
 }
 
 
@@ -56,12 +51,12 @@
 }
 
 .goalui-fixedinput {
-    // position: fixed !important;
+    position: relative !important;
 
-    // .attach-list {
-    //     max-height: rem(125px);
-    //     overflow: auto;
-    // }
+    .attach-list {
+        max-height: rem(125px);
+        overflow: auto;
+    }
 }
 
 .componentAttachItem {
