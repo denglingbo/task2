@@ -122,7 +122,7 @@ function sendCommentLog(page, name, id, attachNotNull, error) {
         targetTag.talkId = id;
     }
 
-    if (attachIsNull) {
+    if (attachNotNull) {
         targetTag.attach = attachNotNull;
     }
     var data = {

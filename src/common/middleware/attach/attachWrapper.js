@@ -152,7 +152,9 @@ attach.initDetailAttach = function (options) {
     );
     /* eslint-disable */
     var attachObj = new Attach(attachOptions);
-    var renderString = Attach.getRenderString({attach: options.attachData}, attachOptions.clientMsg.appver);
+    var renderString = Attach.getRenderString({
+        attach: options.attachData
+    }, attachOptions.clientMsg.appver);
     $(attachOptions.dom.containerDOM).append(renderString.attach);
     Attach.initEvent(attachOptions.dom.containerDOM, attachOptions.clientMsg.lang);
     return attachObj;
